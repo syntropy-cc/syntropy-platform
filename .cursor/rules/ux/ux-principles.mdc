@@ -1,0 +1,194 @@
+# UX Principles Rules
+
+## Purpose
+
+This file defines the core user experience principles that govern all systems built with this framework. These principles apply regardless of interface type — CLI, Web, API, or hybrid. UX quality is not optional: it is as mandatory as architectural compliance.
+
+> **AI Instruction**: When designing any user-facing interface or workflow, consult this file first. UX principles govern what to build; interaction design rules (in `interaction-design.mdc`) govern how to structure specific interfaces. For web systems with visual interfaces, also consult `design-system/design-system.mdc`.
+
+---
+
+## Core Principles
+
+### Rule UX-001: User Goals Over System Capabilities
+
+Design every interface around what users are trying to accomplish — not around what the system can do internally.
+
+**Implications**:
+- Name commands, endpoints, and UI elements after user goals, not internal operations
+- Organize navigation and menus by user task, not by system module
+- Error messages describe what the user was trying to do and how to fix it, not what the system failed to do
+
+```
+# CORRECT: Named after user goal
+myapp deploy production
+
+# INCORRECT: Named after internal operation
+myapp run-build-artifact-upload-pipeline
+
+# CORRECT: Error from user's perspective
+"Could not deploy: the production environment is not configured. Run 'myapp init production' first."
+
+# INCORRECT: Error from system's perspective
+"NullPointerException: environment context is null in DeploymentService.execute()"
+```
+
+### Rule UX-002: Progressive Disclosure
+
+Present only what users need at each step. Reveal complexity gradually.
+
+**Requirements**:
+- Primary commands and features must be immediately visible
+- Advanced options can be hidden behind `--verbose`, `--advanced`, or secondary menus
+- Help text starts with the simplest use case; details follow
+- Required input is requested first; optional input is requested only when necessary
+
+```
+# CORRECT: Simple by default, detailed on demand
+myapp deploy --help
+  Deploy your application to an environment.
+
+  Usage: myapp deploy <environment>
+
+  Options:
+    --version TEXT  Specific version to deploy (default: latest)
+    --dry-run       Preview changes without applying (default: false)
+
+  Advanced options (--advanced):
+    --rollback-strategy  ...
+    --health-check-timeout  ...
+
+# INCORRECT: All options shown equally, overwhelming the user
+```
+
+### Rule UX-003: Immediate and Clear Feedback
+
+Every action must produce feedback that confirms what happened, what the system is doing, or what went wrong.
+
+**Requirements for feedback**:
+- Immediate confirmation that the action was received
+- Progress indication for operations > 2 seconds
+- Clear success state when an operation completes
+- Clear failure state with actionable recovery instructions
+- Distinguish between transient states (in progress) and terminal states (done, failed)
+
+| Action Duration | Required Feedback |
+|----------------|------------------|
+| < 200ms | Immediate result visible |
+| 200ms–2s | Brief status indicator |
+| 2s–30s | Progress message or spinner with estimated completion |
+| > 30s | Progress with percentage or steps if deterministic |
+| Background | Confirmation that it started; notification when done |
+
+### Rule UX-004: Error Prevention Over Error Recovery
+
+The best error is the one that never occurs. Design flows that prevent errors before they happen.
+
+**Prevention strategies**:
+- Validate input as early as possible (before expensive operations begin)
+- Confirm destructive actions before executing
+- Make the "safe" choice the default
+- Provide input examples in documentation and help text
+- Autocomplete or suggest valid values where possible
+
+```
+# CORRECT: Confirms destructive action before proceeding
+$ myapp delete-workspace production
+This will permanently delete the "production" workspace and all its data.
+This action cannot be undone.
+
+Type the workspace name to confirm: 
+```
+
+### Rule UX-005: Consistency Within and Across Interfaces
+
+Users develop a mental model of your system. Consistency reinforces that model; inconsistency breaks it.
+
+**Consistency requirements**:
+- Same concept always uses the same name (see `GLOSSARY.md` / Architecture Domain terminology)
+- Same operation follows the same pattern (e.g., all list commands: `myapp {noun} list`)
+- Same terminology in UI, CLI, API, documentation, and error messages
+- Input/output formats are consistent within the same interface type
+
+**Anti-patterns to prevent**:
+- "create" in one place, "new" in another, "add" in a third — for the same concept
+- Different parameter ordering for similar commands
+- Date formats inconsistent between API responses and CLI output
+
+### Rule UX-006: Accessibility as a First-Class Requirement
+
+Accessibility is not an afterthought. It is a requirement that must be addressed from the design phase.
+
+**Minimum requirements by interface type**:
+
+| Interface | Minimum Requirements |
+|-----------|---------------------|
+| Web / Dashboard | WCAG 2.1 AA: keyboard navigation, sufficient color contrast (4.5:1), screen reader labels, focus indicators |
+| CLI | Plain text output by default; structured output (JSON/YAML) available via flag; no color-only signals (also use symbols/text) |
+| API | Documented error codes; human-readable error messages; no behavior difference based on user identity attributes |
+| Email/Notifications | Plain text alternative; no image-only content |
+
+Accessibility decisions must be documented in the UX template for the component.
+
+### Rule UX-007: Respect User Context and Mental Load
+
+Users are interrupted, working in parallel, and operating under time pressure. Design for realistic conditions, not ideal ones.
+
+**Requirements**:
+- Commands and forms must be resumable (state is preserved or the user is informed of what was lost)
+- Undo or rollback is available for destructive or reversible actions
+- Long operations report progress and can be cancelled
+- Defaults are chosen to reduce the number of decisions a user must make
+- Optional inputs are truly optional (the system works without them)
+
+### Rule UX-008: Respect System Type Characteristics
+
+Different system types have different UX expectations. Meet users where they are.
+
+| System Type | Primary UX Expectation | Anti-patterns |
+|------------|----------------------|---------------|
+| CLI | Speed, scriptability, composability | Interactive prompts in pipes; non-zero exit codes for "not found"; inconsistent output format |
+| Web / Dashboard | Visual clarity, discoverability, state visibility | Hidden save buttons; modal overuse; unclear navigation; no empty states |
+| REST API | Predictability, self-documentation, consistency | Inconsistent error formats; missing pagination; surprising status codes |
+| Library / SDK | Minimal cognitive overhead, strong types, clear error messages | Checked exceptions as normal flow; mutable shared state; magic strings |
+| Agent / Pipeline | Traceability, idempotency, recoverability | Silent failures; non-idempotent steps; no way to resume |
+
+---
+
+## Applying UX Principles During Architecture
+
+### Rule UX-009: UX Considerations in Architecture Decisions
+
+Every architecture decision that affects user-facing behavior must include a UX impact assessment. When creating or reviewing ADRs:
+
+1. Identify whether the decision affects a user-facing interface
+2. If yes, evaluate against UX-001 through UX-008
+3. Document UX consequences in the ADR's Consequences section
+4. Flag any UX trade-offs explicitly
+
+### Rule UX-010: UX Requirements in Vision Document
+
+The Vision Document (Section 4: Interface and Interaction Preferences) is the authoritative source for UX requirements. The architecture must implement what the vision specifies.
+
+Minimum information required in Section 4:
+- Delivery interfaces (which interface types the system exposes)
+- Interaction style (conversational, command-driven, form-based, etc.)
+- Accessibility requirements (explicit WCAG level or equivalent)
+- Any stated preferences about information density, verbosity, or tone
+
+If Section 4 is absent or empty, treat as a Vision Document quality issue (VQ-D04 in `vision/vision-quality.mdc`) and request clarification before proceeding.
+
+---
+
+## References
+
+| Rule | Interaction Pattern | System Type |
+|------|--------------------|-------------|
+| UX-001 | All | All |
+| UX-006 | All | Web, CLI |
+| UX-008 | Type-specific | Per system type |
+
+See also:
+- `.cursor/rules/ux/interaction-design.mdc` — specific interaction patterns for CLI, Web, and API
+- `.cursor/rules/design-system/design-system.mdc` — visual design consistency (web systems only)
+- `.cursor/templates/ux/UX-PRINCIPLES-TEMPLATE.md` — document UX requirements for your project

@@ -1,0 +1,263 @@
+# Vision Quality Rules
+
+## Purpose
+
+This file defines the quality standards, scoring dimensions, minimum thresholds, and readiness classification criteria for Vision Documents. These rules govern the Vision Quality Assessment Skill and the Vision Analyst Agent.
+
+> **AI Instruction**: Apply these rules when evaluating any Vision Document. A Vision Document that fails minimum thresholds must not proceed to architecture generation. Direct the user to Prompt 00 for guided remediation.
+
+---
+
+## Scoring Model
+
+### Rule VQ-001: Dimensions and Scale
+
+Evaluate each dimension on a scale of 1–5 using the criteria below. Do not average; every dimension must meet its minimum individually.
+
+| Dimension | ID | Weight | Minimum Required |
+|---|---|---|---|
+| Problem Statement | VQ-D01 | Standard | 3 |
+| Ideal Future | VQ-D02 | Standard | 2 |
+| Actors and Users | VQ-D03 | Critical | 3 |
+| Interface Preferences | VQ-D04 | Critical | 3 |
+| Key Capabilities | VQ-D05 | Critical | 3 |
+| Information and Concepts | VQ-D06 | Standard | 2 |
+| Workflows and Journeys | VQ-D07 | Critical | 3 |
+| Quality Priorities | VQ-D08 | Standard | 2 |
+| Constraints and Non-Goals | VQ-D09 | Standard | 2 |
+| Success Metrics | VQ-D10 | Standard | 2 |
+| System Components Vision | VQ-D11 | Conditional | N/A |
+
+**Total possible score**: 55 points (11 dimensions × 5)
+
+**Critical dimensions** (VQ-D03, VQ-D04, VQ-D05, VQ-D07): a score below 3 on any critical dimension classifies the document as Insufficient regardless of total score.
+
+### Rule VQ-002: Readiness Classification
+
+| Classification | Total Score | Critical Dimension Condition | Meaning |
+|---|---|---|---|
+| **Ready** | 38–55 | All critical ≥ 3 | Architecture generation can proceed |
+| **Needs Improvement** | 28–37 | All critical ≥ 3 | Architecture generation is possible but output quality will be degraded; refinement strongly recommended |
+| **Insufficient** | < 28 | OR any critical < 3 | Architecture generation must not proceed; Prompt 00 required |
+
+> **AI Instruction**: If the document is Insufficient, halt and direct the user to Prompt 00. If it is Needs Improvement, warn the user about the specific gaps and offer to continue or refine first. Never proceed silently with an Insufficient document.
+
+---
+
+## Scoring Criteria per Dimension
+
+### Rule VQ-D01: Problem Statement
+
+| Score | Criteria |
+|---|---|
+| 5 | Current situation described with specific examples or data; clearly identifies who is affected; quantifies cost or consequence of inaction; includes description of current solutions and their shortcomings |
+| 4 | Describes situation concretely; identifies affected parties; references current solutions; may lack quantification |
+| 3 | Problem described but vague; affected parties mentioned; limited or no mention of current approaches |
+| 2 | Only a partial description; problem is implied rather than stated; no stakeholders identified |
+| 1 | Problem not described or is one sentence with no context |
+
+### Rule VQ-D02: Ideal Future
+
+| Score | Criteria |
+|---|---|
+| 5 | Vivid description of the desired end state; explains what becomes possible; uses concrete outcomes rather than feature lists |
+| 4 | Clear description of desired state; references concrete outcomes |
+| 3 | General vision present but vague or focused on features rather than outcomes |
+| 2 | Brief or aspirational statement with no concrete outcomes |
+| 1 | Missing or one sentence |
+
+### Rule VQ-D03: Actors and Users (Critical)
+
+| Score | Criteria |
+|---|---|
+| 5 | 3+ actors defined; each has role, primary need, frequency, and technical level; narrative context provided for at least one; external systems identified if applicable |
+| 4 | 3+ actors defined with most fields filled; minor gaps in some actors |
+| 3 | At least 2 actors defined with role, need, and frequency; technical level may be missing |
+| 2 | 1–2 actors with incomplete information; generic descriptions ("the user") |
+| 1 | No actors defined or only "the user" with no detail |
+
+### Rule VQ-D04: Interface and Interaction Preferences (Critical)
+
+| Score | Criteria |
+|---|---|
+| 5 | All delivery interfaces checked and described; interaction style identified; accessibility needs stated or confirmed not applicable |
+| 4 | Primary delivery interfaces identified and described; interaction style noted; accessibility addressed |
+| 3 | At least one delivery interface clearly identified; limited description of interaction style |
+| 2 | Interfaces implied but not stated (e.g., "the web app" mentioned elsewhere without being listed here) |
+| 1 | Section empty or not completed |
+
+**Note**: This dimension is critical because delivery interface selection drives layer structure (GEN-002), UX phase conditionality, and documentation type classification (DOC-002). A missing or incomplete Section 4 forces the architecture agent to guess the system type, producing unreliable results.
+
+### Rule VQ-D05: Key Capabilities (Critical)
+
+| Score | Criteria |
+|---|---|
+| 5 | 6+ capabilities; each has a descriptive name and explanation of what it enables and why it matters; priorities assigned (MVP / Post-MVP / Future); capabilities are business-level not feature-level |
+| 4 | 5+ capabilities with names and descriptions; most have priorities; predominantly business-level |
+| 3 | At least 5 capabilities with names and descriptions; priorities may be missing; some may be feature-level |
+| 2 | 3–4 capabilities or capabilities described too vaguely to extract domains |
+| 1 | Fewer than 3 capabilities or capability list is a feature list ("add/edit/delete" type items) |
+
+### Rule VQ-D06: Information and Concepts
+
+| Score | Criteria |
+|---|---|
+| 5 | 4+ concepts defined; each has description, key attributes, relationships, owner, and lifecycle states |
+| 4 | 4+ concepts with description, attributes, and relationships; lifecycle states may be missing for some |
+| 3 | At least 3 concepts defined with description and key attributes |
+| 2 | 1–2 concepts or concepts described without key attributes |
+| 1 | Section empty or only generic terms |
+
+### Rule VQ-D07: Workflows and Journeys (Critical)
+
+| Score | Criteria |
+|---|---|
+| 5 | 3+ workflows; each has actor, goal, trigger, frequency, volume, step-by-step narrative, and variations; covers happy path and at least one error case |
+| 4 | 3+ workflows with actor, goal, trigger, and steps; frequency and volume may be missing for some |
+| 3 | At least 2 workflows with actor, goal, and step-by-step narrative |
+| 2 | 1–2 workflows or workflows described as a list without narrative |
+| 1 | No workflows or only a single sentence per workflow |
+
+### Rule VQ-D08: Quality Priorities
+
+| Score | Criteria |
+|---|---|
+| 5 | Priorities ranked in order; non-negotiable floors identified; notes explain key trade-offs |
+| 4 | Priorities ranked; some explanation of choices |
+| 3 | Priorities listed without ranking, or ranked without explanation |
+| 2 | 1–3 priorities mentioned without ranking |
+| 1 | Section empty or just "quality is important" |
+
+### Rule VQ-D09: Constraints and Non-Goals
+
+| Score | Criteria |
+|---|---|
+| 5 | Non-goals listed; known constraints listed; integration requirements table complete; data sensitivity and compliance checked; scale and team context filled |
+| 4 | Non-goals and constraints present; integration requirements noted; data sensitivity addressed |
+| 3 | Non-goals and at least one constraint listed; other sub-sections may be empty |
+| 2 | Only one of the two main sub-sections completed |
+| 1 | Section empty |
+
+### Rule VQ-D10: Success Metrics
+
+| Score | Criteria |
+|---|---|
+| 5 | Business and technical metrics defined; each has target and measurement method; anti-metrics section includes at least 2 failure indicators |
+| 4 | Business and/or technical metrics with targets; measurement methods provided; anti-metrics may be missing |
+| 3 | At least 2 measurable metrics defined with targets |
+| 2 | Metrics mentioned but not measurable ("the system should be fast") |
+| 1 | Section empty or only qualitative statements |
+
+### Rule VQ-D11: System Components Vision (Conditional)
+
+This dimension applies **only when the system has multiple distinct components**. Assess whether Section 5 was correctly handled:
+
+| Score | Criteria |
+|---|---|
+| 5 | Multi-component system: 2+ components defined with type, audience, design character, principles, success criteria, and unique constraints; single-component system: clearly marked N/A |
+| 4 | Multi-component: components defined with most fields; single-component: marked N/A |
+| 3 | Multi-component: components listed but design character missing; single-component: marked N/A |
+| 2 | Multi-component system but section not filled in |
+| 1 | Multi-component system but section is empty or section not present in document |
+
+> **AI Instruction**: If the system appears to have multiple components (multiple interfaces mentioned in Section 4, or capabilities that clearly map to different user-facing surfaces) but Section 5 is empty or marked N/A, flag this as a gap. Do not score it as N/A — score it as 2 and recommend completing it.
+
+---
+
+## Gap Severity Classification
+
+### Rule VQ-003: Gap Severity Levels
+
+When identifying gaps, classify each as:
+
+| Severity | Meaning | Example |
+|---|---|---|
+| **Critical** | The architecture agent cannot safely proceed without this information; will produce incorrect domain structure or wrong layer selection | Missing actors entirely; no delivery interface identified; fewer than 3 capabilities |
+| **High** | The architecture agent will make significant assumptions that may need correction in Phase 3 | Workflows described but no actors assigned; capabilities listed but no priorities; integrations not mentioned |
+| **Medium** | Architecture can proceed but quality or completeness will be limited | Missing lifecycle states; no success metrics; constraints section sparse |
+| **Low** | Nice to have; architecture can proceed confidently | Anti-metrics missing; current solutions section sparse; scale context vague |
+
+---
+
+## Minimum Completion Criteria
+
+### Rule VQ-004: Section Completion Minimums
+
+Before any section scores above 2, it must meet these minimum completion criteria:
+
+| Section | Minimum Completion |
+|---|---|
+| 1. Problem Statement | At least 3 sentences describing the problem, not just the solution |
+| 2. Ideal Future | At least 3 sentences describing concrete outcomes |
+| 3. Actors | At least 2 rows in the table with all 5 columns filled |
+| 4. Interface Preferences | At least 1 checkbox selected and described |
+| 5. Component Visions | Either 2+ components described, or "Single component" clearly stated |
+| 6. Key Capabilities | At least 5 rows in the table with name, description, and priority |
+| 7. Concepts | At least 3 rows in the table with description and key information |
+| 8. Workflows | At least 2 workflow blocks with actor, goal, trigger, and at least 3 steps |
+| 9. Quality Priorities | At least 5 priorities in ranked order |
+| 10. Constraints | At least 2 non-goals and 2 constraints listed |
+| 11. Success Metrics | At least 2 metrics with targets and measurement methods |
+| 12. Inspirations | Optional — no minimum required |
+
+---
+
+## Remediation Guidance
+
+### Rule VQ-005: Improvement Guidance per Dimension
+
+When a dimension scores below its minimum, provide specific, actionable guidance:
+
+**VQ-D01 (Problem Statement)**: Ask the user to describe a concrete scenario where the problem occurred, identify who was affected and what happened, and describe what the current solution fails to provide.
+
+**VQ-D03 (Actors)**: Ask the user to name every person or system that will interact with the system — even indirectly. For each, ask: "What does this actor want to accomplish? How often? What technical experience do they have?"
+
+**VQ-D04 (Interface Preferences)**: Ask the user directly: "Will users access this through a website, a command-line tool, an API, a mobile app, or something else? Should multiple interfaces exist?" This single question resolves the most common architecture ambiguity.
+
+**VQ-D05 (Capabilities)**: Ask the user to describe 5–10 things the system must be able to do, framed as "The system should be able to..." — each answer is a capability. Then ask which are needed for the first version.
+
+**VQ-D07 (Workflows)**: Ask the user to walk through the most common task a user performs, step by step, from "I decide to do X" to "I know X is done." This produces the first workflow. Repeat for the second most common task.
+
+### Rule VQ-006: Re-scoring After Improvement
+
+After the user updates the Vision Document following guidance from Prompt 00:
+
+1. Re-score every dimension that was below minimum
+2. Update the total score
+3. Re-classify the document (Ready / Needs Improvement / Insufficient)
+4. Update the Vision Quality Report with the new scores and a changelog entry noting the session date and what changed
+
+---
+
+## Integration with Prompt 01
+
+### Rule VQ-007: Prompt 01 Feasibility Pre-Check
+
+When Prompt 01 invokes this skill:
+
+1. Run the full Vision Quality Assessment
+2. If the document is Insufficient (total < 28 OR any critical dimension < 3):
+   - **Halt immediately**
+   - Present the quality report to the user
+   - Direct the user to run Prompt 00 before proceeding
+   - Do NOT begin architecture analysis
+3. If the document is Needs Improvement (28–37):
+   - Present the quality report prominently at the top of the session
+   - List the specific gaps and their severity
+   - Ask: "Would you like to improve these areas first (recommended) or proceed with the current document?"
+   - If user chooses to proceed, note all gaps in the architecture generation and document assumptions made to compensate
+4. If the document is Ready (38+):
+   - Present a brief quality confirmation note
+   - Proceed to architecture analysis
+   - Note any Medium/Low gaps as optional improvements
+
+### Rule VQ-008: Special Inputs for Architecture Generation
+
+When Prompt 01 proceeds past the feasibility check, the following sections must be explicitly extracted before architecture analysis begins:
+
+1. **Section 4 (Interface Preferences)**: delivery interfaces → determines layer structure selection (GEN-002 rule), platform documents needed, and UX phase conditionality
+2. **Section 5 (Component Visions)**: component design characters → informs domain boundary decisions and platform document scope
+3. **Section 9 (Quality Priorities)**: quality ranking → informs cross-cutting concern selection and architectural style trade-offs
+4. **Section 10 (Constraints)**: Integration Requirements → identifies external systems that require adapters; Data Sensitivity → triggers security cross-cutting concern; Scale → informs deployment architecture
+
+These sections must be explicitly quoted in the architecture analysis output, not just mentioned.

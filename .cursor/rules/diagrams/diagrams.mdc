@@ -1,0 +1,220 @@
+---
+description: Rules for consistent software architecture diagrams (structural and behavioral)
+globs: ["**/*.md", "**/*.mdc", "**/docs/architecture/**", "**/diagrams/**"]
+alwaysApply: false
+priority: 2
+---
+
+# Software Architecture Diagram Rules
+
+## Purpose
+
+This file defines standards for creating and maintaining software architecture diagrams. Diagrams visualize system structure and behavior, facilitating design communication, documentation, and analysis. All diagrams must be consistent in syntax, naming, and placement so that stakeholders can interpret them reliably.
+
+> **AI Instruction**: When creating or editing architecture diagrams, follow these rules. Use the templates in `.cursor/templates/diagrams/` as the starting point. Prefer Mermaid for diagram syntax so diagrams live in version-controlled Markdown and render in common tools. **Make diagrams descriptive and useful** (DIAG-019–DIAG-022): use concrete names from the architecture, show data/artifact flows and who reads/writes, and add a second diagram (e.g. data flow or “who feeds vs who consumes”) when one diagram would be too simple or obvious.
+
+## Diagram Classification
+
+### Rule DIAG-001: Structural vs Behavioral
+
+Classify every diagram as either **Structural** (static) or **Behavioral** (dynamic):
+
+| Category    | Diagram Type   | Purpose |
+|------------|----------------|---------|
+| Structural | Component      | High-level software components, interfaces, relationships |
+| Structural | Class          | Object-oriented structure: classes, attributes, methods |
+| Structural | Deployment     | Physical hardware/nodes where software is installed |
+| Structural | Context/System  | High-level system and external actors |
+| Structural | ERD            | Data models and relationships (e.g. database) |
+| Behavioral | Sequence       | Order of interactions over time (user flows, API calls) |
+| Behavioral | Activity       | Workflows and step-by-step processes |
+| Behavioral | State Machine  | Life cycle and state transitions of an object or system |
+| Behavioral | Use Case       | User interactions with the system |
+
+Use **Structural** diagrams to answer "what exists and how it is connected." Use **Behavioral** diagrams to answer "what happens and in what order."
+
+### Rule DIAG-002: 4+1 View Model Mapping
+
+Align diagrams with the **4+1 View Model** by stakeholder perspective:
+
+| View           | Audience        | Primary Diagram Types              | Purpose |
+|----------------|-----------------|------------------------------------|---------|
+| **Logical**    | Developers      | Component, Class                   | Functionality and structure |
+| **Process**    | Integrators     | Sequence, Activity                 | Runtime behavior and concurrency |
+| **Development**| Dev/DevOps      | Module/package structure (Component) | Code organization |
+| **Physical**   | Ops/Infra       | Deployment                         | Hardware and deployment topology |
+| **Scenario (+1)** | All          | Use Case                           | System functionality from user perspective |
+
+When documenting a feature or component, choose diagram types that serve the relevant views (e.g. Logical + Process for a new service).
+
+## Syntax and Tooling
+
+### Rule DIAG-003: Mermaid as Default
+
+Use **Mermaid** for diagram source unless a different format is mandated (e.g. PlantUML for legacy docs). Mermaid is text-based, version-control friendly, and widely supported.
+
+- Store diagram source inside Markdown code blocks: ` ```mermaid ` ... ` ``` `
+- Place diagram files under `docs/architecture/diagrams/` when they are shared across documents, or inline in architecture/ADR/RFC documents when they are local to that doc.
+- File naming: `{diagram-type}-{scope}-{short-name}.md` or inline in the owning document.
+
+### Rule DIAG-004: Diagram Block Format
+
+Every diagram block must have:
+
+1. A **title** (in Mermaid when supported, or in a heading above the block).
+2. A **brief caption or purpose** in the surrounding text (one sentence) so the diagram is understandable without opening the source.
+
+```markdown
+## Order Placement Flow
+
+The following sequence describes how an order is placed from cart to confirmation.
+
+```mermaid
+sequenceDiagram
+    title Order Placement Sequence
+    participant U as User
+    participant API as Order API
+    ...
+```
+```
+
+### Rule DIAG-005: Naming Conventions
+
+- **Participants/Components**: Use short, consistent IDs (e.g. `API`, `DB`, `Auth`) and optional display names (e.g. `participant API as Order API`).
+- **Labels**: Use active, present-tense verbs for relationships and messages (e.g. "sends", "validates", "stores").
+- **Avoid**: Ambiguous names (e.g. "Service1"), jargon that is not in the project glossary, and abbreviations that are not defined.
+
+## Diagram-Specific Rules
+
+### Rule DIAG-006: Component Diagrams
+
+- Show **components**, their **interfaces** (provided/required), and **relationships** (dependencies, not implementation details).
+- Keep to a single level of abstraction per diagram (e.g. system-level OR subsystem-level, not mixed).
+- Use Mermaid `flowchart` or C4-style Component diagrams when documenting containers/components.
+
+### Rule DIAG-007: Sequence Diagrams
+
+- Represent **one scenario or flow per diagram** (e.g. "happy path login", "payment failure").
+- Order participants left-to-right by invocation order when possible; put the primary actor (user or trigger) at the left.
+- Include return messages or explicit "reply" when it clarifies the flow; avoid excessive detail that belongs in code.
+
+### Rule DIAG-008: Deployment Diagrams
+
+- Show **nodes** (hardware, VMs, containers, clusters) and **artifacts** (applications, services) deployed on them.
+- Label communication protocols and key ports only when relevant to the discussion.
+- Prefer one diagram per environment or per deployment unit (e.g. production, staging) to avoid clutter.
+
+### Rule DIAG-009: Context/System Diagrams
+
+- One **system** (or system boundary) in the center; **external actors** and **external systems** at the edges.
+- Focus on **what** interacts with the system and **what** the system uses externally; no internal structure.
+- Use C4 Context or a simple Mermaid flowchart with clear "System" and "External" groupings.
+
+### Rule DIAG-010: Activity Diagrams
+
+- Model **workflows or processes** with a clear start and end; use decision nodes and parallel flows when needed.
+- One diagram per process or use case; use subgraphs or separate diagrams for sub-processes.
+- Label edges with conditions where the flow is not obvious.
+
+### Rule DIAG-011: Entity Relationship Diagrams
+
+- Show **entities** (tables or domain aggregates), **attributes** (key ones only), and **relationships** (cardinality and optionality).
+- Scope to one bounded context or one database/schema per diagram when the model is large.
+- Use for data-model documentation and ADRs; keep in sync with actual schema or document the delta.
+
+### Rule DIAG-012: State Machine Diagrams
+
+- One diagram per **entity or aggregate** whose life cycle matters (e.g. Order, Payment, Subscription).
+- Define **states** (noun phrases) and **transitions** (verbs or events); include initial and terminal states.
+- Avoid duplicate transition labels; use guards or notes if the same trigger leads to different states under different conditions.
+
+### Rule DIAG-013: Class Diagrams
+
+- Use for **domain or API model** structure: classes, key attributes, methods, and relationships (association, inheritance, composition).
+- Show only what is relevant to the decision or document; omit getters/setters and implementation details unless needed.
+- Prefer one diagram per bounded context or per package to keep the diagram readable.
+
+### Rule DIAG-014: Use Case Diagrams
+
+- Show **actors** (users, systems) and **use cases** (goals) with **associations**; use `include`/`extend` sparingly and only when they add clarity.
+- Keep the set of use cases small per diagram (one subsystem or one feature area).
+- Use to communicate scope and user-facing functionality, not internal design.
+
+## Descriptive and Useful Diagrams
+
+### Rule DIAG-019: Avoid Obvious or Useless Diagrams
+
+A diagram is **too simple** when a reader gains little beyond what the surrounding text already states. The goal is to let the reader **observe a complex architecture in a simpler way**. If the diagram would be redundant or trivial, enrich it or add a second diagram.
+
+**Enrich by**:
+- Using **concrete names** from the codebase or architecture (e.g. real agent IDs, tool names, entity names), not generic labels like "Component A" or "Service 1".
+- Showing **data flows and artifacts** (what passes between components: file names, DTOs, event names, key attributes).
+- Indicating **who reads vs who writes** (e.g. "Pipeline reads Institution; Pipeline writes Content and Content Characterization").
+- Adding **one level of operational detail** (e.g. phases with outputs, validation criteria, retry behavior) when documenting processes.
+
+### Rule DIAG-020: Multiple Diagrams per Document When Needed
+
+A single diagram often cannot show both **structure** and **flow**, or both **context** and **data flow**. Prefer **multiple diagrams in one document** when:
+- One diagram shows "who and what" (actors, systems, boundaries) and another shows "what flows where" (inputs → processing → outputs).
+- One diagram shows component layout and another shows "who feeds vs who consumes" or artifact evolution over phases.
+- One diagram shows a high-level flow and another zooms into one scenario (e.g. one agent or one phase) with concrete steps.
+
+Keep **one main idea per diagram** (DIAG-015); use separate numbered diagrams (Diagram 1, Diagram 2) and a short caption for each.
+
+### Rule DIAG-021: Concrete Naming and Artifacts
+
+- **Components/nodes**: Use real names (e.g. `ideation_agent`, `template_selector`, `coherence_brief`) as they appear in architecture docs or code. Add a one-line responsibility or key attributes where it helps.
+- **Edges/labels**: Name the **artifact or interaction** (e.g. `post_ideas.json`, `run_pipeline(article, editorial_id)`, "reads context", "writes content_characterization") instead of generic "uses" or "calls".
+- **Data flow diagrams**: Include concrete artifact names (files, DTOs, schema names) that pass between phases or layers so the diagram can be traced to implementation.
+
+### Rule DIAG-022: Checklist Before Finalizing a Diagram
+
+Before considering a diagram complete, verify:
+- [ ] A reader unfamiliar with the system could **navigate** (e.g. find which doc or component to open next).
+- [ ] **Concrete names** are used where the architecture defines them (agents, tools, entities, phases).
+- [ ] At least one of: **data/artifact flow**, **who reads/writes**, or **validation/transition rules** is visible where relevant.
+- [ ] The diagram is **not redundant** with a single sentence in the text; it adds structure or sequence the text does not.
+
+## Quality and Maintenance
+
+### Rule DIAG-015: Single Responsibility per Diagram
+
+Each diagram should convey **one main idea** (one view, one flow, one structure). If a diagram mixes multiple concerns, split it into multiple diagrams and reference them from the document.
+
+### Rule DIAG-016: Cross-References
+
+When a diagram in document A is relevant to document B, prefer **linking to the authoritative document** that owns the diagram rather than copying the diagram. If a copy is necessary (e.g. in an ADR), state that it is derived from the source and link to it.
+
+### Rule DIAG-017: Staleness and Updates
+
+- When changing components, APIs, or flows, update the corresponding diagrams in the same change (or in a follow-up task).
+- In ADRs and RFCs, diagrams are part of the decision record; update them when the decision is revised or superseded.
+
+## Quick Reference: Which Diagram When?
+
+| Need to show…                          | Prefer diagram type   |
+|----------------------------------------|------------------------|
+| System boundaries and external actors  | Context/System         |
+| High-level components and dependencies| Component              |
+| Order of calls between parts           | Sequence               |
+| Where software runs (nodes/containers) | Deployment             |
+| Step-by-step process or workflow       | Activity               |
+| Data entities and relationships        | ERD                    |
+| Life cycle and state transitions       | State Machine          |
+| Domain/API class structure             | Class                  |
+| User goals and actors                  | Use Case               |
+
+## File and Document Placement
+
+### Rule DIAG-018: Where to Put Diagrams
+
+- **Inline**: Prefer embedding the diagram in the document it supports (e.g. ARCHITECTURE.md, ADR, RFC) so it stays next to the narrative.
+- **Shared files**: When a diagram is reused across multiple documents, place it under `docs/architecture/diagrams/` with a descriptive name: `{diagram-type}-{scope}-{short-name}.md` (e.g. `sequence-orders-place-order.md`). Link to it from the referring documents.
+- **Templates**: Copy from `.cursor/templates/diagrams/`; do not edit the templates in place for project-specific content.
+
+## References
+
+- Architecture docs: `docs/architecture/ARCHITECTURE.md`, domain and platform ARCHITECTURE.md files
+- Diagram templates: `.cursor/templates/diagrams/` (see `_DIAGRAM-INDEX.md` for the full list)
+- Existing diagram examples: `docs/architecture/diagrams/` (overview, core, execution, platform, cross-cutting) for descriptive, multi-diagram patterns
+- Evolution rules: `.cursor/rules/architecture/architecture-evolution.mdc` (for when diagram changes require ADRs)

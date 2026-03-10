@@ -1,0 +1,397 @@
+# LLM Documentation Rules
+
+## Purpose
+
+This file governs the creation and maintenance of the LLM documentation artifact — a self-contained, purpose-built documentation block at `docs/llm/AGENTS.md` designed to be loaded into an LLM context window by any agent that needs to understand and use this system. It is not a summary of any human-facing document. It answers one question: **what does an external LLM agent need to know to correctly understand and use this system?**
+
+> **AI Instruction**: Whenever you generate or update `docs/llm/AGENTS.md`, follow every rule in this file without exception. The artifact's usefulness depends entirely on its density, precision, and self-containment. Do not relax these rules to save time.
+
+## Scope
+
+The LLM artifact covers every project built with this framework. It is generated at two points in the workflow:
+
+1. **Initial generation** at Prompt 01-C (architecture-complete): sections sourced from architecture docs are filled; sections requiring implementation details carry `TODO: populate at Prompt 07` markers.
+2. **Completion** at Prompt 07 (implementation-complete): all `TODO:` markers are resolved using the `src/` code scan.
+3. **Update** at Prompt 08c (after each evolution cycle): affected sections are regenerated from updated architecture and code.
+
+---
+
+## Rule LLM-001: Single-File Artifact
+
+The primary artifact is a **single file** at `docs/llm/AGENTS.md`. A supplemental file `docs/llm/AGENTS-EXTENDED.md` may be created only when the primary file exceeds the 6,000-token hard limit, to hold overflow content for secondary domains. The primary file must always note which sections are extended.
+
+**Why single file**: any agent working with this system needs domain model, entry points, contracts, and constraints simultaneously. Selective file loading requires pre-knowledge of what is needed, which defeats the artifact's purpose.
+
+## Rule LLM-002: Token Budget
+
+| Target | Hard Limit | Overflow |
+|--------|-----------|---------|
+| 4,000 tokens | 6,000 tokens | Move secondary domains to `AGENTS-EXTENDED.md` |
+
+Before completing generation, estimate the token count of the produced artifact. If it exceeds 6,000 tokens, extract the lowest-priority domain sections into `AGENTS-EXTENDED.md` and add a reference note in the primary file.
+
+**Token allocation guide** (adjust per system complexity):
+
+| Section | Allocation |
+|---------|-----------|
+| Machine-readable header | ~50 tokens |
+| System Identity | ~200 tokens |
+| Domain Model | ~1,000 tokens |
+| Entry Points | ~1,500 tokens |
+| Cross-Cutting Contracts | ~400 tokens |
+| State and Sequencing Constraints | ~500 tokens |
+| Known Failure Modes | ~400 tokens |
+
+## Rule LLM-003: Mandatory Sections and Order
+
+The artifact must contain all seven sections in this exact order. No section may be omitted. No section may be reordered.
+
+1. **Machine-readable header** — YAML front matter
+2. **System Identity** — what it is, for whom, explicit out-of-scope
+3. **Domain Model** — typed entity definitions, relationships, invariants
+4. **Entry Points** — all APIs, CLIs, events with complete schemas
+5. **Cross-Cutting Contracts** — auth, error format, pagination, rate limits, idempotency
+6. **State and Sequencing Constraints** — ordered operations, blocking states, irreversible transitions
+7. **Known Failure Modes** — common agent misuses and correct behaviors
+
+**Critical first-30% rule**: Sections 1–3 (header, identity, domain model) must fall within the first 30% of the document. An agent reading the first third must know what the system is and what entities it manages.
+
+## Rule LLM-004: Machine-Readable Header
+
+Every artifact opens with a YAML front matter block containing these exact fields:
+
+```yaml
+---
+artifact_type: llm-documentation
+generated_by: "Vision-to-System Framework / Prompt {01-C | 07 | 08c}"
+last_updated: {YYYY-MM-DD}
+token_budget: 4000
+system_version: "{version from architecture}"
+completeness: "{architecture-only | complete}"
+---
+```
+
+- `completeness: architecture-only` — at 01-C, when `TODO:` markers remain
+- `completeness: complete` — at 07, when all markers are resolved
+
+## Rule LLM-005: System Identity
+
+The System Identity section must be 3–5 sentences. It answers three questions:
+
+1. What does this system do (operational definition, not marketing)?
+2. Who are its primary consumers (agents, users, other systems)?
+3. What does it explicitly NOT do (hard boundaries)?
+
+**Prohibited content**: adjectives like "powerful", "flexible", "seamless". Aspirational statements. Vision-document language. Decision rationale.
+
+```markdown
+## 2. System Identity
+
+{System name} {verb phrase describing core function}. {Primary consumer types} {use it to accomplish what}. The system does not {explicit boundary 1}. The system does not {explicit boundary 2}. {One sentence on operational scope if needed.}
+```
+
+## Rule LLM-006: Domain Model
+
+Express every entity as a typed field definition block, not prose. Follow this structure for each entity:
+
+```
+### {EntityName}
+
+{One sentence: what this entity represents.}
+
+| Field | Type | Required | Constraints |
+|-------|------|----------|------------|
+| id | string (UUID) | yes | immutable after creation |
+| field_name | type | yes/no | constraint or "none" |
+
+**Relationships**:
+- belongs to {EntityName} via {field}
+- has many {EntityName} (foreign key: {field})
+
+**Invariants**:
+- {rule that must always hold, e.g., "status must be 'active' when billing_date is set"}
+```
+
+**Do not** describe entities in prose. If a constraint cannot be expressed in the table, add it to the Invariants list.
+
+**Coverage requirement**: every entity defined in any domain's Data Architecture section must appear in the Domain Model. No entity may be omitted.
+
+## Rule LLM-007: Entry Points
+
+Document every public interface the system exposes. "Public interface" means: any REST endpoint, any CLI command, any event a consuming system can subscribe to.
+
+**For REST endpoints**:
+
+```
+### {Resource Name}
+
+#### {METHOD} {/path/with/{param}}
+
+{One sentence: what this operation does.}
+
+**Request**:
+\`\`\`
+{field}: {type} — {constraint or description}
+{field}: {type} — {constraint or description}
+\`\`\`
+
+**Response** `{HTTP status}`:
+\`\`\`
+{field}: {type}
+{field}: {type}
+\`\`\`
+
+**Errors**: `{code}` — {condition}; `{code}` — {condition}
+```
+
+**For CLI commands**:
+
+```
+### {command} {subcommand}
+
+{One sentence: what this command does.}
+
+**Usage**: `{program} {command} [options] <args>`
+
+**Arguments**:
+- `<arg>` — {type}, {description}
+
+**Options**:
+- `--flag <value>` — {type}, default: {value}, {description}
+
+**Exit codes**: `0` — success; `1` — {condition}; `2` — {condition}
+```
+
+**For events**:
+
+```
+### {EventName}
+
+Emitted by {domain} when {condition}.
+
+**Payload**:
+\`\`\`
+{field}: {type}
+{field}: {type}
+\`\`\`
+
+**Consumers**: {domain or service that subscribes}
+```
+
+**Coverage requirement**: no endpoint, command, or event from any architecture document may be omitted. Every undocumented interface is a gap an agent will hit at runtime.
+
+## Rule LLM-008: Cross-Cutting Contracts
+
+State each contract once. Never repeat it per endpoint. These contracts apply to every interaction unless an entry point explicitly overrides them.
+
+Required contracts:
+
+| Contract | What to state |
+|----------|--------------|
+| Authentication | Mechanism (e.g., Bearer JWT), header name, token acquisition endpoint |
+| Error format | Exact JSON structure of every error response; list all standard error codes |
+| Pagination | Pattern (cursor/offset), parameters, response fields, default and max page sizes |
+| Rate limits | Requests per unit time, scope (per-user / per-IP / global), response when exceeded |
+| Idempotency | Whether supported, which methods, header name if applicable |
+
+If a contract does not apply to this system (e.g., no rate limits), state: `{Contract}: not applicable — {one-sentence reason}`.
+
+## Rule LLM-009: State and Sequencing Constraints
+
+Express each constraint as a single declarative rule on its own line. Group rules by entity or operation.
+
+**Format**:
+
+```markdown
+## 6. State and Sequencing Constraints
+
+### {EntityName} lifecycle
+- {EntityName} must be created before any {RelatedEntity} can reference it.
+- Transitioning {EntityName}.status from {state_a} to {state_b} is irreversible.
+- {EntityName} in status {blocked_state} cannot be {operation}.
+
+### {OperationName} sequencing
+- Step A must complete before Step B begins.
+- Calling {endpoint} before {prerequisite endpoint} returns {error code}.
+```
+
+Every state machine defined in any domain's architecture must be represented here as rules.
+
+## Rule LLM-010: Known Failure Modes
+
+This section is the most operationally valuable. It prevents the most agent bugs. State each failure mode as: **what an agent does wrong** → **what the correct behavior is**.
+
+```markdown
+## 7. Known Failure Modes
+
+### {Category}
+
+**Wrong**: {what an agent incorrectly does — specific, not vague}
+**Correct**: {what to do instead — specific and actionable}
+
+**Wrong**: {another common mistake}
+**Correct**: {correct behavior}
+```
+
+Minimum 5 failure modes. At 01-C, add architecture-inferable failures (wrong sequencing, missing required fields). At 07, add implementation-observed failures (actual error conditions from code).
+
+## Rule LLM-011: Writing Rules
+
+All content in the artifact must follow these rules:
+
+1. **Sentence structure**: subject-verb-object. No passive voice. No subordinate clauses where a direct statement works.
+2. **Schema expression**: all schemas in typed field lists in fenced code blocks. No prose schema descriptions.
+3. **Constraint expression**: explicit rule format — "FIELD must be non-null when CONDITION is true". No implied constraints embedded in narrative.
+4. **Compression**: contracts are verbatim and complete. Explanatory text is one sentence maximum. Examples are included only when the contract is ambiguous without them.
+5. **Self-containment**: every domain-specific term must be defined in the Domain Model section or be a universally understood technical term. No references to external documents.
+6. **Exclusion discipline**: no rationale, no "why", no design history — only what an agent must know to use the system correctly.
+7. **Freshness markers**: at 01-C, sections that require implementation details carry `TODO: populate at Prompt 07 — {what is missing}`. At 07, all `TODO:` markers are resolved.
+
+## Rule LLM-012: Excluded Content
+
+The following content must never appear in the LLM artifact:
+
+- Architecture rationale and ADR decision history
+- UX principles, visual direction, design system
+- Implementation notes and development conventions
+- Links to any external document (the artifact must be self-contained)
+- Human-readable narrative that adds no operational information
+- Testing and quality-assurance details
+- Vision document language or business goals
+- Anything describing how the system was designed or why — only what it does
+
+## Rule LLM-013: Self-Containment Requirement
+
+`docs/llm/AGENTS.md` is the **only document** an integration-building agent loads. The agent must never need to access `docs/architecture/`, `docs/user/`, `docs/context/`, or any other directory to make its first correct API call or to handle any operation the system supports.
+
+This means the artifact must contain, inline and complete:
+- How to obtain the first credential or API key (not just how to use it after obtaining it)
+- Every environment the agent can target (production, staging, etc.) with their base URLs
+- The API versioning scheme and how to specify it in requests
+- Every endpoint, command, and event the system exposes
+- Every error response the agent will ever receive
+- Every sequencing constraint that governs the order of operations
+
+Apply this test before completing generation:
+
+```
+For each term used in sections 2–7:
+  Is it defined in Section 2 (Domain Model) or is it a universal technical term?
+  → If neither, add a definition or rephrase.
+
+For each contract stated in sections 3–6:
+  Is it complete enough to act on without reading any other document?
+  → If not, expand it.
+
+Integration completeness test:
+  Could an agent, reading only this file, make its first valid authenticated API call?
+  → If not, identify what is missing and add it.
+```
+
+**Prohibited**: any statement that directs the agent to consult another document, such as:
+- "See the API reference for details"
+- "Refer to the architecture documentation"
+- "Check the getting started guide"
+- Any hyperlink to any file outside `docs/llm/`
+
+## Rule LLM-013a: Integration Prerequisites Section
+
+Every artifact must contain an **Integration Prerequisites** subsection at the top of Section 3 (Entry Points), before any endpoint, command, or event definition. This subsection covers everything an agent needs before making its first call:
+
+```markdown
+### Integration Prerequisites
+
+**Environments**:
+| Name | Base URL | Use for |
+|------|----------|---------|
+| production | {https://api.example.com} | live traffic |
+| staging | {https://staging.api.example.com} | integration testing |
+
+**API versioning**: {version is specified as {/v1/} in the URL path | via Accept-Version header: {format} | all endpoints are unversioned}.
+
+**Credential acquisition**: {To obtain credentials, {call POST /auth/register with {fields} | register at {URL} | contact {process}}. The response contains {field_name} which is used as the Bearer token.}
+
+**SDK availability**: {No official SDK — use the REST API directly. | Official SDKs: {language} at {url}; {language} at {url}.}
+```
+
+If any of the above does not apply to this system, state it explicitly: `{item}: not applicable — {reason}`.
+
+This section must be populated at Prompt 01-C from the architecture's platform and cross-cutting documents. It must not carry `TODO:` markers — credential acquisition and environment information must be in the architecture before any implementation begins.
+
+## Rule LLM-014: Generation Instruction for Prompt 01-C
+
+At Prompt 01-C (initial generation), read the following documents to populate the artifact:
+
+| Section | Read from |
+|---------|-----------|
+| System Identity | `docs/architecture/ARCHITECTURE.md` → System Purpose section |
+| Domain Model | `docs/architecture/domains/*/ARCHITECTURE.md` → Data Architecture + ERD sections |
+| Entry Points (APIs) | `docs/architecture/domains/*/ARCHITECTURE.md` → API Design sections |
+| Entry Points (CLI) | `docs/architecture/platform/*/ARCHITECTURE.md` → Command interface sections |
+| Entry Points (Events) | `docs/architecture/domains/*/ARCHITECTURE.md` → Event Contracts sections |
+| Cross-Cutting Contracts | `docs/architecture/cross-cutting/*/ARCHITECTURE.md` → all sections |
+| State and Sequencing | `docs/architecture/domains/*/ARCHITECTURE.md` → state machine diagrams, sequence diagrams |
+| Known Failure Modes | Infer from architecture: missing required fields, wrong state transitions, undeclared prerequisites |
+
+Sections that require code-level detail must carry: `TODO: populate at Prompt 07 — {specific detail needed}`.
+
+## Rule LLM-015: Generation Instruction for Prompt 07
+
+At Prompt 07 (completion), read the current `docs/llm/AGENTS.md` and resolve every `TODO:` marker:
+
+| TODO category | Resolve by reading |
+|---|---|
+| Actual error codes | `src/` — error type definitions, HTTP status mappings |
+| Concrete field examples | `src/` — default values, validation logic |
+| Failure modes from code | `src/` — exception handlers, guard clauses, edge case handling |
+| Rate limit specifics | `src/` or config files |
+
+After resolution, set `completeness: complete` in the header.
+
+## Rule LLM-016: Update Instruction for Prompt 08c
+
+At Prompt 08c (evolution update), re-read the Evolution Impact Plan and determine which sections of `docs/llm/AGENTS.md` are affected by the architecture changes. Update only affected sections. Do not regenerate unaffected sections. Update `last_updated` and `system_version` in the header.
+
+## Rule LLM-017: Verification Checklist
+
+Before completing any generation or update of the artifact, verify:
+
+```markdown
+## LLM Artifact Verification Checklist
+
+### Structure
+- [ ] Machine-readable header present with all required fields
+- [ ] completeness field correctly set (architecture-only or complete)
+- [ ] All 7 sections present in correct order
+
+### Content coverage
+- [ ] System Identity: 3–5 sentences, no marketing language, explicit out-of-scope stated
+- [ ] Domain Model: every entity from every domain architecture document is present
+- [ ] Domain Model: every entity has typed fields, relationships, and invariants
+- [ ] Entry Points → Integration Prerequisites: environments (base URLs), API versioning, credential acquisition, SDK availability
+- [ ] Entry Points: every API endpoint from every domain architecture is documented
+- [ ] Entry Points: every CLI command is documented (if applicable)
+- [ ] Entry Points: every event contract is documented (if applicable)
+- [ ] Cross-Cutting Contracts: authentication, error format, pagination, rate limits, idempotency all addressed
+- [ ] State and Sequencing: every state machine from every domain is represented as rules
+- [ ] Known Failure Modes: minimum 5 failure modes present
+
+### Self-containment (the critical gate)
+- [ ] Integration completeness test passed: an agent reading only this file can make its first valid authenticated API call
+- [ ] No statement directs the agent to consult another document or directory
+- [ ] No links to external documents (docs/architecture/, docs/user/, or any other path outside docs/llm/)
+- [ ] All domain-specific terms are defined in Section 2 (Domain Model) or are universal technical terms
+- [ ] Credential acquisition is explained completely inline — no "register at the portal" without specifying what the portal returns and how to use it
+
+### Quality
+- [ ] No TODO markers remain (only at completeness: complete)
+- [ ] No excluded content present (rationale, UX, design decisions, implementation notes)
+- [ ] Token count estimated; does not exceed 6,000 tokens
+- [ ] docs/llm/README.md exists and describes the artifact accurately
+```
+
+## References
+
+| Rule | Generated at |
+|------|-------------|
+| LLM-001 to LLM-017 | Initial — Prompt 01-C addition |

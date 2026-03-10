@@ -1,0 +1,222 @@
+---
+description: Rules for generating architecture documentation from a Vision Document
+globs: ["**/docs/architecture/**", "**/*.md"]
+alwaysApply: false
+priority: 1
+---
+
+# Architecture Generation Rules
+
+## Purpose
+
+This file defines the rules and heuristics an AI assistant must follow when generating architecture documentation from a Vision Document. It covers domain extraction, layer structure selection, mandatory outputs, diagram requirements, ambiguity handling, and quality gates.
+
+> **AI Instruction**: Follow these rules strictly when executing Prompt 01 (generate architecture from vision) or Prompt 02 (iterate architecture). These rules ensure consistent, high-quality architecture output regardless of the project domain.
+
+## Domain Extraction
+
+### Rule GEN-001: Domain Extraction Heuristics
+
+When reading a Vision Document, identify bounded contexts (domains) using these heuristics:
+
+1. **Capability-to-Domain Mapping**: Each distinct business capability described in Section 4 (Key Capabilities) of the vision is a candidate domain. Group closely related capabilities into a single domain; split capabilities that serve different actors or data ownership into separate domains.
+
+2. **Concept Clustering**: Each "thing" the system manages (Section 5 — Information and Concepts) with its own lifecycle is a candidate entity. Cluster entities that are always created, read, updated, and deleted together into one domain.
+
+3. **Boundary Signals**: Look for natural domain boundaries:
+   - **Different actors** own or consume different data
+   - **Different rates of change** (data that changes per-second vs data that changes per-month belongs in different domains)
+   - **Different consistency requirements** (real-time vs eventually consistent)
+   - **Different vocabulary** (the same word meaning different things in different contexts signals separate bounded contexts)
+
+4. **Workflow Decomposition**: Map workflows (Section 6) to the domains they touch. If a workflow involves multiple domains, the workflow boundaries suggest integration points, not a single merged domain.
+
+5. **Domain Sizing**: A well-sized domain has 2–8 entities. If a candidate domain has 1 entity, consider merging it with a related domain. If it has more than 10, consider splitting.
+
+**Output**: A list of domains, each with:
+- Name
+- One-sentence responsibility
+- Owned entities
+- Vision capabilities it implements (traceability)
+
+### Rule GEN-002: Layer Structure Selection
+
+Choose the simplest layer structure that supports the vision's complexity:
+
+| Indicator in Vision | Suggested Structure | Example |
+|---------------------|---------------------|---------|
+| Few actors, simple CRUD workflows, few concepts | **2-layer**: Domain + Infrastructure | Simple admin panel, form-based app |
+| Multiple domains with distinct responsibilities, API-first | **3-layer**: Domain + Application + Infrastructure | SaaS product, marketplace |
+| AI/LLM agents, pipelines, complex orchestration | **3-layer (specialized)**: Core + Execution + Platform | Agent systems, content pipelines |
+| Many independent domains, different scaling needs, team boundaries | **N-layer / Microservices**: per-domain services | Large enterprise systems |
+
+**Selection criteria**:
+- **Quality priorities** from Section 7 of the vision: if simplicity is ranked highest, prefer fewer layers; if scalability is highest, prefer per-domain services
+- **Team size**: solo/small team → monolith with clean layers; large team → microservices
+- **Constraints** from Section 8: budget, timeline, and team size constrain what is feasible
+
+**Default**: When uncertain, start with a clean 3-layer architecture. It can evolve to microservices later.
+
+### Rule GEN-003: Entity Relationship Identification
+
+For each domain, identify entity relationships:
+
+1. **Ownership**: Every entity must belong to exactly one domain (single source of truth per ARCH-005)
+2. **Relationships**: Map relationships between entities within and across domains:
+   - **Within domain**: Direct references (e.g., Order → OrderItem)
+   - **Across domains**: ID references only (e.g., Order.customer_id referencing Identity domain)
+3. **Cardinality**: Determine 1:1, 1:N, N:N for all relationships
+4. **Lifecycle dependencies**: If Entity A cannot exist without Entity B, they likely belong in the same domain or A depends on B's domain
+
+## Mandatory Outputs
+
+### Rule GEN-004: Required Architecture Documents
+
+When generating architecture from a vision, produce **all** of the following:
+
+| Document | Template | Required |
+|----------|----------|----------|
+| Root ARCHITECTURE.md | `.cursor/templates/architecture/ARCHITECTURE.md` | Always |
+| Domain ARCHITECTURE.md (one per domain) | `.cursor/templates/architecture/domains/_DOMAIN-TEMPLATE.md` | Always |
+| Cross-cutting concern docs | `.cursor/templates/architecture/cross-cutting/_CONCERN-TEMPLATE.md` | When vision mentions security, resilience, data standards, or shared patterns |
+| Platform docs | `.cursor/templates/architecture/platform/_PLATFORM-TEMPLATE.md` | When vision mentions CLI, API, Web, or other delivery interfaces |
+| ADR-001 (Architecture Style) | `.cursor/templates/architecture/decisions/_template.md` | Always |
+| Additional ADRs | `.cursor/templates/architecture/decisions/_template.md` | For each significant technology or pattern choice |
+| Architecture Changelog | `.cursor/templates/architecture/evolution/CHANGELOG.md` | Always (initialized) |
+
+**Directory structure to create**:
+```
+docs/
+└── architecture/
+    ├── ARCHITECTURE.md
+    ├── domains/
+    │   ├── {domain-1}/ARCHITECTURE.md
+    │   ├── {domain-2}/ARCHITECTURE.md
+    │   └── ...
+    ├── cross-cutting/
+    │   └── {concern}/ARCHITECTURE.md
+    ├── platform/
+    │   └── {platform}/ARCHITECTURE.md
+    ├── diagrams/
+    │   ├── README.md
+    │   ├── overview/
+    │   └── {per-domain or per-layer}/
+    ├── decisions/
+    │   ├── ADR-001-{architecture-style}.md
+    │   └── ...
+    └── evolution/
+        └── CHANGELOG.md
+```
+
+### Rule GEN-005: Required Diagrams
+
+Generate at minimum these diagrams (following `.cursor/rules/diagrams/diagrams.mdc`):
+
+| Diagram | Type | Placement | Template |
+|---------|------|-----------|----------|
+| System Context | Context/System | Root ARCHITECTURE.md + `diagrams/overview/` | `context-system-diagram.md` |
+| Layer/Component Overview | Component | Root ARCHITECTURE.md + `diagrams/overview/` | `component-diagram.md` |
+| Domain Relationships | Component | Root ARCHITECTURE.md | `component-diagram.md` |
+| Entity Hierarchy | Class or ERD | Root ARCHITECTURE.md + `diagrams/overview/` | `class-diagram.md` or `entity-relationship-diagram.md` |
+| Per-domain ERD | ERD | Each domain ARCHITECTURE.md | `entity-relationship-diagram.md` |
+| Per-domain Component | Component | Each domain ARCHITECTURE.md | `component-diagram.md` |
+| Key Workflow Sequences | Sequence | Domain docs or `diagrams/` | `sequence-diagram.md` |
+| Key Activity/Process Flows | Activity | Domain docs or `diagrams/` | `activity-diagram.md` |
+
+**Every architecture document must include at least one diagram.** If a domain document has no diagram, add at minimum a component boundary diagram showing the domain's services, data stores, and integration points.
+
+### Rule GEN-006: Diagram Quality Requirements
+
+All generated diagrams must satisfy:
+
+1. **Concrete names**: Use actual domain names, entity names, and service names from the architecture — never generic labels like "Component A" or "Service 1"
+2. **Data/artifact flows**: At least one diagram per domain must show what data passes between components (DTOs, events, file names, key attributes)
+3. **Who reads / who writes**: Where relevant, make it clear which component produces data and which consumes it
+4. **DIAG-022 checklist**: Before finalizing any diagram, verify:
+   - [ ] A reader unfamiliar with the system could navigate to the right document or component
+   - [ ] Concrete names are used where the architecture defines them
+   - [ ] Data/artifact flow, read/write direction, or transition rules are visible where relevant
+   - [ ] The diagram adds structure or sequence that the surrounding text does not
+
+## Ambiguity Handling
+
+### Rule GEN-007: Ambiguity Protocol
+
+When the Vision Document is unclear:
+
+| Ambiguity Type | Action |
+|----------------|--------|
+| **Critical**: Affects domain boundaries, core entity relationships, or architecture style | **Stop and ask the user** before proceeding. Explain what is ambiguous and offer 2–3 concrete options. |
+| **Significant**: Affects technology choices, specific API design, or performance targets | **Make a reasonable assumption**, document it in an ADR (status: Proposed), and flag it in the generation summary. |
+| **Minor**: Affects naming conventions, specific field names, or presentation details | **Make a reasonable assumption** and note it inline in the affected document. |
+
+**Never silently resolve ambiguity.** Every assumption must be visible — either as a question to the user, an ADR, or an inline note.
+
+### Rule GEN-008: Vision Gap Detection
+
+If the Vision Document is missing critical information, flag these gaps:
+
+- No actors defined → ask before generating (cannot determine system boundaries)
+- No capabilities described → ask before generating (cannot identify domains)
+- No concepts/entities described → generate candidate list from capabilities and ask for confirmation
+- No workflows described → generate architecture with a note that workflows need to be defined for sequence diagrams
+- No quality priorities → default to: Simplicity > Reliability > Security > Scalability > Cost
+
+## Quality Gates
+
+### Rule GEN-009: Architecture Completeness Checklist
+
+Before considering architecture generation complete, verify:
+
+**Root Document**:
+- [ ] System Purpose clearly states what the system does and for whom
+- [ ] Document Map lists all domain, platform, and cross-cutting docs
+- [ ] All domains listed in Domain Overview table with links
+- [ ] System-Wide Principles defined (at least 3)
+- [ ] Technology Radar populated
+- [ ] Navigation Guide present
+- [ ] At least 3 diagrams: context, component overview, entity hierarchy/domain relationships
+
+**Per Domain**:
+- [ ] Business Capability traced to vision
+- [ ] Ubiquitous Language table with at least 3 terms
+- [ ] Component Architecture with at least one diagram
+- [ ] Data Architecture with ERD
+- [ ] Integration Points documented (upstream and downstream)
+- [ ] At least 2 diagrams total
+
+**Cross-Cutting** (when applicable):
+- [ ] Principles defined
+- [ ] Standards with implementation guidance
+- [ ] Domain integration requirements listed
+
+**Decisions**:
+- [ ] ADR-001 for architecture style exists
+- [ ] Each ADR has: Status, Context, Decision, Alternatives, Consequences
+
+**Traceability**:
+- [ ] Every domain traces to at least one vision capability
+- [ ] Every vision capability maps to at least one domain
+- [ ] No orphan capabilities (described in vision but not in any domain)
+
+### Rule GEN-010: Generation Summary
+
+After generating all documents, produce a summary containing:
+
+1. **Documents created**: List with paths
+2. **Domains identified**: Count and names
+3. **Diagrams generated**: Count and types
+4. **ADRs created**: Count and titles
+5. **Assumptions made**: List each assumption with its location
+6. **Gaps detected**: Anything missing from the vision that affects architecture quality
+7. **Next steps**: Whether to iterate (Phase 3) or proceed to implementation setup (Phase 4)
+
+## References
+
+- Vision Document template: `.cursor/templates/vision/VISION-TEMPLATE.md`
+- Architecture rules: `.cursor/rules/architecture/architecture.mdc`
+- Architecture evolution: `.cursor/rules/architecture/architecture-evolution.mdc`
+- Architecture navigation: `.cursor/rules/architecture/architecture-navigation.mdc`
+- Diagram rules: `.cursor/rules/diagrams/diagrams.mdc`
+- Diagram templates: `.cursor/templates/diagrams/_DIAGRAM-INDEX.md`
+- Architecture templates: `.cursor/templates/architecture/`

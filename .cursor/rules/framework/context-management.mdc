@@ -1,0 +1,186 @@
+# Context Management Rules
+
+## Purpose
+
+This file defines the rules governing the context engineering system of the Vision-to-System Framework. These rules ensure that critical information is never lost between sessions, all prompts find what they need without manual input, and every user sees a comprehensive plan before any execution begins.
+
+> **AI Instruction**: Before implementing any prompt in this framework, verify you are following these rules. Context file reads and writes are mandatory, not optional. Plan mode output is a deliverable, not a courtesy.
+
+## Context File Rules
+
+### Rule CTX-001: Read EXECUTION-STATE.md First
+
+Every prompt must read `docs/context/EXECUTION-STATE.md` as its first action, before any analysis begins.
+
+If the file does not exist, the prompt is running for the first time on a new project — this is acceptable only for Prompt 00 and Prompt 01-A. All other prompts must halt if `EXECUTION-STATE.md` is missing and direct the user to start from the beginning.
+
+```
+# Correct startup sequence for any prompt:
+1. Read docs/context/EXECUTION-STATE.md
+2. Verify the current phase matches this prompt's expected position
+3. Check required context files are present (see CTX-004)
+4. Proceed with analysis
+```
+
+### Rule CTX-002: Update EXECUTION-STATE.md Last
+
+Every prompt must update `docs/context/EXECUTION-STATE.md` as its final action, after all files are created and all context files are written.
+
+The update must set:
+- `Active phase` to the phase just completed (or now active if this prompt started a new phase)
+- `Last completed prompt` to this prompt's ID and name
+- `Next prompt` to the correct next step (with any conditional notes)
+- `Context File Registry` to reflect new or updated files
+- A new entry in `## Completed Phases` documenting what this prompt produced
+
+```markdown
+# Correct EXECUTION-STATE.md update format:
+## Current Phase
+| Active phase | Phase 2 — Architecture Generation |
+| Last completed prompt | 01-A — Assess and Brief |
+| Next prompt | 01-B — Generate Architecture |
+| Blocked on | _(empty)_ |
+
+## Context File Registry
+| docs/context/architecture-brief.md | Active | 01-A | {today} |
+```
+
+### Rule CTX-003: Phase-Scoped Files Written Only by Their Owning Prompt
+
+Each phase-scoped context file has exactly one owning prompt. Only that prompt may create or overwrite that file.
+
+| File | Owning prompt |
+|------|--------------|
+| `docs/context/architecture-brief.md` | Prompt 01-A |
+| `docs/context/architecture-file-list.md` | Prompt 01-B |
+| `docs/context/generation-summary.md` | Prompt 01-C |
+| `docs/context/ux-brief.md` | Prompt 01-D |
+| `docs/context/ux-generation-summary.md` | Prompt 01-E |
+
+No other prompt may modify these files. Downstream prompts read them; they do not write to them. If a downstream prompt discovers an error in an upstream context file, it must halt, report the error, and direct the user to re-run the owning prompt.
+
+### Rule CTX-004: Halt on Missing Required Context File
+
+Before proceeding with any analysis, each prompt must verify that all required context files exist and have `Status: Active`.
+
+**Required context files per prompt:**
+
+| Prompt | Required files | Halt message if missing |
+|--------|---------------|------------------------|
+| 01-B | `architecture-brief.md` (Status: Active) | "Required context file `docs/context/architecture-brief.md` is missing or not Active. Run Prompt 01-A first to produce the Architecture Brief." |
+| 01-C | `architecture-brief.md`, `architecture-file-list.md` | "Required context file `docs/context/{missing-file}` is missing. Run Prompt 01-{A or B} first." |
+| 01-D | `generation-summary.md` | "Required context file `docs/context/generation-summary.md` is missing. Run Prompt 01-C first to produce the Architecture Generation Summary." |
+| 01-E | `ux-brief.md`, `generation-summary.md` | "Required context file `docs/context/{missing-file}` is missing. Run Prompt 01-{C or D} first." |
+| 01-F | `ux-generation-summary.md` | "Required context file `docs/context/ux-generation-summary.md` is missing. Run Prompt 01-E first." |
+
+**Do not proceed past the halt condition.** Attempting to reconstruct missing context from conversation history violates this rule.
+
+### Rule CTX-005: Write Context File After Confirmation, Not Before
+
+For **analysis-only prompts** (Type A: 01-A, 01-D): the confirmed output (Architecture Brief, UX Brief) must be written to its context file **after the user confirms it**, not before. The flow is:
+
+```
+1. Produce the brief/output and present it to the user
+2. User reviews and confirms (or requests changes)
+3. Apply any requested changes
+4. Write the confirmed output to the context file
+5. Update EXECUTION-STATE.md
+6. Direct the user to the next prompt
+```
+
+If the user requests changes after the file is written, overwrite the file with the updated content. The context file must always reflect the confirmed, final version.
+
+For **execute prompts** (Type B: 01-B, 01-C, 01-E, 01-F): context files are written at the **end of execution** (after all files are created), not during. The output summary (file list, generation summary, UX generation summary) captures what was actually produced, so it can only be written after production is complete.
+
+### Rule CTX-006: Status Field Lifecycle
+
+Every phase-scoped context file contains a `Status` field. Manage it as follows:
+
+| Status | Meaning | Set by |
+|--------|---------|--------|
+| `Active` | Written by owning prompt; not yet consumed by all downstream consumers | Owning prompt, when writing the file |
+| `Delivered` | All consuming prompts have run; file is retained for reference only | The last consuming prompt, when updating EXECUTION-STATE.md |
+
+Do not delete context files when they become `Delivered`. They are permanent project artifacts and may be needed for debugging or re-running phases.
+
+**When to set `Delivered`**: A file's status becomes `Delivered` when the last prompt that needs it has completed. For example, `architecture-brief.md` is consumed by both 01-B and 01-C; its status becomes `Delivered` when 01-C completes.
+
+---
+
+## Plan Mode Optimization Rules
+
+### Rule CTX-007: Execute Prompts Must Produce the Standard Execution Plan in Plan Mode
+
+Every **execute prompt** (Type B: 01-B, 01-C, 01-E, 01-F; and Type C: 03, 04, 05) must produce the standard Execution Plan format in Plan mode before creating any file. The standard format is defined in `.cursor/templates/context/EXECUTION-PLAN-TEMPLATE.md`.
+
+The Execution Plan must always include all of the following sections:
+- **Context Loaded**: what was read from context files or disk, with one-sentence summaries
+- **Scope**: file count and estimated execution duration
+- **File Manifest**: every file to be created with path, template, and content outline
+- **Key Decisions**: decisions that will be made during execution with preliminary conclusions
+- **Assumptions**: any gaps in inputs and what assumption covers them
+- **Execution Order**: files/tasks ordered by dependency with reasoning
+
+Producing a simple file path list without these sections violates this rule.
+
+```
+# Correct Plan mode behavior:
+1. Read all required context files and docs
+2. Produce the full Execution Plan (standard format)
+3. Present it to the user
+4. Wait for confirmation (CTX-009)
+5. Execute only after confirmation
+
+# Incorrect Plan mode behavior:
+1. List file paths only
+2. Say "confirm to proceed"
+→ Violates CTX-007: missing File Manifest content outlines, Key Decisions, Assumptions
+```
+
+### Rule CTX-008: File Manifest Must Include Content Outlines
+
+The **File Manifest** table in the Execution Plan must include a content outline column for every file. A content outline is 1–2 sentences describing:
+- What the key sections of the file will contain
+- What specific decisions or information will be embedded
+- What templates will be used
+
+A manifest entry that contains only a file path and template name, with no content outline, is incomplete and violates this rule.
+
+```markdown
+# Correct File Manifest entry:
+| 1 | docs/architecture/domains/identity/ARCHITECTURE.md | _DOMAIN-TEMPLATE.md | Will define User, Role, Session entities; document OAuth2 flow from Vision Section 8; include ERD and two sequence diagrams for login and token refresh |
+
+# Incorrect File Manifest entry:
+| 1 | docs/architecture/domains/identity/ARCHITECTURE.md | _DOMAIN-TEMPLATE.md | Domain architecture document |
+→ Violates CTX-008: no content outline
+```
+
+### Rule CTX-009: Mandatory Confirmation Gate Before Execution
+
+No file may be created by an execute prompt until the user has explicitly confirmed the Execution Plan. The confirmation gate is the final line of the Execution Plan:
+
+> **Ready to execute. Confirm to switch to Agent mode.**
+
+After presenting the Execution Plan:
+- **Wait** for the user to confirm
+- If the user requests changes, update the plan and re-present
+- Only after explicit confirmation: switch to execution and begin creating files
+- **Never** begin file creation in the same turn as the Execution Plan presentation
+
+This rule is the enforcement mechanism for the Plan → Execute workflow. Violating it defeats the purpose of Plan mode.
+
+---
+
+## Rule Reference
+
+| Rule | Category | Summary |
+|------|----------|---------|
+| CTX-001 | Context files | Read `EXECUTION-STATE.md` first |
+| CTX-002 | Context files | Update `EXECUTION-STATE.md` last |
+| CTX-003 | Context files | Phase-scoped files written only by their owning prompt |
+| CTX-004 | Context files | Halt on missing required context file |
+| CTX-005 | Context files | Write context file after user confirmation, not before |
+| CTX-006 | Context files | Manage `Status` field lifecycle (Active → Delivered) |
+| CTX-007 | Plan mode | Produce standard Execution Plan format in Plan mode |
+| CTX-008 | Plan mode | File Manifest must include content outlines |
+| CTX-009 | Plan mode | Mandatory confirmation gate before execution |

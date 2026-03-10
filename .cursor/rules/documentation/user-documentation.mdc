@@ -1,0 +1,425 @@
+# User Documentation Rules
+
+## Purpose
+
+This file defines the standards for user-facing documentation — the documentation that end users, integrators, and operators consult to understand and use the system. This is distinct from architecture documentation (system design) and implementation documentation (build instructions for AI/developers). User documentation is the public face of the system.
+
+> **AI Instruction**: When generating or updating user documentation, follow these rules strictly. User documentation must be accurate, complete, and written for the audience that will use the system — not for the developers who built it.
+
+## Documentation Structure
+
+### Rule DOC-001: Diataxis Documentation Model
+
+All user documentation follows the [Diataxis](https://diataxis.fr/) framework, which divides documentation into four distinct types. Each type serves a different purpose and must not be mixed.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                  DOCUMENTATION TYPES                     │
+├──────────────────────────┬──────────────────────────────┤
+│                          │                              │
+│  TUTORIALS               │  HOW-TO GUIDES              │
+│  Learning-oriented       │  Task-oriented               │
+│  "Follow me to learn"    │  "How do I...?"              │
+│  Step-by-step lessons    │  Recipes for specific goals  │
+│  For beginners           │  For practitioners           │
+│                          │                              │
+├──────────────────────────┼──────────────────────────────┤
+│                          │                              │
+│  EXPLANATION             │  REFERENCE                   │
+│  Understanding-oriented  │  Information-oriented        │
+│  "Why does this...?"     │  "What is the exact...?"     │
+│  Concepts and context    │  Precise technical details   │
+│  For the curious         │  For working developers      │
+│                          │                              │
+└──────────────────────────┴──────────────────────────────┘
+```
+
+**Mandatory sections** for every documented system:
+
+| Section | Diataxis Type | Required | Content |
+|---------|---------------|----------|---------|
+| Getting Started | Tutorial | Always | Installation + first working interaction |
+| Tutorials | Tutorial | Always | At least one per primary user workflow |
+| How-to Guides | How-to | Always | At least one per common task |
+| Reference | Reference | Always | Complete technical specification |
+| Concepts | Explanation | Always | Key domain concepts for users |
+| FAQ | How-to | Always | Common questions and troubleshooting |
+| Changelog | Reference | Always | User-visible changes per version |
+
+**Do not mix types in a single page**. A tutorial must not include exhaustive reference tables. A reference page must not include step-by-step instructions. Cross-link instead.
+
+### Rule DOC-002: System-Type Documentation Matrix
+
+The documentation scope and emphasis depend on the system's architecture type. Detect the type from the root `ARCHITECTURE.md` and generate accordingly.
+
+| System Type | Primary Reference | Secondary Reference | Tutorial Focus | How-to Focus |
+|-------------|-------------------|---------------------|----------------|--------------|
+| **REST API** | Endpoint catalog (per resource) | Authentication, error codes, rate limits | First API call, common workflows | Pagination, filtering, webhooks, SDKs |
+| **CLI** | Command reference (per command/group) | Configuration, environment variables | First command, pipeline examples | Scripting, automation, CI/CD integration |
+| **Web Application** | Feature catalog (per feature area) | Keyboard shortcuts, settings | Account setup, primary workflow | Admin tasks, data export, integrations |
+| **Library/SDK** | API reference (per module/class) | Type definitions, exceptions | Import and first usage | Advanced patterns, extension, migration |
+| **Agent/Pipeline** | Capability reference (per agent/step) | Configuration, input/output specs | First pipeline run | Custom steps, monitoring, debugging |
+| **Hybrid** | Combine applicable types above | Combine applicable types above | Primary interaction mode first | Cross-mode guides |
+
+> **AI Instruction**: When a system has multiple interfaces (e.g., API + CLI + Web), generate reference sections for each. Tutorials and how-to guides should cover the primary interaction mode first, then secondary modes.
+
+### Rule DOC-003: Documentation Source of Truth Chain
+
+User documentation derives from architecture and code. It is never the source of truth — it reflects them.
+
+```
+Architecture (source of truth)
+    │
+    ├── Defines: capabilities, domains, APIs, data models
+    │
+    ▼
+Code (implementation of architecture)
+    │
+    ├── Defines: exact behavior, public interfaces, CLI commands, config options
+    │
+    ▼
+User Documentation (reflection of architecture + code)
+    │
+    ├── Translates: technical specs into user-understandable guides
+    └── Must match: actual system behavior, not aspirational design
+```
+
+**Rules**:
+- Never document features that are not implemented
+- Never document behavior that contradicts the architecture
+- When architecture and code disagree, flag the inconsistency — do not guess
+- When the system evolves, user documentation must be updated in the same cycle
+
+## Writing Standards
+
+### Rule DOC-004: Writing Style
+
+User documentation uses a consistent, professional writing style optimized for clarity.
+
+**Voice and tone**:
+- Use **second person** ("you") when addressing the reader
+- Use **present tense** for describing system behavior ("The API returns a JSON object")
+- Use **imperative mood** for instructions ("Run the following command", not "You should run")
+- Be **direct** — avoid hedging ("This will create a user", not "This should create a user")
+- Be **concise** — one idea per sentence, one topic per paragraph
+
+**Terminology**:
+- Define every domain-specific term on first use
+- Maintain a glossary page for terms used across multiple pages
+- Use the same term consistently — never alternate between synonyms
+- Match the terminology used in the system itself (CLI flags, API field names, UI labels)
+
+**Formatting**:
+- Use code formatting for: commands, file paths, field names, values, environment variables
+- Use bold for: UI elements, important warnings, key concepts on first mention
+- Use admonitions (note, warning, tip, danger) for: caveats, prerequisites, shortcuts, breaking changes
+- Use tables for: parameter lists, option comparisons, status codes
+
+```markdown
+<!-- CORRECT: Clear, direct, well-formatted -->
+## Create a user
+
+To create a new user, send a POST request to `/api/v1/users`:
+
+```bash
+curl -X POST https://api.example.com/v1/users \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"email": "user@example.com", "name": "Jane Doe"}'
+```
+
+The API returns a `201 Created` response with the user object.
+
+!!! note
+    Email addresses must be unique. If the email already exists,
+    the API returns `409 Conflict`.
+
+<!-- INCORRECT: Vague, passive, poorly formatted -->
+## Users
+
+Users can be created by sending requests. You should probably use
+POST and put the data in the body. The email should be unique or
+it might not work.
+```
+
+### Rule DOC-005: Code Examples
+
+Every feature, endpoint, command, or configuration option must include at least one working example.
+
+**Example requirements**:
+- Examples must use **realistic data** (not "foo", "bar", "test123")
+- Examples must be **copy-pasteable** — the reader should be able to run them directly
+- Examples must show both the **input and expected output**
+- Examples must specify the **language** in fenced code blocks
+- For API endpoints: show `curl` and at least one SDK/language example
+- For CLI commands: show the command and its output
+- For configuration: show a complete, minimal configuration block
+
+```markdown
+<!-- CORRECT: Realistic, complete, shows output -->
+```bash
+$ myapp users create --email "jane@acme.com" --name "Jane Doe"
+Created user:
+  ID:    usr_7f3a2b1c
+  Email: jane@acme.com
+  Name:  Jane Doe
+```
+
+<!-- INCORRECT: Unrealistic, no output -->
+```
+myapp users create --email foo@bar.com --name test
+```
+```
+
+**Multi-language examples** (for APIs and libraries):
+
+Use tabs or clearly labeled sections to show examples in multiple languages. At minimum, include the system's primary language and `curl` for HTTP APIs.
+
+## Organization
+
+### Rule DOC-006: File Naming and Directory Structure
+
+All user documentation lives under `docs/user/` following a strict directory structure:
+
+```
+docs/
+├── user/
+│   ├── index.md                    # Landing page: what this system does, who it's for
+│   ├── getting-started/
+│   │   ├── installation.md         # How to install/set up
+│   │   └── quick-start.md          # First working interaction
+│   ├── tutorials/
+│   │   └── {workflow-name}.md      # One per primary user workflow
+│   ├── how-to/
+│   │   └── {task-name}.md          # One per common task
+│   ├── reference/
+│   │   ├── api/                    # If system has API
+│   │   │   └── {resource}.md       # One per resource/endpoint group
+│   │   ├── cli/                    # If system has CLI
+│   │   │   └── {command-group}.md  # One per command group
+│   │   └── configuration.md        # All configuration options
+│   ├── concepts/
+│   │   └── {concept-name}.md       # Key domain concepts
+│   ├── faq.md                      # Frequently asked questions
+│   ├── glossary.md                 # Term definitions
+│   └── changelog.md                # User-facing version history
+└── mkdocs.yml                      # Portal configuration
+```
+
+**File naming rules**:
+- Use **kebab-case** for all file and directory names
+- Use **descriptive names** that match the page title (e.g., `create-api-keys.md`, not `api-keys-create.md`)
+- Prefix tutorial files with a number for ordering if needed (e.g., `01-first-pipeline.md`)
+- Keep file names under 50 characters
+
+### Rule DOC-007: Documentation Versioning
+
+Documentation follows the system's semantic versioning:
+
+- **Major version**: new documentation version (may restructure, remove pages)
+- **Minor version**: new pages, new sections, expanded content
+- **Patch version**: corrections, clarifications, typo fixes
+
+**Version tracking**:
+- The documentation landing page (`index.md`) displays the current version
+- The changelog (`changelog.md`) records all user-visible changes
+- MkDocs Material's version provider can serve multiple versions simultaneously
+
+**Version tagging**: when deploying documentation, tag it with the system version to enable version switching in the portal.
+
+### Rule DOC-008: Cross-Referencing
+
+Every documentation page must link to related pages. Isolated pages are a navigation dead end.
+
+**Required links**:
+- Tutorials link to the relevant reference page ("For all options, see [Command Reference](../reference/cli/commands.md)")
+- Reference pages link to relevant tutorials or how-to guides ("For a step-by-step example, see [Tutorial: First Pipeline](../tutorials/first-pipeline.md)")
+- Concept pages link to both tutorials and reference ("To see this in practice, see... For the full API, see...")
+- How-to guides link to reference for complete option lists
+
+**Link format**: use relative Markdown links that resolve within MkDocs. Never use absolute URLs to your own documentation.
+
+**"See also" sections**: every page ends with a "See Also" or "Related" section listing 2-5 related pages.
+
+## Changelog and Release Notes
+
+### Rule DOC-009: User-Facing Changelog
+
+The user-facing changelog (`docs/user/changelog.md`) differs from the architecture changelog. It describes changes **from the user's perspective**, not the developer's.
+
+**Format**:
+```markdown
+# Changelog
+
+All notable changes to {System Name} are documented here.
+This changelog follows [Keep a Changelog](https://keepachangelog.com/) format.
+
+## [Unreleased]
+
+### Added
+- New `export` command for downloading reports in CSV format
+
+### Changed
+- The `--format` flag now defaults to `json` instead of `text`
+
+### Deprecated
+- The `--legacy-auth` flag will be removed in v3.0. Use `--token` instead.
+
+### Removed
+- Removed support for configuration file format v1 (deprecated in v2.0)
+
+### Fixed
+- Fixed pagination returning duplicate results when filtering by date
+```
+
+**Writing rules for changelog entries**:
+- Write from the user's perspective ("New `export` command", not "Added ExportService class")
+- Include the affected command, endpoint, or feature name
+- Mention migration steps for breaking changes
+- Link to relevant documentation pages for new features
+
+## Portal Configuration
+
+### Rule DOC-010: MkDocs Material Standards
+
+The documentation portal uses MkDocs with the Material theme. The configuration must include:
+
+**Required plugins**:
+- `search` — full-text search across all documentation
+- `minify` — HTML minification for production
+
+**Required features**:
+- Navigation tabs (top-level sections as tabs)
+- Navigation sections (expandable sidebar groups)
+- Navigation path (breadcrumbs)
+- Table of contents integration (right sidebar)
+- Code copy button
+- Content tabs (for multi-language examples)
+- Admonitions (note, warning, tip, danger blocks)
+
+**Required extensions**:
+- `pymdownx.highlight` — syntax highlighting
+- `pymdownx.superfences` — fenced code blocks with Mermaid support
+- `pymdownx.tabbed` — content tabs
+- `admonition` — admonition blocks
+- `toc` with permalink — table of contents with anchor links
+- `attr_list` — attribute lists for images and elements
+
+**Configuration location**: `docs/mkdocs.yml` (at the docs root, not inside `docs/user/`)
+
+## Quality Assurance
+
+### Rule DOC-011: Documentation Review Checklist
+
+Before marking user documentation as complete, verify all items:
+
+```markdown
+## Documentation Completeness Checklist
+
+### Structure
+- [ ] Landing page (index.md) exists with system overview
+- [ ] Getting Started section with installation and quick-start
+- [ ] At least one tutorial per primary user workflow
+- [ ] At least one how-to guide per common task
+- [ ] Complete reference for all public interfaces
+- [ ] Concepts section explaining key domain terms
+- [ ] FAQ with at least 5 common questions
+- [ ] Glossary with all domain-specific terms
+- [ ] Changelog initialized
+
+### Content Quality
+- [ ] Every page has a clear title and introduction
+- [ ] Every feature/endpoint/command has at least one example
+- [ ] Examples use realistic data (not "foo", "bar")
+- [ ] Examples show both input and output
+- [ ] No jargon used without definition
+- [ ] Second person ("you") used consistently
+- [ ] Imperative mood for all instructions
+
+### Navigation
+- [ ] MkDocs configuration resolves all pages
+- [ ] Every page has a "See Also" section with 2-5 related links
+- [ ] All internal links resolve (no broken links)
+- [ ] Breadcrumbs and sidebar navigation work
+
+### Accuracy
+- [ ] Every documented feature exists in the implementation
+- [ ] No undocumented features exist in the public interface
+- [ ] All code examples are runnable
+- [ ] Configuration options match actual defaults
+- [ ] Error messages match actual system output
+
+### Traceability
+- [ ] Every tutorial traces to a vision capability or user workflow
+- [ ] Every reference page traces to an architecture component/API
+- [ ] Every concept page traces to a domain concept in the architecture
+```
+
+## Documentation Evolution
+
+### Rule DOC-012: Documentation Update Triggers
+
+User documentation must be updated when any of the following occur:
+
+| Trigger | Documentation Action |
+|---------|---------------------|
+| New feature implemented | Add reference page + tutorial or how-to guide |
+| Feature behavior changed | Update all affected pages (reference, tutorials, how-to) |
+| Feature removed | Remove pages, add migration guide if needed, update changelog |
+| API contract changed | Update reference, examples, and any affected tutorials |
+| CLI command changed | Update command reference and affected how-to guides |
+| Configuration option added/changed | Update configuration reference |
+| Error behavior changed | Update FAQ and troubleshooting |
+| New domain concept introduced | Add explanation page, update glossary |
+| System version released | Update changelog, version tag, landing page version |
+
+**During system evolution** (Prompt 08):
+1. Identify which user documentation pages are affected by the architecture/code change
+2. Update affected pages to reflect new behavior
+3. Add new pages if new features or concepts are introduced
+4. Remove or redirect pages for removed features
+5. Update the user-facing changelog
+6. Verify MkDocs navigation still resolves
+
+**Documentation must never lag behind the implementation by more than one version**. If the system is at v2.1, documentation must cover at least v2.0.
+
+## Audience Awareness
+
+### Rule DOC-013: Know Your Reader
+
+Documentation is written for the system's **users**, not its developers. The audience depends on the system type:
+
+| System Type | Primary Audience | Technical Level | Assumes Knowledge Of |
+|-------------|-----------------|-----------------|----------------------|
+| REST API | Backend developers | High | HTTP, JSON, authentication |
+| CLI | DevOps engineers, developers | Medium-High | Terminal, shell basics |
+| Web Application | End users, admins | Low-Medium | Web browsers, basic computing |
+| Library/SDK | Developers in target language | High | Language ecosystem, package management |
+| Agent/Pipeline | Technical operators | Medium-High | Configuration files, data formats |
+
+**Adjust accordingly**:
+- For **low-tech audiences**: avoid technical terms, use screenshots, explain every step
+- For **developer audiences**: be precise, show code, assume familiarity with tools
+- For **mixed audiences**: provide a quick path for experts and a detailed path for beginners
+
+### Rule DOC-014: Accessibility
+
+User documentation must be accessible:
+
+- Use descriptive alt text for all images and diagrams
+- Ensure sufficient contrast in custom styling (rely on MkDocs Material defaults)
+- Use semantic heading hierarchy (h1 > h2 > h3, never skip levels)
+- Provide text alternatives for video content
+- Keep paragraphs short (3-5 sentences maximum)
+- Use lists for sequential steps or parallel items
+
+## References
+
+| Rule | Related Rules | Scope |
+|------|---------------|-------|
+| DOC-001 | ARCH-004 (API contracts) | Documentation structure |
+| DOC-002 | GEN-003 (layer structure) | System-type adaptation |
+| DOC-003 | ARCH-005 (single source of truth) | Truth chain |
+| DOC-004 | CONV-012, CONV-013 (docstrings, comments) | Writing standards |
+| DOC-005 | CODE-013 (docstring requirements) | Code examples |
+| DOC-006 | CONV-002 (case conventions) | File organization |
+| DOC-012 | EVO-016, EVO-017 (evolution protocol) | Evolution triggers |

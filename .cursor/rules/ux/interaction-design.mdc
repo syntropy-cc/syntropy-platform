@@ -1,0 +1,264 @@
+# Interaction Design Rules
+
+## Purpose
+
+This file defines concrete interaction design standards for each system interface type supported by the framework. While `ux-principles.mdc` defines the *why*, this file defines the *how* — specific patterns, conventions, and quality bars for designing and evaluating interactions.
+
+> **AI Instruction**: When designing interactions for a specific interface type, load the relevant section below. Apply these standards during Phase 2b (UX/Interaction Design) and verify compliance during Phase 6b (Quality Audit). Also consult `ux-principles.mdc` for the underlying principles.
+
+---
+
+## CLI Interaction Standards
+
+### Rule IXD-001: Command Structure and Grammar
+
+All CLI commands follow a consistent grammar:
+
+```
+{tool} [global-options] {noun} {verb} [arguments] [options]
+
+Examples:
+myapp pipeline create <name> --template <template>
+myapp pipeline list [--status <status>]
+myapp pipeline run <id> [--watch]
+```
+
+**Requirements**:
+- Use noun-verb ordering (not verb-noun)
+- Nouns are singular or plural based on operation: `pipeline create` (acting on one), `pipeline list` (acting on many)
+- Verbs from approved set: `create`, `update`, `delete`, `list`, `get`, `run`, `stop`, `enable`, `disable`, `import`, `export`, `init`, `validate`
+- Avoid inventing synonyms for approved verbs
+
+### Rule IXD-002: CLI Output Standards
+
+| Output Scenario | Format | Requirements |
+|----------------|--------|-------------|
+| Success with single result | Structured (table or key-value) | Show most important fields first |
+| Success with list | Table | Fixed column order; pagination if > 25 rows |
+| Success with no results | Empty message | `No {noun}s found.` (never return empty output) |
+| Progress | Spinner or dots | Overwrite previous line; show elapsed time |
+| Error | Stderr, prefixed with "Error:" | Actionable message; exit code > 0 |
+| Warning | Stderr, prefixed with "Warning:" | Non-fatal; exit code 0 |
+| Debug/verbose | Stderr, behind `--verbose`/`--debug` flag | Never shown by default |
+
+**Machine-readable output**:
+- Every command that produces structured output must support `--output json` (and optionally `--output yaml`)
+- JSON output must be stable — field names and types do not change between versions
+- JSON output is never paginated (all results in one call)
+
+### Rule IXD-003: CLI Exit Codes
+
+| Exit Code | Meaning |
+|-----------|---------|
+| 0 | Success |
+| 1 | General error (user error or operation failed) |
+| 2 | Invalid usage (wrong argument, missing required option) |
+| 3 | Resource not found |
+| 4 | Authentication / authorization error |
+| 5 | Timeout |
+| 130 | Interrupted (Ctrl+C) |
+
+Exit codes must be documented in the CLI Reference.
+
+### Rule IXD-004: CLI Help Text
+
+Every command must have help text accessible via `--help` or `-h`:
+
+```
+{one-line description}
+
+Usage:
+  {tool} {noun} {verb} [options]
+
+Arguments:
+  <argument>    Description (required/optional)
+
+Options:
+  --option <value>   Description. Default: {value}
+  --flag             Description. Default: false
+
+Examples:
+  {most common use case}
+  {use case with important option}
+
+See also:
+  {related command}
+```
+
+- One-line description must be ≤ 80 characters
+- Examples use realistic data, not `<placeholder>` syntax
+- Every option has a default shown or noted as "required"
+
+### Rule IXD-005: Interactive Prompts
+
+Use interactive prompts only when:
+1. Input is genuinely ambiguous and cannot be inferred
+2. The command is explicitly designed for interactive use (wizard/init flows)
+3. stdin is a terminal (check `sys.stdin.isatty()` before prompting)
+
+Never use interactive prompts in:
+- Commands designed for scripting or CI/CD use
+- Piped input/output scenarios
+- Commands with `--yes` / `--no-interactive` flags set
+
+---
+
+## Web / Dashboard Interaction Standards
+
+### Rule IXD-006: Navigation and Information Architecture
+
+- Primary navigation (top-level sections): max 7 items
+- Secondary navigation: sidebar with clear section headings
+- Current location always visible (breadcrumb or highlighted nav item)
+- Every page reachable within 3 clicks from the home page
+- URLs are stable, descriptive, and bookmarkable
+
+### Rule IXD-007: Forms and Data Entry
+
+| Element | Requirement |
+|---------|-------------|
+| Required fields | Marked with visible indicator (not just red color); explained in legend |
+| Optional fields | No marker, or explicit "(optional)" label |
+| Validation | Inline, on field blur (not only on submit); show validation state clearly |
+| Error placement | Directly beneath the field that caused the error |
+| Error messages | State what is wrong and how to fix it |
+| Success confirmation | Shown after form submission; includes what was changed |
+| Destructive actions | Require confirmation dialog with explicit description of consequence |
+
+### Rule IXD-008: State Communication
+
+Users must always know the system state. Every possible state must be designed:
+
+| State | Design Requirement |
+|-------|-------------------|
+| Loading | Skeleton screen or spinner; never blank content area |
+| Empty | Illustrated or textual empty state with call to action |
+| Error | Friendly error message with recovery option |
+| Success | Confirmation message; auto-dismiss for low-stakes actions |
+| Partial / warning | Inline badge or banner; not a blocking modal |
+| Offline | Clear indicator; queue or disable actions that require connectivity |
+
+### Rule IXD-009: Keyboard and Accessibility
+
+- All interactive elements reachable via keyboard (Tab, Shift+Tab)
+- Focus order follows visual reading order (top to bottom, left to right)
+- Focus ring always visible (never hidden with `outline: none` without replacement)
+- All images have `alt` text; decorative images have empty `alt=""`
+- Form fields have associated `<label>` elements (not `placeholder` as substitute)
+- Color is never the sole differentiator for information (also use icons, text, patterns)
+- Minimum contrast ratio: 4.5:1 for normal text, 3:1 for large text (WCAG 2.1 AA)
+- Interactive elements minimum touch target: 44×44px
+
+### Rule IXD-010: Responsive Design
+
+- Mobile-first approach: design smallest viewport first, then expand
+- Breakpoints documented in design system (if web system has one)
+- Critical workflows must be completable on mobile without horizontal scrolling
+- Tables on mobile: use horizontal scroll container or responsive layout (not truncation without disclosure)
+
+---
+
+## REST API Interaction Standards
+
+### Rule IXD-011: Request and Response Conventions
+
+All API interactions follow these conventions (see also CONV-016 and CONV-017 in `conventions.mdc`):
+
+**Requests**:
+- Use HTTP verbs semantically: GET (read), POST (create), PUT (replace), PATCH (partial update), DELETE (remove)
+- Request bodies: JSON with `Content-Type: application/json`
+- Path parameters: resource identifiers only
+- Query parameters: filtering, pagination, sorting, projection
+
+**Responses**:
+- Success responses: wrapped in `{ "data": ... }` envelope (CONV-017)
+- Error responses: wrapped in `{ "error": { "code": "", "message": "", "details": [] } }` envelope
+- Use appropriate HTTP status codes (200, 201, 204, 400, 401, 403, 404, 409, 422, 429, 500)
+- 404 for missing resources, 422 for validation errors, 409 for conflicts
+
+### Rule IXD-012: API Error Messages
+
+Error messages must be:
+- Human-readable: a developer debugging without a manual can understand
+- Specific: name the field or parameter that caused the error
+- Actionable: state what the valid value or format is
+
+```json
+// CORRECT
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid request body",
+    "details": [
+      {
+        "field": "schedule",
+        "message": "Invalid cron expression: '0 25 * * *'. Hour must be 0-23."
+      }
+    ]
+  }
+}
+
+// INCORRECT
+{
+  "error": "Bad request"
+}
+```
+
+### Rule IXD-013: Pagination
+
+All list endpoints that can return > 20 items must support pagination:
+
+```
+GET /api/v1/pipelines?limit=25&cursor=eyJpZCI6IjEyMyJ9
+
+Response:
+{
+  "data": [...],
+  "meta": {
+    "cursor": "eyJpZCI6IjQ1NiJ9",
+    "has_more": true,
+    "total": 150
+  }
+}
+```
+
+- Use cursor-based pagination for large/growing datasets
+- Default `limit`: 25; maximum `limit`: 100
+- When `has_more` is false, no further pages exist
+
+---
+
+## Cross-Interface Standards
+
+### Rule IXD-014: Terminology Consistency Across Interfaces
+
+The same concept must use the same term in every interface (CLI, Web, API, docs). When a discrepancy is found, refer to the architecture's glossary / Vision Document Section 7 for the canonical term.
+
+Create or update `docs/GLOSSARY.md` when new user-visible terms are introduced.
+
+### Rule IXD-015: Interaction Flows Documentation Requirement
+
+Every significant user interaction flow must be documented in the Interaction Design document (`.cursor/templates/ux/INTERACTION-DESIGN-TEMPLATE.md`). A "significant flow" is any that:
+
+- Involves more than 2 steps to complete
+- Has non-obvious error states
+- Differs from conventional patterns for the interface type
+- Represents a primary user workflow from the Vision Document
+
+---
+
+## Compliance Check
+
+When auditing UX and interaction design during Phase 6b, verify:
+
+| Check | Rule | Applies To |
+|-------|------|-----------|
+| Commands use noun-verb grammar | IXD-001 | CLI |
+| All exit codes documented | IXD-003 | CLI |
+| Help text present for every command | IXD-004 | CLI |
+| All states designed (loading, empty, error, success) | IXD-008 | Web |
+| All forms have accessible labels | IXD-009 | Web |
+| API errors use standard format | IXD-012 | API |
+| List endpoints support pagination | IXD-013 | API |
+| Terminology consistent across interfaces | IXD-014 | All |
+| Significant flows documented | IXD-015 | All |

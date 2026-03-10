@@ -1,0 +1,310 @@
+# Design System Rules
+
+## Purpose
+
+This file defines the standards for establishing and maintaining a design system for web-based user interfaces. These rules apply **only to systems with graphical web interfaces** (web applications, dashboards, portals). CLI-only and API-only systems do not require a design system, though they may benefit from one if they expose a web management interface.
+
+> **AI Instruction**: These rules are **conditional** — they activate only when the Vision Document Section 4 identifies Web, Dashboard, or Mobile as a primary interface. If the system is CLI-only or API-only, skip this file. If a design system is applicable, load this file during Phase 2b (UX/Interaction Design) and reference it during all frontend implementation stages.
+
+---
+
+## When to Apply Design System Rules
+
+### Rule DS-001: Applicability Gate
+
+Evaluate the Vision Document Section 4 (Interface and Interaction Preferences):
+
+| Condition | Action |
+|-----------|--------|
+| Interfaces include Web, Dashboard, or Mobile | Apply all rules in this file |
+| Interfaces include CLI only | Skip this file entirely |
+| Interfaces include API only | Skip this file; apply IXD-011 through IXD-013 from `interaction-design.mdc` |
+| Hybrid (API + Web admin portal) | Apply to the web portal component only |
+
+Document the applicability decision in the UX Principles document.
+
+---
+
+## Design Token System
+
+### Rule DS-002: Token-First Design
+
+All visual properties (colors, typography, spacing, shadows, radii) are expressed as tokens before being applied in components. Never hardcode visual values in component definitions.
+
+```
+Level 1: Primitive tokens (raw values)
+  --color-blue-500: #3B82F6;
+  --font-size-16: 16px;
+  --space-4: 4px;
+
+Level 2: Semantic tokens (purpose-driven aliases)
+  --color-action-primary: var(--color-blue-500);
+  --text-size-body: var(--font-size-16);
+  --space-component-gap: var(--space-4);
+
+Level 3: Component tokens (component-specific overrides)
+  --button-primary-bg: var(--color-action-primary);
+  --card-body-size: var(--text-size-body);
+```
+
+Components reference Level 2 (semantic) or Level 3 (component) tokens only — never Level 1 directly.
+
+### Rule DS-003: Color System Requirements
+
+The color system must define:
+
+| Token Category | Required Tokens |
+|---------------|----------------|
+| Brand | Primary, Secondary |
+| Semantic | Success, Warning, Error, Info |
+| Neutral | Background (page, surface, overlay), Border, Text (primary, secondary, disabled, inverse) |
+| Interactive | Action (default, hover, active, disabled), Focus ring |
+
+**Accessibility requirements**:
+- Text on background: minimum 4.5:1 contrast ratio (WCAG 2.1 AA)
+- Large text (18pt+ or 14pt+ bold) on background: minimum 3:1
+- Interactive components and focus indicators: minimum 3:1
+- Never rely on color alone to convey information
+
+### Rule DS-004: Typography Scale
+
+Define a type scale based on a consistent ratio (e.g., Major Third = 1.25, Perfect Fourth = 1.333):
+
+| Role | Token | Example Size | Usage |
+|------|-------|-------------|-------|
+| Display | `--text-display` | 48px | Hero headings only |
+| Heading 1 | `--text-h1` | 32px | Page title |
+| Heading 2 | `--text-h2` | 24px | Section title |
+| Heading 3 | `--text-h3` | 20px | Subsection title |
+| Body Large | `--text-body-lg` | 18px | Lead paragraph |
+| Body | `--text-body` | 16px | Default body text |
+| Body Small | `--text-body-sm` | 14px | Supporting text, labels |
+| Caption | `--text-caption` | 12px | Image captions, footnotes |
+| Code | `--text-code` | 14px | Monospace for code |
+
+Define line height, font weight, and letter spacing for each role.
+
+### Rule DS-005: Spacing System
+
+Use a base unit (4px or 8px) to generate a consistent spacing scale:
+
+```
+--space-1: 4px    (hairline)
+--space-2: 8px    (tight)
+--space-3: 12px   
+--space-4: 16px   (base unit — most common)
+--space-5: 20px   
+--space-6: 24px   (comfortable)
+--space-8: 32px   (spacious)
+--space-10: 40px  
+--space-12: 48px  (section gap)
+--space-16: 64px  
+--space-24: 96px  (page section)
+```
+
+Components use spacing tokens only. `margin: 13px` is prohibited; `margin: var(--space-3)` is correct.
+
+---
+
+## Component Library
+
+### Rule DS-006: Component Classification
+
+Classify components by reusability level:
+
+| Level | Name | Description | Examples |
+|-------|------|-------------|----------|
+| Atoms | Primitive UI elements | Cannot be broken down further | Button, Input, Label, Icon |
+| Molecules | Simple groups of atoms | Single clear function | Form Field (Label + Input + Error), Card Header |
+| Organisms | Complex groups | Distinct section of interface | Navigation Bar, Data Table, Form |
+| Templates | Page layouts | Arrange organisms in a layout | Dashboard Layout, Settings Layout |
+
+### Rule DS-007: Component Documentation Requirements
+
+Every component in the library must document:
+
+1. **Purpose**: One sentence describing what the component is for
+2. **Variants**: All visual and behavioral variations (e.g., Button: primary, secondary, destructive, disabled)
+3. **Props/Parameters**: All configurable inputs with types, defaults, and descriptions
+4. **States**: Every interactive state (default, hover, focus, active, disabled, loading, error)
+5. **Accessibility**: ARIA roles, keyboard interactions, screen reader behavior
+6. **Examples**: At least one usage example per variant
+7. **Do / Don't**: At least one usage anti-pattern
+
+### Rule DS-008: Component Naming Conventions
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Component name | PascalCase | `Button`, `DataTable`, `NavigationBar` |
+| CSS class / token name | kebab-case | `button-primary`, `nav-bar--collapsed` |
+| Variant modifier | BEM modifier (`--`) | `button--destructive`, `input--error` |
+| State class | State prefix | `is-loading`, `is-disabled`, `has-error` |
+| Component file | kebab-case | `button.tsx`, `data-table.tsx` |
+
+### Rule DS-009: Interaction States
+
+Every interactive component must have designs for all applicable states:
+
+| State | Requirement |
+|-------|------------|
+| Default | Base appearance |
+| Hover | Visual change that signals clickability |
+| Focus | Visible focus ring (min 2px, 3:1 contrast) |
+| Active / Pressed | Visual confirmation of interaction |
+| Disabled | Visually distinct; not interactive; `aria-disabled` |
+| Loading | Spinner or skeleton; prevents re-interaction |
+| Error | Error indicator (color + icon + text); not just color |
+| Success | Confirmation indicator |
+
+---
+
+## Pattern Library
+
+### Rule DS-010: Required Interaction Patterns
+
+Define standard patterns for these common interactions. Once defined, they must be applied consistently across the system:
+
+| Pattern | Required When |
+|---------|--------------|
+| Form validation | Any form with user input |
+| Loading state | Any async operation visible to user |
+| Empty state | Any list or data view that can be empty |
+| Error state | Any page, component, or form that can fail |
+| Confirmation dialog | Any destructive or irreversible action |
+| Notification / toast | System-generated feedback (success, error, warning) |
+| Pagination | Any list that can exceed 25 items |
+| Search and filter | Any list with > 10 expected items |
+
+### Rule DS-011: Iconography
+
+Icons must come from a single, consistent source. Mixing icon sets is prohibited.
+
+Requirements:
+- Choose one icon library and document it in the design system
+- All icons have text alternatives (aria-label or visually-hidden text)
+- Icon size follows the spacing scale
+- Icon color uses semantic color tokens (never hardcoded hex)
+- Interactive icons have all required states (hover, focus, active, disabled)
+
+---
+
+## Design-to-Code Handoff
+
+### Rule DS-012: Token Synchronization
+
+Design tokens defined in the design tool (Figma, Sketch, etc.) must be exported and committed to the codebase. The codebase token file is the single source of truth at build time.
+
+Synchronization process:
+1. Design tokens are updated in the design tool
+2. Tokens are exported (Style Dictionary, Theo, or equivalent)
+3. The exported file replaces the codebase token file
+4. A design system changelog entry is added
+
+### Rule DS-013: Component Spec Completeness
+
+Before a component is handed to engineering for implementation, its documentation (per DS-007) must be complete for all planned variants. Incomplete component specs are returned to design.
+
+---
+
+## Design System Evolution
+
+### Rule DS-014: Design System Change Process
+
+Changes to the design system (new tokens, new components, breaking changes) follow the same L1–L4 classification as architecture changes (EVO-001):
+
+| Change Type | Classification | Required Process |
+|-------------|--------------|-----------------|
+| Token value adjustment (no structure change) | L1 | Direct update |
+| New token | L2 | Lightweight ADR |
+| New component | L2 | Lightweight ADR + component spec |
+| Component variant added | L2 | Update component spec |
+| Breaking: component renamed or removed | L3 | Full ADR + migration guide |
+| Breaking: token renamed or restructured | L3 | Full ADR + migration guide |
+
+### Rule DS-015: Deprecation Policy
+
+Deprecated components and tokens:
+- Remain available for 2 release cycles before removal
+- Are marked with a `@deprecated` annotation and migration note
+- Are listed in the design system changelog under "Deprecated"
+- Trigger a console warning in development mode when used
+
+---
+
+## Compliance Checklist
+
+Use during Phase 6b (Quality Audit) and design reviews:
+
+- [ ] All color values use semantic tokens (DS-002, DS-003)
+- [ ] All spacing uses spacing scale tokens (DS-005)
+- [ ] All text uses typography scale tokens (DS-004)
+- [ ] All components documented per DS-007
+- [ ] All interactive states designed per DS-009
+- [ ] Required patterns defined for all applicable scenarios (DS-010)
+- [ ] Icons from single source with accessible labels (DS-011)
+- [ ] No hardcoded hex, px, or raw values in component definitions
+- [ ] WCAG 2.1 AA contrast verified for all text on background combinations
+- [ ] `docs/design-system/VISUAL-DIRECTION.md` exists with all sections complete (DS-016)
+- [ ] Visual Direction Aesthetic Archetype is defined and unambiguous (DS-016)
+- [ ] Anti-Patterns section contains ≥ 5 specific items (DS-016)
+- [ ] `docs/design-system/IMAGE-PROMPTS.md` exists or is explicitly marked not applicable (DS-017)
+- [ ] Base Style Specification in IMAGE-PROMPTS.md reflects current token values (DS-017)
+
+---
+
+## Visual Direction and Image Prompts
+
+### Rule DS-016: Visual Direction Document Requirement
+
+When the DS-001 gate is "Required" (web, dashboard, or mobile interface in scope), a Visual Direction document must exist at `docs/design-system/VISUAL-DIRECTION.md` before implementation begins. The Visual Direction document:
+
+- Translates design token choices into aesthetic narrative that developers and AI agents can act on
+- Defines the aesthetic archetype — a single word and expansion sentence — that serves as the primary calibration tool for new visual decisions
+- Provides explicit anti-patterns that contradict the system's character
+- Contains extension guidelines for visual decisions not covered by existing tokens
+- Must be created by Prompt 01-F (`.cursor/prompts/01f-visual-direction-and-image-prompts.md`)
+
+**When to consult VISUAL-DIRECTION.md:**
+- During Prompt 05 (implementation) for any frontend component work, new page layout, or visual asset creation
+- When implementing UI states not yet specified in the component library
+- When choosing between two visually valid options (token values match but aesthetic intent differs)
+- When a new team member or AI agent needs to understand the product's visual character
+
+**Enforcement**: A design system that lacks a Visual Direction document is incomplete. The Compliance Checklist in the design system must include a VISUAL-DIRECTION.md check alongside the token checks.
+
+```
+## Updated Compliance Checklist (DS-016 addition)
+
+- [ ] `docs/design-system/VISUAL-DIRECTION.md` exists and all sections are filled
+- [ ] Aesthetic Archetype section contains a one-word archetype and expansion sentence
+- [ ] Anti-Patterns section contains at least 5 specific, actionable items
+- [ ] Extension Guidelines section contains at least 4 numbered rules
+- [ ] Calibration Checklist section contains at least 6 questions
+```
+
+### Rule DS-017: Image Prompt Calibration Standard
+
+When AI-generated visual assets (images, illustrations, mockups) are needed at any point in the project lifecycle — during implementation, user documentation generation, or system evolution — the following standard applies:
+
+1. **Base Style Specification is mandatory**: All AI image generation prompts must begin with the Base Style Specification from `docs/design-system/IMAGE-PROMPTS.md`. This specification encodes the aesthetic archetype, color palette mood, and rendering style derived from the design system.
+
+2. **Category-specific prompts are the starting point**: Use the category-specific prompt templates from IMAGE-PROMPTS.md as the foundation. Custom additions are permitted to specify content, but must not contradict the aesthetic direction.
+
+3. **Universal negative prompt always applies**: The Universal Negative Prompt from IMAGE-PROMPTS.md must be appended to every AI image generation request. It encodes the anti-patterns from VISUAL-DIRECTION.md.
+
+4. **Calibration check is required**: Before any generated image is used in documentation, marketing materials, or the product itself, verify it passes all checks in IMAGE-PROMPTS.md Section 9.
+
+5. **IMAGE-PROMPTS.md must be updated when the design system changes**: If design tokens are revised (new brand colors, changed aesthetic direction), the Base Style Specification in IMAGE-PROMPTS.md must be updated in the same session. Image prompts that reference outdated token values are deprecated.
+
+**When IMAGE-PROMPTS.md does not exist or is marked not applicable**: No AI image generation should occur for this project without first creating the document. If image generation needs emerge after the design system was established, run Prompt 01-F to create IMAGE-PROMPTS.md before proceeding.
+
+---
+
+## References
+
+- `.cursor/rules/ux/ux-principles.mdc` — UX principles (especially UX-006: Accessibility)
+- `.cursor/rules/ux/interaction-design.mdc` — IXD-006 through IXD-010: Web interaction standards
+- `.cursor/templates/design-system/DESIGN-SYSTEM-TEMPLATE.md` — Document your project's design system
+- `.cursor/templates/design-system/COMPONENT-LIBRARY-TEMPLATE.md` — Document individual components
+- `.cursor/templates/design-system/VISUAL-DIRECTION-TEMPLATE.md` — Document visual direction and aesthetic narrative (DS-016)
+- `.cursor/templates/design-system/IMAGE-PROMPTS-TEMPLATE.md` — Document AI image generation prompt library (DS-017)

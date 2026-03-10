@@ -1,0 +1,113 @@
+# MkDocs Material Configuration Template
+#
+# Copy this file to `docs/mkdocs.yml` and customize the placeholders.
+# See: https://squidfunk.github.io/mkdocs-material/
+#
+# To serve locally:   mkdocs serve -f docs/mkdocs.yml
+# To build for deploy: mkdocs build -f docs/mkdocs.yml
+
+site_name: "{System Name} Documentation"
+site_description: "{One-sentence description of the system}"
+site_url: "https://{your-domain}/docs/"
+
+docs_dir: "user"
+site_dir: "../site"
+
+repo_url: "https://github.com/{org}/{repo}"
+repo_name: "{org}/{repo}"
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - navigation.indexes
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+  - Tutorials:
+    - tutorials/index.md
+    # Add tutorial pages here:
+    # - "Tutorial Title": tutorials/{tutorial-name}.md
+  - How-to Guides:
+    - how-to/index.md
+    # Add how-to pages here:
+    # - "How to {Task}": how-to/{task-name}.md
+  - Reference:
+    - reference/index.md
+    # Uncomment and adapt based on system type:
+    #
+    # For API systems:
+    # - API:
+    #   - Overview: reference/api/overview.md
+    #   - "{Resource}": reference/api/{resource}.md
+    #
+    # For CLI systems:
+    # - CLI:
+    #   - "{Command Group}": reference/cli/{group}.md
+    #
+    - Configuration: reference/configuration.md
+  - Concepts:
+    - concepts/index.md
+    # Add concept pages here:
+    # - "{Concept}": concepts/{concept-name}.md
+  - FAQ: faq.md
+  - Glossary: glossary.md
+  - Changelog: changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: "https://github.com/{org}/{repo}"
+  # Uncomment for version support:
+  # version:
+  #   provider: mike

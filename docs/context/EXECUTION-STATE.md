@@ -4,7 +4,7 @@
 > **Created by**: Prompt 01-A — Assess and Brief
 > **Updated by**: Every prompt upon completion
 > **Lifecycle**: Project-scoped — rolling-update pattern; never deleted
-> **Last updated**: 2026-03-12 by Prompt 01-A
+> **Last updated**: 2026-03-12 by Prompt 01-B
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Active phase** | Phase 2 — Architecture Generation |
-| **Last completed prompt** | 01-A — Assess and Brief |
-| **Next prompt** | 01-B — Generate Architecture |
+| **Active phase** | Phase 2 — Architecture Generation (complete) |
+| **Last completed prompt** | 01-B — Generate Architecture |
+| **Next prompt** | 01-C — Create ADRs (ADR-001 through ADR-010) |
 | **Blocked on** | _(nothing — execution proceeding normally)_ |
 
 ---
@@ -24,7 +24,7 @@
 | File | Status | Written by | Last updated |
 |------|--------|------------|--------------|
 | `docs/context/architecture-brief.md` | Active | Prompt 01-A | 2026-03-12 |
-| `docs/context/architecture-file-list.md` | Not created | — | — |
+| `docs/context/architecture-file-list.md` | Active | Prompt 01-B | 2026-03-12 |
 | `docs/context/generation-summary.md` | Not created | — | — |
 | `docs/context/ux-brief.md` | Not created | — | — |
 | `docs/context/ux-generation-summary.md` | Not created | — | — |
@@ -44,6 +44,14 @@ The Syntropy Ecosystem is a unified platform where learning, building, and resea
 - Outcome: Vision Document quality: Ready (55/55)
 - Quality report: `docs/vision/VISION-QUALITY-REPORT.md`
 - Notes: Exceptional quality — all 11 dimensions scored 5/5. No gaps carried as assumptions. Architecture Brief produced after iterative review of domain decomposition, entity ownership model, subdomain analysis, and event signing hierarchy.
+
+### Phase 2 — Architecture Generation
+- Completed: 2026-03-12
+- Outcome: 48 architecture documents generated (1 root + 12 domains + 24 subdomains + 4 cross-cutting + 5 platform + 2 infrastructure)
+- Architecture files: `docs/context/architecture-file-list.md`
+- Architecture root: `docs/architecture/ARCHITECTURE.md`
+- Diagrams indexed: 68 Mermaid diagrams across all documents
+- Notes: All documents generated from confirmed Architecture Brief (55/55 quality). DIP established as single source of truth for all fundamental entities. Three-layer immutability model documented. Context Map with 10 integration patterns fully documented. 10 ADRs referenced but deferred to Prompt 01-C.
 
 ### Key Architecture Decisions Settled in 01-A
 - **Modular Monolith** chosen as architecture style (mandated by Vision's "Inviolable Decisions" — Turborepo + pnpm workspaces)

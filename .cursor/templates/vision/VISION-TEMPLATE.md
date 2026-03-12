@@ -115,6 +115,9 @@ Notes: {Any specific expectations about how users interact with the system}
 
 > **When to complete this section**: complete this section if your system has 2 or more distinct components that serve different audiences, have different design characters, or behave in fundamentally different ways. Examples: a web application AND a background processing engine; a user-facing interface AND a developer API; multiple specialized agents in a pipeline. If your system is a single component, write "Single component — not applicable" and move to the next section.
 
+> **Components vs. Sub-components — why both matter**:
+> Each **Component** described here is a major part of your system. The architecture will later map these to **Domains** (Bounded Contexts). Within each component, you can describe **Sub-components** — distinct business areas that live inside that component but have their own vocabulary, their own "things" to manage, or their own team. The architecture will map Sub-components to **Subdomains** within the corresponding Domain. You do not need technical precision here — describe what you observe about the business, and the architecture agent will do the mapping.
+
 ---
 
 ### Component 1: {Component Name}
@@ -136,11 +139,63 @@ Notes: {Any specific expectations about how users interact with the system}
 
 **Unique constraints or priorities** (if different from system-wide priorities in Section 9): {Examples: "Must work offline for field operators." / "Response time under 100ms is non-negotiable — users are blocked if it is slow." / "Must be embeddable in other companies' platforms."}
 
+#### Sub-components of {Component Name}
+
+> **When to define sub-components**: define sub-components if this component has two or more clearly distinct business areas — areas that talk about different "things", use different vocabulary, or could have different teams owning them. If the component is small and uniform, write "No sub-components — this component is a single cohesive area" and skip.
+>
+> **These will become Subdomains in the architecture.** You do not need to think about technical boundaries now — just describe what distinct "worlds" exist inside this component.
+
+| Sub-component | Purpose | Key Concepts (the "things" it manages) | Distinct Vocabulary or Rules |
+|---------------|---------|----------------------------------------|------------------------------|
+| {Sub-component 1 — e.g., "Catalog Management"} | {What this sub-area does — e.g., "Manages the lifecycle of products available for sale"} | {e.g., "Product, Category, Variant, Price"} | {Terms or rules specific to this sub-area — e.g., "A Product can have multiple Variants; price is always per Variant"} |
+| {Sub-component 2 — e.g., "Inventory Tracking"} | {Purpose} | {Key concepts} | {Vocabulary or rules} |
+| {Sub-component 3} | {Purpose} | {Key concepts} | {Vocabulary or rules} |
+
+{For any sub-component that deserves more explanation — because it is complex, important, or unclear from the table — add a short paragraph below:}
+
+**{Sub-component Name}** (expanded): {Optional narrative. Describe what makes this sub-area distinctive. What business rules govern it? What would break if this sub-area was confused with another?}
+
 ---
 
 ### Component 2: {Component Name}
 
-{Repeat the structure above for each additional component.}
+{Repeat the full structure above — including the Sub-components table — for each additional component.}
+
+---
+
+## 5a. Domain Priorities — Core, Supporting, and Generic
+
+*Which parts of your system are your competitive advantage, and which are just necessary plumbing?*
+
+This section helps the architecture agent decide **where to invest design effort**. In Domain-Driven Design, not all areas of a system deserve equal attention:
+
+- **Core Domain**: the activity that is *unique to your business* — what makes you different from competitors. This is where the most careful design, the richest models, and the highest investment should go. If someone else could easily build this part generically, it is probably not your Core Domain.
+- **Supporting Subdomain**: necessary to run the business, but not a source of competitive advantage. Other companies need this too, but there is no off-the-shelf solution that perfectly fits your context. Build it yourself, but keep it simple.
+- **Generic Subdomain**: a well-understood, solved problem. Many off-the-shelf tools or services exist. Use them instead of building from scratch (e.g., authentication, email delivery, payment processing).
+
+> **Why this matters**: Architecture generation uses this classification to decide how much design ceremony to apply to each domain — rich models for Core, simple CRUD for Supporting, adapters for Generic.
+
+### Classification Table
+
+For each major area of your system (from Section 5 or from your own thinking), classify it:
+
+| Business Area | Type | Justification | Strategy |
+|---------------|------|---------------|----------|
+| {Area 1 — e.g., "Recommendation engine"} | Core | {Why this is your competitive differentiator} | Build carefully with rich domain model |
+| {Area 2 — e.g., "User notifications"} | Supporting | {Necessary but not differentiating} | Build simply, CRUD is fine |
+| {Area 3 — e.g., "Email delivery"} | Generic | {Solved problem, many tools exist} | Use off-the-shelf (SendGrid, SES, etc.) |
+| {Area 4} | {Core / Supporting / Generic} | {Justification} | {Strategy} |
+
+> **Tips for classification**:
+> - Ask: "If I bought this capability from a vendor, would my business still be unique?" If yes → it's your Core Domain.
+> - Ask: "Would a well-funded competitor solve this the same way?" If yes → it's Supporting or Generic.
+> - Ask: "Can I find a SaaS or library that does this well enough?" If yes → it's Generic.
+
+### Core Domain Statement
+
+*In one or two sentences, describe what is irreplaceable and unique about your system. This is your Core Domain.*
+
+{e.g., "Our core capability is the personalized learning path engine that adapts in real time to each learner's progress, style, and goals — this cannot be replicated by a generic LMS."}
 
 ---
 

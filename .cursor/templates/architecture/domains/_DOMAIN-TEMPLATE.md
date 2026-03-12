@@ -4,6 +4,8 @@
 > **Parent**: [System Architecture](../../ARCHITECTURE.md)
 > **Last Updated**: {YYYY-MM-DD}
 > **Domain Owner**: {Team Name}
+> **Subdomain Type**: Core Domain | Supporting Subdomain | Generic Subdomain
+> **Rationale**: {One sentence: why this domain is classified as Core / Supporting / Generic}
 
 ## Vision Traceability
 
@@ -71,6 +73,52 @@ Key terms used within this domain. All code, documentation, and communication sh
 | {Term 1} | {Precise definition} | {Usage notes} |
 | {Term 2} | {Precise definition} | {Usage notes} |
 | {Term 3} | {Precise definition} | {Usage notes} |
+
+## Subdomain Classification & Context Map Position
+
+### Subdomain Classification
+
+**Type**: {Core Domain | Supporting Subdomain | Generic Subdomain}
+
+{Explain the classification in 2–4 sentences. For Core: describe the competitive advantage and why this domain is irreplaceable. For Supporting: describe why it is built in-house rather than purchased. For Generic: list the off-the-shelf solutions considered and the one chosen.}
+
+**Design investment implications**:
+
+| Subdomain Type | Applies? | Design Approach |
+|----------------|----------|-----------------|
+| Core Domain | {Yes / No} | Rich model — Aggregates with invariants, Value Objects, Domain Events, Domain Services. No CRUD shortcuts. Ubiquitous language enforced in all code. |
+| Supporting Subdomain | {Yes / No} | Pragmatic model — CRUD repositories acceptable, simpler entities. Domain boundaries still enforced per ARCH-003. |
+| Generic Subdomain | {Yes / No} | Thin adapter (PAT-005) over off-the-shelf solution. ACL required (ARCH-012) to prevent external vocabulary leaking into the domain. |
+
+### Context Map Position
+
+How this bounded context relates to the other bounded contexts in the system. Every cross-domain integration must use one of the approved DDD patterns (see ARCH-012).
+
+```mermaid
+graph LR
+    subgraph thisDomain ["{Domain Name} (this)"]
+        direction TB
+        A["{Domain Name}"]
+    end
+    B["{Other Domain 1}"]
+    C["{Other Domain 2}"]
+    D["{External System}"]
+
+    B -->|"Customer-Supplier\n(B upstream)"| A
+    A -->|"ACL\n(protects this domain)"| D
+    A -->|"Open Host Service"| C
+```
+
+**Context Map Table**:
+
+| Other Context | Pattern | Direction | Description |
+|---------------|---------|-----------|-------------|
+| {Domain / System 1} | Customer-Supplier \| ACL \| Conformist \| Partnership \| Shared Kernel \| Open Host Service \| Published Language | This is upstream \| This is downstream \| Bidirectional | {Why this pattern; what is exchanged; what protections are in place} |
+| {Domain / System 2} | {Pattern} | {Direction} | {Description} |
+
+> **ACL requirement**: If this is a Core Domain consuming data from a Generic Subdomain or external system, an Anti-Corruption Layer is mandatory (ARCH-012). Document the ACL adapter name and location here.
+
+---
 
 ## Component Architecture
 
@@ -319,6 +367,46 @@ Architectural decisions specific to this domain. For system-wide decisions, see 
 |-----|------|---------|
 | [ADR-{Domain}-001](./decisions/ADR-001.md) | {Date} | {Title} |
 | [ADR-{Domain}-002](./decisions/ADR-002.md) | {Date} | {Title} |
+
+## Internal Subdomain Decomposition
+
+> **When to complete this section**: complete this section only when this domain is large or complex enough to contain distinct sub-areas with different vocabularies, different rates of change, or different teams. For simple domains (fewer than 8 entities, single team, uniform language), write "Not applicable — domain is small enough to be treated as a single unit" and skip this section.
+
+When a domain contains multiple distinct sub-areas, each area is documented as an **internal subdomain** using the template at `.cursor/templates/architecture/domains/subdomains/_SUBDOMAIN-TEMPLATE.md`. Internal subdomain documents are placed in `domains/{domain-name}/subdomains/`.
+
+```
+domains/{domain-name}/
+├── ARCHITECTURE.md              ← This document
+└── subdomains/
+    ├── {subdomain-1}.md         ← Uses _SUBDOMAIN-TEMPLATE.md
+    └── {subdomain-2}.md
+```
+
+### Subdomain Map
+
+| Subdomain | Type | Boundary Model | Responsibility | Document |
+|-----------|------|----------------|---------------|----------|
+| {Subdomain 1 Name} | Core \| Supporting \| Generic | Bounded Context \| Internal Module | {One sentence} | [→ Architecture](./subdomains/{subdomain-1}.md) |
+| {Subdomain 2 Name} | Core \| Supporting \| Generic | Bounded Context \| Internal Module | {One sentence} | [→ Architecture](./subdomains/{subdomain-2}.md) |
+
+### Subdomain Boundaries Diagram
+
+```mermaid
+graph TB
+    subgraph domainBoundary ["{Domain Name} Domain"]
+        subgraph sub1 ["{Subdomain 1} (Core)"]
+            AGG1["{AggregateRoot1}"]
+        end
+        subgraph sub2 ["{Subdomain 2} (Supporting)"]
+            AGG2["{AggregateRoot2}"]
+        end
+        sub1 -->|"{integration pattern}"| sub2
+    end
+```
+
+> **Rule**: Subdomains within the same domain may share a data store (schema), but must not directly access each other's aggregate tables. Cross-subdomain data flows through defined service interfaces or domain events.
+
+---
 
 ## Technical Debt
 

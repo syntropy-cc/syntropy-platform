@@ -81,39 +81,68 @@ C4Context
 
 ## Domain Overview
 
-The system is organized into the following bounded contexts. Each domain is autonomous and owns its data. Cross-domain communication happens through well-defined contracts.
+The system is organized into the following bounded contexts. Each domain is autonomous and owns its data. Cross-domain communication happens through well-defined contracts (see ARCH-003, ARCH-012).
 
-| Domain | Responsibility | Team | Documentation |
-|--------|---------------|------|---------------|
-| **Identity** | User accounts, authentication, authorization | Platform Team | [→ Architecture](./domains/identity/ARCHITECTURE.md) |
-| **Payments** | Payment processing, billing, invoicing | Payments Team | [→ Architecture](./domains/payments/ARCHITECTURE.md) |
-| **Catalog** | Product information, inventory, pricing | Catalog Team | [→ Architecture](./domains/catalog/ARCHITECTURE.md) |
-| **Orders** | Order creation, fulfillment, returns | Orders Team | [→ Architecture](./domains/orders/ARCHITECTURE.md) |
-| **Notifications** | Email, SMS, push notifications | Platform Team | [→ Architecture](./domains/notifications/ARCHITECTURE.md) |
+| Domain | Type | Responsibility | Team | Documentation |
+|--------|------|---------------|------|---------------|
+| **Identity** | Generic | User accounts, authentication, authorization | Platform Team | [→ Architecture](./domains/identity/ARCHITECTURE.md) |
+| **Payments** | Generic | Payment processing, billing, invoicing | Payments Team | [→ Architecture](./domains/payments/ARCHITECTURE.md) |
+| **Catalog** | Core | Product information, inventory, pricing | Catalog Team | [→ Architecture](./domains/catalog/ARCHITECTURE.md) |
+| **Orders** | Core | Order creation, fulfillment, returns | Orders Team | [→ Architecture](./domains/orders/ARCHITECTURE.md) |
+| **Notifications** | Supporting | Email, SMS, push notifications | Platform Team | [→ Architecture](./domains/notifications/ARCHITECTURE.md) |
+
+> **AI Instruction**: The "Type" column uses DDD subdomain classification (ARCH-011). Core Domains require rich domain models. Supporting Subdomains may use simpler CRUD patterns. Generic Subdomains should prefer off-the-shelf solutions wrapped in adapters.
 
 ### Domain Relationships
 
 ```mermaid
 graph TB
-    subgraph "Core Domains"
-        IDENTITY[Identity]
+    subgraph coreDomains [Core Domains]
         CATALOG[Catalog]
         ORDERS[Orders]
+    end
+
+    subgraph genericDomains [Generic Subdomains]
+        IDENTITY[Identity]
         PAYMENTS[Payments]
     end
-    
-    subgraph "Supporting Domains"
+
+    subgraph supportingDomains [Supporting Subdomains]
         NOTIFICATIONS[Notifications]
     end
-    
-    ORDERS -->|queries products| CATALOG
-    ORDERS -->|initiates payment| PAYMENTS
-    ORDERS -->|triggers| NOTIFICATIONS
-    PAYMENTS -->|validates user| IDENTITY
-    
-    style ORDERS fill:#f9f,stroke:#333
-    style PAYMENTS fill:#f9f,stroke:#333
+
+    ORDERS -->|"queries products"| CATALOG
+    ORDERS -->|"initiates payment\n(Customer-Supplier)"| PAYMENTS
+    ORDERS -->|"triggers\n(Open Host Service)"| NOTIFICATIONS
+    PAYMENTS -->|"validates user\n(ACL)"| IDENTITY
 ```
+
+### Context Map
+
+The Context Map documents the integration patterns between every pair of bounded contexts that communicate directly. See ARCH-012 for pattern definitions.
+
+```mermaid
+graph LR
+    ORDERS["Orders\n(Core)"]
+    CATALOG["Catalog\n(Core)"]
+    PAYMENTS["Payments\n(Generic)"]
+    IDENTITY["Identity\n(Generic)"]
+    NOTIFICATIONS["Notifications\n(Supporting)"]
+
+    ORDERS -->|"Partnership"| CATALOG
+    ORDERS -->|"Customer-Supplier\n(Orders downstream)"| PAYMENTS
+    ORDERS -->|"Open Host Service"| NOTIFICATIONS
+    PAYMENTS -->|"ACL\n(Payments wraps Identity)"| IDENTITY
+```
+
+| Upstream | Downstream | Pattern | Notes |
+|----------|-----------|---------|-------|
+| {Catalog} | {Orders} | Partnership | {Evolve together; shared design decisions} |
+| {Payments} | {Orders} | Customer-Supplier | {Payments publishes contract; Orders conforms} |
+| {Identity} | {Payments} | ACL | {Payments uses ACL to translate Identity model} |
+| {Orders} | {Notifications} | Open Host Service | {Orders publishes events; Notifications subscribes} |
+
+> **AI Instruction**: When generating this document, replace the placeholder rows above with actual domain pairs. Every pair of domains that exchange data must appear in this table. If no direct integration exists between two domains, they should not appear as a pair.
 
 ## Platform Services
 

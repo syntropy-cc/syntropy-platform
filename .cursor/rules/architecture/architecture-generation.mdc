@@ -19,25 +19,114 @@ This file defines the rules and heuristics an AI assistant must follow when gene
 
 When reading a Vision Document, identify bounded contexts (domains) using these heuristics:
 
-1. **Capability-to-Domain Mapping**: Each distinct business capability described in Section 4 (Key Capabilities) of the vision is a candidate domain. Group closely related capabilities into a single domain; split capabilities that serve different actors or data ownership into separate domains.
+1. **Component-to-Domain Mapping**: Each Component defined in Section 5 of the vision is a primary candidate for a Domain (Bounded Context). One Component typically maps to one Domain; large components may split into multiple domains; small related components may merge.
 
-2. **Concept Clustering**: Each "thing" the system manages (Section 5 — Information and Concepts) with its own lifecycle is a candidate entity. Cluster entities that are always created, read, updated, and deleted together into one domain.
+2. **Capability-to-Domain Mapping**: Each distinct business capability described in Section 6 (Key Capabilities) of the vision is a candidate domain. Group closely related capabilities into a single domain; split capabilities that serve different actors or data ownership into separate domains.
 
-3. **Boundary Signals**: Look for natural domain boundaries:
+3. **Concept Clustering**: Each "thing" the system manages (Section 7 — Information and Concepts) with its own lifecycle is a candidate entity. Cluster entities that are always created, read, updated, and deleted together into one domain.
+
+4. **Boundary Signals**: Look for natural domain boundaries:
    - **Different actors** own or consume different data
    - **Different rates of change** (data that changes per-second vs data that changes per-month belongs in different domains)
    - **Different consistency requirements** (real-time vs eventually consistent)
    - **Different vocabulary** (the same word meaning different things in different contexts signals separate bounded contexts)
 
-4. **Workflow Decomposition**: Map workflows (Section 6) to the domains they touch. If a workflow involves multiple domains, the workflow boundaries suggest integration points, not a single merged domain.
+5. **Workflow Decomposition**: Map workflows (Section 8) to the domains they touch. If a workflow involves multiple domains, the workflow boundaries suggest integration points, not a single merged domain.
 
-5. **Domain Sizing**: A well-sized domain has 2–8 entities. If a candidate domain has 1 entity, consider merging it with a related domain. If it has more than 10, consider splitting.
+6. **Domain Sizing**: A well-sized domain has 2–8 entities. If a candidate domain has 1 entity, consider merging it with a related domain. If it has more than 10, consider splitting.
 
 **Output**: A list of domains, each with:
 - Name
 - One-sentence responsibility
+- Source component(s) from Section 5 (traceability)
 - Owned entities
 - Vision capabilities it implements (traceability)
+
+### Rule GEN-001c: Subdomain Extraction from Sub-components
+
+After extracting domains (GEN-001), inspect the **Sub-components** defined within each Component in Section 5 of the Vision Document. Sub-components are direct signals for internal subdomains within the corresponding domain.
+
+**Mapping rules**:
+
+| Vision Section 5 Signal | Architecture Output |
+|-------------------------|---------------------|
+| Component has 2+ sub-components with distinct vocabulary | Each sub-component → candidate internal subdomain of the corresponding domain |
+| Sub-component manages concepts that don't appear in sibling sub-components | Strong signal for separate subdomain boundary |
+| Sub-component has "Distinct Vocabulary or Rules" filled in with terms that diverge from the parent component | Very strong signal — subdomain boundary is real |
+| Sub-component is small (1–2 concepts) and shares vocabulary with parent | Merge into parent domain as a module; no separate subdomain needed |
+| Section 5 sub-components table is empty or "No sub-components" | Domain has no internal subdomain decomposition — document as single-unit domain |
+
+**Decision: Bounded Context or Internal Module?**
+
+For each extracted sub-component:
+- If the sub-component has vocabulary that **diverges** from the parent domain's ubiquitous language → create a **separate Bounded Context** (its own domain document)
+- If the sub-component shares language but is a distinct business area → document as an **Internal Module** within the parent domain using `domains/{domain}/subdomains/{name}.md` with the subdomain template
+- If the sub-component is small and shares everything → no separate document needed; model as a feature within the parent domain
+
+**Output**: For each domain that has sub-components in the vision:
+- List of internal subdomains (name, type Core/Supporting/Generic, boundary model)
+- Note which sub-components become separate bounded contexts vs. internal modules
+- Populate the "Internal Subdomain Decomposition" section of the domain's `ARCHITECTURE.md`
+- Create individual subdomain documents using `.cursor/templates/architecture/domains/subdomains/_SUBDOMAIN-TEMPLATE.md`
+
+> **AI Instruction**: Never ignore Section 5 Sub-components. They are the primary user-provided signal for subdomain decomposition. If Section 5 sub-components are defined but the generated architecture does not reflect them as subdomains or internal modules, the generation is incomplete.
+
+### Rule GEN-001a: Subdomain Classification
+
+After extracting the list of domains (GEN-001), classify each domain as **Core Domain**, **Supporting Subdomain**, or **Generic Subdomain** before proceeding to any other step. This classification drives design investment decisions (ARCH-011) and Context Map patterns (ARCH-012).
+
+**Classification signals from the Vision Document**:
+
+| Signal | Likely Classification |
+|--------|-----------------------|
+| Vision Section 5a explicitly classifies this area | Use that classification directly |
+| "Core Domain Statement" in Section 5a covers this domain | Core Domain |
+| The vision describes this as "what makes us unique" or "our competitive advantage" | Core Domain |
+| The domain is necessary but exists in every system of this type | Supporting Subdomain |
+| Off-the-shelf solutions exist and are mentioned in vision constraints (Section 10) | Generic Subdomain |
+| Domain maps to authentication, email, payments, logging, or other commodity capability | Generic Subdomain |
+| Domain supports the Core but has a stable, well-understood solution space | Supporting Subdomain |
+
+**Fallback heuristic** (use when Section 5a is absent):
+1. Identify the 1–2 domains most closely connected to what the vision identifies as unique value → **Core Domain**
+2. Identify domains that exist to serve the Core but could be solved in standard ways → **Supporting Subdomain**
+3. Identify domains (or parts of domains) where industry-standard tools exist → **Generic Subdomain**
+
+**Output**: Updated domain list, each entry now includes:
+- Subdomain Type (Core / Supporting / Generic)
+- Classification rationale (1–2 sentences)
+- Design approach to apply (rich model / pragmatic CRUD / off-the-shelf adapter)
+
+> **AI Instruction**: If the Vision Document lacks Section 5a (Domain Priorities), flag this as a gap in the generation summary (GEN-010) and apply the fallback heuristic. Do not silently assume every domain is Core.
+
+### Rule GEN-001b: Context Map Generation
+
+After classifying subdomains (GEN-001a), generate a Context Map for the system. The Context Map documents the integration pattern for every pair of bounded contexts that communicate directly.
+
+**Steps**:
+
+1. **Identify communicating pairs**: For each domain, list every other domain it sends data to or receives data from (from workflow analysis in GEN-001 step 4).
+
+2. **Assign integration pattern** to each pair using the DDD vocabulary (ARCH-012):
+
+   | Condition | Suggested Pattern |
+   |-----------|-------------------|
+   | Core Domain consuming from Generic Subdomain or external system | **ACL** (mandatory per ARCH-012) |
+   | Two Core Domains evolving together, teams coordinating | **Partnership** |
+   | One domain feeds another; the downstream has no power to change the upstream | **Conformist** |
+   | One domain publishes a stable contract the other consumes | **Customer-Supplier** |
+   | A domain exposes a published protocol for many consumers | **Open Host Service** |
+   | Agreed-upon exchange format between two contexts | **Published Language** |
+
+3. **Document in both directions**: For each pair (A, B), note the pattern in A's domain doc and in B's domain doc (see `_DOMAIN-TEMPLATE.md` → "Context Map Position" section).
+
+4. **Generate the Context Map diagram** in the root `ARCHITECTURE.md` — replace the placeholder diagram and table with actual domain names and patterns.
+
+**Output**: Context Map section populated in:
+- Root `ARCHITECTURE.md` → "Context Map" section
+- Each domain's `ARCHITECTURE.md` → "Context Map Position" section
+
+> **AI Instruction**: Never leave the Context Map as a placeholder when generating architecture. At minimum, document the pattern for every cross-domain data flow identified in the workflow analysis.
 
 ### Rule GEN-002: Layer Structure Selection
 
@@ -171,18 +260,27 @@ Before considering architecture generation complete, verify:
 **Root Document**:
 - [ ] System Purpose clearly states what the system does and for whom
 - [ ] Document Map lists all domain, platform, and cross-cutting docs
-- [ ] All domains listed in Domain Overview table with links
+- [ ] All domains listed in Domain Overview table with links **and "Type" column** (Core / Supporting / Generic)
+- [ ] Each domain in the table traces back to a Component in Vision Section 5
+- [ ] Context Map section present with diagram and pattern table for all communicating domain pairs
 - [ ] System-Wide Principles defined (at least 3)
 - [ ] Technology Radar populated
 - [ ] Navigation Guide present
 - [ ] At least 3 diagrams: context, component overview, entity hierarchy/domain relationships
 
 **Per Domain**:
-- [ ] Business Capability traced to vision
+- [ ] Business Capability traced to vision (Section 6 capabilities)
+- [ ] Source component traced to Vision Section 5 (which component maps to this domain)
+- [ ] Subdomain Type declared (Core / Supporting / Generic) with rationale
+- [ ] Context Map Position section documents integration pattern for every cross-domain relationship
+- [ ] ACL documented if this is a Core Domain consuming from Generic or external system
 - [ ] Ubiquitous Language table with at least 3 terms
 - [ ] Component Architecture with at least one diagram
 - [ ] Data Architecture with ERD
+- [ ] If domain is a Core Domain: rich model with at least one Aggregate Root, Value Objects, and Domain Events
 - [ ] Integration Points documented (upstream and downstream)
+- [ ] Internal Subdomain Decomposition section present (even if "Not applicable")
+- [ ] Every Sub-component from Vision Section 5 accounted for (as subdomain, internal module, or explicit merge decision)
 - [ ] At least 2 diagrams total
 
 **Cross-Cutting** (when applicable):
@@ -204,19 +302,23 @@ Before considering architecture generation complete, verify:
 After generating all documents, produce a summary containing:
 
 1. **Documents created**: List with paths
-2. **Domains identified**: Count and names
-3. **Diagrams generated**: Count and types
-4. **ADRs created**: Count and titles
-5. **Assumptions made**: List each assumption with its location
-6. **Gaps detected**: Anything missing from the vision that affects architecture quality
-7. **Next steps**: Whether to iterate (Phase 3) or proceed to implementation setup (Phase 4)
+2. **Domains identified**: Count and names, each with subdomain type (Core / Supporting / Generic)
+3. **Core Domain(s)**: Name(s) and brief rationale for the classification
+4. **Context Map**: List all domain pairs and their integration patterns
+5. **Diagrams generated**: Count and types
+6. **ADRs created**: Count and titles
+7. **Assumptions made**: List each assumption with its location
+8. **Gaps detected**: Anything missing from the vision that affects architecture quality (include: missing Section 5a, unclear Core Domain identification, undocumented cross-domain integrations)
+9. **Next steps**: Whether to iterate (Phase 3) or proceed to implementation setup (Phase 4)
 
 ## References
 
 - Vision Document template: `.cursor/templates/vision/VISION-TEMPLATE.md`
-- Architecture rules: `.cursor/rules/architecture/architecture.mdc`
+- Architecture rules: `.cursor/rules/architecture/architecture.mdc` (ARCH-011, ARCH-012)
 - Architecture evolution: `.cursor/rules/architecture/architecture-evolution.mdc`
 - Architecture navigation: `.cursor/rules/architecture/architecture-navigation.mdc`
 - Diagram rules: `.cursor/rules/diagrams/diagrams.mdc`
 - Diagram templates: `.cursor/templates/diagrams/_DIAGRAM-INDEX.md`
 - Architecture templates: `.cursor/templates/architecture/`
+- Domain template: `.cursor/templates/architecture/domains/_DOMAIN-TEMPLATE.md`
+- Subdomain template: `.cursor/templates/architecture/domains/subdomains/_SUBDOMAIN-TEMPLATE.md`

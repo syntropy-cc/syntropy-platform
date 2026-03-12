@@ -152,6 +152,46 @@ Apply defense in depth:
 - Encrypt in transit and at rest
 - Sanitize all outputs (prevent injection)
 
+## Domain-Driven Design
+
+### Rule ARCH-011: Subdomain Classification and Design Investment
+
+Every domain (bounded context) must be classified as one of three subdomain types, and the design investment must match the classification:
+
+| Subdomain Type | Description | Design Approach | Examples |
+|----------------|-------------|-----------------|---------|
+| **Core Domain** | The primary competitive differentiator — what makes the business unique | Rich domain model: Aggregates, Value Objects, Domain Events, Domain Services, ubiquitous language enforced strictly | Custom pricing engine, proprietary recommendation algorithm |
+| **Supporting Subdomain** | Necessary to operate the business but not a source of competitive advantage | Simpler models acceptable; CRUD-based services are fine; can be built in-house with less ceremony | Notifications, reporting, user profile management |
+| **Generic Subdomain** | Solved problems with well-known solutions; commodity functionality | Buy or integrate off-the-shelf; only build in-house if no suitable solution exists | Authentication (OAuth/OIDC), email delivery, payment processing |
+
+**Enforcement rules**:
+- Core Domains must have rich domain models. CRUD repositories directly exposing database rows in a Core Domain indicate a design flaw.
+- Supporting Subdomains may use simpler patterns, but must still respect domain boundaries (ARCH-003).
+- Generic Subdomains should be wrapped behind adapters (PAT-005) to isolate the rest of the system from external implementations.
+- Every domain architecture document (`domains/*/ARCHITECTURE.md`) must declare its subdomain type in the header metadata and in the "Subdomain Classification" section.
+
+> **AI Instruction**: When implementing features in a Core Domain, invest in proper DDD tactical patterns (Aggregates, Value Objects, Domain Events). When implementing Generic Subdomain features, first ask whether an off-the-shelf solution exists before writing custom code.
+
+### Rule ARCH-012: Context Map Classification
+
+All cross-domain integrations must be documented with an explicit integration pattern from the DDD Context Map vocabulary. Undocumented integrations are prohibited.
+
+**Approved integration patterns**:
+
+| Pattern | Description | When to Use |
+|---------|-------------|-------------|
+| **Partnership** | Two bounded contexts coordinate closely; teams collaborate on integration | Two Core Domains that evolve together |
+| **Shared Kernel** | A small shared subset of the domain model is co-owned by two contexts | Two contexts with overlapping entities where duplication would cause drift |
+| **Customer-Supplier** | Upstream context (supplier) publishes a contract; downstream (customer) conforms to it | When one domain feeds another with well-defined data |
+| **Conformist** | Downstream accepts the upstream model as-is, with no translation | When the upstream is not willing or able to accommodate the downstream's needs |
+| **Anti-Corruption Layer (ACL)** | Downstream translates the upstream model into its own language via a translation layer | When a Core Domain consumes a model from a Generic or external domain |
+| **Open Host Service** | Upstream publishes a well-documented protocol for any consumer to use | Public APIs, event streams used by many consumers |
+| **Published Language** | A shared, well-documented exchange format agreed upon by both contexts | Event schemas, canonical data models, shared DTOs |
+
+**Mandatory ACL rule**: When a Core Domain consumes data from a Generic Subdomain or an external system, an Anti-Corruption Layer is **required** to translate external concepts into the Core Domain's ubiquitous language.
+
+> **AI Instruction**: When creating or modifying cross-domain integrations, identify the pattern and document it in the Context Map section of both affected domain architecture documents. Never let an external model's vocabulary leak into a Core Domain.
+
 ## Decision References
 
 | Rule | Related ADR | Status |
@@ -159,6 +199,8 @@ Apply defense in depth:
 | ARCH-001 | ADR-001 | Active |
 | ARCH-002 | ADR-001 | Active |
 | ARCH-003 | ADR-002 | Active |
+| ARCH-011 | (create ADR when subdomain classification is established) | Active |
+| ARCH-012 | (create ADR when Context Map is first documented) | Active |
 
 > **Maintenance Note**: Update this table when creating new ADRs that affect architecture rules.
 
@@ -169,5 +211,6 @@ When rules conflict, apply this precedence:
 2. Data integrity rules (ARCH-005, ARCH-006)
 3. Layer boundary rules (ARCH-001, ARCH-002)
 4. Communication rules (ARCH-003, ARCH-004)
+5. DDD investment rules (ARCH-011, ARCH-012) — govern design quality, not safety or integrity
 
 When uncertain, create a proposal document before proceeding.

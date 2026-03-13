@@ -14,6 +14,7 @@ import type { AuthProvider } from "@syntropy/identity";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { authContextPluginFp } from "./plugins/auth-context.js";
 import { authMiddlewarePluginFp } from "./plugins/auth-middleware.js";
+import { rateLimitPluginFp } from "./plugins/rate-limit.js";
 import { healthRoutes } from "./routes/health.js";
 import { authRoutes } from "./routes/auth.js";
 import { usersRoutes } from "./routes/users.js";
@@ -47,6 +48,7 @@ export async function createApp(options?: CreateAppOptions) {
   await app.register(fp(requestLoggerPlugin));
   await app.register(fp(authContextPluginFp), options ?? {});
   await app.register(fp(authMiddlewarePluginFp));
+  await app.register(fp(rateLimitPluginFp));
   await app.register(healthRoutes);
   await app.register(authRoutes);
   await app.register(usersRoutes);

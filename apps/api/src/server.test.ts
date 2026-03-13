@@ -42,4 +42,31 @@ describe("API server", () => {
     expect(response.statusCode).toBe(200);
     expect(response.headers["x-correlation-id"]).toBe(existingId);
   });
+
+  it("returns 429 with RATE_LIMITED and Retry-After after exceeding IP limit (COMP-033.3)", async () => {
+    const prev = process.env.RATE_LIMIT_TEST_MAX;
+    process.env.RATE_LIMIT_TEST_MAX = "20";
+    const rateLimitApp = await createApp();
+    try {
+      const url = "/api/v1/auth/me";
+      const opts = {
+        method: "GET" as const,
+        url,
+        headers: { "x-forwarded-for": "192.168.1.100" },
+      };
+      let lastRes = await rateLimitApp.inject(opts);
+      for (let i = 0; i < 20; i++) {
+        lastRes = await rateLimitApp.inject(opts);
+        if (lastRes.statusCode === 429) break;
+      }
+      expect(lastRes.statusCode).toBe(429);
+      expect(lastRes.headers["retry-after"]).toBeDefined();
+      const body = JSON.parse(lastRes.payload) as { error?: { code?: string } };
+      expect(body.error?.code).toBe("RATE_LIMITED");
+    } finally {
+      await rateLimitApp.close();
+      if (prev !== undefined) process.env.RATE_LIMIT_TEST_MAX = prev;
+      else delete process.env.RATE_LIMIT_TEST_MAX;
+    }
+  });
 });

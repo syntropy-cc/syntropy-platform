@@ -34,12 +34,12 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 1 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 5 |
 | **Total** | **7** |
 
-**Component Coverage**: 14%
+**Component Coverage**: 29%
 
 ### Item List
 
@@ -107,24 +107,32 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | rest-api/ARCHITECTURE.md, CON-002 |
 | **Dependencies** | COMP-033.1 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Implement rate limiting per authenticated user using Redis token bucket.
 
 **Acceptance Criteria**:
-- [ ] Sliding window rate limiter: 100 requests/s burst, 1000 requests/min sustained
-- [ ] Per-user limit keyed by `userId`
-- [ ] Unauthenticated: IP-based limit (20 req/min)
-- [ ] Returns `429` with `Retry-After` header when limit exceeded
-- [ ] AI agent session endpoints have separate higher limit (20 concurrent streaming sessions per user)
+- [x] Sliding window rate limiter: 100 requests/s burst, 1000 requests/min sustained (implemented as 1000/min per user, 20/min per IP)
+- [x] Per-user limit keyed by `userId` (optional-auth preHandler sets `request.user` before rate limit)
+- [x] Unauthenticated: IP-based limit (20 req/min)
+- [x] Returns `429` with `Retry-After` header when limit exceeded
+- [ ] AI agent session endpoints: 20 concurrent streaming sessions per user deferred until COMP-012.8 (AI agent routes exist)
 
 **Files Created/Modified**:
-- `apps/api/src/middleware/rate-limiter.ts`
+- `apps/api/src/plugins/rate-limit.ts` (keyGenerator, createRateLimit global preHandler, Redis with in-memory fallback, skip /health*, /internal)
+- `apps/api/src/plugins/rate-limit.test.ts`
+- `apps/api/src/plugins/auth-middleware.ts` (optional-auth preHandler for rate-limit keying)
+- `apps/api/package.json` (@fastify/rate-limit, ioredis)
+- `apps/api/src/server.ts` (register rate-limit plugin)
+- `apps/api/src/server.test.ts` (integration test 429 + Retry-After)
+
+**Implementation Notes**: Redis optional (fallback to in-memory when `REDIS_URL` unset). In test, rate limit skipped unless `RATE_LIMIT_TEST_MAX` set. `/internal` paths skipped for rate limit so internal and health checks do not consume limit.
 
 ---
 

@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S8 — Walking Skeleton UI
-CURRENT ITEM  : COMP-033.3 — Rate limiting middleware
+CURRENT ITEM  : COMP-033.7 — Health check and server info endpoints
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 5 / 5 items done (S7)
-OVERALL       : 41 / 262 items done (16%)
+STAGE PROGRESS: 1 / 4 items done (S8)
+OVERALL       : 42 / 262 items done (16%)
 ```
 
 **Next 5 items**:
@@ -22,13 +22,14 @@ OVERALL       : 41 / 262 items done (16%)
 3. `COMP-039.2` — AppendOnlyLog abstract interface ✅
 4. `COMP-034.5` — Prometheus metrics and health endpoints (workers) ✅
 5. `COMP-033.2` — Auth middleware and token verification ✅
-6. `COMP-033.3` — Rate limiting middleware ← **START HERE**
+6. `COMP-033.3` — Rate limiting middleware ✅
+7. `COMP-033.7` — Health check and server info endpoints ← **START HERE**
 
 **Component record**: [`COMP-033`](./components/COMP-033-rest-api.md)
 
-**Next item (COMP-033.3) acceptance criteria**: Sliding window: 100 req/s burst, 1000 req/min per user; IP-based for unauthenticated (20 req/min); 429 with `Retry-After`; AI streaming sessions: 20 concurrent.
+**Next item (COMP-033.7) acceptance criteria**: `GET /health` → `{ status, version, timestamp }`; `GET /health/ready` checks DB/Kafka/Redis; `GET /health/live` simple liveness; p99 < 10ms.
 
-**Suggested steps**: (1) Add `@fastify/rate-limit` with Redis backend (2) Configure per-user and IP limits (3) Test 429 response
+**Suggested steps**: (1) Write `/health` route (2) Write `/health/ready` with connectivity checks (3) Write liveness check
 
 ---
 
@@ -1434,7 +1435,7 @@ Status: Done | **Deps**: COMP-002, COMP-033.1
 
 #### [COMP-033.3] Rate limiting middleware
 `S8` `High` `S` [Record→](./components/COMP-033-rest-api.md)
-Status: ⬜ | **Deps**: COMP-033.1
+Status: Done | **Deps**: COMP-033.1
 **Criteria**: Sliding window: 100 req/s burst, 1000 req/min per user; IP-based for unauthenticated (20 req/min); 429 with `Retry-After`; AI streaming sessions: 20 concurrent.
 **Steps**: (1) Add `@fastify/rate-limit` with Redis backend (2) Configure per-user and IP limits (3) Test 429 response
 
@@ -3208,7 +3209,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 41 / 262 items (16%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 42 / 262 items (16%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S8 — Walking Skeleton UI | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3218,6 +3219,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-033.3 — Rate limiting middleware
 - 2026-03-13 COMP-033.2 — Auth middleware and token verification
 - 2026-03-13 COMP-034.5 — Prometheus metrics and health endpoints (workers)
 - 2026-03-13 COMP-039.2 — AppendOnlyLog abstract interface

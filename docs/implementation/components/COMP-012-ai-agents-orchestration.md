@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/ai-agents/subdomains/orchestration-context-engine.md](../../architecture/domains/ai-agents/subdomains/orchestration-context-engine.md)
 > **Stage Assignment**: S5 — AI Agents
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -52,12 +52,12 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 8 |
+| ⬜ Ready/Backlog | 7 |
 | **Total** | **8** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 12.5%
 
 ### Item List
 
@@ -65,26 +65,32 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | orchestration-context-engine.md, ADR-006 |
 | **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Set up `packages/ai-agents` workspace package and implement `UserContextModel` aggregate with its four context sections.
 
-**Acceptance Criteria**:
-- [ ] `packages/ai-agents` fully scaffolded with 4-layer structure
-- [ ] `UserContextModel` aggregate: `user_id`, `learning_context (LearningContextSection)`, `contribution_context (ContributionContextSection)`, `research_context (ResearchContextSection)`, `portfolio_context (PortfolioContextSection)`, `last_refreshed_at`
-- [ ] Each section: structured JSONB with relevant signals (e.g., LearningContext: `active_tracks`, `completed_fragments_count`, `skill_gaps`)
-- [ ] `UserContextModel.refresh(section, data)` updates specific section
-- [ ] `UserContextSnapshot` value object: immutable copy of UserContextModel at a point in time
+**Acceptance Criteria** (per IMPLEMENTATION-PLAN Section 7):
+- [x] `packages/ai-agents` fully scaffolded with 4-layer structure
+- [x] `UserContextModel` aggregate: `userId`, `recentActivity[]`, `activeGoals[]`, `skillLevel`; `update(event)` method
+- [x] `UserContextSnapshot` value object: immutable copy of UserContextModel at a point in time
+- [x] Unit tests for context update behavior
 
 **Files Created/Modified**:
+- `packages/ai-agents/package.json` (main, types, vitest, devDependencies)
+- `packages/ai-agents/tsconfig.json`, `vitest.config.ts`
+- `packages/ai-agents/src/domain/orchestration/types.ts`
 - `packages/ai-agents/src/domain/orchestration/user-context-model.ts`
 - `packages/ai-agents/src/domain/orchestration/user-context-snapshot.ts`
-- `packages/ai-agents/src/domain/orchestration/context-sections/`
+- `packages/ai-agents/src/domain/orchestration/index.ts`
+- `packages/ai-agents/src/domain/index.ts`, `src/application/index.ts`, `src/infrastructure/index.ts`
+- `packages/ai-agents/src/index.ts`
+- `packages/ai-agents/tests/unit/orchestration/user-context-model.test.ts`
 
 ---
 
@@ -279,6 +285,15 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 - `packages/ai-agents/src/api/routes/sessions.ts`
 - `packages/ai-agents/src/api/routes/agents.ts`
 - `packages/ai-agents/src/api/routes/internal.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-13 — COMP-012.1 completed
+
+- **Decision**: Implemented Plan contract: `UserContextModel` with `userId`, `recentActivity[]`, `activeGoals[]`, `skillLevel` and `update(event)` (discriminated union: `activity_added`, `goals_updated`, `skill_level_updated`). Four-section model (Learning/Contribution/Research/Portfolio) and `refresh(section, data)` can be added in a later evolution.
+- **Snapshot**: `UserContextSnapshot` created via `model.createSnapshot()`; immutable, includes `capturedAt`.
 
 ---
 

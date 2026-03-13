@@ -9,29 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S10 — DIP Artifact Registry Completion + AI Foundation Start
-CURRENT ITEM  : COMP-012.1 — AI agents package setup + UserContextModel aggregate
+CURRENT STAGE : S11 — DIP Smart Contract Engine
+CURRENT ITEM  : COMP-004.1 — Smart Contract Engine package setup
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 5 / 5 items done (S9) | 3 / 4 items done (S10)
-OVERALL       : 53 / 262 items done (20%)
+STAGE PROGRESS: 4 / 4 items done (S10) | 0 / 6 items done (S11)
+OVERALL       : 54 / 262 items done (21%)
 ```
 
 **Next 5 items**:
-1. `COMP-003.1` — DIP package setup + Artifact aggregate ✅
-2. `COMP-003.2` — ArtifactLifecycleService ✅
-3. `COMP-003.3` — NostrAnchor integration ✅
-4. `COMP-003.4` — ArtifactRepository (Postgres) ✅
-5. `COMP-003.5` — ArtifactEventPublisher ✅
-6. `COMP-003.6` — Artifact query service ✅
-7. `COMP-003.7` — Artifact REST API endpoints ✅
-8. `COMP-003.8` — Integration tests for Artifact Registry ✅
-9. `COMP-012.1` — AI agents package setup + UserContextModel aggregate ← **START HERE**
+1. `COMP-003.8` — Integration tests for Artifact Registry ✅
+2. `COMP-012.1` — AI agents package setup + UserContextModel aggregate ✅
+3. `COMP-004.1` — Smart Contract Engine package setup ← **START HERE**
+4. `COMP-004.2` — GovernanceContract aggregate + clause value objects
+5. `COMP-004.3` — SmartContractEvaluator
 
-**Component record**: [`COMP-012`](./components/COMP-012-ai-agents-orchestration.md)
+**Component record**: [`COMP-004`](./components/COMP-004-dip-smart-contract-engine.md)
 
-**Next item (COMP-012.1) acceptance criteria**: `packages/ai-agents` workspace; `UserContextModel` aggregate with `userId`, `recentActivity[]`, `activeGoals[]`, `skillLevel`; `update(event)` method; unit tests.
+**Next item (COMP-004.1) acceptance criteria**: `packages/dip-contracts` workspace; package initialized with TypeScript; base types: `ContractClause`, `EvaluationResult`; empty `GovernanceContract` scaffold; tests pass.
 
-**Suggested steps**: (1) Scaffold `packages/ai-agents` (2) Write `UserContextModel` aggregate (3) Write context update unit tests
+**Suggested steps**: (1) Scaffold `packages/dip-contracts` (2) Write base types (3) Write empty tests scaffold
 
 ---
 
@@ -1533,7 +1529,7 @@ Status: ✅ Done | **Deps**: COMP-003.7
 
 #### [COMP-012.1] AI agents package setup + UserContextModel aggregate
 `S10` `Critical` `S` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-002
+Status: ✅ Done | **Deps**: COMP-001, COMP-002
 **Criteria**: `packages/ai-agents` workspace; `UserContextModel` aggregate with `userId`, `recentActivity[]`, `activeGoals[]`, `skillLevel`; `update(event)` method; unit tests.
 **Steps**: (1) Scaffold `packages/ai-agents` (2) Write `UserContextModel` aggregate (3) Write context update unit tests
 
@@ -3211,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 53 / 262 items (20%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 54 / 262 items (21%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S10 — DIP Artifact Registry Completion + AI Foundation Start | S56 | ⬜ |
+| **Current Stage** | S11 — DIP Smart Contract Engine | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3221,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-012.1 — AI agents package setup + UserContextModel aggregate
 - 2026-03-13 COMP-003.8 — Integration tests for Artifact Registry
 - 2026-03-13 COMP-003.7 — Artifact REST API endpoints
 - 2026-03-13 COMP-003.6 — Artifact query service

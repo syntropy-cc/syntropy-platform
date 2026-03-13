@@ -1,6 +1,6 @@
 /**
- * AI Agents package — orchestration and registry.
- * Architecture: COMP-012, COMP-013
+ * AI Agents domain layer — aggregates and value objects.
+ * Architecture: COMP-012
  */
 
 export {
@@ -12,4 +12,4 @@ export {
   type SkillLevel,
   type UserContextUpdateEvent,
   type UserId,
-} from "./domain/index.js";
+} from "./orchestration/index.js";

@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S5 — Event Bus Core
-CURRENT ITEM  : COMP-009.2 — Event schema versioning system
+CURRENT STAGE : S6 — Event Bus Completion + Identity Finalization
+CURRENT ITEM  : COMP-009.8 — Schema registry API
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 0 / 7 items done (S5)
-OVERALL       : 24 / 262 items done (9%)
+STAGE PROGRESS: 0 / 5 items done (S6)
+OVERALL       : 31 / 262 items done (12%)
 ```
 
 **Next 5 items**:
-1. `COMP-009.2` — Event schema versioning system ← **START HERE**
-2. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
-3. `COMP-009.4` — ActorSignatureVerifier
-4. `COMP-009.5` — CausalChainTracer
-5. `COMP-009.6` — AppendOnlyLog repository (Postgres)
+1. `COMP-009.8` — Schema registry API ← **START HERE**
+2. `COMP-002.6` — Identity REST API endpoints
+3. `COMP-002.7` — Session Kafka consumer
+4. `COMP-034.3` — DLQ processor
+5. `COMP-034.4` — Scheduled job runner
 
 **Component record**: [`COMP-009`](./components/COMP-009-event-bus-audit.md)
 
-**Next item (COMP-009.2) acceptance criteria**: `EventSchema` registry base class; schema version in event envelope; backward compatibility check; `SchemaRegistry.register(topic, schema, version)` stores schema.
+**Next item (COMP-009.8) acceptance criteria**: `GET /internal/event-schemas` lists all registered schemas; `POST /internal/event-schemas` registers new version; compatibility check rejects breaking changes; admin-only access.
 
-**Suggested steps**: (1) Write `EventSchema` type with version field (2) Write `SchemaRegistry` in-memory store (3) Write compatibility check
+**Suggested steps**: (1) Write schema registry API routes (2) Add compatibility check logic (3) Write API tests
 
 ---
 
@@ -1297,7 +1297,7 @@ Status: Done | **Deps**: COMP-001
 
 #### [COMP-009.2] Event schema versioning system
 `S5` `Critical` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-009.1
+Status: ✅ Done | **Deps**: COMP-009.1
 **Criteria**: `EventSchema` registry base class; schema version in event envelope; backward compatibility check; `SchemaRegistry.register(topic, schema, version)` stores schema.
 **Steps**: (1) Write `EventSchema` type with version field (2) Write `SchemaRegistry` in-memory store (3) Write compatibility check
 
@@ -1305,7 +1305,7 @@ Status: ⬜ | **Deps**: COMP-009.1
 
 #### [COMP-009.3] AppendOnlyLog PostgreSQL schema + migrations
 `S5` `Critical` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-039.3
+Status: ✅ Done | **Deps**: COMP-039.3
 **Criteria**: Migration creates `event_log` table with all required columns; index on `(actor_id, recorded_at)` and `(correlation_id)`; triggers prevent UPDATE/DELETE.
 **Steps**: (1) Write migration file (2) Add index definitions (3) Add trigger to prevent mutations
 
@@ -1313,7 +1313,7 @@ Status: ⬜ | **Deps**: COMP-039.3
 
 #### [COMP-009.4] ActorSignatureVerifier
 `S5` `High` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-009.1
+Status: ✅ Done | **Deps**: COMP-009.1
 **Criteria**: `ActorSignatureVerifier.verify(event)` validates actor digital signature (Ed25519 or HMAC); rejects events with invalid signature; used by AppendOnlyLog consumer before write.
 **Steps**: (1) Write `ActorSignatureVerifier` (2) Implement Ed25519 verify (3) Write acceptance + rejection tests
 
@@ -1321,7 +1321,7 @@ Status: ⬜ | **Deps**: COMP-009.1
 
 #### [COMP-009.5] CausalChainTracer
 `S5` `High` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-009.1
+Status: ✅ Done | **Deps**: COMP-009.1
 **Criteria**: `CausalChainTracer.trace(eventId)` reconstructs causation chain from `causation_id` links; returns ordered list of events; handles cycles gracefully.
 **Steps**: (1) Write `CausalChainTracer` (2) Query `event_log` by causation chain (3) Write trace test
 
@@ -1329,7 +1329,7 @@ Status: ⬜ | **Deps**: COMP-009.1
 
 #### [COMP-009.6] AppendOnlyLog repository (Postgres)
 `S5` `High` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-009.3
+Status: ✅ Done | **Deps**: COMP-009.3
 **Criteria**: `AppendOnlyLogRepository.append(event)` inserts to `event_log`; `findByCorrelationId(id)` retrieves events; `findByActorId(actorId, dateRange)` for audit queries; no update/delete methods.
 **Steps**: (1) Write repository with INSERT-only methods (2) Add query methods (3) Integration test with real DB
 
@@ -1337,7 +1337,7 @@ Status: ⬜ | **Deps**: COMP-009.3
 
 #### [COMP-009.7] AppendOnlyLog Kafka consumer writer
 `S5` `High` `M` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-009.6, COMP-039.3
+Status: ✅ Done | **Deps**: COMP-009.6, COMP-039.3
 **Criteria**: Kafka consumer subscribes to all domain event topics; on each message, validates signature then writes to `event_log`; DLQ routing on validation failure; exactly-once semantics via Kafka transactions.
 **Steps**: (1) Write `AuditLogConsumer` subscribing to `*.events` topics (2) Add signature validation (3) Add DLQ routing on failure
 
@@ -1345,7 +1345,7 @@ Status: ⬜ | **Deps**: COMP-009.6, COMP-039.3
 
 #### [COMP-002.5] IdentityEventPublisher (Kafka)
 `S5` `High` `S` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-002.4, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-002.4, COMP-009.1
 **Criteria**: `IdentityEventPublisher` publishes `identity.user.created`, `identity.user.updated`, `identity.session.created` events to Kafka with correct schema; unit tests with mock Kafka.
 **Steps**: (1) Write `IdentityEventPublisher` (2) Map domain events to Kafka messages (3) Write publish tests
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 24 / 262 items (9%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 31 / 262 items (12%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S5 — Event Bus Core | S56 | ⬜ |
+| **Current Stage** | S6 — Event Bus Completion + Identity Finalization | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-009.2 — Event schema versioning system
+- 2026-03-13 COMP-009.3 — AppendOnlyLog PostgreSQL schema + migrations
+- 2026-03-13 COMP-009.4 — ActorSignatureVerifier
+- 2026-03-13 COMP-009.5 — CausalChainTracer
+- 2026-03-13 COMP-009.6 — AppendOnlyLog repository (Postgres)
+- 2026-03-13 COMP-009.7 — AppendOnlyLog Kafka consumer writer
+- 2026-03-13 COMP-002.5 — IdentityEventPublisher (Kafka)
 - 2026-03-13 COMP-033.1 — REST API server setup and middleware stack
 - 2026-03-13 COMP-009.1 — Kafka client package setup
 - 2026-03-13 COMP-034.2 — Kafka consumer worker bootstrapping
@@ -3246,26 +3253,26 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 23 | 51% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 31 | 69% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **22** | **8%** | ⬜ |
+| **Total** | **262** | **31** | **12%** | ⬜ |
 
 ### Component Coverage
 
 | Component | Items | Done | Status |
 |-----------|-------|------|--------|
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
-| COMP-002 Identity | 7 | 4 | 🔵 In Progress |
+| COMP-002 Identity | 7 | 5 | 🔵 In Progress |
 | COMP-003 DIP Artifact Registry | 8 | 0 | ⬜ Not Started |
 | COMP-004 DIP Smart Contract Engine | 6 | 0 | ⬜ Not Started |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
 | COMP-007 DIP Institutional Governance | 9 | 0 | ⬜ Not Started |
 | COMP-008 DIP Value Distribution & Treasury | 8 | 0 | ⬜ Not Started |
-| COMP-009 Event Bus & Audit | 8 | 1 | 🔵 In Progress |
+| COMP-009 Event Bus & Audit | 8 | 7 | 🔵 In Progress |
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
 | COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
 | COMP-012 AI Agents Orchestration | 8 | 0 | ⬜ Not Started |

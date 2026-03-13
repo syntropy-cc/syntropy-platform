@@ -120,6 +120,10 @@ importers:
   packages/ide: {}
 
   packages/identity:
+    dependencies:
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
     devDependencies:
       '@types/node':
         specifier: ^22.10.0
@@ -139,6 +143,9 @@ importers:
 
   packages/platform-core:
     dependencies:
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
       pino:
         specifier: ^9.5.0
         version: 9.14.0

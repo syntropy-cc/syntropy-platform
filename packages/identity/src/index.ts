@@ -26,4 +26,5 @@ export {
   SupabaseAuthAdapter,
   type SupabaseAuthLike,
 } from "./infrastructure/supabase-auth-adapter.js";
+export { IdentityEventPublisher } from "./infrastructure/IdentityEventPublisher.js";
 export { InvalidTokenError, AuthProviderError } from "./infrastructure/errors.js";

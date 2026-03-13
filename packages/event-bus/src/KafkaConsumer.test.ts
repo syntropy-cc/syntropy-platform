@@ -34,7 +34,7 @@ describe("KafkaConsumer", () => {
 
     consumer.subscribe("identity.events", handler);
 
-    expect(mockSubscribe).toHaveBeenCalledWith({ topic: "identity.events", fromBeginning: true });
+    expect(mockSubscribe).toHaveBeenCalledWith({ topics: ["identity.events"], fromBeginning: true });
     expect(mockRun).toHaveBeenCalledTimes(1);
     const runArg = mockRun.mock.calls[0][0];
     expect(typeof runArg.eachMessage).toBe("function");

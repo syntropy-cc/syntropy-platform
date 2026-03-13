@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@syntropy/event-bus": "workspace:*",
     "pino": "^9.5.0"
   },
   "devDependencies": {

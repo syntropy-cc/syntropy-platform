@@ -40,7 +40,14 @@ export class KafkaConsumer {
    * Must call connect() before subscribe. run() is started in the background (non-blocking).
    */
   subscribe(topic: string, handler: (message: ConsumedMessage) => Promise<void>): void {
-    this.consumer.subscribe({ topic, fromBeginning: true });
+    this.subscribeMany([topic], handler);
+  }
+
+  /**
+   * Subscribe to multiple topics with one handler. Use for audit log and multi-topic consumers.
+   */
+  subscribeMany(topics: string[], handler: (message: ConsumedMessage) => Promise<void>): void {
+    this.consumer.subscribe({ topics, fromBeginning: true });
 
     this.runPromise = this.consumer.run({
       eachMessage: async (payload: EachMessagePayload): Promise<void> => {

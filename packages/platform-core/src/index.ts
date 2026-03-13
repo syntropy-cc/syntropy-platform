@@ -60,3 +60,17 @@ export {
   BulkheadRejectedError,
   type BulkheadConfig,
 } from "./resilience/bulkhead.js";
+
+export {
+  PostgresAppendOnlyLogRepository,
+  CausalChainTracer,
+  AuditLogConsumer,
+  AUDIT_LOG_TOPICS,
+  AUDIT_LOG_CONSUMER_GROUP,
+  type AppendOnlyLogRepository,
+  type EventLogClient,
+  type EventLogEntry,
+  type EventLogEntryToAppend,
+  type DateRange,
+  type AuditLogConsumerOptions,
+} from "./event-log/index.js";

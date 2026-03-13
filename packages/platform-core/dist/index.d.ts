@@ -14,4 +14,5 @@ export { CircuitOpenError, TimeoutError } from "./resilience/errors.js";
 export { withTimeout, DEFAULT_HTTP_TIMEOUT_MS, DEFAULT_DB_TIMEOUT_MS, DEFAULT_JOB_TIMEOUT_MS, } from "./resilience/timeout.js";
 export { RetryPolicy, isRetryableError, type RetryPolicyConfig, type RetryExecuteOptions, type RetryLogger, } from "./resilience/retry-policy.js";
 export { Bulkhead, BulkheadRejectedError, type BulkheadConfig, } from "./resilience/bulkhead.js";
+export { PostgresAppendOnlyLogRepository, CausalChainTracer, type AppendOnlyLogRepository, type EventLogClient, type EventLogEntry, type EventLogEntryToAppend, type DateRange, } from "./event-log/index.js";
 //# sourceMappingURL=index.d.ts.map

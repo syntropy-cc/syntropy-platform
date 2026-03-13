@@ -4,7 +4,7 @@
  * Architecture: COMP-001, COMP-038, COMP-040, COMP-037
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BulkheadRejectedError = exports.Bulkhead = exports.isRetryableError = exports.RetryPolicy = exports.DEFAULT_JOB_TIMEOUT_MS = exports.DEFAULT_DB_TIMEOUT_MS = exports.DEFAULT_HTTP_TIMEOUT_MS = exports.withTimeout = exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = exports.appendToLog = exports.getAuditColumnsMigrationSnippet = exports.AuditColumnsMixin = exports.SoftDeletableMixin = exports.getEncryptionKey = exports.decryptField = exports.encryptField = exports.validateEnv = void 0;
+exports.CausalChainTracer = exports.PostgresAppendOnlyLogRepository = exports.BulkheadRejectedError = exports.Bulkhead = exports.isRetryableError = exports.RetryPolicy = exports.DEFAULT_JOB_TIMEOUT_MS = exports.DEFAULT_DB_TIMEOUT_MS = exports.DEFAULT_HTTP_TIMEOUT_MS = exports.withTimeout = exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = exports.appendToLog = exports.getAuditColumnsMigrationSnippet = exports.AuditColumnsMixin = exports.SoftDeletableMixin = exports.getEncryptionKey = exports.decryptField = exports.encryptField = exports.validateEnv = void 0;
 var env_validator_js_1 = require("./config/env-validator.js");
 Object.defineProperty(exports, "validateEnv", { enumerable: true, get: function () { return env_validator_js_1.validateEnv; } });
 var encrypted_field_js_1 = require("./security/encrypted-field.js");
@@ -37,3 +37,6 @@ Object.defineProperty(exports, "isRetryableError", { enumerable: true, get: func
 var bulkhead_js_1 = require("./resilience/bulkhead.js");
 Object.defineProperty(exports, "Bulkhead", { enumerable: true, get: function () { return bulkhead_js_1.Bulkhead; } });
 Object.defineProperty(exports, "BulkheadRejectedError", { enumerable: true, get: function () { return bulkhead_js_1.BulkheadRejectedError; } });
+var index_js_1 = require("./event-log/index.js");
+Object.defineProperty(exports, "PostgresAppendOnlyLogRepository", { enumerable: true, get: function () { return index_js_1.PostgresAppendOnlyLogRepository; } });
+Object.defineProperty(exports, "CausalChainTracer", { enumerable: true, get: function () { return index_js_1.CausalChainTracer; } });

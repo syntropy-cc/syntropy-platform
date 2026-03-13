@@ -2,6 +2,9 @@
   "name": "@syntropy/identity",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "@syntropy/event-bus": "workspace:*"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "echo 'lint placeholder'",

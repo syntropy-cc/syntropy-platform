@@ -52,3 +52,87 @@ describe("Artifact.draft", () => {
     expect(artifact.createdAt).toEqual(createdAt);
   });
 });
+
+describe("Artifact.submit", () => {
+  it("transitions from Draft to Submitted and returns new Artifact", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const artifact = Artifact.draft({ id, authorId });
+
+    const submitted = artifact.submit();
+
+    expect(submitted.id).toBe(id);
+    expect(submitted.status).toBe(ArtifactStatus.Submitted);
+    expect(submitted.publishedAt).toBeNull();
+    expect(submitted.archivedAt).toBeNull();
+    expect(artifact.status).toBe(ArtifactStatus.Draft);
+  });
+
+  it("throws when status is not Draft", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const artifact = Artifact.draft({ id, authorId }).submit();
+
+    expect(() => artifact.submit()).toThrow("cannot submit");
+    expect(() => artifact.submit()).toThrow("submitted");
+  });
+});
+
+describe("Artifact.publish", () => {
+  it("transitions from Submitted to Published and sets publishedAt", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const artifact = Artifact.draft({ id, authorId }).submit();
+
+    const published = artifact.publish();
+
+    expect(published.id).toBe(id);
+    expect(published.status).toBe(ArtifactStatus.Published);
+    expect(published.publishedAt).toBeInstanceOf(Date);
+    expect(published.archivedAt).toBeNull();
+  });
+
+  it("uses provided publishedAt when supplied", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const at = new Date("2024-06-01T12:00:00Z");
+    const artifact = Artifact.draft({ id, authorId }).submit();
+
+    const published = artifact.publish(at);
+
+    expect(published.publishedAt).toEqual(at);
+  });
+
+  it("throws when status is not Submitted", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const draftArtifact = Artifact.draft({ id, authorId });
+
+    expect(() => draftArtifact.publish()).toThrow("cannot publish");
+    expect(() => draftArtifact.publish()).toThrow("draft");
+  });
+});
+
+describe("Artifact.archive", () => {
+  it("transitions from Published to Archived and sets archivedAt", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const artifact = Artifact.draft({ id, authorId }).submit().publish();
+
+    const archived = artifact.archive();
+
+    expect(archived.id).toBe(id);
+    expect(archived.status).toBe(ArtifactStatus.Archived);
+    expect(archived.publishedAt).toBeInstanceOf(Date);
+    expect(archived.archivedAt).toBeInstanceOf(Date);
+  });
+
+  it("throws when status is not Published", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const draftArtifact = Artifact.draft({ id, authorId });
+
+    expect(() => draftArtifact.archive()).toThrow("cannot archive");
+    expect(() => draftArtifact.archive()).toThrow("draft");
+  });
+});

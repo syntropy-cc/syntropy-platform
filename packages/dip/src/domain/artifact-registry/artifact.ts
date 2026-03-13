@@ -7,9 +7,10 @@ import type { ArtifactId } from "./value-objects/artifact-id.js";
 import type { AuthorId } from "./value-objects/author-id.js";
 import type { ContentHash } from "./value-objects/content-hash.js";
 import { ArtifactStatus } from "./artifact-status.js";
+import { InvalidLifecycleTransitionError } from "./errors.js";
 
 /**
- * Artifact aggregate. Lifecycle: draft → published (optional: archived).
+ * Artifact aggregate. Lifecycle: draft → submitted → published → archived.
  * Invariants: publishedAt set only when status is published; archivedAt only when archived.
  */
 export class Artifact {
@@ -62,6 +63,82 @@ export class Artifact {
       createdAt,
       publishedAt: null,
       archivedAt: null,
+    });
+  }
+
+  /**
+   * Transitions from Draft to Submitted. Returns a new Artifact.
+   *
+   * @throws InvalidLifecycleTransitionError if status is not Draft
+   */
+  submit(): Artifact {
+    if (this.status !== ArtifactStatus.Draft) {
+      throw new InvalidLifecycleTransitionError(
+        this.status,
+        "submit",
+        this.id,
+      );
+    }
+    return new Artifact({
+      id: this.id,
+      authorId: this.authorId,
+      contentHash: this.contentHash,
+      status: ArtifactStatus.Submitted,
+      createdAt: this.createdAt,
+      publishedAt: this.publishedAt,
+      archivedAt: this.archivedAt,
+    });
+  }
+
+  /**
+   * Transitions from Submitted to Published. Sets publishedAt. Returns a new Artifact.
+   *
+   * @param publishedAt - Optional; defaults to new Date()
+   * @throws InvalidLifecycleTransitionError if status is not Submitted
+   */
+  publish(publishedAt?: Date): Artifact {
+    if (this.status !== ArtifactStatus.Submitted) {
+      throw new InvalidLifecycleTransitionError(
+        this.status,
+        "publish",
+        this.id,
+      );
+    }
+    const at = publishedAt ?? new Date();
+    return new Artifact({
+      id: this.id,
+      authorId: this.authorId,
+      contentHash: this.contentHash,
+      status: ArtifactStatus.Published,
+      createdAt: this.createdAt,
+      publishedAt: at,
+      archivedAt: this.archivedAt,
+    });
+  }
+
+  /**
+   * Transitions from Published to Archived. Sets archivedAt. Returns a new Artifact.
+   *
+   * @param archivedAt - Optional; defaults to new Date()
+   * @throws InvalidLifecycleTransitionError if status is not Published
+   */
+  archive(archivedAt?: Date): Artifact {
+    if (this.status !== ArtifactStatus.Published) {
+      throw new InvalidLifecycleTransitionError(
+        this.status,
+        "archive",
+        this.id,
+      );
+    }
+    const at = archivedAt ?? new Date();
+    return new Artifact({
+      id: this.id,
+      authorId: this.authorId,
+      contentHash: this.contentHash,
+      status: ArtifactStatus.Archived,
+      createdAt: this.createdAt,
+      publishedAt: this.publishedAt,
+      archivedAt: at,
     });
   }
 }

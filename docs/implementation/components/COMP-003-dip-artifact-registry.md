@@ -375,6 +375,12 @@ packages/dip/
 
 ## Implementation Log
 
+### 2026-03-13 - COMP-003.2 completed (Implementation Plan)
+
+- **COMP-003.2** (per IMPLEMENTATION-PLAN.md): ArtifactLifecycleService done.
+- Added: `ArtifactStatus.Submitted`; `Artifact.submit()`, `publish()`, `archive()` with `InvalidLifecycleTransitionError`; `ArtifactRepository` interface; `ArtifactLifecycleEvent` payloads and `ArtifactLifecycleEventPublisher` interface; `ArtifactLifecycleService` with `draft(authorId, content?)`, `submit(artifactId)`, `publish(artifactId)`, `archive(artifactId)`; each transition saves and publishes domain event (`dip.artifact.drafted`, `submitted`, `published`, `archived`). Content hash in draft via SHA-256 when content provided.
+- Unit tests: Artifact transitions (submit/publish/archive valid and invalid); ArtifactLifecycleService with mocked repository and event publisher (9 tests). All 38 tests pass.
+
 ### 2026-03-13 - COMP-003.1 completed (Implementation Plan)
 
 - **COMP-003.1** (per IMPLEMENTATION-PLAN.md): DIP package setup + Artifact aggregate done.

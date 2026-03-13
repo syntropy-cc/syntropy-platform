@@ -15,3 +15,12 @@ export {
   isContentHash,
 } from "./domain/index.js";
 export type { ArtifactId, AuthorId, ContentHash } from "./domain/index.js";
+export {
+  ArtifactLifecycleService,
+  ArtifactNotFoundError,
+} from "./application/index.js";
+export type {
+  ArtifactRepository,
+  ArtifactLifecycleEventPublisher,
+} from "./domain/index.js";
+export { InvalidLifecycleTransitionError } from "./domain/index.js";

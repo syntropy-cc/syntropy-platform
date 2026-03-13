@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S9 — DIP Artifact Registry Core
-CURRENT ITEM  : COMP-003.2 — ArtifactLifecycleService
+CURRENT ITEM  : COMP-003.3 — NostrAnchor integration
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S8) | 1 / 5 items done (S9)
-OVERALL       : 46 / 262 items done (18%)
+STAGE PROGRESS: 4 / 4 items done (S8) | 2 / 5 items done (S9)
+OVERALL       : 47 / 262 items done (18%)
 ```
 
 **Next 5 items**:
 1. `COMP-032.1` — Next.js app scaffolding and design system ✅
 2. `COMP-003.1` — DIP package setup + Artifact aggregate ✅
-3. `COMP-003.2` — ArtifactLifecycleService ← **START HERE**
-4. `COMP-003.3` — NostrAnchor integration
+3. `COMP-003.2` — ArtifactLifecycleService ✅
+4. `COMP-003.3` — NostrAnchor integration ← **START HERE**
 5. `COMP-003.4` — ArtifactRepository (Postgres)
 
 **Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
 
-**Next item (COMP-003.2) acceptance criteria**: `draft(author, content) → Artifact`; `submit(artifactId) → Artifact`; `publish(artifactId) → Artifact`; `archive(artifactId) → Artifact`; each step publishes domain event; unit tests with mock repo.
+**Next item (COMP-003.3) acceptance criteria**: `NostrAnchorService.anchor(artifact)` computes content hash and submits to Nostr relay; returns `NostrEventId`; stored on artifact; mock relay in tests.
 
-**Suggested steps**: (1) Write `ArtifactLifecycleService` (2) Add event publishing on each transition (3) Write lifecycle unit tests
+**Suggested steps**: (1) Write `NostrAnchorService` (2) Compute SHA-256 content hash (3) Mock Nostr relay in tests
 
 ---
 
@@ -1473,7 +1473,7 @@ Status: ✅ Done | **Deps**: COMP-001, COMP-009
 
 #### [COMP-003.2] ArtifactLifecycleService
 `S9` `Critical` `M` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.1
+Status: ✅ Done | **Deps**: COMP-003.1
 **Criteria**: `draft(author, content) → Artifact`; `submit(artifactId) → Artifact`; `publish(artifactId) → Artifact`; `archive(artifactId) → Artifact`; each step publishes domain event; unit tests with mock repo.
 **Steps**: (1) Write `ArtifactLifecycleService` (2) Add event publishing on each transition (3) Write lifecycle unit tests
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 46 / 262 items (18%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 47 / 262 items (18%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S9 — DIP Artifact Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-003.2 — ArtifactLifecycleService
 - 2026-03-13 COMP-003.1 — DIP package setup + Artifact aggregate
 - 2026-03-13 COMP-032.1 — Next.js app scaffolding and design system
 - 2026-03-13 COMP-032.2 — Auth Provider integration (Supabase UI)

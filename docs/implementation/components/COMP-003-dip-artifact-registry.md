@@ -375,6 +375,13 @@ packages/dip/
 
 ## Implementation Log
 
+### 2026-03-13 - COMP-003.1 completed (Implementation Plan)
+
+- **COMP-003.1** (per IMPLEMENTATION-PLAN.md): DIP package setup + Artifact aggregate done.
+- Added: `packages/dip` domain layout; value objects `ArtifactId`, `ContentHash`, `AuthorId`; `ArtifactStatus` enum; `Artifact` aggregate with `Artifact.draft()` factory.
+- Vitest added; 22 unit tests (value objects + Artifact). Build and tests pass.
+- Note: Component record item numbering (003.1 = setup, 003.2 = Artifact) differs from Plan; Plan is authority for execution order.
+
 ### 2026-03-13 - Component Created
 
 - Created initial implementation record

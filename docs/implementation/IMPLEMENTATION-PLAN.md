@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S9 — DIP Artifact Registry Core
-CURRENT ITEM  : COMP-003.1 — DIP package setup + Artifact aggregate
+CURRENT ITEM  : COMP-003.2 — ArtifactLifecycleService
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S8) | 0 / 5 items done (S9)
-OVERALL       : 45 / 262 items done (17%)
+STAGE PROGRESS: 4 / 4 items done (S8) | 1 / 5 items done (S9)
+OVERALL       : 46 / 262 items done (18%)
 ```
 
 **Next 5 items**:
 1. `COMP-032.1` — Next.js app scaffolding and design system ✅
-2. `COMP-003.1` — DIP package setup + Artifact aggregate ← **START HERE**
-3. `COMP-003.2` — ArtifactLifecycleService
+2. `COMP-003.1` — DIP package setup + Artifact aggregate ✅
+3. `COMP-003.2` — ArtifactLifecycleService ← **START HERE**
 4. `COMP-003.3` — NostrAnchor integration
 5. `COMP-003.4` — ArtifactRepository (Postgres)
 
 **Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
 
-**Next item (COMP-003.1) acceptance criteria**: `packages/dip` workspace; `Artifact` aggregate with `ArtifactId`, `ContentHash`, `AuthorId`; `ArtifactStatus` enum (`draft/published/archived`); `Artifact.draft()` factory; unit tests.
+**Next item (COMP-003.2) acceptance criteria**: `draft(author, content) → Artifact`; `submit(artifactId) → Artifact`; `publish(artifactId) → Artifact`; `archive(artifactId) → Artifact`; each step publishes domain event; unit tests with mock repo.
 
-**Suggested steps**: (1) Scaffold `packages/dip` (2) Write `Artifact` aggregate (3) Write `ArtifactId` + `ContentHash` value objects
+**Suggested steps**: (1) Write `ArtifactLifecycleService` (2) Add event publishing on each transition (3) Write lifecycle unit tests
 
 ---
 
@@ -1465,7 +1465,7 @@ Status: ✅ Done | **Deps**: COMP-001
 
 #### [COMP-003.1] DIP package setup + Artifact aggregate
 `S9` `Critical` `S` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-009
+Status: ✅ Done | **Deps**: COMP-001, COMP-009
 **Criteria**: `packages/dip` workspace; `Artifact` aggregate with `ArtifactId`, `ContentHash`, `AuthorId`; `ArtifactStatus` enum (`draft/published/archived`); `Artifact.draft()` factory; unit tests.
 **Steps**: (1) Scaffold `packages/dip` (2) Write `Artifact` aggregate (3) Write `ArtifactId` + `ContentHash` value objects
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 45 / 262 items (17%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 46 / 262 items (18%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S9 — DIP Artifact Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-003.1 — DIP package setup + Artifact aggregate
 - 2026-03-13 COMP-032.1 — Next.js app scaffolding and design system
 - 2026-03-13 COMP-032.2 — Auth Provider integration (Supabase UI)
 - 2026-03-13 COMP-033.7 — Health check and server info endpoints

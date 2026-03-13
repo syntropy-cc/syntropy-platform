@@ -325,7 +325,7 @@ All domains emit events conforming to registered EventSchema versions. Platform 
 | `learn.fragment.artifact_published` | Learn | Award XP, check achievement conditions, update skills |
 | `learn.track.completed` | Learn | Award track completion achievement, update career profile |
 | `hub.contribution.integrated` | Hub | Award XP, update skill in contribution domain |
-| `hub.hackin.completed` | Hub | Award XP and hackin achievement |
+| `hub.hackin.completed` | Hub | Award XP and ContributionSandbox achievement (event name retained; see ADR-011) |
 | `labs.review.submitted` | Labs | Award review XP, update reviewer reputation |
 | `labs.article.published` | Labs | Award publication achievement |
 | `dip.artifact.anchored` | DIP | Record in portfolio as verified artifact |

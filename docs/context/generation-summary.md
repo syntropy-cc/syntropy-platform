@@ -48,7 +48,7 @@
 | Digital Institutions Protocol (DIP) | Core | Artifact registry & identity anchoring (Nostr), IACP four-phase protocol, smart contract execution, institutional governance, value distribution & treasury (AVU) |
 | AI Agents | Core (orchestration) / Supporting (agents) | Agent orchestration, unified UserContextModel, agent registry & tool layer, 12 specialized pillar agents |
 | Learn | Core | Project-first tracks, courses, fragments (Problem→Theory→Artifact invariant), creator tools with AI copilot, mentorship |
-| Hub | Core | Collaboration layer (issues, contributions, hackin), institution orchestration UI, public square discovery |
+| Hub | Core | Collaboration layer (issues, contributions, contribution sandbox), institution orchestration UI, public square discovery |
 | Labs | Core | Scientific context extension on DIP entities, MyST+LaTeX article editor, experiment design, open peer review, DOI publication |
 | Sponsorship | Supporting | Voluntary sponsorship, creator monetization, Stripe ACL |
 | Communication | Supporting | Contextualized forums (anchor-required), direct messaging, activity feed, notifications |

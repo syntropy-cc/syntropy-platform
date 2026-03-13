@@ -144,7 +144,7 @@ The Vision Document meets all minimum thresholds — including all critical dime
 **What is present**:
 - Platform/Protocol (13 concepts): includes formal mathematical notation for key protocol entities (Artifact as triple, IACP phases with event signatures, Digital Institution as 4-component entity, Treasury liquidation sequence, Voting weight function Φ, Delegation registry Λ) — critical for architecture reasoning about the Digital Institutions Protocol
 - Learn (9 concepts): complete coverage of the content hierarchy (Career, Track, Course, Fragment) and learning artifacts (Reference Project, Learner Project, Collectible)
-- Hub (9 concepts): covers the institutional model (Institution, Project, Governance Contract, Proposal, Issue, Contribution, Hackin Dimension, Legitimacy Chain, Contract Template)
+- Hub (9 concepts): covers the institutional model (Institution, Project, Governance Contract, Proposal, Issue, Contribution, ContributionSandbox, Legitimacy Chain, Contract Template)
 - Labs (7 concepts): covers the research model (Laboratory, Research Line, Scientific Article, Review, Dataset, Experiment, Subject Area), with expanded notes on the Scientific Article lifecycle
 - All concepts have lifecycle states; protocol concepts have formal state definitions (e.g., "Emitted → Anchored → Archived", "Immutable once anchored")
 - Relationships ("Related To") are explicit and bidirectional where appropriate

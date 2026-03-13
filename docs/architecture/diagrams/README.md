@@ -2,7 +2,7 @@
 
 > **Document Type**: Diagram Index
 > **Parent**: [System Architecture](../ARCHITECTURE.md)
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-13
 
 This index catalogs all Mermaid diagrams embedded in the architecture documents. Diagrams are grouped by category and reference their source document with the diagram name and type.
 
@@ -112,10 +112,10 @@ This index catalogs all Mermaid diagrams embedded in the architecture documents.
 | Hub Context Map | `graph LR` | [Hub Architecture](../domains/hub/ARCHITECTURE.md#context-map-position) | ACL→DIP, Customer-Supplier→Learn |
 | Hub Subdomain Boundaries | `graph TB` | [Hub Architecture](../domains/hub/ARCHITECTURE.md#subdomain-boundaries-diagram) | 3 subdomains |
 | Contribution Review Sequence | `sequenceDiagram` | [Hub Architecture](../domains/hub/ARCHITECTURE.md#contribution-review-sequence) | Submission → Review → DIP publication → Integration |
-| Hub ERD | `erDiagram` | [Hub Architecture](../domains/hub/ARCHITECTURE.md#entity-relationship-diagram) | Issue, Contribution, HackinDimension, ContractTemplate |
+| Hub ERD | `erDiagram` | [Hub Architecture](../domains/hub/ARCHITECTURE.md#entity-relationship-diagram) | Issue, Contribution, ContributionSandbox, ContractTemplate |
 | Issue State Machine | `stateDiagram-v2` | [Collaboration Layer](../domains/hub/subdomains/collaboration-layer.md) | Open→InProgress→InReview→Closed |
 | Contribution State Machine | `stateDiagram-v2` | [Collaboration Layer](../domains/hub/subdomains/collaboration-layer.md) | Submitted→InReview→Accepted/Rejected→Integrated |
-| Collaboration Layer ERD | `erDiagram` | [Collaboration Layer](../domains/hub/subdomains/collaboration-layer.md) | Issue, Contribution, HackinDimension |
+| Collaboration Layer ERD | `erDiagram` | [Collaboration Layer](../domains/hub/subdomains/collaboration-layer.md) | Issue, Contribution, ContributionSandbox |
 | ContractTemplate ERD | `erDiagram` | [Institution Orchestration](../domains/hub/subdomains/institution-orchestration.md) | ContractTemplate, InstitutionCreationWorkflow |
 | Public Square Read Model | Table | [Public Square](../domains/hub/subdomains/public-square.md) | DiscoveryDocument structure |
 

@@ -1,7 +1,7 @@
 # Syntropy Ecosystem — System Architecture
 
 > **Document Type**: Root Architecture Document (Level 1 - Context)
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-13
 > **Version**: 1.0.0
 
 ## Generation Metadata
@@ -84,9 +84,9 @@ docs/architecture/ARCHITECTURE.md   ← You are here (root)
 │   │       ├── creator-tools-copilot.md        → AI-assisted authoring workflow
 │   │       └── mentorship-community.md         → MentorshipRelationship lifecycle
 │   │
-│   ├── hub/ARCHITECTURE.md                    → Issues, contributions, hackin, institution orchestration
+│   ├── hub/ARCHITECTURE.md                    → Issues, contributions, contribution sandbox, institution orchestration
 │   │   └── subdomains/
-│   │       ├── collaboration-layer.md          → Issue/Contribution/HackinDimension lifecycles
+│   │       ├── collaboration-layer.md          → Issue/Contribution/ContributionSandbox lifecycles
 │   │       ├── institution-orchestration.md    → ContractTemplates, InstitutionProfile read model
 │   │       └── public-square.md                → Discovery read model over DIP entities
 │   │
@@ -187,7 +187,7 @@ The system is organized into 12 bounded contexts. Each domain owns its data and 
 | **Digital Institutions Protocol (DIP)** | Core | Artifact registry & identity anchoring, IACP four-phase protocol, smart contracts, institutional governance, value distribution & treasury | [→ Architecture](./domains/digital-institutions-protocol/ARCHITECTURE.md) |
 | **AI Agents** | Core (orchestration) / Supporting (agents) | Agent orchestration, unified user context model, agent registry & tool layer, specialized pillar agents | [→ Architecture](./domains/ai-agents/ARCHITECTURE.md) |
 | **Learn** | Core | Tracks, courses, fragments (Problem→Theory→Artifact invariant), creator tools, mentorship, collectible definitions | [→ Architecture](./domains/learn/ARCHITECTURE.md) |
-| **Hub** | Core | Collaboration layer (issues, contributions, hackin), institution orchestration UI, public square discovery | [→ Architecture](./domains/hub/ARCHITECTURE.md) |
+| **Hub** | Core | Collaboration layer (issues, contributions, contribution sandbox), institution orchestration UI, public square discovery | [→ Architecture](./domains/hub/ARCHITECTURE.md) |
 | **Labs** | Core | Scientific context extension on DIP entities, article editor (MyST+LaTeX), experiment design, open peer review, DOI publication | [→ Architecture](./domains/labs/ARCHITECTURE.md) |
 | **Sponsorship** | Supporting | Voluntary sponsorship, creator monetization, impact discovery | [→ Architecture](./domains/sponsorship/ARCHITECTURE.md) |
 | **Communication** | Supporting | Contextualized forums (anchor-required), direct messaging, activity feed, notifications | [→ Architecture](./domains/communication/ARCHITECTURE.md) |
@@ -301,7 +301,7 @@ graph TD
     end
 
     subgraph hub_owned [Hub — Owned]
-        HUB_ENT["Issue\nContribution\nHackinDimension\nContractTemplate\nInstitutionProfile"]
+        HUB_ENT["Issue\nContribution\nContributionSandbox\nContractTemplate\nInstitutionProfile"]
     end
 
     subgraph labs_owned [Labs — Owned]

@@ -6,7 +6,9 @@ All notable architectural changes to the Syntropy Ecosystem are documented here.
 
 ## [Unreleased]
 
-*(No unreleased changes at this time — all current decisions are documented below.)*
+### Changed
+
+- **Hub**: Renamed HackinDimension to **ContributionSandbox** and clarified definition. ContributionSandbox is the mechanism that encapsulates the contribution workflow: isolated instance/container, clone artifact, contributor edits and sees effects, optional pull request (accepted or rejected). Applies to all DIP artifacts; available to every contributor who has access to the artifact (including owners and authorized contributors on private or closed projects). See [ADR-011](../decisions/ADR-011-contribution-sandbox-rename-and-definition.md).
 
 ---
 

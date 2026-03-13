@@ -3,7 +3,7 @@
 > **Document Type**: Subdomain Architecture Document (Level 3 - Component)
 > **Parent Domain**: [Hub](../ARCHITECTURE.md)
 > **Root Architecture**: [System Architecture](../../../ARCHITECTURE.md)
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-13
 > **Subdomain Owner**: Syntropy Core Team
 
 ## Metadata
@@ -21,11 +21,11 @@
 
 ### What This Subdomain Solves
 
-The Collaboration Layer is the heart of Hub — it provides the structured collaboration model that makes digital project work verifiable and organized. Issue, Contribution, and HackinDimension are Hub-exclusive concepts that solve the problem of "informal collaboration without attribution." When a Contribution is accepted and integrated, it becomes a DIP-anchored artifact with the contributor's cryptographic signature — permanent, verifiable proof of their contribution.
+The Collaboration Layer is the heart of Hub — it provides the structured collaboration model that makes digital project work verifiable and organized. Issue, Contribution, and ContributionSandbox are Hub-exclusive concepts that solve the problem of "informal collaboration without attribution." When a Contribution is accepted and integrated, it becomes a DIP-anchored artifact with the contributor's cryptographic signature — permanent, verifiable proof of their contribution.
 
 ### Subdomain Classification Rationale
 
-**Type**: Core Domain. The combination of structured Issue/Contribution lifecycles with automatic DIP artifact creation on contribution acceptance, plus the HackinDimension model for time-bounded collaborative events, constitutes novel collaboration infrastructure.
+**Type**: Core Domain. The combination of structured Issue/Contribution lifecycles with automatic DIP artifact creation on contribution acceptance, plus the ContributionSandbox mechanism (safe clone-edit-PR flow for all contributors with artifact access), constitutes novel collaboration infrastructure.
 
 ---
 
@@ -68,13 +68,13 @@ stateDiagram-v2
     Integrated --> [*]
 ```
 
-### HackinDimension
+### ContributionSandbox
 
-**Responsibility**: Manage structured collaborative events; create challenge-specific Issues; aggregate Contributions from the event.
+**Responsibility**: Encapsulate the contribution workflow: provision an isolated instance (or container, e.g. Docker); clone the artifact so the contributor can edit and see effects; optionally allow submission of a pull request (accepted or rejected). Applies to all DIP artifact types (code, documents, data). Available to every contributor who has access to the artifact — including owners and authorized contributors on private or closed projects; visibility (public vs private) does not restrict the mechanism, access permission does. Also orchestrates structured collaborative events; creates challenge-specific Issues; aggregates Contributions from the event.
 
 **Domain Events emitted**:
-- `hub.hackin.started` — event begins
-- `hub.hackin.completed` — event concludes (with participation summary)
+- `hub.hackin.started` — ContributionSandbox session or event begins (event name retained for compatibility; see ADR-011)
+- `hub.hackin.completed` — ContributionSandbox lifecycle event concludes (with participation summary)
 
 ```mermaid
 erDiagram
@@ -112,7 +112,7 @@ erDiagram
         uuid issue_id FK
     }
 
-    HACKIN_DIMENSION {
+    CONTRIBUTION_SANDBOX {
         uuid id PK
         uuid project_id FK
         string title
@@ -125,8 +125,8 @@ erDiagram
 
     ISSUE ||--o{ CONTRIBUTION_ISSUE_LINK : "addressed by"
     CONTRIBUTION ||--o{ CONTRIBUTION_ISSUE_LINK : "addresses"
-    HACKIN_DIMENSION ||--o{ CONTRIBUTION : "generates"
-    HACKIN_DIMENSION ||--o{ ISSUE : "creates"
+    CONTRIBUTION_SANDBOX ||--o{ CONTRIBUTION : "generates"
+    CONTRIBUTION_SANDBOX ||--o{ ISSUE : "creates"
 ```
 
 ---
@@ -136,7 +136,7 @@ erDiagram
 | Service | Responsibility | Operates On |
 |---------|---------------|-------------|
 | `ContributionIntegrationService` | On Contribution acceptance: calls DIP ACL adapter to publish artifact; sets dip_artifact_id; closes linked Issues if criteria met | Contribution, Issue aggregates, DIP adapter |
-| `HackinEventOrchestrator` | Manages HackinDimension lifecycle; creates structured Issues from challenge definition; aggregates participation records | HackinDimension aggregate |
+| `ContributionSandboxOrchestrator` | Manages ContributionSandbox lifecycle; provisions isolated instance/container, clone, edit session, optional PR; creates structured Issues from challenge definition; aggregates participation records | ContributionSandbox aggregate |
 
 ---
 
@@ -146,4 +146,4 @@ erDiagram
 |----------------|---------|----------------------------------|
 | Structured contribution workflow (cap. 28) | §28 | Contribution lifecycle with DIP artifact creation on acceptance |
 | Issue system (cap. 29) | §29 | Issue lifecycle from Open to Closed |
-| Hackin model (cap. 30) | §30 | HackinDimension for time-bounded collaborative events |
+| Contribution sandbox (cap. 30) | §30 | ContributionSandbox — safe clone-edit-PR for all contributors with artifact access; time-bounded collaborative events |

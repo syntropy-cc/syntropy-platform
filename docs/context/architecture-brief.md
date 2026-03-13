@@ -52,7 +52,7 @@
 | AVU, Treasury, ArtifactManifesto, DependencyGraph | DIP | Hub presents treasury state as read model. Never owns. |
 | CollectibleDefinition (template) | Learn | Platform Core owns CollectibleInstance (earned item in portfolio) |
 | XP, Achievement, CollectibleInstance, Skill, Reputation | Platform Core | Pillars emit events; Platform Core transforms into portfolio state |
-| Issue, Contribution, HackinDimension, ContractTemplate | Hub | Hub-exclusive collaboration concepts with no DIP equivalent |
+| Issue, Contribution, ContributionSandbox, ContractTemplate | Hub | Hub-exclusive collaboration concepts with no DIP equivalent |
 | Review, SubjectArea, DOIRecord, ExperimentDesign | Labs | Labs-exclusive scientific concepts with no DIP equivalent |
 | Career, Track, Course, Fragment, CollectibleDefinition | Learn | Learn-exclusive pedagogical concepts with no DIP equivalent |
 | EcosystemEvent, AppendOnlyLog, EventSchema | Platform Core | All domains emit events conforming to registered schemas; Platform Core owns the log |
@@ -68,7 +68,7 @@
 | Digital Institutions Protocol (DIP) | Artifact registry and identity anchoring, IACP four-phase protocol, smart contract execution, institutional governance, value distribution and treasury, legitimacy chain | Core | Artifact, IdentityRecord, IACP, UsageAgreementEvent, UsageEvent, DigitalProject, DigitalInstitution, GovernanceContract, Proposal, LegitimacyChain, AVU, Treasury, ArtifactManifesto, DependencyGraph | 13–18 |
 | AI Agents | Agent orchestration, unified user context model, agent registry and tool layer, specialized pillar agents | Core (orchestration) / Supporting (agents) | AIAgent, UserContextModel, AgentSession, ToolCall, AgentMemory | Embedded across pillars |
 | Learn | Tracks, courses, fragments (fixed Problem→Theory→Artifact invariant), creator tools, mentorship, collectible definitions | Core | Career, Track, Course, Fragment, CollectibleDefinition, TrackProjectLink, LearnerProgressRecord, MentorshipRelationship, AICopilotSession | 19–26 |
-| Hub | Collaboration layer (issues, contributions, hackin), institution orchestration UI, public square discovery | Core | Issue, Contribution, HackinDimension, ContractTemplate, InstitutionProfile | 27–32 |
+| Hub | Collaboration layer (issues, contributions, contribution sandbox), institution orchestration UI, public square discovery | Core | Issue, Contribution, ContributionSandbox, ContractTemplate, InstitutionProfile | 27–32 |
 | Labs | Scientific context extension on DIP entities, article editor, experiment design, open peer review, DOI publication | Core | Review, ReviewPassageLink, AuthorResponse, SubjectArea, ResearchMethodology, HypothesisRecord, ExperimentDesign, DOIRecord | 33–40 |
 | Sponsorship | Voluntary sponsorship, creator monetization, impact discovery | Supporting | Sponsorship, CreatorMonetization, ImpactMetric, AccessPolicy | 4 |
 | Communication | Contextualized forums (anchor-required), direct messaging, activity feed, notifications | Supporting | Thread, Reply, ContextAnchor, Message, Notification | 8 |
@@ -122,7 +122,7 @@
 
 | Subdomain | Type | Responsibility |
 |-----------|------|---------------|
-| **Collaboration Layer** | Core | Issue lifecycle (Open→InProgress→InReview→Closed), Contribution review cycle (Submitted→InReview→Accepted/Rejected→Integrated), HackinDimension management — Hub's exclusively-owned collaboration concepts |
+| **Collaboration Layer** | Core | Issue lifecycle (Open→InProgress→InReview→Closed), Contribution review cycle (Submitted→InReview→Accepted/Rejected→Integrated), ContributionSandbox management — Hub's exclusively-owned collaboration concepts |
 | **Institution Orchestration** | Supporting | Institution creation workflow via ContractTemplates (pre-audited DIP GovernanceContract shortcuts); InstitutionProfile (read/presentation model over DIP entities); configuration UI for DIP governance parameters — Hub orchestrates, DIP executes |
 | **Public Square** | Supporting | Read model for institution and project discovery; renders public DIP entities; prominence based on activity signals from Platform Core event log |
 
@@ -212,7 +212,7 @@
 | Platform Core | Component diagram (3 subdomains), event flow sequence (emission → signing → append-only log → portfolio aggregation), two-level event signing hierarchy diagram |
 | DIP | IACP four-phase protocol sequence, artifact identity ERD (Artifact/IdentityRecord/IACP/UsageEvent), governance state machine (Proposal lifecycle + LegitimacyChain), dependency DAG activity diagram |
 | Learn | ERD (Career/Track/Course/Fragment + TrackProjectLink→DIP), fragment lifecycle sequence, creator authoring workflow activity diagram |
-| Hub | Collaboration ERD (Issue/Contribution/HackinDimension + references to DIP entities by ID), institution orchestration flow, contribution review sequence |
+| Hub | Collaboration ERD (Issue/Contribution/ContributionSandbox + references to DIP entities by ID), institution orchestration flow, contribution review sequence |
 | Labs | Scientific ERD (Review/SubjectArea/DOIRecord + references to DIP entities), article publication cycle sequence, peer review flow |
 | AI Agents | Orchestration component diagram, UserContextModel ERD, agent invocation sequence |
 
@@ -281,7 +281,7 @@
 
 | Ambiguity | Severity | Resolution |
 |-----------|----------|------------|
-| DIP vs Hub boundary: DIP includes both technical protocol (IACP, artifact identity) and governance logic deeply used by Hub. Single or separate bounded context? | Significant | Assumed: DIP is a separate Core bounded context; Hub consumes DIP via ACL (mandatory per ARCH-012). DIP owns contracts and protocol; Hub owns management UI and collaboration-specific concepts (Issue, Contribution, HackinDimension). |
+| DIP vs Hub boundary: DIP includes both technical protocol (IACP, artifact identity) and governance logic deeply used by Hub. Single or separate bounded context? | Significant | Assumed: DIP is a separate Core bounded context; Hub consumes DIP via ACL (mandatory per ARCH-012). DIP owns contracts and protocol; Hub owns management UI and collaboration-specific concepts (Issue, Contribution, ContributionSandbox). |
 | AI Agents: Orchestration Engine (Core) and Specialized Agents (Supporting) — one domain or two? | Significant | Assumed: Single bounded context with 3 internal subdomains (Orchestration Core, Registry/Tool Layer, Pillar Agents). Vocabulary is shared; scaling needs are similar at current team size. |
 | Labs architecture-first, launch-later: Labs is architectured from day 1 but launches after Learn and Hub. | Significant | Assumed: Labs domain fully defined with all entities, contracts, and integrations. Feature flags and deployment phases control user-facing availability. No conditional architecture. |
 | Governance & Moderation role management vs Identity enforcement | Minor | Assumed: Identity defines and enforces roles/permissions; Governance & Moderation defines platform policies and initiates role transitions via event bus events. Policy definition vs enforcement separation. |

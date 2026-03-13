@@ -2,10 +2,10 @@
 
 > **Document Type**: Domain Architecture Document (Level 2 - Container)
 > **Parent**: [System Architecture](../../ARCHITECTURE.md)
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-13
 > **Domain Owner**: Syntropy Core Team
 > **Subdomain Type**: Core Domain
-> **Rationale**: Hub's core competitive advantage is its structured collaboration model — Issue, Contribution, and HackinDimension are novel concepts that solve the problem of "informal collaboration without structure." No existing platform combines verifiable contributor attribution (via DIP), structured governance (via DIP institutional contracts), and the hackin model (structured short-cycle contribution events) in a single coherent interface.
+> **Rationale**: Hub's core competitive advantage is its structured collaboration model — Issue, Contribution, and ContributionSandbox are novel concepts that solve the problem of "informal collaboration without structure." No existing platform combines verifiable contributor attribution (via DIP), structured governance (via DIP institutional contracts), and the contribution sandbox (safe clone-edit-PR flow for all contributors with artifact access) in a single coherent interface.
 
 ---
 
@@ -16,7 +16,7 @@
 | Digital organization as complete entity (cap. 27) | §56 | Hub orchestrates institution creation via ContractTemplates over DIP governance; InstitutionProfile is the read model |
 | Structured contribution workflow (cap. 28) | §28 | Collaboration Layer — Contribution lifecycle (Submitted→InReview→Accepted/Rejected→Integrated) |
 | Issue system for project collaboration (cap. 29) | §29 | Collaboration Layer — Issue lifecycle (Open→InProgress→InReview→Closed) |
-| Hackin model for structured contribution events (cap. 30) | §30 | HackinDimension management in Collaboration Layer |
+| Contribution sandbox for safe contribution (cap. 30) | §30 | ContributionSandbox management in Collaboration Layer — safe clone, edit, optional PR for all contributors with artifact access |
 | Public square for institution and project discovery (cap. 31) | §31 | Public Square subdomain — read model over DIP entities |
 | Institution governance UI (cap. 32) | §32 | Institution Orchestration subdomain — wraps DIP governance via ContractTemplates |
 
@@ -28,7 +28,7 @@ This document describes the **Hub** bounded context — responsible for structur
 
 ### What This Document Covers
 
-- Issue, Contribution, and HackinDimension as Hub's exclusively-owned collaboration concepts
+- Issue, Contribution, and ContributionSandbox as Hub's exclusively-owned collaboration concepts
 - Institution Orchestration UI (ContractTemplates as shortcuts to DIP governance)
 - Public Square as a discovery read model over DIP entities
 - ACL with DIP (Hub orchestrates, DIP executes)
@@ -44,7 +44,7 @@ This document describes the **Hub** bounded context — responsible for structur
 
 ### Business Capability
 
-Hub solves the collaboration problem: no existing platform lets a digital organization exist as a complete entity with verifiable governance, contributor attribution, and structured collaboration in one place. Hub provides the collaboration layer (Issues, Contributions, Hackins) and the institution management UI (ContractTemplates) on top of DIP's foundational protocol. Without Hub, DIP's power would be inaccessible to most users — Hub is the UX layer that makes DIP manageable.
+Hub solves the collaboration problem: no existing platform lets a digital organization exist as a complete entity with verifiable governance, contributor attribution, and structured collaboration in one place. Hub provides the collaboration layer (Issues, Contributions, Contribution Sandboxes) and the institution management UI (ContractTemplates) on top of DIP's foundational protocol. Without Hub, DIP's power would be inaccessible to most users — Hub is the UX layer that makes DIP manageable.
 
 ### Ubiquitous Language
 
@@ -52,7 +52,7 @@ Hub solves the collaboration problem: no existing platform lets a digital organi
 |------|------------|-------|
 | **Issue** | A discrete unit of work in a DigitalProject, with a defined acceptance criteria | Lifecycle: Open→InProgress→InReview→Closed; Hub-exclusive |
 | **Contribution** | A submitted piece of work addressing one or more Issues | Lifecycle: Submitted→InReview→Accepted/Rejected→Integrated; produces an Artifact anchored to DIP on acceptance |
-| **HackinDimension** | A structured, time-bounded collaborative event organized around a specific problem or challenge | Hub-exclusive concept; creates Issues and records Contributions |
+| **ContributionSandbox** | The mechanism that encapsulates the contribution workflow: creates an isolated instance (or container, e.g. Docker); clones the artifact so the contributor can edit and see effects; optionally submit a pull request (accepted or rejected). Applies to all DIP artifacts (code, documents, data). Available to every contributor who has access to the artifact — including owners and authorized contributors on private or closed projects. Visibility (public vs private) does not restrict the mechanism; access permission does. | Hub-exclusive concept; creates Issues and records Contributions; see [ADR-011](../../decisions/ADR-011-contribution-sandbox-rename-and-definition.md) |
 | **ContractTemplate** | A pre-audited shortcut to a DIP GovernanceContract — a standardized governance configuration for common institution types | Hub owns the templates; DIP executes the resulting contracts |
 | **InstitutionProfile** | A read/presentation model over a DIP DigitalInstitution — Hub's view of institutional state for display | Hub never owns institution data; InstitutionProfile is a projection |
 | **Collaborator** | A contributor who has submitted at least one Accepted Contribution to a project | Distinct from project member (governance role defined in DIP) |
@@ -65,7 +65,7 @@ Hub solves the collaboration problem: no existing platform lets a digital organi
 
 **Type**: Core Domain
 
-Issue, Contribution, and HackinDimension represent novel collaboration models with no off-the-shelf equivalent in the context of verifiable contributor attribution and DIP integration. ContractTemplates require domain expertise about both governance patterns and DIP protocol — they are not configuration files.
+Issue, Contribution, and ContributionSandbox represent novel collaboration models with no off-the-shelf equivalent in the context of verifiable contributor attribution and DIP integration. ContractTemplates require domain expertise about both governance patterns and DIP protocol — they are not configuration files.
 
 ### Context Map Position
 
@@ -100,7 +100,7 @@ graph LR
 
 | Subdomain | Type | Responsibility | Document |
 |-----------|------|----------------|----------|
-| **Collaboration Layer** | Core | Issue/Contribution/HackinDimension lifecycles, contributor attribution | [→ Architecture](./subdomains/collaboration-layer.md) |
+| **Collaboration Layer** | Core | Issue/Contribution/ContributionSandbox lifecycles, contributor attribution | [→ Architecture](./subdomains/collaboration-layer.md) |
 | **Institution Orchestration** | Supporting | ContractTemplate management, InstitutionProfile read model, DIP governance configuration UI | [→ Architecture](./subdomains/institution-orchestration.md) |
 | **Public Square** | Supporting | Read model for institution and project discovery, DIP entity rendering, prominence signals | [→ Architecture](./subdomains/public-square.md) |
 
@@ -112,7 +112,7 @@ graph TB
         subgraph collabLayer [Collaboration Layer - Core]
             ISSUE_AGG["Issue Aggregate\n(Open→InProgress→InReview→Closed)"]
             CONTRIBUTION_AGG["Contribution Aggregate\n(Submitted→InReview→Accepted/Rejected→Integrated)"]
-            HACKIN_DIM["HackinDimension\n(structured events)"]
+            CONTRIB_SANDBOX["ContributionSandbox\n(safe clone-edit-PR for contributors with access)"]
             ISSUE_AGG -->|"contribution addresses issue"| CONTRIBUTION_AGG
         end
         subgraph instOrch [Institution Orchestration - Supporting]
@@ -167,7 +167,7 @@ sequenceDiagram
 |--------|-------------|-------------|
 | Issue | Discrete work unit | Internal / Public (for public projects) |
 | Contribution | Submitted work product | Internal / Public |
-| HackinDimension | Structured collaborative event | Internal / Public |
+| ContributionSandbox | Safe contribution workflow (isolated instance, clone, edit, optional PR) | Internal / Public |
 | ContractTemplate | Pre-audited governance configuration | Internal |
 | InstitutionProfile | Read model (no owned business data) | Derived (from DIP) |
 
@@ -208,7 +208,7 @@ erDiagram
         uuid issue_id FK
     }
 
-    HACKIN_DIMENSION {
+    CONTRIBUTION_SANDBOX {
         uuid id PK
         uuid project_id FK
         string title
@@ -231,8 +231,8 @@ erDiagram
 
     ISSUE ||--o{ CONTRIBUTION_ISSUE_LINK : "addressed by"
     CONTRIBUTION ||--o{ CONTRIBUTION_ISSUE_LINK : "addresses"
-    HACKIN_DIMENSION ||--o{ CONTRIBUTION : "generates"
-    HACKIN_DIMENSION ||--o{ ISSUE : "creates"
+    CONTRIBUTION_SANDBOX ||--o{ CONTRIBUTION : "generates"
+    CONTRIBUTION_SANDBOX ||--o{ ISSUE : "creates"
 ```
 
 ---
@@ -264,7 +264,7 @@ Published when an Issue transitions to Closed state.
 
 #### `hub.hackin.completed`
 
-Published when a HackinDimension event concludes.
+Published when a ContributionSandbox lifecycle event concludes. (Event name retained for backward compatibility; see ADR-011.)
 
 #### `hub.institution.created`
 

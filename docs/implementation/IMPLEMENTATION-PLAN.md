@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S8 — Walking Skeleton UI
-CURRENT ITEM  : COMP-033.7 — Health check and server info endpoints
+CURRENT ITEM  : COMP-032.2 — Auth Provider integration (Supabase UI)
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 1 / 4 items done (S8)
-OVERALL       : 42 / 262 items done (16%)
+STAGE PROGRESS: 2 / 4 items done (S8)
+OVERALL       : 43 / 262 items done (16%)
 ```
 
 **Next 5 items**:
@@ -23,13 +23,14 @@ OVERALL       : 42 / 262 items done (16%)
 4. `COMP-034.5` — Prometheus metrics and health endpoints (workers) ✅
 5. `COMP-033.2` — Auth middleware and token verification ✅
 6. `COMP-033.3` — Rate limiting middleware ✅
-7. `COMP-033.7` — Health check and server info endpoints ← **START HERE**
+7. `COMP-033.7` — Health check and server info endpoints ✅
+8. `COMP-032.2` — Auth Provider integration (Supabase UI) ← **START HERE**
 
-**Component record**: [`COMP-033`](./components/COMP-033-rest-api.md)
+**Component record**: [`COMP-032`](./components/COMP-032-web-application.md)
 
-**Next item (COMP-033.7) acceptance criteria**: `GET /health` → `{ status, version, timestamp }`; `GET /health/ready` checks DB/Kafka/Redis; `GET /health/live` simple liveness; p99 < 10ms.
+**Next item (COMP-032.2) acceptance criteria**: Next.js Auth Provider wraps Supabase client; `/login` page renders; `/logout` clears session; `useUser()` hook returns current user; protected routes redirect to `/login`.
 
-**Suggested steps**: (1) Write `/health` route (2) Write `/health/ready` with connectivity checks (3) Write liveness check
+**Suggested steps**: (1) Add `@supabase/ssr` to apps (2) Write `AuthProvider` component (3) Write `useUser` hook
 
 ---
 
@@ -1443,7 +1444,7 @@ Status: Done | **Deps**: COMP-033.1
 
 #### [COMP-033.7] Health check and server info endpoints
 `S8` `High` `XS` [Record→](./components/COMP-033-rest-api.md)
-Status: ⬜ | **Deps**: COMP-033.1
+Status: ✅ Done | **Deps**: COMP-033.1
 **Criteria**: `GET /health` → `{ status, version, timestamp }`; `GET /health/ready` checks DB/Kafka/Redis; `GET /health/live` simple liveness; p99 < 10ms.
 **Steps**: (1) Write `/health` route (2) Write `/health/ready` with connectivity checks (3) Write liveness check
 
@@ -3209,7 +3210,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 42 / 262 items (16%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 43 / 262 items (16%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S8 — Walking Skeleton UI | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3219,6 +3220,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-033.7 — Health check and server info endpoints
 - 2026-03-13 COMP-033.3 — Rate limiting middleware
 - 2026-03-13 COMP-033.2 — Auth middleware and token verification
 - 2026-03-13 COMP-034.5 — Prometheus metrics and health endpoints (workers)
@@ -3309,7 +3311,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-030 IDE Domain | 8 | 0 | ⬜ Not Started |
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
 | COMP-032 Web Application | 8 | 0 | ⬜ Not Started |
-| COMP-033 REST API Gateway | 7 | 2 | 🔵 In Progress |
+| COMP-033 REST API Gateway | 7 | 4 | 🔵 In Progress |
 | COMP-034 Background Services | 7 | 6 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |

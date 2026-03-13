@@ -19,10 +19,53 @@ describe("API server", () => {
     await app.close();
   });
 
-  it("GET /health returns 200 and { status: 'ok' }", async () => {
+  it("GET /health returns 200 with status, version, and timestamp (COMP-033.7)", async () => {
     const response = await app.inject({ method: "GET", url: "/health" });
     expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.payload) as {
+      status: string;
+      version: string;
+      timestamp: string;
+    };
+    expect(body.status).toBe("ok");
+    expect(body.version).toBeDefined();
+    expect(typeof body.version).toBe("string");
+    expect(body.timestamp).toBeDefined();
+    expect(() => new Date(body.timestamp).toISOString()).not.toThrow();
+  });
+
+  it("GET /health/live returns 200 and minimal body (COMP-033.7)", async () => {
+    const response = await app.inject({ method: "GET", url: "/health/live" });
+    expect(response.statusCode).toBe(200);
     expect(JSON.parse(response.payload)).toEqual({ status: "ok" });
+  });
+
+  it("GET /health/ready returns 200 with checks when no deps configured (COMP-033.7)", async () => {
+    const prevRedis = process.env.REDIS_URL;
+    const prevDb = process.env.DATABASE_URL;
+    const prevKafka = process.env.KAFKA_BROKERS;
+    delete process.env.REDIS_URL;
+    delete process.env.DATABASE_URL;
+    delete process.env.KAFKA_BROKERS;
+    try {
+      const response = await app.inject({ method: "GET", url: "/health/ready" });
+      expect(response.statusCode).toBe(200);
+      const body = JSON.parse(response.payload) as {
+        status: string;
+        checks: Record<string, string>;
+        timestamp: string;
+      };
+      expect(body.status).toBe("ok");
+      expect(body.checks).toEqual({
+        redis: "skipped",
+        database: "skipped",
+        kafka: "skipped",
+      });
+    } finally {
+      if (prevRedis !== undefined) process.env.REDIS_URL = prevRedis;
+      if (prevDb !== undefined) process.env.DATABASE_URL = prevDb;
+      if (prevKafka !== undefined) process.env.KAFKA_BROKERS = prevKafka;
+    }
   });
 
   it("GET /health response includes X-Correlation-ID header", async () => {

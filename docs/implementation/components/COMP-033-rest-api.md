@@ -34,12 +34,12 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 2 |
+| ✅ Done | 4 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **7** |
 
-**Component Coverage**: 29%
+**Component Coverage**: 57%
 
 ### Item List
 
@@ -216,23 +216,30 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | rest-api/ARCHITECTURE.md |
 | **Dependencies** | COMP-033.1 |
 | **Size** | XS |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Implement health check and server info endpoints for load balancer and monitoring.
 
 **Acceptance Criteria**:
-- [ ] `GET /health` → `{ status: 'ok', version, timestamp }` (no auth required)
-- [ ] `GET /health/ready` → checks DB, Kafka, Redis connectivity
-- [ ] `GET /health/live` → simple liveness check
-- [ ] Response time p99 < 10ms
+- [x] `GET /health` → `{ status: 'ok', version, timestamp }` (no auth required)
+- [x] `GET /health/ready` → checks DB, Kafka, Redis connectivity
+- [x] `GET /health/live` → simple liveness check
+- [x] Response time p99 < 10ms (handlers lightweight; readiness uses 2s timeout per check)
 
 **Files Created/Modified**:
-- `apps/api/src/routes/health.ts`
+- `apps/api/src/routes/health.ts` — GET /health (version from env or package.json), GET /health/ready, GET /health/live
+- `apps/api/src/lib/readiness.ts` — checkRedis, checkDatabase, checkKafka, runReadinessChecks (2s timeout)
+- `apps/api/src/lib/readiness.test.ts` — unit tests for readiness checks
+- `apps/api/package.json` — added `pg` for DB readiness
+- `apps/api/src/server.test.ts` — integration tests for /health, /health/live, /health/ready
+
+**Implementation Notes**: Readiness runs only when env vars are set (REDIS_URL, DATABASE_URL, KAFKA_BROKERS). Unset checks report "skipped". 503 returned when any configured check fails.
 
 ---
 

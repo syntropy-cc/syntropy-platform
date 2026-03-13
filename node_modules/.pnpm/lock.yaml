@@ -50,6 +50,9 @@ importers:
       ioredis:
         specifier: ^5.4.1
         version: 5.10.0
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
     devDependencies:
       '@types/node':
         specifier: ^22.10.0

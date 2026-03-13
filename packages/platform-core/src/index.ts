@@ -48,3 +48,15 @@ export {
   DEFAULT_DB_TIMEOUT_MS,
   DEFAULT_JOB_TIMEOUT_MS,
 } from "./resilience/timeout.js";
+export {
+  RetryPolicy,
+  isRetryableError,
+  type RetryPolicyConfig,
+  type RetryExecuteOptions,
+  type RetryLogger,
+} from "./resilience/retry-policy.js";
+export {
+  Bulkhead,
+  BulkheadRejectedError,
+  type BulkheadConfig,
+} from "./resilience/bulkhead.js";

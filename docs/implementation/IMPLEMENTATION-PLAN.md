@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S4 — Infrastructure Bootstrap
-CURRENT ITEM  : COMP-040.2 — RetryPolicy with exponential backoff
+CURRENT ITEM  : COMP-034.1 — Background services process setup + worker registry
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 0 / 6 items done (S4)
-OVERALL       : 18 / 262 items done (7%)
+STAGE PROGRESS: 2 / 6 items done (S4)
+OVERALL       : 20 / 262 items done (8%)
 ```
 
 **Next 5 items**:
-1. `COMP-040.2` — RetryPolicy with exponential backoff ← **START HERE**
-2. `COMP-040.4` — BulkheadPattern (semaphore concurrency limiter)
-3. `COMP-034.1` — Background services process setup + worker registry
-4. `COMP-034.2` — Kafka consumer worker bootstrapping
-5. `COMP-009.1` — Kafka client package setup
+1. `COMP-034.1` — Background services process setup + worker registry ← **START HERE**
+2. `COMP-034.2` — Kafka consumer worker bootstrapping
+3. `COMP-009.1` — Kafka client package setup
+4. `COMP-033.1` — REST API server setup and middleware stack
+5. `COMP-009.2` — Event schema versioning system
 
-**Component record**: [`COMP-040`](./components/COMP-040-resilience.md)
+**Component record**: [`COMP-034`](./components/COMP-034-background-services.md)
 
-**Next item (COMP-040.2) acceptance criteria**: `RetryPolicy.execute(fn, options)` retries on transient errors; exponential backoff with jitter; max 3 retries configurable; throws after max; unit tests.
+**Next item (COMP-034.1) acceptance criteria**: `apps/workers` workspace with `src/main.ts`; `WorkerRegistry` pattern; `SIGTERM` handler with 30s wait; each worker reports health; unhandled rejections crash process.
 
-**Suggested steps**: (1) Write `RetryPolicy` with `execute` method (2) Implement exponential backoff with jitter (3) Write retry count tests
+**Suggested steps**: (1) Scaffold `apps/workers` (2) Write `WorkerRegistry` class (3) Write `SIGTERM` handler
 
 ---
 
@@ -1249,7 +1249,7 @@ Status: ✅ Done | **Deps**: COMP-001
 
 #### [COMP-040.2] RetryPolicy with exponential backoff
 `S4` `Critical` `S` [Record→](./components/COMP-040-resilience.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `RetryPolicy.execute(fn, options)` retries on transient errors; exponential backoff with jitter; max 3 retries configurable; throws after max; unit tests.
 **Steps**: (1) Write `RetryPolicy` with `execute` method (2) Implement exponential backoff with jitter (3) Write retry count tests
 
@@ -1257,7 +1257,7 @@ Status: ⬜ | **Deps**: COMP-001
 
 #### [COMP-040.4] BulkheadPattern (semaphore concurrency limiter)
 `S4` `High` `S` [Record→](./components/COMP-040-resilience.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `Bulkhead(maxConcurrent)` limits parallel executions; excess calls queued or rejected (configurable); `execute(fn)` acquires semaphore before calling fn; tests verify limit.
 **Steps**: (1) Write `Bulkhead` class with semaphore (2) Add queue/reject option (3) Write concurrency limit test
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 18 / 262 items (7%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 20 / 262 items (8%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S4 — Infrastructure Bootstrap | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,8 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-040.4 — BulkheadPattern (semaphore concurrency limiter)
+- 2026-03-13 COMP-040.2 — RetryPolicy with exponential backoff
 - 2026-03-13 COMP-039.4 — AuditColumns mixin
 - 2026-03-13 COMP-002.4 — SupabaseAuthAdapter (ACL)
 - 2026-03-13 COMP-002.3 — Session aggregate and IdentityToken value object
@@ -3240,7 +3242,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 18 | 40% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 20 | 44% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
@@ -3290,7 +3292,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-037 Security | 6 | 3 | 🔵 In Progress |
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 3 | 🔵 In Progress |
-| COMP-040 Resilience | 5 | 2 | 🔵 In Progress |
+| COMP-040 Resilience | 5 | 4 | 🔵 In Progress |
 | **Total** | **262** | **13** | |
 
 ### Layer Coverage

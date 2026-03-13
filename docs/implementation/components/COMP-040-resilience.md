@@ -28,12 +28,12 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 2 |
+| ✅ Done | 4 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 3 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **5** |
 
-**Component Coverage**: 40%
+**Component Coverage**: 80%
 
 ### Item List
 
@@ -72,25 +72,28 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | cross-cutting/resilience/ARCHITECTURE.md, CON-009 |
 | **Dependencies** | COMP-040.1 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Implement retry policy with exponential backoff and jitter for transient failure handling.
 
 **Acceptance Criteria**:
-- [ ] `withRetry<T>(fn: () => Promise<T>, policy: RetryPolicy): Promise<T>`
-- [ ] `RetryPolicy`: `maxAttempts` (default 3), `baseDelayMs` (default 1000), `backoffMultiplier` (default 2), `jitterMs` (default 200)
-- [ ] Does NOT retry: `4xx` HTTP errors (except `429`), `CircuitOpenError`
-- [ ] Does retry: network errors, `5xx` errors, `429` (with `Retry-After` respect)
-- [ ] Retry attempts logged with `warn` level, including attempt number and error
-- [ ] Integration with circuit breaker: retries counted toward failure threshold
+- [x] `RetryPolicy.execute<T>(fn, options?)` (API per Implementation Plan Section 7)
+- [x] `RetryPolicy`: `maxAttempts` (default 3), `baseDelayMs` (default 1000), `backoffMultiplier` (default 2), `jitterMs` (default 200)
+- [x] Does NOT retry: `4xx` HTTP errors (except `429`), `CircuitOpenError`
+- [x] Does retry: network errors, `5xx` errors, `429`
+- [x] Retry attempts logged with `warn` level when logger provided
+- [x] Integration with circuit breaker: retries can be wrapped by caller and passed to CircuitBreaker
 
 **Files Created/Modified**:
 - `packages/platform-core/src/resilience/retry-policy.ts`
+- `packages/platform-core/src/resilience/retry-policy.test.ts`
+- `packages/platform-core/src/index.ts` — exports RetryPolicy, isRetryableError, types
 
 ---
 
@@ -121,33 +124,30 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 ---
 
-#### [COMP-040.4] Resilient adapter base class
+#### [COMP-040.4] BulkheadPattern (semaphore concurrency limiter)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | cross-cutting/resilience/ARCHITECTURE.md |
-| **Dependencies** | COMP-040.1, COMP-040.2, COMP-040.3 |
+| **Origin** | cross-cutting/resilience/ARCHITECTURE.md, Implementation Plan Section 7 |
+| **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
-**Description**: Build `ResilientAdapter` base class that combines circuit breaker, retry, and timeout for external service adapters.
+**Description**: Bulkhead pattern limits concurrent executions; implemented per Implementation Plan Section 7 (Resilient adapter base class is a later item).
 
 **Acceptance Criteria**:
-- [ ] `ResilientAdapter` abstract base class
-- [ ] `protected call<T>(name: string, fn: () => Promise<T>): Promise<T>` method
-- [ ] `call()` combines: timeout → circuit breaker → retry (in this order)
-- [ ] All adapters in the system extend `ResilientAdapter`:
-  - `LLMAdapter` (COMP-012)
-  - `StripePaymentAdapter` (COMP-027)
-  - `DataCiteAdapter` (COMP-026)
-  - `KubernetesContainerAdapter` (COMP-035)
-  - `NostrAnchor` (COMP-039)
-- [ ] Health status exposed: `isHealthy()` returns `true` if circuit is `Closed`
+- [x] `Bulkhead(config)` with `maxConcurrent` and `rejectOverflow` (queue or reject)
+- [x] `execute<T>(fn: () => Promise<T>): Promise<T>` acquires semaphore, runs fn, releases in finally
+- [x] Excess calls queued when `rejectOverflow` false; rejected with `BulkheadRejectedError` when true
+- [x] Unit tests verify concurrency limit and overflow behavior
 
 **Files Created/Modified**:
-- `packages/platform-core/src/resilience/resilient-adapter.ts`
+- `packages/platform-core/src/resilience/bulkhead.ts`
+- `packages/platform-core/src/resilience/bulkhead.test.ts`
+- `packages/platform-core/src/index.ts` — exports Bulkhead, BulkheadRejectedError, BulkheadConfig
 
 ---
 

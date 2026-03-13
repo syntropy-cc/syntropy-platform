@@ -14,10 +14,14 @@ export {
   createArtifactId,
   createAuthorId,
   createContentHash,
+  createNostrEventId,
   isArtifactId,
   isAuthorId,
   isContentHash,
+  isNostrEventId,
   type ArtifactId,
   type AuthorId,
   type ContentHash,
+  type NostrEventId,
 } from "./value-objects/index.js";
+export type { NostrRelayPort, AnchoringPayload } from "./ports/nostr-relay-port.js";

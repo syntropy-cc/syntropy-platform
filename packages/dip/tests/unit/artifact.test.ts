@@ -9,6 +9,7 @@ import { ArtifactStatus } from "../../src/domain/artifact-registry/artifact-stat
 import { createArtifactId } from "../../src/domain/artifact-registry/value-objects/artifact-id.js";
 import { createAuthorId } from "../../src/domain/artifact-registry/value-objects/author-id.js";
 import { createContentHash } from "../../src/domain/artifact-registry/value-objects/content-hash.js";
+import { createNostrEventId } from "../../src/domain/artifact-registry/value-objects/nostr-event-id.js";
 
 const SAMPLE_ARTIFACT_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
 const SAMPLE_AUTHOR_ID = "a1b2c3d4-e5f6-4789-a012-3456789abcde";
@@ -28,6 +29,7 @@ describe("Artifact.draft", () => {
     expect(artifact.publishedAt).toBeNull();
     expect(artifact.archivedAt).toBeNull();
     expect(artifact.contentHash).toBeNull();
+    expect(artifact.nostrEventId).toBeNull();
     expect(artifact.createdAt).toBeInstanceOf(Date);
   });
 
@@ -134,5 +136,35 @@ describe("Artifact.archive", () => {
 
     expect(() => draftArtifact.archive()).toThrow("cannot archive");
     expect(() => draftArtifact.archive()).toThrow("draft");
+  });
+});
+
+describe("Artifact.withNostrEventId", () => {
+  const validNostrId = createNostrEventId("b".repeat(64));
+
+  it("returns new Artifact with nostrEventId set and other fields preserved", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const artifact = Artifact.draft({ id, authorId }).submit();
+
+    const withAnchor = artifact.withNostrEventId(validNostrId);
+
+    expect(withAnchor.nostrEventId).toBe(validNostrId);
+    expect(withAnchor.id).toBe(artifact.id);
+    expect(withAnchor.authorId).toBe(artifact.authorId);
+    expect(withAnchor.status).toBe(artifact.status);
+    expect(withAnchor.contentHash).toBe(artifact.contentHash);
+    expect(artifact.nostrEventId).toBeNull();
+  });
+
+  it("preserves nostrEventId through submit, publish, archive", () => {
+    const id = createArtifactId(SAMPLE_ARTIFACT_ID);
+    const authorId = createAuthorId(SAMPLE_AUTHOR_ID);
+    const artifact = Artifact.draft({ id, authorId })
+      .withNostrEventId(validNostrId)
+      .submit()
+      .publish();
+
+    expect(artifact.nostrEventId).toBe(validNostrId);
   });
 });

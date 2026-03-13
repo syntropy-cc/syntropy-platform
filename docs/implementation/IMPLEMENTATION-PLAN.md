@@ -9,25 +9,26 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S9 — DIP Artifact Registry Core
-CURRENT ITEM  : COMP-003.3 — NostrAnchor integration
+CURRENT STAGE : S10 — DIP Artifact Registry Completion + AI Foundation Start
+CURRENT ITEM  : COMP-003.6 — Artifact query service
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S8) | 2 / 5 items done (S9)
-OVERALL       : 47 / 262 items done (18%)
+STAGE PROGRESS: 5 / 5 items done (S9) | 0 / 4 items done (S10)
+OVERALL       : 50 / 262 items done (19%)
 ```
 
 **Next 5 items**:
-1. `COMP-032.1` — Next.js app scaffolding and design system ✅
-2. `COMP-003.1` — DIP package setup + Artifact aggregate ✅
-3. `COMP-003.2` — ArtifactLifecycleService ✅
-4. `COMP-003.3` — NostrAnchor integration ← **START HERE**
-5. `COMP-003.4` — ArtifactRepository (Postgres)
+1. `COMP-003.1` — DIP package setup + Artifact aggregate ✅
+2. `COMP-003.2` — ArtifactLifecycleService ✅
+3. `COMP-003.3` — NostrAnchor integration ✅
+4. `COMP-003.4` — ArtifactRepository (Postgres) ✅
+5. `COMP-003.5` — ArtifactEventPublisher ✅
+6. `COMP-003.6` — Artifact query service ← **START HERE**
 
 **Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
 
-**Next item (COMP-003.3) acceptance criteria**: `NostrAnchorService.anchor(artifact)` computes content hash and submits to Nostr relay; returns `NostrEventId`; stored on artifact; mock relay in tests.
+**Next item (COMP-003.6) acceptance criteria**: `ArtifactQueryService.findPublished(filter)` with pagination; filter by `authorId`, `type`, `tag`; cursor-based pagination; returns `ArtifactSummary[]`.
 
-**Suggested steps**: (1) Write `NostrAnchorService` (2) Compute SHA-256 content hash (3) Mock Nostr relay in tests
+**Suggested steps**: (1) Write query service (2) Add filter + pagination logic (3) Write query tests
 
 ---
 
@@ -1481,7 +1482,7 @@ Status: ✅ Done | **Deps**: COMP-003.1
 
 #### [COMP-003.3] NostrAnchor integration
 `S9` `High` `S` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.2
+Status: ✅ Done | **Deps**: COMP-003.2
 **Criteria**: `NostrAnchorService.anchor(artifact)` computes content hash and submits to Nostr relay; returns `NostrEventId`; stored on artifact; mock relay in tests.
 **Steps**: (1) Write `NostrAnchorService` (2) Compute SHA-256 content hash (3) Mock Nostr relay in tests
 
@@ -1489,7 +1490,7 @@ Status: ⬜ | **Deps**: COMP-003.2
 
 #### [COMP-003.4] ArtifactRepository (Postgres)
 `S9` `High` `S` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.1, COMP-039.1, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-003.1, COMP-039.1, COMP-039.4
 **Criteria**: `ArtifactRepository` implements interface; `save`, `findById`, `findByAuthor`, `findPublished`; migration creates `artifacts` table with all columns; integration test.
 **Steps**: (1) Write migration (2) Write `PostgresArtifactRepository` (3) Write integration test
 
@@ -1497,7 +1498,7 @@ Status: ⬜ | **Deps**: COMP-003.1, COMP-039.1, COMP-039.4
 
 #### [COMP-003.5] ArtifactEventPublisher
 `S9` `High` `S` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.2, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-003.2, COMP-009.1
 **Criteria**: Publishes `dip.artifact.published`, `dip.artifact.archived` to Kafka; event schema version 1; actor signature included; unit tests with mock Kafka.
 **Steps**: (1) Write `ArtifactEventPublisher` (2) Define event schemas (3) Write publish tests
 
@@ -3207,7 +3208,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 47 / 262 items (18%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 50 / 262 items (19%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S9 — DIP Artifact Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3218,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-003.5 — ArtifactEventPublisher
+- 2026-03-13 COMP-003.4 — ArtifactRepository (Postgres)
+- 2026-03-13 COMP-003.3 — NostrAnchor integration
 - 2026-03-13 COMP-003.2 — ArtifactLifecycleService
 - 2026-03-13 COMP-003.1 — DIP package setup + Artifact aggregate
 - 2026-03-13 COMP-032.1 — Next.js app scaffolding and design system
@@ -3282,7 +3286,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 |-----------|-------|------|--------|
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
 | COMP-002 Identity | 7 | 7 | ✅ Complete |
-| COMP-003 DIP Artifact Registry | 8 | 0 | ⬜ Not Started |
+| COMP-003 DIP Artifact Registry | 8 | 5 | 🔵 In Progress |
 | COMP-004 DIP Smart Contract Engine | 6 | 0 | ⬜ Not Started |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
@@ -3320,7 +3324,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 4 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 5 | ✅ Complete |
-| **Total** | **262** | **41** | |
+| **Total** | **262** | **50** | |
 
 ### Layer Coverage
 

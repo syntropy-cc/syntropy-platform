@@ -375,6 +375,13 @@ packages/dip/
 
 ## Implementation Log
 
+### 2026-03-13 - COMP-003.3, 003.4, 003.5 completed (Implementation Plan)
+
+- **COMP-003.3** (NostrAnchor integration): Added `NostrEventId` value object; `NostrRelayPort` (domain port) and `NostrRelayAdapter` (infrastructure); `Artifact.nostrEventId`, `Artifact.withNostrEventId()`, `Artifact.fromPersistence()`; `NostrAnchorService.anchor(artifact, content?)` with SHA-256 content hash and relay submit; unit tests for NostrAnchorService (mock relay) and Artifact.withNostrEventId.
+- **COMP-003.4** (ArtifactRepository Postgres): Extended `ArtifactRepository` with `findByAuthor`, `findPublished(options)`; migration `supabase/migrations/20260313220000_dip_artifacts.sql` (dip.artifacts table); `ArtifactDbClient` interface; `PostgresArtifactRepository`, `PgArtifactDbClient`; integration tests with mock DB client (roundtrip, findByAuthor, findPublished).
+- **COMP-003.5** (ArtifactEventPublisher): `ArtifactEventPublisher` implements `ArtifactLifecycleEventPublisher`; publishes to topic `dip.artifact.events` with schema version 1 and payload (artifactId, authorId, timestamp); unit tests with mock Kafka producer.
+- Note: Component record item numbering differs from Implementation Plan; Plan is authority for execution order.
+
 ### 2026-03-13 - COMP-003.2 completed (Implementation Plan)
 
 - **COMP-003.2** (per IMPLEMENTATION-PLAN.md): ArtifactLifecycleService done.

@@ -5,6 +5,13 @@
 
 import type { Artifact } from "../artifact.js";
 import type { ArtifactId } from "../value-objects/artifact-id.js";
+import type { AuthorId } from "../value-objects/author-id.js";
+
+/** Options for findPublished pagination. */
+export interface FindPublishedOptions {
+  limit?: number;
+  offset?: number;
+}
 
 /**
  * Port for persisting and loading Artifact aggregates.
@@ -13,4 +20,6 @@ import type { ArtifactId } from "../value-objects/artifact-id.js";
 export interface ArtifactRepository {
   findById(id: ArtifactId): Promise<Artifact | null>;
   save(artifact: Artifact): Promise<void>;
+  findByAuthor(authorId: AuthorId): Promise<Artifact[]>;
+  findPublished(options?: FindPublishedOptions): Promise<Artifact[]>;
 }

@@ -25,6 +25,17 @@ function createMockRepository(initialArtifacts: Map<string, Artifact> = new Map(
     save: vi.fn(async (artifact) => {
       store.set(artifact.id, artifact);
     }),
+    findByAuthor: vi.fn(async (authorId) =>
+      [...store.values()].filter((a) => a.authorId === authorId),
+    ),
+    findPublished: vi.fn(async (opts) => {
+      const published = [...store.values()].filter(
+        (a) => a.status === "published",
+      );
+      const offset = opts?.offset ?? 0;
+      const limit = opts?.limit ?? published.length;
+      return published.slice(offset, offset + limit);
+    }),
   };
 }
 

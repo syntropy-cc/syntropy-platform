@@ -6,6 +6,7 @@
 import type { ArtifactId } from "./value-objects/artifact-id.js";
 import type { AuthorId } from "./value-objects/author-id.js";
 import type { ContentHash } from "./value-objects/content-hash.js";
+import type { NostrEventId } from "./value-objects/nostr-event-id.js";
 import { ArtifactStatus } from "./artifact-status.js";
 import { InvalidLifecycleTransitionError } from "./errors.js";
 
@@ -17,6 +18,7 @@ export class Artifact {
   readonly id: ArtifactId;
   readonly authorId: AuthorId;
   readonly contentHash: ContentHash | null;
+  readonly nostrEventId: NostrEventId | null;
   readonly status: (typeof ArtifactStatus)[keyof typeof ArtifactStatus];
   readonly createdAt: Date;
   readonly publishedAt: Date | null;
@@ -26,6 +28,7 @@ export class Artifact {
     id: ArtifactId;
     authorId: AuthorId;
     contentHash: ContentHash | null;
+    nostrEventId: NostrEventId | null;
     status: (typeof ArtifactStatus)[keyof typeof ArtifactStatus];
     createdAt: Date;
     publishedAt: Date | null;
@@ -34,6 +37,7 @@ export class Artifact {
     this.id = params.id;
     this.authorId = params.authorId;
     this.contentHash = params.contentHash;
+    this.nostrEventId = params.nostrEventId;
     this.status = params.status;
     this.createdAt = params.createdAt;
     this.publishedAt = params.publishedAt;
@@ -59,10 +63,44 @@ export class Artifact {
       id: params.id,
       authorId: params.authorId,
       contentHash: params.contentHash ?? null,
+      nostrEventId: null,
       status: ArtifactStatus.Draft,
       createdAt,
       publishedAt: null,
       archivedAt: null,
+    });
+  }
+
+  /**
+   * Reconstructs an Artifact from persistence (e.g. repository).
+   * All fields must be provided; used by infrastructure layer.
+   */
+  static fromPersistence(params: {
+    id: ArtifactId;
+    authorId: AuthorId;
+    contentHash: ContentHash | null;
+    nostrEventId: NostrEventId | null;
+    status: (typeof ArtifactStatus)[keyof typeof ArtifactStatus];
+    createdAt: Date;
+    publishedAt: Date | null;
+    archivedAt: Date | null;
+  }): Artifact {
+    return new Artifact(params);
+  }
+
+  /**
+   * Returns a new Artifact with the given Nostr event id (anchoring reference) set.
+   */
+  withNostrEventId(id: NostrEventId): Artifact {
+    return new Artifact({
+      id: this.id,
+      authorId: this.authorId,
+      contentHash: this.contentHash,
+      nostrEventId: id,
+      status: this.status,
+      createdAt: this.createdAt,
+      publishedAt: this.publishedAt,
+      archivedAt: this.archivedAt,
     });
   }
 
@@ -83,6 +121,7 @@ export class Artifact {
       id: this.id,
       authorId: this.authorId,
       contentHash: this.contentHash,
+      nostrEventId: this.nostrEventId,
       status: ArtifactStatus.Submitted,
       createdAt: this.createdAt,
       publishedAt: this.publishedAt,
@@ -109,6 +148,7 @@ export class Artifact {
       id: this.id,
       authorId: this.authorId,
       contentHash: this.contentHash,
+      nostrEventId: this.nostrEventId,
       status: ArtifactStatus.Published,
       createdAt: this.createdAt,
       publishedAt: at,
@@ -135,6 +175,7 @@ export class Artifact {
       id: this.id,
       authorId: this.authorId,
       contentHash: this.contentHash,
+      nostrEventId: this.nostrEventId,
       status: ArtifactStatus.Archived,
       createdAt: this.createdAt,
       publishedAt: this.publishedAt,

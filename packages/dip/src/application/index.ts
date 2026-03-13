@@ -6,3 +6,7 @@ export {
   ArtifactLifecycleService,
   ArtifactNotFoundError,
 } from "./artifact-lifecycle-service.js";
+export {
+  NostrAnchorService,
+  AnchoringContentRequiredError,
+} from "./nostr-anchor-service.js";

@@ -375,6 +375,15 @@ packages/dip/
 
 ## Implementation Log
 
+### 2026-03-13 - COMP-003.7 completed (Artifact REST API endpoints)
+
+- **Location**: `apps/api` (API app owns the HTTP layer; DIP provides application services).
+- **Endpoints**: `POST /api/v1/artifacts`, `GET /api/v1/artifacts/:id`, `PUT /api/v1/artifacts/:id/submit`, `PUT /api/v1/artifacts/:id/publish`; all require auth via `requireAuth`; responses use CONV-017 envelope (`successEnvelope` / `errorEnvelope`).
+- **Wiring**: `CreateAppOptions.dip` optional; when present, `artifactRoutes` registered with `{ dip }`. `DipContext` type in `apps/api/src/types/dip-context.ts` to avoid circular dependency.
+- **Files**: `apps/api/src/routes/artifacts.ts` (handlers + `artifactToDto`), `apps/api/src/routes/artifacts.test.ts` (13 API tests with mocked DIP), `apps/api/src/types/dip-context.ts`, `apps/api/package.json` (added `@syntropy/dip`).
+- **Errors**: `ArtifactNotFoundError` → 404, `InvalidLifecycleTransitionError` → 409, invalid UUID → 400.
+- **Production wiring**: Not done in this item; main.ts unchanged. Real DIP services can be wired in a follow-up (e.g. COMP-003.8 or dedicated wiring task).
+
 ### 2026-03-13 - COMP-003.6 completed (Artifact query service)
 
 - **ArtifactQueryService**: `findPublished(filter?, pagination?)` returns `{ items: ArtifactSummary[], nextCursor? }`; filter by `authorId`, `type`, `tag`; cursor-based pagination (default limit 20, max 100).

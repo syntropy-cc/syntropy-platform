@@ -6,7 +6,7 @@
  */
 
 import { Redis } from "ioredis";
-import { Pool } from "pg";
+import { Pool, type PoolClient } from "pg";
 import {
   createKafkaClient,
   getKafkaConfigFromEnv,
@@ -59,7 +59,10 @@ export async function checkDatabase(
     connectionTimeoutMillis: READINESS_TIMEOUT_MS,
   });
   try {
-    const client = await withTimeout(pool.connect(), READINESS_TIMEOUT_MS);
+    const client = (await withTimeout(
+      pool.connect(),
+      READINESS_TIMEOUT_MS
+    )) as PoolClient;
     try {
       await withTimeout(client.query("SELECT 1"), READINESS_TIMEOUT_MS);
       return { ok: true };

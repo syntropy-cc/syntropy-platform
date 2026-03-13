@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S10 — DIP Artifact Registry Completion + AI Foundation Start
-CURRENT ITEM  : COMP-003.7 — Artifact REST API endpoints
+CURRENT ITEM  : COMP-003.8 — Integration tests for Artifact Registry
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 5 / 5 items done (S9) | 1 / 4 items done (S10)
-OVERALL       : 51 / 262 items done (19%)
+STAGE PROGRESS: 5 / 5 items done (S9) | 2 / 4 items done (S10)
+OVERALL       : 52 / 262 items done (20%)
 ```
 
 **Next 5 items**:
@@ -23,13 +23,14 @@ OVERALL       : 51 / 262 items done (19%)
 4. `COMP-003.4` — ArtifactRepository (Postgres) ✅
 5. `COMP-003.5` — ArtifactEventPublisher ✅
 6. `COMP-003.6` — Artifact query service ✅
-7. `COMP-003.7` — Artifact REST API endpoints ← **START HERE**
+7. `COMP-003.7` — Artifact REST API endpoints ✅
+8. `COMP-003.8` — Integration tests for Artifact Registry ← **START HERE**
 
 **Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
 
-**Next item (COMP-003.7) acceptance criteria**: `POST /api/v1/artifacts`, `GET /api/v1/artifacts/{id}`, `PUT /api/v1/artifacts/{id}/submit`, `PUT /api/v1/artifacts/{id}/publish`; auth required; response envelopes per CONV-017.
+**Next item (COMP-003.8) acceptance criteria**: Full lifecycle test: draft→submit→publish; Nostr anchor verified; Kafka event emitted; API returns correct status at each step; uses real DB (testcontainers).
 
-**Suggested steps**: (1) Write Fastify route handlers (2) Wire to lifecycle service (3) Write API tests
+**Suggested steps**: (1) Write lifecycle integration test (2) Assert Kafka event (3) Assert Nostr anchor stored
 
 ---
 
@@ -1515,7 +1516,7 @@ Status: Done | **Deps**: COMP-003.4
 
 #### [COMP-003.7] Artifact REST API endpoints
 `S10` `High` `M` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.6, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-003.6, COMP-033.2
 **Criteria**: `POST /api/v1/artifacts`, `GET /api/v1/artifacts/{id}`, `PUT /api/v1/artifacts/{id}/submit`, `PUT /api/v1/artifacts/{id}/publish`; auth required; response envelopes per CONV-017.
 **Steps**: (1) Write Fastify route handlers (2) Wire to lifecycle service (3) Write API tests
 
@@ -3209,7 +3210,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 51 / 262 items (19%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 52 / 262 items (20%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S10 — DIP Artifact Registry Completion + AI Foundation Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3219,6 +3220,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-003.7 — Artifact REST API endpoints
 - 2026-03-13 COMP-003.6 — Artifact query service
 - 2026-03-13 COMP-003.5 — ArtifactEventPublisher
 - 2026-03-13 COMP-003.4 — ArtifactRepository (Postgres)
@@ -3288,7 +3290,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 |-----------|-------|------|--------|
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
 | COMP-002 Identity | 7 | 7 | ✅ Complete |
-| COMP-003 DIP Artifact Registry | 8 | 5 | 🔵 In Progress |
+| COMP-003 DIP Artifact Registry | 8 | 6 | 🔵 In Progress |
 | COMP-004 DIP Smart Contract Engine | 6 | 0 | ⬜ Not Started |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |

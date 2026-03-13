@@ -18,7 +18,9 @@ import { rateLimitPluginFp } from "./plugins/rate-limit.js";
 import { healthRoutes } from "./routes/health.js";
 import { authRoutes } from "./routes/auth.js";
 import { usersRoutes } from "./routes/users.js";
+import { artifactRoutes } from "./routes/artifacts.js";
 import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
+import type { DipContext } from "./types/dip-context.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -33,9 +35,12 @@ function getCorsOrigins(): string[] | true {
   return env.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
+export type { DipContext } from "./types/dip-context.js";
+
 export interface CreateAppOptions {
   auth?: AuthProvider | null;
   supabaseClient?: SupabaseClient | null;
+  dip?: DipContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -52,6 +57,9 @@ export async function createApp(options?: CreateAppOptions) {
   await app.register(healthRoutes);
   await app.register(authRoutes);
   await app.register(usersRoutes);
+  if (options?.dip) {
+    await app.register(artifactRoutes, { dip: options.dip });
+  }
   await app.register(internalEventSchemasPlugin);
 
   return app;

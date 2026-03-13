@@ -32,6 +32,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.47.0
         version: 2.99.1
+      '@syntropy/dip':
+        specifier: workspace:*
+        version: link:../../packages/dip
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus
@@ -57,6 +60,9 @@ importers:
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.15
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.18.0
       typescript:
         specifier: ~5.6.0
         version: 5.6.3

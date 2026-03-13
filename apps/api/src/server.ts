@@ -11,6 +11,7 @@ import fp from "fastify-plugin";
 import { correlationIdPlugin } from "./middleware/correlation-id.js";
 import { requestLoggerPlugin } from "./middleware/request-logger.js";
 import { healthRoutes } from "./routes/health.js";
+import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -34,6 +35,7 @@ export async function createApp() {
   await app.register(fp(correlationIdPlugin));
   await app.register(fp(requestLoggerPlugin));
   await app.register(healthRoutes);
+  await app.register(internalEventSchemasPlugin);
 
   return app;
 }

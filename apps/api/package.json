@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^10.0.0",
+    "@syntropy/event-bus": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
     "fastify": "^5.1.0",
     "fastify-plugin": "^5.0.0"

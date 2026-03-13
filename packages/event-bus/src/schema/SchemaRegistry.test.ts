@@ -82,4 +82,38 @@ describe("SchemaRegistry", () => {
     expect(() => registry.register("identity.events", v2Breaking, 2)).toThrow(IncompatibleSchemaError);
     expect(() => registry.register("identity.events", v2Breaking, 2)).toThrow(/required field "id"/i);
   });
+
+  it("listAll returns empty array when no schemas registered", () => {
+    const registry = new SchemaRegistry();
+    expect(registry.listAll()).toEqual([]);
+  });
+
+  it("listAll returns all registered topic-version-schema entries", () => {
+    const registry = new SchemaRegistry();
+    const s1 = { type: "object", properties: { id: { type: "string" } } };
+    const s2 = { type: "object", properties: { name: { type: "string" } } };
+    registry.register("identity.events", s1, 1);
+    registry.register("identity.events", s2, 2);
+    registry.register("hub.events", { type: "object" }, 1);
+
+    const list = registry.listAll();
+    expect(list).toHaveLength(3);
+    expect(list.map((x) => ({ topic: x.topic, version: x.version })).sort(byTopicThenVersion)).toEqual(
+      [
+        { topic: "hub.events", version: 1 },
+        { topic: "identity.events", version: 1 },
+        { topic: "identity.events", version: 2 },
+      ],
+    );
+    expect(list.find((x) => x.topic === "identity.events" && x.version === 1)?.schema).toEqual(s1);
+    expect(list.find((x) => x.topic === "identity.events" && x.version === 2)?.schema).toEqual(s2);
+  });
 });
+
+function byTopicThenVersion(
+  a: { topic: string; version: number },
+  b: { topic: string; version: number },
+): number {
+  if (a.topic !== b.topic) return a.topic.localeCompare(b.topic);
+  return a.version - b.version;
+}

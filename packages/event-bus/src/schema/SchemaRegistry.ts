@@ -73,4 +73,18 @@ export class SchemaRegistry {
     if (!schema) return undefined;
     return { topic, schema, version };
   }
+
+  /**
+   * Returns all registered schemas as an array of { topic, version, schema }.
+   * Used by GET /internal/event-schemas (COMP-009.8).
+   */
+  listAll(): Array<{ topic: string; version: number; schema: JsonSchemaDefinition }> {
+    const result: Array<{ topic: string; version: number; schema: JsonSchemaDefinition }> = [];
+    for (const [topic, versions] of this.byTopic) {
+      for (const [version, schema] of versions) {
+        result.push({ topic, version, schema });
+      }
+    }
+    return result;
+  }
 }

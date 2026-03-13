@@ -26,6 +26,9 @@ importers:
       '@fastify/cors':
         specifier: ^10.0.0
         version: 10.1.0
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../../packages/event-bus
       '@syntropy/platform-core':
         specifier: workspace:*
         version: link:../../packages/platform-core

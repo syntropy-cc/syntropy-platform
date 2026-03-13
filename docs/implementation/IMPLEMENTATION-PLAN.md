@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S6 — Event Bus Completion + Identity Finalization
-CURRENT ITEM  : COMP-009.8 — Schema registry API
+CURRENT ITEM  : COMP-002.6 — Identity REST API endpoints
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 0 / 5 items done (S6)
-OVERALL       : 31 / 262 items done (12%)
+STAGE PROGRESS: 1 / 5 items done (S6)
+OVERALL       : 32 / 262 items done (12%)
 ```
 
 **Next 5 items**:
-1. `COMP-009.8` — Schema registry API ← **START HERE**
-2. `COMP-002.6` — Identity REST API endpoints
+1. `COMP-009.8` — Schema registry API ✅
+2. `COMP-002.6` — Identity REST API endpoints ← **START HERE**
 3. `COMP-002.7` — Session Kafka consumer
 4. `COMP-034.3` — DLQ processor
 5. `COMP-034.4` — Scheduled job runner
 
-**Component record**: [`COMP-009`](./components/COMP-009-event-bus-audit.md)
+**Component record**: [`COMP-002`](./components/COMP-002-identity.md)
 
-**Next item (COMP-009.8) acceptance criteria**: `GET /internal/event-schemas` lists all registered schemas; `POST /internal/event-schemas` registers new version; compatibility check rejects breaking changes; admin-only access.
+**Next item (COMP-002.6) acceptance criteria**: `POST /api/v1/auth/login`, `POST /api/v1/auth/logout`, `GET /api/v1/auth/me`, `GET /api/v1/users/{id}`, `PUT /api/v1/users/{id}/roles`; all return correct response envelopes; 401/403 on auth failure.
 
-**Suggested steps**: (1) Write schema registry API routes (2) Add compatibility check logic (3) Write API tests
+**Suggested steps**: (1) Write Fastify route handlers (2) Wire to identity use cases (3) Write API integration tests
 
 ---
 
@@ -1353,7 +1353,7 @@ Status: ✅ Done | **Deps**: COMP-002.4, COMP-009.1
 
 #### [COMP-009.8] Schema registry API
 `S6` `Medium` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-009.2
+Status: ✅ Done | **Deps**: COMP-009.2
 **Criteria**: `GET /internal/event-schemas` lists all registered schemas; `POST /internal/event-schemas` registers new version; compatibility check rejects breaking changes; admin-only access.
 **Steps**: (1) Write schema registry API routes (2) Add compatibility check logic (3) Write API tests
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 31 / 262 items (12%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 32 / 262 items (12%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S6 — Event Bus Completion + Identity Finalization | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-009.8 — Schema registry API
 - 2026-03-13 COMP-009.2 — Event schema versioning system
 - 2026-03-13 COMP-009.3 — AppendOnlyLog PostgreSQL schema + migrations
 - 2026-03-13 COMP-009.4 — ActorSignatureVerifier
@@ -3253,12 +3254,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 31 | 69% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 32 | 71% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **31** | **12%** | ⬜ |
+| **Total** | **262** | **32** | **12%** | ⬜ |
 
 ### Component Coverage
 
@@ -3272,7 +3273,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
 | COMP-007 DIP Institutional Governance | 9 | 0 | ⬜ Not Started |
 | COMP-008 DIP Value Distribution & Treasury | 8 | 0 | ⬜ Not Started |
-| COMP-009 Event Bus & Audit | 8 | 7 | 🔵 In Progress |
+| COMP-009 Event Bus & Audit | 8 | 8 | ✅ Complete |
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
 | COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
 | COMP-012 AI Agents Orchestration | 8 | 0 | ⬜ Not Started |

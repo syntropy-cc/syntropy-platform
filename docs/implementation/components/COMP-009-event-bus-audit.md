@@ -300,6 +300,10 @@ Event Bus & Audit is the central nervous system of the Syntropy ecosystem. It ow
 
 ## Implementation Log
 
+### 2026-03-13 — COMP-009.8 done
+
+Schema registry API (COMP-009.8) implemented in **`apps/api`**: routes at `GET /internal/event-schemas` (list all; optional `?topic=&version=` for single schema) and `POST /internal/event-schemas` (register). Uses `SchemaRegistry` and `IncompatibleSchemaError` from `@syntropy/event-bus`. Admin guard via `X-Internal-API-Key` header when `INTERNAL_API_KEY` env is set. Added `SchemaRegistry.listAll()` in `packages/event-bus`. API tests in `apps/api/src/routes/internal-event-schemas.test.ts`. Initial schema seed migration deferred to later work.
+
 ### 2026-03-13 — COMP-009.1 done
 
 COMP-009.1 (Kafka client package setup) was implemented as **`packages/event-bus`** per the Implementation Plan: `KafkaProducer`, `KafkaConsumer`, `createKafkaClient(config)` factory, and minimal event envelope validation (`EventEnvelope`, `validateEventEnvelope`). Full SchemaRegistry integration is deferred to COMP-009.2.

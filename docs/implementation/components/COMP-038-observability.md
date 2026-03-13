@@ -3,7 +3,7 @@
 > **Component ID**: COMP-038
 > **Architecture Reference**: [cross-cutting/observability/ARCHITECTURE.md](../../architecture/cross-cutting/observability/ARCHITECTURE.md)
 > **Stage Assignment**: S13 — Cross-Cutting Concerns
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -29,12 +29,12 @@ Observability cross-cutting concerns implement the three pillars of observabilit
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 5 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 17%
 
 ### Item List
 
@@ -42,25 +42,30 @@ Observability cross-cutting concerns implement the three pillars of observabilit
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | cross-cutting/observability/ARCHITECTURE.md, ARCH-009 |
 | **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Build a structured JSON logger library that all services use for consistent logging with correlation IDs.
 
 **Acceptance Criteria**:
-- [ ] `createLogger(service: string)` factory returns a pino/winston logger configured for JSON output
-- [ ] `logger.info/warn/error(message, context)` — always includes: `service`, `correlation_id`, `causation_id`, `timestamp`, `level`
-- [ ] `withCorrelationId(correlationId)` child logger for request-scoped logging
-- [ ] Log levels configurable per environment: `debug` in dev, `info` in prod
-- [ ] Secrets never in logs: `redact` patterns for `password`, `token`, `key`, `secret`
-- [ ] Tests: log redaction, correlation ID propagation
+- [x] `createLogger(service: string)` factory returns a pino logger configured for JSON output
+- [x] `logger.info/warn/error(message, context)` — always includes: `service`, `correlation_id`, `causation_id`, `timestamp`, `level`
+- [x] `withCorrelationId(logger, correlationId, causationId?)` child logger for request-scoped logging
+- [x] Log levels configurable per environment: `debug` in dev, `info` in prod (via `LOG_LEVEL` or `NODE_ENV`)
+- [x] Secrets never in logs: pino `redact` for `password`, `token`, `key`, `secret`, `apiKey`, etc.
+- [x] Tests: log redaction, correlation ID propagation, level from options
 
 **Files Created/Modified**:
 - `packages/platform-core/src/observability/logger.ts`
+- `packages/platform-core/src/observability/logger.test.ts`
+- `packages/platform-core/src/index.ts` (exports)
+- `packages/platform-core/package.json` (pino, vitest, @types/node)
+- `packages/platform-core/vitest.config.ts`
 
 ---
 
@@ -196,6 +201,18 @@ Observability cross-cutting concerns implement the three pillars of observabilit
 - `infra/loki/` configuration files
 - `infra/promtail/` configuration files
 - `docker/docker-compose.observability.yml`
+
+---
+
+## Implementation Log
+
+### 2026-03-13 — COMP-038.1 completed
+
+- Implemented `createLogger(service, options?)` and `withCorrelationId(logger, correlationId, causationId?)` in `packages/platform-core/src/observability/logger.ts`.
+- Used pino with JSON output, redaction paths for secret-like keys, and optional `destination` for tests.
+- Level from `options.level` or `LOG_LEVEL` env or `NODE_ENV` (development → debug, else info).
+- Unit tests: redaction, correlation/causation ID propagation, level from options. Vitest added as test runner.
+- All 5 tests pass; build succeeds.
 
 ---
 

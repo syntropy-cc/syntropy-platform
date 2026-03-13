@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.out/
+.next/
+out/
+*.tsbuildinfo
+
+# Turborepo
+.turbo/
+
+# Environment and secrets (CON-008, COMP-037.6)
+.env
+.env.*
+!.env.example
+.env.local
+.env.*.local
+
+# Logs and runtime
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing and coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# IDE and editors
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Optional npm/pnpm cache (usually in homedir)
+.npm
+.pnpm-store
+
+# Debug
+.debug/
+
+# Docker
+.docker/
+
+# Lockfile backup (keep pnpm-lock.yaml tracked)
+*.lock.bak
+
+# Local config overrides
+*.local
+!.env.example

@@ -10,20 +10,24 @@
 
 ```
 CURRENT STAGE : S2 — Cross-Cutting Libraries
-CURRENT ITEM  : COMP-038.1 — Structured logger library
+CURRENT ITEM  : COMP-040.1 — CircuitBreaker implementation
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 5 / 5 items done (S1 complete)
-OVERALL       : 5 / 262 items done (2%)
+STAGE PROGRESS: 1 / 8 items done (S2)
+OVERALL       : 6 / 262 items done (2%)
 ```
 
 **Next 5 items**:
-1. `COMP-038.1` — Structured logger library ← **START HERE**
-2. `COMP-040.1` — CircuitBreaker implementation
-3. `COMP-040.3` — TimeoutWrapper utility
-4. `COMP-037.6` — Secret management configuration
-5. `COMP-037.3` — Data encryption for classified fields
+1. `COMP-040.1` — CircuitBreaker implementation ← **START HERE**
+2. `COMP-040.3` — TimeoutWrapper utility
+3. `COMP-037.6` — Secret management configuration
+4. `COMP-037.3` — Data encryption for classified fields
+5. `COMP-037.5` — SAST and dependency vulnerability scanning in CI
 
-**Component record**: [`COMP-038`](./components/COMP-038-observability.md)
+**Component record**: [`COMP-040`](./components/COMP-040-resilience.md)
+
+**Next item (COMP-040.1) acceptance criteria**: `CircuitBreaker` transitions `closed→open→half-open→closed`; failure threshold configurable; `execute()` throws `CircuitOpenError` when open; unit tests cover all transitions.
+
+**Suggested steps**: (1) Write `CircuitBreaker` class with state machine (2) Add failure counter and timeout timer (3) Write state transition unit tests.
 
 ---
 
@@ -1141,7 +1145,7 @@ Status: ✅ Done | **Deps**: COMP-001.3
 
 #### [COMP-038.1] Structured logger library
 `S2` `Critical` `S` [Record→](./components/COMP-038-observability.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: ✅ Done | **Deps**: COMP-001
 **Criteria**: `createLogger(service)` returns JSON logger; all logs include `correlation_id`, `service`, `level`, `timestamp`; secret patterns redacted; tests verify redaction.
 **Steps**: (1) Add `pino` to `packages/platform-core` (2) Write `logger.ts` with `createLogger` factory (3) Write redaction test
 
@@ -3203,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 5 / 262 items (2%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 6 / 262 items (2%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S2 — Cross-Cutting Libraries | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3213,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-038.1 — Structured logger library
 - 2026-03-13 COMP-001.1 — Initialize Turborepo + pnpm workspaces
 - 2026-03-13 COMP-001.2 — TypeScript project references and shared tsconfig
 - 2026-03-13 COMP-001.3 — Docker Compose local infrastructure
@@ -3223,12 +3228,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 5 | 11% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 6 | 13% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **0** | **0%** | ⬜ |
+| **Total** | **262** | **6** | **2%** | ⬜ |
 
 ### Component Coverage
 
@@ -3271,10 +3276,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
 | COMP-037 Security | 6 | 0 | ⬜ Not Started |
-| COMP-038 Observability | 6 | 0 | ⬜ Not Started |
+| COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 0 | ⬜ Not Started |
 | COMP-040 Resilience | 5 | 0 | ⬜ Not Started |
-| **Total** | **262** | **0** | |
+| **Total** | **262** | **6** | |
 
 ### Layer Coverage
 

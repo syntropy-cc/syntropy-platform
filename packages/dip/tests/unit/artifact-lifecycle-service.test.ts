@@ -32,9 +32,11 @@ function createMockRepository(initialArtifacts: Map<string, Artifact> = new Map(
       const published = [...store.values()].filter(
         (a) => a.status === "published",
       );
-      const offset = opts?.offset ?? 0;
       const limit = opts?.limit ?? published.length;
-      return published.slice(offset, offset + limit);
+      const items = published.slice(0, limit);
+      const nextCursor =
+        published.length > limit ? "cursor-next" : undefined;
+      return { items, nextCursor };
     }),
   };
 }

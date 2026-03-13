@@ -375,6 +375,15 @@ packages/dip/
 
 ## Implementation Log
 
+### 2026-03-13 - COMP-003.6 completed (Artifact query service)
+
+- **ArtifactQueryService**: `findPublished(filter?, pagination?)` returns `{ items: ArtifactSummary[], nextCursor? }`; filter by `authorId`, `type`, `tag`; cursor-based pagination (default limit 20, max 100).
+- **Schema**: Migration `20260313230000_dip_artifacts_type_and_tags.sql` added `artifact_type` (TEXT) and `tags` (TEXT[]) to `dip.artifacts` with indexes.
+- **Domain**: `ArtifactType` value object (scientific-article, dataset, experiment, code, document); `Artifact` aggregate extended with optional `artifactType` and `tags`; `ArtifactSummary` DTO and `ArtifactQueryFilter`; `ArtifactRepository.findPublished` now takes `FindPublishedOptions` (filter, cursor, limit) and returns `FindPublishedResult` (items, nextCursor).
+- **Infrastructure**: `PostgresArtifactRepository` updated for new columns, dynamic WHERE for filter, keyset pagination via cursor (encode/decode `(published_at, id)`).
+- **Tests**: Unit tests for `ArtifactQueryService` (5 tests); integration tests for repository `findPublished` with cursor pagination updated.
+- Implementation Plan is authority for item numbering; component record item labels may differ.
+
 ### 2026-03-13 - COMP-003.3, 003.4, 003.5 completed (Implementation Plan)
 
 - **COMP-003.3** (NostrAnchor integration): Added `NostrEventId` value object; `NostrRelayPort` (domain port) and `NostrRelayAdapter` (infrastructure); `Artifact.nostrEventId`, `Artifact.withNostrEventId()`, `Artifact.fromPersistence()`; `NostrAnchorService.anchor(artifact, content?)` with SHA-256 content hash and relay submit; unit tests for NostrAnchorService (mock relay) and Artifact.withNostrEventId.

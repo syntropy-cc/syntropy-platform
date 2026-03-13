@@ -3,6 +3,11 @@
  */
 
 export {
+  ArtifactQueryService,
+  type FindPublishedResult,
+  type ArtifactQueryPagination,
+} from "./artifact-query-service.js";
+export {
   ArtifactLifecycleService,
   ArtifactNotFoundError,
 } from "./artifact-lifecycle-service.js";

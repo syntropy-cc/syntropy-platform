@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S10 — DIP Artifact Registry Completion + AI Foundation Start
-CURRENT ITEM  : COMP-003.6 — Artifact query service
+CURRENT ITEM  : COMP-003.7 — Artifact REST API endpoints
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 5 / 5 items done (S9) | 0 / 4 items done (S10)
-OVERALL       : 50 / 262 items done (19%)
+STAGE PROGRESS: 5 / 5 items done (S9) | 1 / 4 items done (S10)
+OVERALL       : 51 / 262 items done (19%)
 ```
 
 **Next 5 items**:
@@ -22,13 +22,14 @@ OVERALL       : 50 / 262 items done (19%)
 3. `COMP-003.3` — NostrAnchor integration ✅
 4. `COMP-003.4` — ArtifactRepository (Postgres) ✅
 5. `COMP-003.5` — ArtifactEventPublisher ✅
-6. `COMP-003.6` — Artifact query service ← **START HERE**
+6. `COMP-003.6` — Artifact query service ✅
+7. `COMP-003.7` — Artifact REST API endpoints ← **START HERE**
 
 **Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
 
-**Next item (COMP-003.6) acceptance criteria**: `ArtifactQueryService.findPublished(filter)` with pagination; filter by `authorId`, `type`, `tag`; cursor-based pagination; returns `ArtifactSummary[]`.
+**Next item (COMP-003.7) acceptance criteria**: `POST /api/v1/artifacts`, `GET /api/v1/artifacts/{id}`, `PUT /api/v1/artifacts/{id}/submit`, `PUT /api/v1/artifacts/{id}/publish`; auth required; response envelopes per CONV-017.
 
-**Suggested steps**: (1) Write query service (2) Add filter + pagination logic (3) Write query tests
+**Suggested steps**: (1) Write Fastify route handlers (2) Wire to lifecycle service (3) Write API tests
 
 ---
 
@@ -1506,7 +1507,7 @@ Status: ✅ Done | **Deps**: COMP-003.2, COMP-009.1
 
 #### [COMP-003.6] Artifact query service
 `S10` `High` `S` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.4
+Status: Done | **Deps**: COMP-003.4
 **Criteria**: `ArtifactQueryService.findPublished(filter)` with pagination; filter by `authorId`, `type`, `tag`; cursor-based pagination; returns `ArtifactSummary[]`.
 **Steps**: (1) Write query service (2) Add filter + pagination logic (3) Write query tests
 
@@ -3208,9 +3209,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 50 / 262 items (19%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 51 / 262 items (19%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S9 — DIP Artifact Registry Core | S56 | ⬜ |
+| **Current Stage** | S10 — DIP Artifact Registry Completion + AI Foundation Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3218,6 +3219,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-003.6 — Artifact query service
 - 2026-03-13 COMP-003.5 — ArtifactEventPublisher
 - 2026-03-13 COMP-003.4 — ArtifactRepository (Postgres)
 - 2026-03-13 COMP-003.3 — NostrAnchor integration

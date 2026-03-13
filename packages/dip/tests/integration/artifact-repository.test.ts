@@ -33,6 +33,8 @@ function createMockDbClient(): ArtifactDbClient & {
         published_at: params[5],
         archived_at: params[6],
         nostr_event_id: params[7],
+        artifact_type: params[8] ?? null,
+        tags: params[9] ?? null,
       });
     },
     async query<T = Record<string, unknown>>(
@@ -54,18 +56,42 @@ function createMockDbClient(): ArtifactDbClient & {
               new Date(b.created_at as string).getTime(),
           ) as T[];
       }
-      if (sql.includes("WHERE status = $1")) {
-        const limit = (params[1] as number) ?? 100;
-        const offset = (params[2] as number) ?? 0;
-        const published = [...rows.values()].filter(
+      if (
+        sql.includes("ORDER BY published_at") &&
+        sql.includes("LIMIT")
+      ) {
+        const fetchLimit = (params[params.length - 1] as number) ?? 100;
+        let published = [...rows.values()].filter(
           (r) => r.status === ArtifactStatus.Published,
         );
-        published.sort(
-          (a, b) =>
-            new Date((a.published_at as string) ?? 0).getTime() -
-            new Date((b.published_at as string) ?? 0).getTime(),
-        );
-        return published.slice(offset, offset + limit) as T[];
+        const cursorAt = params[1];
+        const cursorId = params[2];
+        const isCursor =
+          params.length >= 4 &&
+          typeof cursorAt === "string" &&
+          cursorAt.includes("T") &&
+          typeof cursorId === "string";
+        if (isCursor) {
+          published = published.filter((r) => {
+            const pt = new Date((r.published_at as string) ?? 0).getTime();
+            const id = String(r.id);
+            const ct = new Date(cursorAt as string).getTime();
+            return pt > ct || (pt === ct && id > cursorId);
+          });
+        } else if (
+          params.length >= 3 &&
+          typeof params[1] === "string" &&
+          !params[1].includes("T")
+        ) {
+          published = published.filter((r) => r.author_actor_id === params[1]);
+        }
+        published.sort((a, b) => {
+          const ta = new Date((a.published_at as string) ?? 0).getTime();
+          const tb = new Date((b.published_at as string) ?? 0).getTime();
+          if (ta !== tb) return ta - tb;
+          return String(a.id).localeCompare(String(b.id));
+        });
+        return published.slice(0, fetchLimit) as T[];
       }
       return [];
     },
@@ -172,12 +198,14 @@ describe("PostgresArtifactRepository", () => {
       }),
     );
 
-    const published = await repo.findPublished({ limit: 2, offset: 0 });
-    const publishedPage2 = await repo.findPublished({ limit: 2, offset: 2 });
+    const page1 = await repo.findPublished({ limit: 2 });
+    const page2 = page1.nextCursor
+      ? await repo.findPublished({ limit: 2, cursor: page1.nextCursor })
+      : { items: [] };
 
-    expect(published).toHaveLength(2);
-    expect(publishedPage2).toHaveLength(1);
-    expect(published.every((a) => a.status === ArtifactStatus.Published)).toBe(
+    expect(page1.items).toHaveLength(2);
+    expect(page2.items).toHaveLength(1);
+    expect(page1.items.every((a) => a.status === ArtifactStatus.Published)).toBe(
       true,
     );
   });

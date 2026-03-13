@@ -4,6 +4,7 @@
  */
 
 import type { ArtifactId } from "./value-objects/artifact-id.js";
+import type { ArtifactType } from "./value-objects/artifact-type.js";
 import type { AuthorId } from "./value-objects/author-id.js";
 import type { ContentHash } from "./value-objects/content-hash.js";
 import type { NostrEventId } from "./value-objects/nostr-event-id.js";
@@ -13,6 +14,7 @@ import { InvalidLifecycleTransitionError } from "./errors.js";
 /**
  * Artifact aggregate. Lifecycle: draft → submitted → published → archived.
  * Invariants: publishedAt set only when status is published; archivedAt only when archived.
+ * artifactType and tags are optional (nullable in DB for backfill).
  */
 export class Artifact {
   readonly id: ArtifactId;
@@ -23,6 +25,8 @@ export class Artifact {
   readonly createdAt: Date;
   readonly publishedAt: Date | null;
   readonly archivedAt: Date | null;
+  readonly artifactType: ArtifactType | null;
+  readonly tags: readonly string[];
 
   private constructor(params: {
     id: ArtifactId;
@@ -33,6 +37,8 @@ export class Artifact {
     createdAt: Date;
     publishedAt: Date | null;
     archivedAt: Date | null;
+    artifactType?: ArtifactType | null;
+    tags?: readonly string[];
   }) {
     this.id = params.id;
     this.authorId = params.authorId;
@@ -42,6 +48,8 @@ export class Artifact {
     this.createdAt = params.createdAt;
     this.publishedAt = params.publishedAt;
     this.archivedAt = params.archivedAt;
+    this.artifactType = params.artifactType ?? null;
+    this.tags = params.tags ?? [];
   }
 
   /**
@@ -50,12 +58,16 @@ export class Artifact {
    * @param params.id - ArtifactId
    * @param params.authorId - AuthorId
    * @param params.contentHash - Optional; can be null in draft
+   * @param params.artifactType - Optional artifact type
+   * @param params.tags - Optional tags
    * @param params.createdAt - Optional; defaults to new Date()
    */
   static draft(params: {
     id: ArtifactId;
     authorId: AuthorId;
     contentHash?: ContentHash | null;
+    artifactType?: ArtifactType | null;
+    tags?: readonly string[];
     createdAt?: Date;
   }): Artifact {
     const createdAt = params.createdAt ?? new Date();
@@ -68,6 +80,8 @@ export class Artifact {
       createdAt,
       publishedAt: null,
       archivedAt: null,
+      artifactType: params.artifactType ?? null,
+      tags: params.tags ?? [],
     });
   }
 
@@ -84,6 +98,8 @@ export class Artifact {
     createdAt: Date;
     publishedAt: Date | null;
     archivedAt: Date | null;
+    artifactType?: ArtifactType | null;
+    tags?: readonly string[];
   }): Artifact {
     return new Artifact(params);
   }
@@ -101,6 +117,8 @@ export class Artifact {
       createdAt: this.createdAt,
       publishedAt: this.publishedAt,
       archivedAt: this.archivedAt,
+      artifactType: this.artifactType,
+      tags: this.tags,
     });
   }
 
@@ -126,6 +144,8 @@ export class Artifact {
       createdAt: this.createdAt,
       publishedAt: this.publishedAt,
       archivedAt: this.archivedAt,
+      artifactType: this.artifactType,
+      tags: this.tags,
     });
   }
 
@@ -153,6 +173,8 @@ export class Artifact {
       createdAt: this.createdAt,
       publishedAt: at,
       archivedAt: this.archivedAt,
+      artifactType: this.artifactType,
+      tags: this.tags,
     });
   }
 
@@ -180,6 +202,8 @@ export class Artifact {
       createdAt: this.createdAt,
       publishedAt: this.publishedAt,
       archivedAt: at,
+      artifactType: this.artifactType,
+      tags: this.tags,
     });
   }
 }

@@ -28,12 +28,12 @@ Data Integrity cross-cutting concerns enforce the three-layer immutability strat
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **5** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 40%
 
 ### Item List
 
@@ -95,7 +95,7 @@ Data Integrity cross-cutting concerns enforce the three-layer immutability strat
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
 | **Origin** | cross-cutting/data-integrity/ARCHITECTURE.md |
 | **Dependencies** | COMP-001 |
@@ -114,6 +114,7 @@ Data Integrity cross-cutting concerns enforce the three-layer immutability strat
 
 **Files Created/Modified**:
 - `packages/platform-core/src/data-integrity/soft-deletable.ts`
+- `packages/platform-core/src/data-integrity/soft-deletable.test.ts`
 
 ---
 
@@ -169,6 +170,15 @@ Data Integrity cross-cutting concerns enforce the three-layer immutability strat
 **Files Created/Modified**:
 - `packages/platform-core/src/data-integrity/data-retention-service.ts`
 - `apps/workers/src/jobs/data-retention-purge.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-13 — S2 Stage (COMP-039.1, COMP-039.3 per Implementation Plan)
+
+- **SoftDeletable**: Implemented `SoftDeletableMixin`, `SoftDeletable` interface, and `WithDeletedOption` in `packages/platform-core/src/data-integrity/soft-deletable.ts`. Unit tests verify `deleted_at`, `softDelete()`, and idempotence.
+- **PostgreSQL append_only_log**: Added migration `supabase/migrations/20260313160000_platform_core_append_only_log.sql` (table with id, actor_id, event_type, payload, schema_version, correlation_id, causation_id, recorded_at; UPDATE/DELETE revoked). Added `appendToLog()` and `AppendOnlyLogEntry`/`AppendOnlyLogClient` in `packages/platform-core/src/data-integrity/append-only-log.ts`. Unit tests verify insert params shape.
 
 ---
 

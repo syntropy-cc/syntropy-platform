@@ -32,12 +32,12 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 50%
 
 ### Item List
 
@@ -99,7 +99,7 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | cross-cutting/security/ARCHITECTURE.md, CON-007 |
 | **Dependencies** | COMP-001 |
@@ -118,6 +118,7 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 
 **Files Created/Modified**:
 - `packages/platform-core/src/security/encrypted-field.ts`
+- `packages/platform-core/src/security/encrypted-field.test.ts`
 
 ---
 
@@ -150,7 +151,7 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | cross-cutting/security/ARCHITECTURE.md, CON-010 |
 | **Dependencies** | COMP-001 |
@@ -175,7 +176,7 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | cross-cutting/security/ARCHITECTURE.md, ARCH-008 |
 | **Dependencies** | COMP-001 |
@@ -192,8 +193,13 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 - [ ] `console.log` scanning rule: CI fails if secret-like patterns found in logs
 
 **Files Created/Modified**:
-- `apps/*/src/env-validator.ts`
-- `scripts/validate-secrets.ts`
+- `packages/platform-core/src/config/env-validator.ts`
+- `packages/platform-core/src/config/env-validator.test.ts`
+- `apps/admin/.env.example`, `apps/admin/src/env.ts`
+- `apps/hub/.env.example`, `apps/hub/src/env.ts`
+- `apps/institutional-site/.env.example`, `apps/institutional-site/src/env.ts`
+- `apps/labs/.env.example`, `apps/labs/src/env.ts`
+- `apps/learn/.env.example`, `apps/learn/src/env.ts`
 
 ---
 

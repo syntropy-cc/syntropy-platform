@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S2 — Cross-Cutting Libraries
-CURRENT ITEM  : COMP-037.6 — Secret management configuration
+CURRENT STAGE : S3 — Identity Core
+CURRENT ITEM  : COMP-002.1 — Identity package setup and User aggregate
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 3 / 8 items done (S2)
-OVERALL       : 8 / 262 items done (3%)
+STAGE PROGRESS: 0 / 5 items done (S3)
+OVERALL       : 13 / 262 items done (5%)
 ```
 
 **Next 5 items**:
-1. `COMP-037.6` — Secret management configuration ← **START HERE**
-2. `COMP-037.3` — Data encryption for classified fields
-3. `COMP-037.5` — SAST and dependency vulnerability scanning in CI
-4. `COMP-039.1` — SoftDeletable mixin
-5. `COMP-039.3` — PostgreSQL AppendOnlyLog implementation
+1. `COMP-002.1` — Identity package setup and User aggregate ← **START HERE**
+2. `COMP-002.2` — RBACRole, Permission, Role entities
+3. `COMP-002.3` — Session aggregate and IdentityToken value object
+4. `COMP-002.4` — SupabaseAuthAdapter (ACL)
+5. `COMP-039.4` — AuditColumns mixin
 
-**Component record**: [`COMP-037`](./components/COMP-037-security.md)
+**Component record**: [`COMP-002`](./components/COMP-002-identity.md)
 
-**Next item (COMP-037.6) acceptance criteria**: `.env.example` in each app with all vars (values redacted); `.env.*.local` in `.gitignore`; `env-validator.ts` validates required env vars at startup.
+**Next item (COMP-002.1) acceptance criteria**: `packages/identity` workspace with `UserAggregate`; `ActorId` value object (UUID-based); `User.create()` factory; domain events: `UserCreated`, `UserUpdated`; unit tests.
 
-**Suggested steps**: (1) Create `.env.example` for each app (2) Write `env-validator.ts` (3) Add gitignore patterns for secrets.
+**Suggested steps**: (1) Scaffold `packages/identity` with `package.json` and `tsconfig.json` (2) Write `User` aggregate with `ActorId` (3) Write `UserCreated` event + unit tests
 
 ---
 
@@ -1169,7 +1169,7 @@ Status: ✅ Done | **Deps**: COMP-001
 
 #### [COMP-037.6] Secret management configuration
 `S2` `Critical` `S` [Record→](./components/COMP-037-security.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `.env.example` in each app with all vars (values redacted); `.env.*.local` in `.gitignore`; `env-validator.ts` validates required env vars at startup.
 **Steps**: (1) Create `.env.example` for each app (2) Write `env-validator.ts` (3) Add gitignore patterns for secrets
 
@@ -1177,7 +1177,7 @@ Status: ⬜ | **Deps**: COMP-001
 
 #### [COMP-037.3] Data encryption for classified fields
 `S2` `Critical` `S` [Record→](./components/COMP-037-security.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `encryptField(value, key)` AES-256-GCM; `decryptField(cipher, key)` decrypts; key loaded from `DATA_ENCRYPTION_KEY` env var; tests verify round-trip.
 **Steps**: (1) Write `encrypted-field.ts` with AES-256-GCM (2) Add `EncryptedField<T>` type (3) Write round-trip test
 
@@ -1185,7 +1185,7 @@ Status: ⬜ | **Deps**: COMP-001
 
 #### [COMP-037.5] SAST and dependency vulnerability scanning in CI
 `S2` `High` `S` [Record→](./components/COMP-037-security.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: GitHub Actions Semgrep scan on PR; `npm audit` fails on high/critical; SAST results as PR annotations; blocks merge on critical findings.
 **Steps**: (1) Write `.github/workflows/security-scan.yml` with Semgrep (2) Add `npm audit` step (3) Configure block-on-critical
 
@@ -1193,7 +1193,7 @@ Status: ⬜ | **Deps**: COMP-001
 
 #### [COMP-039.1] SoftDeletable mixin
 `S2` `Critical` `S` [Record→](./components/COMP-039-data-integrity.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `SoftDeletable` mixin adds `deleted_at: Date | null`; `softDelete()` sets timestamp; repository `findAll()` filters out soft-deleted by default; unit tests verify behavior.
 **Steps**: (1) Write `SoftDeletable` class/mixin (2) Add `withDeleted` repository option (3) Write unit tests
 
@@ -1201,7 +1201,7 @@ Status: ⬜ | **Deps**: COMP-001
 
 #### [COMP-039.3] PostgreSQL AppendOnlyLog implementation
 `S2` `High` `S` [Record→](./components/COMP-039-data-integrity.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `append_only_log` table with `(id, actor_id, event_type, payload, schema_version, correlation_id, causation_id, recorded_at)`; no UPDATE/DELETE permissions; migration file.
 **Steps**: (1) Write migration for `append_only_log` table (2) Add DB user with INSERT-only permissions (3) Write insert test
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 8 / 262 items (3%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 13 / 262 items (5%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S2 — Cross-Cutting Libraries | S56 | ⬜ |
+| **Current Stage** | S3 — Identity Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-039.3 — PostgreSQL AppendOnlyLog implementation
+- 2026-03-13 COMP-039.1 — SoftDeletable mixin
+- 2026-03-13 COMP-037.5 — SAST and dependency vulnerability scanning in CI
+- 2026-03-13 COMP-037.3 — Data encryption for classified fields
+- 2026-03-13 COMP-037.6 — Secret management configuration
 - 2026-03-13 COMP-040.3 — TimeoutWrapper utility
 - 2026-03-13 COMP-040.1 — CircuitBreaker implementation
 - 2026-03-13 COMP-038.1 — Structured logger library
@@ -3230,12 +3235,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 8 | 18% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 13 | 29% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **8** | **3%** | ⬜ |
+| **Total** | **262** | **13** | **5%** | ⬜ |
 
 ### Component Coverage
 
@@ -3277,11 +3282,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-034 Background Services | 7 | 0 | ⬜ Not Started |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
-| COMP-037 Security | 6 | 0 | ⬜ Not Started |
+| COMP-037 Security | 6 | 3 | 🔵 In Progress |
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
-| COMP-039 Data Integrity | 5 | 0 | ⬜ Not Started |
+| COMP-039 Data Integrity | 5 | 2 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 2 | 🔵 In Progress |
-| **Total** | **262** | **7** | |
+| **Total** | **262** | **13** | |
 
 ### Layer Coverage
 

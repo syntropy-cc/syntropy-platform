@@ -2,6 +2,9 @@
   "name": "@syntropy/hub",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "@syntropy/platform-core": "workspace:*"
+  },
   "scripts": {
     "build": "echo 'build placeholder'",
     "dev": "echo 'dev placeholder'",

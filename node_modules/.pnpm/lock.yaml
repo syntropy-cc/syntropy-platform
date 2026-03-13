@@ -15,15 +15,35 @@ importers:
         specifier: ~5.6.0
         version: 5.6.3
 
-  apps/admin: {}
+  apps/admin:
+    dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../../packages/platform-core
 
-  apps/hub: {}
+  apps/hub:
+    dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../../packages/platform-core
 
-  apps/institutional-site: {}
+  apps/institutional-site:
+    dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../../packages/platform-core
 
-  apps/labs: {}
+  apps/labs:
+    dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../../packages/platform-core
 
-  apps/learn: {}
+  apps/learn:
+    dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../../packages/platform-core
 
   packages/ai-agents: {}
 

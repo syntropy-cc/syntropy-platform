@@ -1,0 +1,61 @@
+# Syntropy Platform — SAST and dependency vulnerability scanning (COMP-037.5)
+# Runs on PR; blocks merge on critical/high findings when branch protection requires this check.
+
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@4
+
+      - name: Run Semgrep
+        run: semgrep scan --config auto --output semgrep.sarif --error
+        # --error exits 1 if findings; SARIF for GitHub Code Scanning
+
+      - name: Upload SARIF
+        if: hashFiles('semgrep.sarif') != ''
+        uses: github/codeql-action/upload-sarif@3
+        with:
+          sarif_file: semgrep.sarif
+        continue-on-error: true
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit dependencies
+        run: pnpm audit --audit-level=high
+        # Fails the job if high or critical vulnerabilities exist.
+        # Add this workflow as a required status check to block merge on critical findings.

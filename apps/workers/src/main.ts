@@ -4,6 +4,7 @@
  * Bootstraps WorkerRegistry, starts all workers concurrently, and handles
  * SIGTERM/SIGINT with graceful shutdown (30s). Unhandled rejections crash
  * the process so the orchestrator can restart (COMP-034.1).
+ * Exposes GET /metrics and GET /health (COMP-034.5).
  *
  * Architecture: COMP-034, platform/background-services/ARCHITECTURE.md
  */
@@ -14,6 +15,7 @@ import { createSessionInvalidationConsumer } from "./workers/session-invalidatio
 import { createDlqProcessor } from "./workers/dlq-processor.js";
 import { createCronScheduler } from "./scheduler/cron-scheduler.js";
 import { WorkerRegistry } from "./worker-registry.js";
+import { createMetricsHealthServer } from "./http-server.js";
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
 const log = createLogger("workers");
@@ -27,6 +29,8 @@ async function run(): Promise<void> {
   registry.register(createDlqProcessor());
   registry.register(createCronScheduler());
 
+  const httpServer = createMetricsHealthServer(registry);
+
   process.on("unhandledRejection", (reason: unknown, promise: Promise<unknown>) => {
     log.error({ err: reason, promise }, "Unhandled rejection; crashing process");
     process.exit(1);
@@ -34,6 +38,9 @@ async function run(): Promise<void> {
 
   const shutdown = (signal: string) => {
     log.info({ signal }, "Received signal; starting graceful shutdown");
+    httpServer.close(() => {
+      log.info("Metrics server closed");
+    });
     registry
       .stopAll({ timeoutMs: SHUTDOWN_TIMEOUT_MS })
       .then(() => {

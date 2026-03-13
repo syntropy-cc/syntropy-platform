@@ -21,3 +21,19 @@ export class AuthProviderError extends Error {
     Object.setPrototypeOf(this, AuthProviderError.prototype);
   }
 }
+
+/**
+ * Thrown when an actor lacks permission for a resource/action (RBAC denial).
+ * Architecture: COMP-037.1, cross-cutting/security
+ */
+export class ForbiddenError extends Error {
+  constructor(
+    message: string = "Insufficient permissions",
+    public readonly resource?: string,
+    public readonly action?: string
+  ) {
+    super(message);
+    this.name = "ForbiddenError";
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
+  }
+}

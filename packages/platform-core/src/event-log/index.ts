@@ -6,6 +6,7 @@ export type { EventLogEntry, EventLogEntryToAppend, DateRange } from "./types.js
 export type { AppendOnlyLogRepository } from "./AppendOnlyLogRepository.js";
 export type { EventLogClient } from "./EventLogClient.js";
 export { PostgresAppendOnlyLogRepository } from "./PostgresAppendOnlyLogRepository.js";
+export { AppendOnlyLogAdapter } from "./AppendOnlyLogAdapter.js";
 export { CausalChainTracer } from "./CausalChainTracer.js";
 export {
   AuditLogConsumer,

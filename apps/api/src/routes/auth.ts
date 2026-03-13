@@ -7,7 +7,7 @@
  */
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import { InvalidTokenError, AuthProviderError } from "@syntropy/identity";
+import { AuthProviderError } from "@syntropy/identity";
 import { successEnvelope, errorEnvelope } from "../types/api-envelope.js";
 
 interface LoginBody {
@@ -19,12 +19,6 @@ function isLoginBody(value: unknown): value is LoginBody {
   if (value === null || typeof value !== "object") return false;
   const o = value as Record<string, unknown>;
   return typeof o.email === "string" && typeof o.password === "string";
-}
-
-function getBearerToken(request: FastifyRequest): string | null {
-  const auth = request.headers.authorization;
-  if (typeof auth !== "string" || !auth.startsWith("Bearer ")) return null;
-  return auth.slice(7).trim() || null;
 }
 
 function getRequestId(request: FastifyRequest): string | undefined {
@@ -118,45 +112,38 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
     return reply.status(204).send();
   });
 
-  fastify.get("/api/v1/auth/me", async (request, reply) => {
-    if (!auth) {
-      return reply.status(503).send(
-        errorEnvelope(
-          "SERVICE_UNAVAILABLE",
-          "Auth is not configured.",
-          getRequestId(request)
-        )
-      );
-    }
-    const tokenStr = getBearerToken(request);
-    if (!tokenStr) {
-      return reply.status(401).send(
-        errorEnvelope(
-          "UNAUTHORIZED",
-          "Missing or invalid Authorization header (expected Bearer <token>).",
-          getRequestId(request)
-        )
-      );
-    }
-    try {
-      const token = await auth.verifyToken(tokenStr);
+  fastify.get(
+    "/api/v1/auth/me",
+    { preHandler: [fastify.requireAuth] },
+    async (request, reply) => {
+      if (!request.user) {
+        return reply.status(401).send(
+          errorEnvelope("UNAUTHORIZED", "Not authenticated", getRequestId(request))
+        );
+      }
       return reply.status(200).send(
         successEnvelope(
           {
-            userId: token.userId,
-            actorId: token.actorId,
-            roles: [...token.roles],
+            userId: request.user.userId,
+            actorId: request.user.actorId,
+            roles: request.user.roles,
           },
           getRequestId(request)
         )
       );
-    } catch (err) {
-      if (err instanceof InvalidTokenError || err instanceof AuthProviderError) {
-        return reply.status(401).send(
-          errorEnvelope("UNAUTHORIZED", err.message, getRequestId(request))
-        );
-      }
-      throw err;
     }
-  });
+  );
+
+  fastify.get(
+    "/api/v1/protected",
+    { preHandler: [fastify.requireAuth] },
+    async (request, reply) => {
+      return reply.status(200).send(
+        successEnvelope(
+          { ok: true, user: request.user },
+          getRequestId(request)
+        )
+      );
+    }
+  );
 }

@@ -9,25 +9,26 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S7 — Security + Resilience + Workers Foundation
-CURRENT ITEM  : COMP-037.1 — RBAC enforcement library
+CURRENT STAGE : S8 — Walking Skeleton UI
+CURRENT ITEM  : COMP-033.3 — Rate limiting middleware
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 5 / 5 items done (S6)
-OVERALL       : 36 / 262 items done (14%)
+STAGE PROGRESS: 5 / 5 items done (S7)
+OVERALL       : 41 / 262 items done (16%)
 ```
 
 **Next 5 items**:
-1. `COMP-002.6` — Identity REST API endpoints ✅
-2. `COMP-002.7` — Session Kafka consumer ✅
-3. `COMP-034.3` — DLQ processor ✅
-4. `COMP-034.4` — Scheduled job runner ✅
-5. `COMP-037.1` — RBAC enforcement library ← **START HERE**
+1. `COMP-037.1` — RBAC enforcement library ✅
+2. `COMP-040.5` — Resilience integration tests ✅
+3. `COMP-039.2` — AppendOnlyLog abstract interface ✅
+4. `COMP-034.5` — Prometheus metrics and health endpoints (workers) ✅
+5. `COMP-033.2` — Auth middleware and token verification ✅
+6. `COMP-033.3` — Rate limiting middleware ← **START HERE**
 
-**Component record**: [`COMP-037`](./components/COMP-037-security.md)
+**Component record**: [`COMP-033`](./components/COMP-033-rest-api.md)
 
-**Next item (COMP-037.1) acceptance criteria**: `hasPermission(actorId, resource, action)` returns boolean; `requirePermission` throws `ForbiddenError`; `@RequireRole` decorator; Redis cache with 5min TTL.
+**Next item (COMP-033.3) acceptance criteria**: Sliding window: 100 req/s burst, 1000 req/min per user; IP-based for unauthenticated (20 req/min); 429 with `Retry-After`; AI streaming sessions: 20 concurrent.
 
-**Suggested steps**: (1) Write `hasPermission` function (2) Write `requirePermission` wrapper (3) Add Redis caching
+**Suggested steps**: (1) Add `@fastify/rate-limit` with Redis backend (2) Configure per-user and IP limits (3) Test 429 response
 
 ---
 
@@ -1393,7 +1394,7 @@ Status: ✅ Done | **Deps**: COMP-034.1
 
 #### [COMP-037.1] RBAC enforcement library
 `S7` `Critical` `S` [Record→](./components/COMP-037-security.md)
-Status: ⬜ | **Deps**: COMP-002
+Status: Done | **Deps**: COMP-002
 **Criteria**: `hasPermission(actorId, resource, action)` returns boolean; `requirePermission` throws `ForbiddenError`; `@RequireRole` decorator; Redis cache with 5min TTL.
 **Steps**: (1) Write `hasPermission` function (2) Write `requirePermission` wrapper (3) Add Redis caching
 
@@ -1401,7 +1402,7 @@ Status: ⬜ | **Deps**: COMP-002
 
 #### [COMP-040.5] Resilience integration tests
 `S7` `High` `S` [Record→](./components/COMP-040-resilience.md)
-Status: ⬜ | **Deps**: COMP-040.1, COMP-040.2, COMP-040.3, COMP-040.4
+Status: Done | **Deps**: COMP-040.1, COMP-040.2, COMP-040.3, COMP-040.4
 **Criteria**: Integration tests for CircuitBreaker + RetryPolicy combination; Bulkhead under load; TimeoutWrapper with real async delay; all tests < 5s total.
 **Steps**: (1) Write circuit-breaker + retry combo test (2) Write bulkhead load test (3) Run full suite
 
@@ -1409,7 +1410,7 @@ Status: ⬜ | **Deps**: COMP-040.1, COMP-040.2, COMP-040.3, COMP-040.4
 
 #### [COMP-039.2] AppendOnlyLog abstract interface
 `S7` `High` `S` [Record→](./components/COMP-039-data-integrity.md)
-Status: ⬜ | **Deps**: COMP-009.3
+Status: Done | **Deps**: COMP-009.3
 **Criteria**: `AppendOnlyLog` interface with `append(event)` and `query(filter)` methods; implemented by `PostgresAppendOnlyLog` and mock; used throughout domain packages.
 **Steps**: (1) Write `AppendOnlyLog` interface (2) Write `MockAppendOnlyLog` for tests (3) Verify `PostgresAppendOnlyLog` implements it
 
@@ -1417,7 +1418,7 @@ Status: ⬜ | **Deps**: COMP-009.3
 
 #### [COMP-034.5] Prometheus metrics and health endpoints (workers)
 `S7` `High` `S` [Record→](./components/COMP-034-background-services.md)
-Status: ⬜ | **Deps**: COMP-034.1
+Status: Done | **Deps**: COMP-034.1
 **Criteria**: `GET /metrics` returns Prometheus format; `GET /health` checks all workers + DLQ depth + Redis/Kafka; default Node.js metrics collected; custom per-worker counters.
 **Steps**: (1) Add `prom-client` to workers (2) Write metrics endpoint (3) Write health check
 
@@ -1425,7 +1426,7 @@ Status: ⬜ | **Deps**: COMP-034.1
 
 #### [COMP-033.2] Auth middleware and token verification
 `S7` `Critical` `S` [Record→](./components/COMP-033-rest-api.md)
-Status: ⬜ | **Deps**: COMP-002, COMP-033.1
+Status: Done | **Deps**: COMP-002, COMP-033.1
 **Criteria**: `authMiddleware` calls `verifyIdentityToken()`; sets `request.user`; returns 401 on invalid token; 403 on insufficient role; Redis token cache 5min TTL.
 **Steps**: (1) Write `authMiddleware` Fastify plugin (2) Wire to `verifyIdentityToken` (3) Add Redis cache
 
@@ -3207,9 +3208,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 36 / 262 items (14%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 41 / 262 items (16%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S7 — Security + Resilience + Workers Foundation | S56 | ⬜ |
+| **Current Stage** | S8 — Walking Skeleton UI | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3218,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-033.2 — Auth middleware and token verification
+- 2026-03-13 COMP-034.5 — Prometheus metrics and health endpoints (workers)
+- 2026-03-13 COMP-039.2 — AppendOnlyLog abstract interface
+- 2026-03-13 COMP-040.5 — Resilience integration tests
+- 2026-03-13 COMP-037.1 — RBAC enforcement library
 - 2026-03-13 COMP-034.4 — Scheduled job runner
 - 2026-03-13 COMP-034.3 — DLQ processor
 - 2026-03-13 COMP-002.7 — Session Kafka consumer
@@ -3258,12 +3264,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 36 | 80% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 41 | 91% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **32** | **12%** | ⬜ |
+| **Total** | **262** | **41** | **16%** | ⬜ |
 
 ### Component Coverage
 
@@ -3301,15 +3307,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-030 IDE Domain | 8 | 0 | ⬜ Not Started |
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
 | COMP-032 Web Application | 8 | 0 | ⬜ Not Started |
-| COMP-033 REST API Gateway | 7 | 0 | ⬜ Not Started |
-| COMP-034 Background Services | 7 | 5 | 🔵 In Progress |
+| COMP-033 REST API Gateway | 7 | 2 | 🔵 In Progress |
+| COMP-034 Background Services | 7 | 6 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
-| COMP-037 Security | 6 | 3 | 🔵 In Progress |
+| COMP-037 Security | 6 | 4 | 🔵 In Progress |
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
-| COMP-039 Data Integrity | 5 | 3 | 🔵 In Progress |
-| COMP-040 Resilience | 5 | 4 | 🔵 In Progress |
-| **Total** | **262** | **23** | |
+| COMP-039 Data Integrity | 5 | 4 | 🔵 In Progress |
+| COMP-040 Resilience | 5 | 5 | ✅ Complete |
+| **Total** | **262** | **41** | |
 
 ### Layer Coverage
 

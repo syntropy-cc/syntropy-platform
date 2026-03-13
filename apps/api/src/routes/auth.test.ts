@@ -205,4 +205,37 @@ describe("auth routes", () => {
       }
     });
   });
+
+  describe("GET /api/v1/protected", () => {
+    it("returns 401 when Authorization header is missing", async () => {
+      const app = await createApp({ auth: createMockAuth(VALID_JWT), supabaseClient: null });
+      try {
+        const response = await app.inject({ method: "GET", url: "/api/v1/protected" });
+        expect(response.statusCode).toBe(401);
+        const body = JSON.parse(response.payload);
+        expect(body.error?.code).toBe("UNAUTHORIZED");
+      } finally {
+        await app.close();
+      }
+    });
+
+    it("returns 200 and user when token is valid", async () => {
+      const app = await createApp({ auth: createMockAuth(VALID_JWT), supabaseClient: null });
+      try {
+        const response = await app.inject({
+          method: "GET",
+          url: "/api/v1/protected",
+          headers: { authorization: `Bearer ${VALID_JWT}` },
+        });
+        expect(response.statusCode).toBe(200);
+        const body = JSON.parse(response.payload);
+        expect(body.data?.ok).toBe(true);
+        expect(body.data?.user?.userId).toBe(TEST_USER_ID);
+        expect(body.data?.user?.actorId).toBe(TEST_ACTOR_ID);
+        expect(body.data?.user?.roles).toEqual(["Learner"]);
+      } finally {
+        await app.close();
+      }
+    });
+  });
 });

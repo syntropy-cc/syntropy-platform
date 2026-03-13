@@ -27,4 +27,21 @@ export {
   type SupabaseAuthLike,
 } from "./infrastructure/supabase-auth-adapter.js";
 export { IdentityEventPublisher } from "./infrastructure/IdentityEventPublisher.js";
-export { InvalidTokenError, AuthProviderError } from "./infrastructure/errors.js";
+export {
+  InvalidTokenError,
+  AuthProviderError,
+  ForbiddenError,
+} from "./infrastructure/errors.js";
+export {
+  hasPermission,
+  requirePermission,
+  PermissionChecker,
+  createPermissionChecker,
+  InMemoryPermissionCache,
+  RequireRole,
+  getPermissionsForRole,
+  DEFAULT_ROLE_PERMISSIONS,
+  type RoleResolver,
+  type PermissionCache,
+  type PermissionCheckerOptions,
+} from "./rbac/index.js";

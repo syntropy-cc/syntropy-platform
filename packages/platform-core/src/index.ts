@@ -29,6 +29,15 @@ export {
   type AppendOnlyLogClient,
 } from "./data-integrity/append-only-log.js";
 export {
+  type IAppendOnlyLog,
+  type AppendOnlyLogQueryFilter,
+} from "./data-integrity/append-only-log-interface.js";
+export {
+  MockAppendOnlyLog,
+  type MockLogEntry,
+  type LogEventWithMeta,
+} from "./data-integrity/MockAppendOnlyLog.js";
+export {
   createLogger,
   withCorrelationId,
   type LoggerOptions,
@@ -67,6 +76,7 @@ export {
   AuditLogConsumer,
   AUDIT_LOG_TOPICS,
   AUDIT_LOG_CONSUMER_GROUP,
+  AppendOnlyLogAdapter,
   type AppendOnlyLogRepository,
   type EventLogClient,
   type EventLogEntry,

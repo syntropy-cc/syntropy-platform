@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S8 — Walking Skeleton UI
-CURRENT ITEM  : COMP-032.2 — Auth Provider integration (Supabase UI)
+CURRENT ITEM  : COMP-032.1 — Next.js app scaffolding and design system
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 2 / 4 items done (S8)
-OVERALL       : 43 / 262 items done (16%)
+STAGE PROGRESS: 3 / 4 items done (S8)
+OVERALL       : 44 / 262 items done (17%)
 ```
 
 **Next 5 items**:
@@ -24,13 +24,14 @@ OVERALL       : 43 / 262 items done (16%)
 5. `COMP-033.2` — Auth middleware and token verification ✅
 6. `COMP-033.3` — Rate limiting middleware ✅
 7. `COMP-033.7` — Health check and server info endpoints ✅
-8. `COMP-032.2` — Auth Provider integration (Supabase UI) ← **START HERE**
+8. `COMP-032.2` — Auth Provider integration (Supabase UI) ✅
+9. `COMP-032.1` — Next.js app scaffolding and design system ← **START HERE**
 
 **Component record**: [`COMP-032`](./components/COMP-032-web-application.md)
 
-**Next item (COMP-032.2) acceptance criteria**: Next.js Auth Provider wraps Supabase client; `/login` page renders; `/logout` clears session; `useUser()` hook returns current user; protected routes redirect to `/login`.
+**Next item (COMP-032.1) acceptance criteria**: `apps/platform`, `apps/learn`, `apps/hub`, `apps/labs` scaffolded; shared `packages/ui` with design system (Tailwind + shadcn/ui); global layout with navigation; theme (light/dark) support.
 
-**Suggested steps**: (1) Add `@supabase/ssr` to apps (2) Write `AuthProvider` component (3) Write `useUser` hook
+**Suggested steps**: (1) Scaffold 4 Next.js apps with `create-next-app` (2) Create `packages/ui` with base components (3) Add Tailwind + shadcn/ui to all apps
 
 ---
 
@@ -1452,7 +1453,7 @@ Status: ✅ Done | **Deps**: COMP-033.1
 
 #### [COMP-032.2] Auth Provider integration (Supabase UI)
 `S8` `Critical` `M` [Record→](./components/COMP-032-web-application.md)
-Status: ⬜ | **Deps**: COMP-002, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-002, COMP-033.2
 **Criteria**: Next.js Auth Provider wraps Supabase client; `/login` page renders; `/logout` clears session; `useUser()` hook returns current user; protected routes redirect to `/login`.
 **Steps**: (1) Add `@supabase/ssr` to apps (2) Write `AuthProvider` component (3) Write `useUser` hook
 
@@ -3210,7 +3211,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 43 / 262 items (16%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 44 / 262 items (17%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S8 — Walking Skeleton UI | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3220,6 +3221,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-032.2 — Auth Provider integration (Supabase UI)
 - 2026-03-13 COMP-033.7 — Health check and server info endpoints
 - 2026-03-13 COMP-033.3 — Rate limiting middleware
 - 2026-03-13 COMP-033.2 — Auth middleware and token verification
@@ -3268,7 +3270,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 41 | 91% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 42 | 93% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
@@ -3310,7 +3312,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-029 Planning | 6 | 0 | ⬜ Not Started |
 | COMP-030 IDE Domain | 8 | 0 | ⬜ Not Started |
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
-| COMP-032 Web Application | 8 | 0 | ⬜ Not Started |
+| COMP-032 Web Application | 8 | 1 | 🔵 In Progress |
 | COMP-033 REST API Gateway | 7 | 4 | 🔵 In Progress |
 | COMP-034 Background Services | 7 | 6 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |

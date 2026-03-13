@@ -19,6 +19,11 @@ export {
   type WithDeletedOption,
 } from "./data-integrity/soft-deletable.js";
 export {
+  AuditColumnsMixin,
+  getAuditColumnsMigrationSnippet,
+  type AuditColumns,
+} from "./data-integrity/audit-columns.js";
+export {
   appendToLog,
   type AppendOnlyLogEntry,
   type AppendOnlyLogClient,

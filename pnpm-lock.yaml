@@ -59,7 +59,17 @@ importers:
 
   packages/ide: {}
 
-  packages/identity: {}
+  packages/identity:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.0
+        version: 22.19.15
+      typescript:
+        specifier: ~5.6.0
+        version: 5.6.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.19.15)
 
   packages/labs: {}
 

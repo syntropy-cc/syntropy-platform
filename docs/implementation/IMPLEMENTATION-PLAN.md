@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S3 — Identity Core
-CURRENT ITEM  : COMP-002.1 — Identity package setup and User aggregate
+CURRENT STAGE : S4 — Infrastructure Bootstrap
+CURRENT ITEM  : COMP-040.2 — RetryPolicy with exponential backoff
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 0 / 5 items done (S3)
-OVERALL       : 13 / 262 items done (5%)
+STAGE PROGRESS: 0 / 6 items done (S4)
+OVERALL       : 18 / 262 items done (7%)
 ```
 
 **Next 5 items**:
-1. `COMP-002.1` — Identity package setup and User aggregate ← **START HERE**
-2. `COMP-002.2` — RBACRole, Permission, Role entities
-3. `COMP-002.3` — Session aggregate and IdentityToken value object
-4. `COMP-002.4` — SupabaseAuthAdapter (ACL)
-5. `COMP-039.4` — AuditColumns mixin
+1. `COMP-040.2` — RetryPolicy with exponential backoff ← **START HERE**
+2. `COMP-040.4` — BulkheadPattern (semaphore concurrency limiter)
+3. `COMP-034.1` — Background services process setup + worker registry
+4. `COMP-034.2` — Kafka consumer worker bootstrapping
+5. `COMP-009.1` — Kafka client package setup
 
-**Component record**: [`COMP-002`](./components/COMP-002-identity.md)
+**Component record**: [`COMP-040`](./components/COMP-040-resilience.md)
 
-**Next item (COMP-002.1) acceptance criteria**: `packages/identity` workspace with `UserAggregate`; `ActorId` value object (UUID-based); `User.create()` factory; domain events: `UserCreated`, `UserUpdated`; unit tests.
+**Next item (COMP-040.2) acceptance criteria**: `RetryPolicy.execute(fn, options)` retries on transient errors; exponential backoff with jitter; max 3 retries configurable; throws after max; unit tests.
 
-**Suggested steps**: (1) Scaffold `packages/identity` with `package.json` and `tsconfig.json` (2) Write `User` aggregate with `ActorId` (3) Write `UserCreated` event + unit tests
+**Suggested steps**: (1) Write `RetryPolicy` with `execute` method (2) Implement exponential backoff with jitter (3) Write retry count tests
 
 ---
 
@@ -1209,7 +1209,7 @@ Status: Done | **Deps**: COMP-001
 
 #### [COMP-002.1] Identity package setup and User aggregate
 `S3` `Critical` `S` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-038.1
+Status: ✅ Done | **Deps**: COMP-001, COMP-038.1
 **Criteria**: `packages/identity` workspace with `UserAggregate`; `ActorId` value object (UUID-based); `User.create()` factory; domain events: `UserCreated`, `UserUpdated`; unit tests.
 **Steps**: (1) Scaffold `packages/identity` with `package.json` and `tsconfig.json` (2) Write `User` aggregate with `ActorId` (3) Write `UserCreated` event + unit tests
 
@@ -1217,7 +1217,7 @@ Status: ⬜ | **Deps**: COMP-001, COMP-038.1
 
 #### [COMP-002.2] RBACRole, Permission, Role entities
 `S3` `Critical` `S` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-002.1
+Status: ✅ Done | **Deps**: COMP-002.1
 **Criteria**: `RBACRole` enum (`admin`, `creator`, `learner`, `mentor`, `reviewer`, `moderator`); `Permission` value object (`resource:action`); `Role` entity maps role to permissions; unit tests.
 **Steps**: (1) Write `RBACRole` enum and `Permission` value object (2) Write `Role` entity with permission set (3) Write permission check unit tests
 
@@ -1225,7 +1225,7 @@ Status: ⬜ | **Deps**: COMP-002.1
 
 #### [COMP-002.3] Session aggregate and IdentityToken value object
 `S3` `Critical` `S` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-002.2
+Status: ✅ Done | **Deps**: COMP-002.2
 **Criteria**: `Session` aggregate with `sessionId`, `userId`, `expiresAt`; `IdentityToken` value object wraps JWT claims; `Session.isExpired()` checks expiry; unit tests.
 **Steps**: (1) Write `Session` aggregate with lifecycle methods (2) Write `IdentityToken` with claim extraction (3) Write session expiry tests
 
@@ -1233,7 +1233,7 @@ Status: ⬜ | **Deps**: COMP-002.2
 
 #### [COMP-002.4] SupabaseAuthAdapter (ACL)
 `S3` `Critical` `M` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-002.3
+Status: ✅ Done | **Deps**: COMP-002.3
 **Criteria**: `SupabaseAuthAdapter` implements `AuthProvider` interface; `verifyToken(jwt)` calls Supabase and returns `IdentityToken`; `signIn/signOut` delegate to Supabase; adapter translates Supabase errors to domain errors.
 **Steps**: (1) Define `AuthProvider` interface (2) Write `SupabaseAuthAdapter` (3) Mock Supabase in tests
 
@@ -1241,7 +1241,7 @@ Status: ⬜ | **Deps**: COMP-002.3
 
 #### [COMP-039.4] AuditColumns mixin
 `S3` `High` `S` [Record→](./components/COMP-039-data-integrity.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: ✅ Done | **Deps**: COMP-001
 **Criteria**: `AuditColumns` mixin adds `created_at`, `updated_at`, `created_by_actor_id`; `updated_at` auto-updated on save; migration helper; unit tests.
 **Steps**: (1) Write `AuditColumns` class (2) Add auto-update hook for `updated_at` (3) Write mixin tests
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 13 / 262 items (5%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 18 / 262 items (7%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S3 — Identity Core | S56 | ⬜ |
+| **Current Stage** | S4 — Infrastructure Bootstrap | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-039.4 — AuditColumns mixin
+- 2026-03-13 COMP-002.4 — SupabaseAuthAdapter (ACL)
+- 2026-03-13 COMP-002.3 — Session aggregate and IdentityToken value object
+- 2026-03-13 COMP-002.2 — RBACRole, Permission, Role entities
+- 2026-03-13 COMP-002.1 — Identity package setup and User aggregate
 - 2026-03-13 COMP-039.3 — PostgreSQL AppendOnlyLog implementation
 - 2026-03-13 COMP-039.1 — SoftDeletable mixin
 - 2026-03-13 COMP-037.5 — SAST and dependency vulnerability scanning in CI
@@ -3235,19 +3240,19 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 13 | 29% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 18 | 40% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **13** | **5%** | ⬜ |
+| **Total** | **262** | **18** | **7%** | ⬜ |
 
 ### Component Coverage
 
 | Component | Items | Done | Status |
 |-----------|-------|------|--------|
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
-| COMP-002 Identity | 7 | 0 | ⬜ Not Started |
+| COMP-002 Identity | 7 | 4 | 🔵 In Progress |
 | COMP-003 DIP Artifact Registry | 8 | 0 | ⬜ Not Started |
 | COMP-004 DIP Smart Contract Engine | 6 | 0 | ⬜ Not Started |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
@@ -3284,7 +3289,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
 | COMP-037 Security | 6 | 3 | 🔵 In Progress |
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
-| COMP-039 Data Integrity | 5 | 2 | 🔵 In Progress |
+| COMP-039 Data Integrity | 5 | 3 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 2 | 🔵 In Progress |
 | **Total** | **262** | **13** | |
 

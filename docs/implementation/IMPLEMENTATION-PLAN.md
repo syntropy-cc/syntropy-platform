@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S10 — DIP Artifact Registry Completion + AI Foundation Start
-CURRENT ITEM  : COMP-003.8 — Integration tests for Artifact Registry
+CURRENT ITEM  : COMP-012.1 — AI agents package setup + UserContextModel aggregate
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 5 / 5 items done (S9) | 2 / 4 items done (S10)
-OVERALL       : 52 / 262 items done (20%)
+STAGE PROGRESS: 5 / 5 items done (S9) | 3 / 4 items done (S10)
+OVERALL       : 53 / 262 items done (20%)
 ```
 
 **Next 5 items**:
@@ -24,13 +24,14 @@ OVERALL       : 52 / 262 items done (20%)
 5. `COMP-003.5` — ArtifactEventPublisher ✅
 6. `COMP-003.6` — Artifact query service ✅
 7. `COMP-003.7` — Artifact REST API endpoints ✅
-8. `COMP-003.8` — Integration tests for Artifact Registry ← **START HERE**
+8. `COMP-003.8` — Integration tests for Artifact Registry ✅
+9. `COMP-012.1` — AI agents package setup + UserContextModel aggregate ← **START HERE**
 
-**Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
+**Component record**: [`COMP-012`](./components/COMP-012-ai-agents-orchestration.md)
 
-**Next item (COMP-003.8) acceptance criteria**: Full lifecycle test: draft→submit→publish; Nostr anchor verified; Kafka event emitted; API returns correct status at each step; uses real DB (testcontainers).
+**Next item (COMP-012.1) acceptance criteria**: `packages/ai-agents` workspace; `UserContextModel` aggregate with `userId`, `recentActivity[]`, `activeGoals[]`, `skillLevel`; `update(event)` method; unit tests.
 
-**Suggested steps**: (1) Write lifecycle integration test (2) Assert Kafka event (3) Assert Nostr anchor stored
+**Suggested steps**: (1) Scaffold `packages/ai-agents` (2) Write `UserContextModel` aggregate (3) Write context update unit tests
 
 ---
 
@@ -1524,7 +1525,7 @@ Status: ✅ Done | **Deps**: COMP-003.6, COMP-033.2
 
 #### [COMP-003.8] Integration tests for Artifact Registry
 `S10` `High` `M` [Record→](./components/COMP-003-dip-artifact-registry.md)
-Status: ⬜ | **Deps**: COMP-003.7
+Status: ✅ Done | **Deps**: COMP-003.7
 **Criteria**: Full lifecycle test: draft→submit→publish; Nostr anchor verified; Kafka event emitted; API returns correct status at each step; uses real DB (testcontainers).
 **Steps**: (1) Write lifecycle integration test (2) Assert Kafka event (3) Assert Nostr anchor stored
 
@@ -3210,7 +3211,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 52 / 262 items (20%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 53 / 262 items (20%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S10 — DIP Artifact Registry Completion + AI Foundation Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3220,6 +3221,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-003.8 — Integration tests for Artifact Registry
 - 2026-03-13 COMP-003.7 — Artifact REST API endpoints
 - 2026-03-13 COMP-003.6 — Artifact query service
 - 2026-03-13 COMP-003.5 — ArtifactEventPublisher

@@ -375,6 +375,14 @@ packages/dip/
 
 ## Implementation Log
 
+### 2026-03-13 - COMP-003.8 completed (Integration tests for Artifact Registry)
+
+- **Location**: `apps/api/src/integration/artifact-lifecycle.integration.test.ts`.
+- **Setup**: Testcontainers Postgres; two DIP migrations run in order; real `PgArtifactDbClient`, `PostgresArtifactRepository`, `ArtifactLifecycleService`; capturing `ArtifactLifecycleEventPublisher` (no real Kafka); `createApp` with mock auth and DIP context.
+- **Tests**: (1) Full lifecycle via API: POST → GET draft → PUT submit → PUT publish → GET published; status and `publishedAt` asserted at each step. (2) Event assertions: capturing publisher receives `dip.artifact.drafted`, `dip.artifact.submitted`, `dip.artifact.published` in order with matching `artifactId`. (3) Nostr anchor: after publish, artifact updated with `withNostrEventId` and saved via repository; GET returns `nostrEventId` in response.
+- **Dependencies**: `@testcontainers/postgresql` added to `apps/api` devDependencies; Vitest config includes `src/**/*.integration.test.ts` and `hookTimeout: 60_000`. Run integration tests with Docker available; for long first pull use `--hook-timeout=90000` if needed.
+- Implementation Plan is authority for item numbering; component record item labels may differ.
+
 ### 2026-03-13 - COMP-003.7 completed (Artifact REST API endpoints)
 
 - **Location**: `apps/api` (API app owns the HTTP layer; DIP provides application services).

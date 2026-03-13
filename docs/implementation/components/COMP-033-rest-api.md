@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#platform-services](../../architecture/ARCHITECTURE.md#platform-services)
 > **Domain Architecture**: [platform/rest-api/ARCHITECTURE.md](../../architecture/platform/rest-api/ARCHITECTURE.md)
 > **Stage Assignment**: S12 — Platform Services
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -34,12 +34,12 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 6 |
 | **Total** | **7** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 14%
 
 ### Item List
 
@@ -47,26 +47,32 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | rest-api/ARCHITECTURE.md |
 | **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Set up the REST API server with core middleware stack.
 
 **Acceptance Criteria**:
-- [ ] Fastify server with TypeScript types
-- [ ] CORS configured for pillar app origins
-- [ ] `correlation-id` middleware: generate UUID v4 `X-Correlation-ID` per request, propagate to response and downstream calls
-- [ ] Request/response logging middleware (structured JSON, correlation_id included)
-- [ ] Graceful shutdown handling
+- [x] Fastify server with TypeScript types
+- [x] CORS configured for pillar app origins
+- [x] `correlation-id` middleware: generate UUID v4 `X-Correlation-ID` per request, propagate to response and downstream calls
+- [x] Request/response logging middleware (structured JSON, correlation_id included)
+- [x] Graceful shutdown handling
 
 **Files Created/Modified**:
-- `apps/api/src/server.ts`
-- `apps/api/src/middleware/correlation-id.ts`
-- `apps/api/src/middleware/request-logger.ts`
+- `apps/api/package.json`, `apps/api/tsconfig.json`, `apps/api/vitest.config.ts`
+- `apps/api/src/main.ts`, `apps/api/src/server.ts`
+- `apps/api/src/middleware/correlation-id.ts`, `apps/api/src/middleware/request-logger.ts`
+- `apps/api/src/routes/health.ts`
+- `apps/api/src/types/fastify.d.ts`
+- Unit tests: `correlation-id.test.ts`, `request-logger.test.ts`; integration: `server.test.ts`
+
+**Implementation Notes**: Plugins registered with `fastify-plugin` so correlation-id and request-logger decorators/hooks apply to all routes. Minimal `GET /health` added for S4 verification; full `/health/ready` and `/health/live` remain in COMP-033.7.
 
 ---
 

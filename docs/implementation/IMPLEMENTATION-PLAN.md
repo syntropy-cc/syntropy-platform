@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S4 — Infrastructure Bootstrap
-CURRENT ITEM  : COMP-033.1 — REST API server setup and middleware stack
+CURRENT STAGE : S5 — Event Bus Core
+CURRENT ITEM  : COMP-009.2 — Event schema versioning system
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 5 / 6 items done (S4)
-OVERALL       : 23 / 262 items done (9%)
+STAGE PROGRESS: 0 / 7 items done (S5)
+OVERALL       : 24 / 262 items done (9%)
 ```
 
 **Next 5 items**:
-1. `COMP-033.1` — REST API server setup and middleware stack ← **START HERE**
-2. `COMP-009.2` — Event schema versioning system
-3. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
-4. `COMP-009.4` — ActorSignatureVerifier
-5. `COMP-002.5` — IdentityEventPublisher (Kafka)
+1. `COMP-009.2` — Event schema versioning system ← **START HERE**
+2. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
+3. `COMP-009.4` — ActorSignatureVerifier
+4. `COMP-009.5` — CausalChainTracer
+5. `COMP-009.6` — AppendOnlyLog repository (Postgres)
 
-**Component record**: [`COMP-033`](./components/COMP-033-rest-api.md)
+**Component record**: [`COMP-009`](./components/COMP-009-event-bus-audit.md)
 
-**Next item (COMP-033.1) acceptance criteria**: Fastify server with TypeScript; CORS configured; correlation-id middleware (UUID v4); request/response logging; graceful shutdown.
+**Next item (COMP-009.2) acceptance criteria**: `EventSchema` registry base class; schema version in event envelope; backward compatibility check; `SchemaRegistry.register(topic, schema, version)` stores schema.
 
-**Suggested steps**: (1) Scaffold `apps/api` with Fastify (2) Add correlation-id and logging plugins (3) Add graceful shutdown handler
+**Suggested steps**: (1) Write `EventSchema` type with version field (2) Write `SchemaRegistry` in-memory store (3) Write compatibility check
 
 ---
 
@@ -1289,7 +1289,7 @@ Status: ✅ Done | **Deps**: COMP-001
 
 #### [COMP-033.1] REST API server setup and middleware stack
 `S4` `Critical` `S` [Record→](./components/COMP-033-rest-api.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: Fastify server with TypeScript; CORS configured; correlation-id middleware (UUID v4); request/response logging; graceful shutdown.
 **Steps**: (1) Scaffold `apps/api` with Fastify (2) Add correlation-id and logging plugins (3) Add graceful shutdown handler
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 23 / 262 items (9%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 24 / 262 items (9%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S4 — Infrastructure Bootstrap | S56 | ⬜ |
+| **Current Stage** | S5 — Event Bus Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-033.1 — REST API server setup and middleware stack
 - 2026-03-13 COMP-009.1 — Kafka client package setup
 - 2026-03-13 COMP-034.2 — Kafka consumer worker bootstrapping
 - 2026-03-13 COMP-034.1 — Background services process setup + worker registry

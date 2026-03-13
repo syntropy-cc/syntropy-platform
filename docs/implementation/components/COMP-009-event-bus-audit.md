@@ -298,6 +298,14 @@ Event Bus & Audit is the central nervous system of the Syntropy ecosystem. It ow
 
 ---
 
+## Implementation Log
+
+### 2026-03-13 — COMP-009.1 done
+
+COMP-009.1 (Kafka client package setup) was implemented as **`packages/event-bus`** per the Implementation Plan: `KafkaProducer`, `KafkaConsumer`, `createKafkaClient(config)` factory, and minimal event envelope validation (`EventEnvelope`, `validateEventEnvelope`). Full SchemaRegistry integration is deferred to COMP-009.2.
+
+---
+
 ## References
 
 ### Architecture Documents

@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S4 — Infrastructure Bootstrap
-CURRENT ITEM  : COMP-009.1 — Kafka client package setup
+CURRENT ITEM  : COMP-033.1 — REST API server setup and middleware stack
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 4 / 6 items done (S4)
-OVERALL       : 22 / 262 items done (8%)
+STAGE PROGRESS: 5 / 6 items done (S4)
+OVERALL       : 23 / 262 items done (9%)
 ```
 
 **Next 5 items**:
-1. `COMP-009.1` — Kafka client package setup ← **START HERE**
-2. `COMP-033.1` — REST API server setup and middleware stack
-3. `COMP-009.2` — Event schema versioning system
-4. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
+1. `COMP-033.1` — REST API server setup and middleware stack ← **START HERE**
+2. `COMP-009.2` — Event schema versioning system
+3. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
+4. `COMP-009.4` — ActorSignatureVerifier
 5. `COMP-002.5` — IdentityEventPublisher (Kafka)
 
-**Component record**: [`COMP-009`](./components/COMP-009-event-bus-audit.md)
+**Component record**: [`COMP-033`](./components/COMP-033-rest-api.md)
 
-**Next item (COMP-009.1) acceptance criteria**: `packages/event-bus` with `KafkaProducer` and `KafkaConsumer` wrappers; `createKafkaClient(config)` factory; producer `publish(topic, event)` with schema validation; consumer `subscribe(topic, handler)`.
+**Next item (COMP-033.1) acceptance criteria**: Fastify server with TypeScript; CORS configured; correlation-id middleware (UUID v4); request/response logging; graceful shutdown.
 
-**Suggested steps**: (1) Scaffold `packages/event-bus` with kafkajs (2) Write `KafkaProducer` with `publish` (3) Write `KafkaConsumer` with `subscribe`
+**Suggested steps**: (1) Scaffold `apps/api` with Fastify (2) Add correlation-id and logging plugins (3) Add graceful shutdown handler
 
 ---
 
@@ -1281,7 +1281,7 @@ Status: Done | **Deps**: COMP-034.1, COMP-009, COMP-010, COMP-011
 
 #### [COMP-009.1] Kafka client package setup
 `S4` `Critical` `S` [Record→](./components/COMP-009-event-bus-audit.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: ✅ Done | **Deps**: COMP-001
 **Criteria**: `packages/event-bus` with `KafkaProducer` and `KafkaConsumer` wrappers; `createKafkaClient(config)` factory; producer `publish(topic, event)` with schema validation; consumer `subscribe(topic, handler)`.
 **Steps**: (1) Scaffold `packages/event-bus` with kafkajs (2) Write `KafkaProducer` with `publish` (3) Write `KafkaConsumer` with `subscribe`
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 22 / 262 items (8%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 23 / 262 items (9%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S4 — Infrastructure Bootstrap | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-009.1 — Kafka client package setup
 - 2026-03-13 COMP-034.2 — Kafka consumer worker bootstrapping
 - 2026-03-13 COMP-034.1 — Background services process setup + worker registry
 - 2026-03-13 COMP-040.4 — BulkheadPattern (semaphore concurrency limiter)
@@ -3244,7 +3245,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 22 | 49% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 23 | 51% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
@@ -3263,7 +3264,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
 | COMP-007 DIP Institutional Governance | 9 | 0 | ⬜ Not Started |
 | COMP-008 DIP Value Distribution & Treasury | 8 | 0 | ⬜ Not Started |
-| COMP-009 Event Bus & Audit | 8 | 0 | ⬜ Not Started |
+| COMP-009 Event Bus & Audit | 8 | 1 | 🔵 In Progress |
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
 | COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
 | COMP-012 AI Agents Orchestration | 8 | 0 | ⬜ Not Started |
@@ -3295,7 +3296,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 3 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 4 | 🔵 In Progress |
-| **Total** | **262** | **21** | |
+| **Total** | **262** | **23** | |
 
 ### Layer Coverage
 

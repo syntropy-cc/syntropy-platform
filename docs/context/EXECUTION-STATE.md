@@ -4,7 +4,7 @@
 > **Created by**: Prompt 01-A — Assess and Brief
 > **Updated by**: Every prompt upon completion
 > **Lifecycle**: Project-scoped — rolling-update pattern; never deleted
-> **Last updated**: 2026-03-12 by Prompt 01-C
+> **Last updated**: 2026-03-12 by Prompt 01-D
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Active phase** | Phase 2 — Architecture Generation (complete) |
-| **Last completed prompt** | 01-C — Create ADRs |
-| **Next prompt** | 01-D — UX Assess and Brief |
+| **Active phase** | Phase 2b — UX and Interaction Design |
+| **Last completed prompt** | 01-D — UX Assess and Brief |
+| **Next prompt** | 01-E — UX Generate and Validate |
 | **Blocked on** | _(nothing — execution proceeding normally)_ |
 
 ---
@@ -26,7 +26,7 @@
 | `docs/context/architecture-brief.md` | Delivered | Prompt 01-A | 2026-03-12 |
 | `docs/context/architecture-file-list.md` | Delivered | Prompt 01-B | 2026-03-12 |
 | `docs/context/generation-summary.md` | Active | Prompt 01-C | 2026-03-12 |
-| `docs/context/ux-brief.md` | Not created | — | — |
+| `docs/context/ux-brief.md` | Active | Prompt 01-D | 2026-03-12 |
 | `docs/context/ux-generation-summary.md` | Not created | — | — |
 
 ---
@@ -61,6 +61,12 @@ The Syntropy Ecosystem is a unified platform where learning, building, and resea
 - LLM reference docs: `docs/llm/AGENTS.md`, `docs/llm/AGENTS-EXTENDED.md`
 - Total architecture documents: 58 (48 from 01-B + 10 ADRs)
 - Validation findings: 2 warnings (Vision Traceability capability number citations in root ARCHITECTURE.md); 0 critical failures
+
+### Phase 2b — UX Assess and Brief (01-D)
+- Completed: 2026-03-12
+- Outcome: UX Brief produced and confirmed. Execution path: Web Application (primary) + Dashboard/Admin (secondary) + REST API + Embedded IDE (supporting). DS-001 gate: Design system Required (Web + Dashboard in scope).
+- UX Brief: `docs/context/ux-brief.md`
+- Notes: 10 primary user flows mapped to Web; 6 Must flows and 4 Recommended. Key UX decisions and 6 UX risks documented for 01-E.
 
 ### Key Architecture Decisions Settled in 01-A
 - **Modular Monolith** chosen as architecture style (mandated by Vision's "Inviolable Decisions" — Turborepo + pnpm workspaces)

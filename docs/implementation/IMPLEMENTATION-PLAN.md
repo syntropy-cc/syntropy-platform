@@ -9,29 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S8 — Walking Skeleton UI
-CURRENT ITEM  : COMP-032.1 — Next.js app scaffolding and design system
-MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 3 / 4 items done (S8)
-OVERALL       : 44 / 262 items done (17%)
+CURRENT STAGE : S9 — DIP Artifact Registry Core
+CURRENT ITEM  : COMP-003.1 — DIP package setup + Artifact aggregate
+MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
+STAGE PROGRESS: 4 / 4 items done (S8) | 0 / 5 items done (S9)
+OVERALL       : 45 / 262 items done (17%)
 ```
 
 **Next 5 items**:
-1. `COMP-037.1` — RBAC enforcement library ✅
-2. `COMP-040.5` — Resilience integration tests ✅
-3. `COMP-039.2` — AppendOnlyLog abstract interface ✅
-4. `COMP-034.5` — Prometheus metrics and health endpoints (workers) ✅
-5. `COMP-033.2` — Auth middleware and token verification ✅
-6. `COMP-033.3` — Rate limiting middleware ✅
-7. `COMP-033.7` — Health check and server info endpoints ✅
-8. `COMP-032.2` — Auth Provider integration (Supabase UI) ✅
-9. `COMP-032.1` — Next.js app scaffolding and design system ← **START HERE**
+1. `COMP-032.1` — Next.js app scaffolding and design system ✅
+2. `COMP-003.1` — DIP package setup + Artifact aggregate ← **START HERE**
+3. `COMP-003.2` — ArtifactLifecycleService
+4. `COMP-003.3` — NostrAnchor integration
+5. `COMP-003.4` — ArtifactRepository (Postgres)
 
-**Component record**: [`COMP-032`](./components/COMP-032-web-application.md)
+**Component record**: [`COMP-003`](./components/COMP-003-dip-artifact-registry.md)
 
-**Next item (COMP-032.1) acceptance criteria**: `apps/platform`, `apps/learn`, `apps/hub`, `apps/labs` scaffolded; shared `packages/ui` with design system (Tailwind + shadcn/ui); global layout with navigation; theme (light/dark) support.
+**Next item (COMP-003.1) acceptance criteria**: `packages/dip` workspace; `Artifact` aggregate with `ArtifactId`, `ContentHash`, `AuthorId`; `ArtifactStatus` enum (`draft/published/archived`); `Artifact.draft()` factory; unit tests.
 
-**Suggested steps**: (1) Scaffold 4 Next.js apps with `create-next-app` (2) Create `packages/ui` with base components (3) Add Tailwind + shadcn/ui to all apps
+**Suggested steps**: (1) Scaffold `packages/dip` (2) Write `Artifact` aggregate (3) Write `ArtifactId` + `ContentHash` value objects
 
 ---
 
@@ -1461,7 +1457,7 @@ Status: ✅ Done | **Deps**: COMP-002, COMP-033.2
 
 #### [COMP-032.1] Next.js app scaffolding and design system
 `S8` `Critical` `M` [Record→](./components/COMP-032-web-application.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: ✅ Done | **Deps**: COMP-001
 **Criteria**: `apps/platform`, `apps/learn`, `apps/hub`, `apps/labs` scaffolded; shared `packages/ui` with design system (Tailwind + shadcn/ui); global layout with navigation; theme (light/dark) support.
 **Steps**: (1) Scaffold 4 Next.js apps with `create-next-app` (2) Create `packages/ui` with base components (3) Add Tailwind + shadcn/ui to all apps
 
@@ -3211,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 44 / 262 items (17%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 45 / 262 items (17%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S8 — Walking Skeleton UI | S56 | ⬜ |
+| **Current Stage** | S9 — DIP Artifact Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3221,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-032.1 — Next.js app scaffolding and design system
 - 2026-03-13 COMP-032.2 — Auth Provider integration (Supabase UI)
 - 2026-03-13 COMP-033.7 — Health check and server info endpoints
 - 2026-03-13 COMP-033.3 — Rate limiting middleware
@@ -3270,12 +3267,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 42 | 93% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 43 | 96% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **41** | **16%** | ⬜ |
+| **Total** | **262** | **45** | **17%** | ⬜ |
 
 ### Component Coverage
 
@@ -3312,7 +3309,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-029 Planning | 6 | 0 | ⬜ Not Started |
 | COMP-030 IDE Domain | 8 | 0 | ⬜ Not Started |
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
-| COMP-032 Web Application | 8 | 1 | 🔵 In Progress |
+| COMP-032 Web Application | 8 | 2 | 🔵 In Progress |
 | COMP-033 REST API Gateway | 7 | 4 | 🔵 In Progress |
 | COMP-034 Background Services | 7 | 6 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |

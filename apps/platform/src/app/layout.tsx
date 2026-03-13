@@ -1,10 +1,10 @@
 /**
- * Root layout — wraps app with AuthProvider (COMP-032.2).
+ * Root layout — design system + auth (COMP-032.1, COMP-032.2).
  * Architecture: platform/web-application/ARCHITECTURE.md
  */
 
 import type { Metadata } from "next";
-import { AuthProvider } from "@/components/auth/AuthProvider";
+import { AppShell } from "@/components/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,9 +18,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

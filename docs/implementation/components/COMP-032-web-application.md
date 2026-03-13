@@ -49,12 +49,15 @@ The Web Application platform service delivers the 4 pillar Next.js applications 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
 | ⬜ Ready/Backlog | 8 |
 | **Total** | **8** |
 
-**Component Coverage**: 12% (1/8 per Implementation Plan numbering)
+**Component Coverage**: 25% (2/8 per Implementation Plan numbering)
+
+**Implementation Log (Implementation Plan item COMP-032.1 — Next.js app scaffolding and design system)**  
+2026-03-13: Implemented shared design system and app shells. **packages/ui**: Tailwind + shadcn-style components (Button, ThemeToggle, AppLayout), ThemeProvider with light/dark and `data-theme` + localStorage persistence, theme CSS variables in `src/theme.css` (exported as `@syntropy/ui/styles`). **apps/platform**: Upgraded to use @syntropy/ui (ThemeProvider, AppLayout, ThemeToggle), Tailwind and PostCSS, AppShell client wrapper. **apps/learn, hub, labs**: Scaffolded as Next.js 14 App Router apps (ports 3001, 3002, 3003), each with layout using ThemeProvider + AppLayout + nav links to other apps, stub index page. Cross-app nav uses localhost URLs in dev. Removed legacy `src/env.ts` from learn/hub/labs (had depended on @syntropy/platform-core). Unit/component tests in packages/ui for ThemeProvider, useTheme, Button, AppLayout (Vitest + RTL + jest-dom).
 
 **Implementation Log (Implementation Plan item COMP-032.2 — Auth Provider integration)**  
 2026-03-13: Implemented in `apps/platform`. Created minimal Next.js 14 App Router app with: `@supabase/ssr` and `@supabase/supabase-js`; browser/server/middleware Supabase clients; `AuthProvider` (client) and `useUser()` hook; `/login` page (email/password); `/logout` route (GET/POST signOut + redirect); middleware refreshing session and redirecting unauthenticated users from `/dashboard` to `/login`; protected `/dashboard` page. Unit tests for `useUser` and `AuthContext`. Build requires `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `.env.local.example`).

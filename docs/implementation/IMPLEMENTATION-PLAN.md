@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S4 — Infrastructure Bootstrap
-CURRENT ITEM  : COMP-034.1 — Background services process setup + worker registry
+CURRENT ITEM  : COMP-034.2 — Kafka consumer worker bootstrapping
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 2 / 6 items done (S4)
-OVERALL       : 20 / 262 items done (8%)
+STAGE PROGRESS: 3 / 6 items done (S4)
+OVERALL       : 21 / 262 items done (8%)
 ```
 
 **Next 5 items**:
-1. `COMP-034.1` — Background services process setup + worker registry ← **START HERE**
-2. `COMP-034.2` — Kafka consumer worker bootstrapping
-3. `COMP-009.1` — Kafka client package setup
-4. `COMP-033.1` — REST API server setup and middleware stack
-5. `COMP-009.2` — Event schema versioning system
+1. `COMP-034.2` — Kafka consumer worker bootstrapping ← **START HERE**
+2. `COMP-009.1` — Kafka client package setup
+3. `COMP-033.1` — REST API server setup and middleware stack
+4. `COMP-009.2` — Event schema versioning system
+5. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
 
 **Component record**: [`COMP-034`](./components/COMP-034-background-services.md)
 
-**Next item (COMP-034.1) acceptance criteria**: `apps/workers` workspace with `src/main.ts`; `WorkerRegistry` pattern; `SIGTERM` handler with 30s wait; each worker reports health; unhandled rejections crash process.
+**Next item (COMP-034.2) acceptance criteria**: All 8 consumer workers bootstrapped from domain packages; all started in parallel; unique consumer group IDs; Prometheus counter per worker.
 
-**Suggested steps**: (1) Scaffold `apps/workers` (2) Write `WorkerRegistry` class (3) Write `SIGTERM` handler
+**Suggested steps**: (1) Import consumer workers from domain packages (2) Register all in `WorkerRegistry` (3) Add per-worker Prometheus counters
 
 ---
 
@@ -1265,7 +1265,7 @@ Status: Done | **Deps**: COMP-001
 
 #### [COMP-034.1] Background services process setup + worker registry
 `S4` `Critical` `S` [Record→](./components/COMP-034-background-services.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: Done | **Deps**: COMP-001
 **Criteria**: `apps/workers` workspace with `src/main.ts`; `WorkerRegistry` pattern; `SIGTERM` handler with 30s wait; each worker reports health; unhandled rejections crash process.
 **Steps**: (1) Scaffold `apps/workers` (2) Write `WorkerRegistry` class (3) Write `SIGTERM` handler
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 20 / 262 items (8%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 21 / 262 items (8%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S4 — Infrastructure Bootstrap | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-034.1 — Background services process setup + worker registry
 - 2026-03-13 COMP-040.4 — BulkheadPattern (semaphore concurrency limiter)
 - 2026-03-13 COMP-040.2 — RetryPolicy with exponential backoff
 - 2026-03-13 COMP-039.4 — AuditColumns mixin
@@ -3242,12 +3243,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 20 | 44% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 21 | 47% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **18** | **7%** | ⬜ |
+| **Total** | **262** | **21** | **8%** | ⬜ |
 
 ### Component Coverage
 
@@ -3286,14 +3287,14 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
 | COMP-032 Web Application | 8 | 0 | ⬜ Not Started |
 | COMP-033 REST API Gateway | 7 | 0 | ⬜ Not Started |
-| COMP-034 Background Services | 7 | 0 | ⬜ Not Started |
+| COMP-034 Background Services | 7 | 1 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
 | COMP-037 Security | 6 | 3 | 🔵 In Progress |
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 3 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 4 | 🔵 In Progress |
-| **Total** | **262** | **13** | |
+| **Total** | **262** | **21** | |
 
 ### Layer Coverage
 

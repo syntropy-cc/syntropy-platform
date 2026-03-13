@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#platform-services](../../architecture/ARCHITECTURE.md#platform-services)
 > **Domain Architecture**: [platform/background-services/ARCHITECTURE.md](../../architecture/platform/background-services/ARCHITECTURE.md)
 > **Stage Assignment**: S12 — Platform Services
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -33,12 +33,12 @@ Background Services hosts all Kafka consumers, scheduled jobs, and long-running 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 6 |
 | **Total** | **7** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 14%
 
 ### Item List
 
@@ -46,26 +46,31 @@ Background Services hosts all Kafka consumers, scheduled jobs, and long-running 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | background-services/ARCHITECTURE.md |
 | **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Set up the background services process with worker registry pattern for bootstrapping all consumers.
 
 **Acceptance Criteria**:
-- [ ] `apps/workers` workspace app with `src/main.ts` entry point
-- [ ] `WorkerRegistry` pattern: workers registered at startup, all started concurrently
-- [ ] Graceful shutdown: `SIGTERM` handler waits for in-flight messages to complete (max 30s)
-- [ ] Each worker reports health status
-- [ ] Unhandled rejections crash the process (let orchestrator restart it)
+- [x] `apps/workers` workspace app with `src/main.ts` entry point
+- [x] `WorkerRegistry` pattern: workers registered at startup, all started concurrently
+- [x] Graceful shutdown: `SIGTERM` handler waits for in-flight messages to complete (max 30s)
+- [x] Each worker reports health status
+- [x] Unhandled rejections crash the process (let orchestrator restart it)
 
 **Files Created/Modified**:
-- `apps/workers/src/main.ts`
-- `apps/workers/src/worker-registry.ts`
-- `apps/workers/src/workers/` (imports from domain packages)
+- `apps/workers/package.json`, `apps/workers/tsconfig.json`, `apps/workers/vitest.config.ts`
+- `apps/workers/src/types.ts` — `Worker` interface, `WorkerHealth` type
+- `apps/workers/src/worker-registry.ts` — `WorkerRegistry` (register, startAll, stopAll with 30s timeout, getHealth)
+- `apps/workers/src/main.ts` — entry point, stub worker, SIGTERM/SIGINT handlers, unhandledRejection → exit(1)
+- `apps/workers/src/worker-registry.test.ts` — unit tests for registry
+
+**Implementation Notes**: Worker contract: `name`, `start()`, `stop()`, `health()`. Shutdown uses a single 30s timeout for all workers; after timeout the process exits. `platform-core` package.json was given `main` and `types` for workspace resolution; bulkhead.test.ts unused-variable fixes applied so platform-core builds.
 
 ---
 

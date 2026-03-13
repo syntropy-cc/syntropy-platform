@@ -1,22 +1,20 @@
 {
-  "name": "@syntropy/platform-core",
+  "name": "@syntropy/workers",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc && node dist/main.js",
     "lint": "echo 'lint placeholder'",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run"
   },
   "dependencies": {
-    "pino": "^9.5.0"
+    "@syntropy/platform-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
-    "pino-pretty": "^11.3.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.0"
   }

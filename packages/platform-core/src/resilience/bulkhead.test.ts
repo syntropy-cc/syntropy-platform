@@ -3,7 +3,7 @@
  * Verifies concurrency limit, queue vs reject overflow, release on throw, no leak.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { Bulkhead, BulkheadRejectedError } from "./bulkhead.js";
 
 describe("BulkheadRejectedError", () => {
@@ -57,7 +57,7 @@ describe("Bulkhead", () => {
   describe("reject overflow mode", () => {
     it("rejects excess calls immediately with BulkheadRejectedError", async () => {
       const bulkhead = new Bulkhead({ maxConcurrent: 1, rejectOverflow: true });
-      const hold = bulkhead.execute(() => new Promise<void>(() => {}));
+      void bulkhead.execute(() => new Promise<void>(() => {}));
       await Promise.resolve();
       await expect(
         bulkhead.execute(async () => "should not run")

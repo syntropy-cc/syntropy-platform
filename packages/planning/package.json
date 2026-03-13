@@ -1,0 +1,11 @@
+{
+  "name": "@syntropy/planning",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "lint": "echo 'lint placeholder'",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'test placeholder'"
+  }
+}

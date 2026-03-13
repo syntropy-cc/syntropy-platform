@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S2 — Cross-Cutting Libraries
-CURRENT ITEM  : COMP-040.1 — CircuitBreaker implementation
+CURRENT ITEM  : COMP-040.3 — TimeoutWrapper utility
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 1 / 8 items done (S2)
-OVERALL       : 6 / 262 items done (2%)
+STAGE PROGRESS: 2 / 8 items done (S2)
+OVERALL       : 7 / 262 items done (3%)
 ```
 
 **Next 5 items**:
-1. `COMP-040.1` — CircuitBreaker implementation ← **START HERE**
-2. `COMP-040.3` — TimeoutWrapper utility
-3. `COMP-037.6` — Secret management configuration
-4. `COMP-037.3` — Data encryption for classified fields
-5. `COMP-037.5` — SAST and dependency vulnerability scanning in CI
+1. `COMP-040.3` — TimeoutWrapper utility ← **START HERE**
+2. `COMP-037.6` — Secret management configuration
+3. `COMP-037.3` — Data encryption for classified fields
+4. `COMP-037.5` — SAST and dependency vulnerability scanning in CI
+5. `COMP-039.1` — SoftDeletable mixin
 
 **Component record**: [`COMP-040`](./components/COMP-040-resilience.md)
 
-**Next item (COMP-040.1) acceptance criteria**: `CircuitBreaker` transitions `closed→open→half-open→closed`; failure threshold configurable; `execute()` throws `CircuitOpenError` when open; unit tests cover all transitions.
+**Next item (COMP-040.3) acceptance criteria**: `withTimeout(fn, ms)` rejects with `TimeoutError` after `ms`; cleans up underlying promise; tests verify timeout fires and success path.
 
-**Suggested steps**: (1) Write `CircuitBreaker` class with state machine (2) Add failure counter and timeout timer (3) Write state transition unit tests.
+**Suggested steps**: (1) Write `withTimeout` using `Promise.race` (2) Ensure cleanup on timeout (3) Add unit tests.
 
 ---
 
@@ -1153,7 +1153,7 @@ Status: ✅ Done | **Deps**: COMP-001
 
 #### [COMP-040.1] CircuitBreaker implementation
 `S2` `Critical` `S` [Record→](./components/COMP-040-resilience.md)
-Status: ⬜ | **Deps**: COMP-001
+Status: ✅ Done | **Deps**: COMP-001
 **Criteria**: `CircuitBreaker` transitions `closed→open→half-open→closed`; failure threshold configurable; `execute()` throws `CircuitOpenError` when open; unit tests cover all transitions.
 **Steps**: (1) Write `CircuitBreaker` class with state machine (2) Add failure counter and timeout timer (3) Write state transition unit tests
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 6 / 262 items (2%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 7 / 262 items (3%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S2 — Cross-Cutting Libraries | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-040.1 — CircuitBreaker implementation
 - 2026-03-13 COMP-038.1 — Structured logger library
 - 2026-03-13 COMP-001.1 — Initialize Turborepo + pnpm workspaces
 - 2026-03-13 COMP-001.2 — TypeScript project references and shared tsconfig
@@ -3228,12 +3229,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 6 | 13% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 7 | 16% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **6** | **2%** | ⬜ |
+| **Total** | **262** | **7** | **3%** | ⬜ |
 
 ### Component Coverage
 
@@ -3278,8 +3279,8 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-037 Security | 6 | 0 | ⬜ Not Started |
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 0 | ⬜ Not Started |
-| COMP-040 Resilience | 5 | 0 | ⬜ Not Started |
-| **Total** | **262** | **6** | |
+| COMP-040 Resilience | 5 | 1 | 🔵 In Progress |
+| **Total** | **262** | **7** | |
 
 ### Layer Coverage
 

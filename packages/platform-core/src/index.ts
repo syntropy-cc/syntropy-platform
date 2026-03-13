@@ -9,3 +9,11 @@ export {
   type LoggerOptions,
 } from "./observability/logger.js";
 export type { Logger } from "pino";
+
+export {
+  CircuitBreaker,
+  type CircuitState,
+  type CircuitBreakerConfig,
+  type CircuitBreakerCallbacks,
+} from "./resilience/circuit-breaker.js";
+export { CircuitOpenError, TimeoutError } from "./resilience/errors.js";

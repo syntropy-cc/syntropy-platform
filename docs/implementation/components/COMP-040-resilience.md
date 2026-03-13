@@ -3,7 +3,7 @@
 > **Component ID**: COMP-040
 > **Architecture Reference**: [cross-cutting/resilience/ARCHITECTURE.md](../../architecture/cross-cutting/resilience/ARCHITECTURE.md)
 > **Stage Assignment**: S13 — Cross-Cutting Concerns
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -28,12 +28,12 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **5** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 20%
 
 ### Item List
 
@@ -41,27 +41,30 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | cross-cutting/resilience/ARCHITECTURE.md, CON-009 |
 | **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Implement circuit breaker pattern library for all external service calls.
 
 **Acceptance Criteria**:
-- [ ] `CircuitBreaker` class with states: `Closed`, `Open`, `HalfOpen`
-- [ ] Configuration: `failureThreshold`, `successThreshold`, `timeout` (ms)
-- [ ] `execute<T>(fn: () => Promise<T>): Promise<T>` wraps external call
-- [ ] `Open` state: fast-fail with `CircuitOpenError`, no call to external service
-- [ ] `HalfOpen` state: allow one test call per timeout period
-- [ ] Metrics: `circuit_breaker_state_transitions_total`, `circuit_breaker_calls_total` (by outcome)
-- [ ] Used by: `LLMAdapter`, `StripePaymentAdapter`, `DataCiteAdapter`, `NostrAnchor`, `KubernetesContainerAdapter`
+- [x] `CircuitBreaker` class with states: `Closed`, `Open`, `HalfOpen`
+- [x] Configuration: `failureThreshold`, `successThreshold`, `resetTimeoutMs`
+- [x] `execute<T>(fn: () => Promise<T>): Promise<T>` wraps external call
+- [x] `Open` state: fast-fail with `CircuitOpenError`, no call to external service
+- [x] `HalfOpen` state: allow one test call per timeout period
+- [x] Optional callbacks `onStateChange` / `onCall` for metrics integration
+- [ ] Used by: `LLMAdapter`, `StripePaymentAdapter`, `DataCiteAdapter`, `NostrAnchor`, `KubernetesContainerAdapter` (when those adapters exist)
 
 **Files Created/Modified**:
+- `packages/platform-core/src/resilience/errors.ts` — `CircuitOpenError`, `TimeoutError`
 - `packages/platform-core/src/resilience/circuit-breaker.ts`
 - `packages/platform-core/src/resilience/circuit-breaker.test.ts`
+- `packages/platform-core/src/index.ts` — exports resilience
 
 ---
 

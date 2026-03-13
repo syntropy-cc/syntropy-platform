@@ -4,7 +4,7 @@
 > **Created by**: Prompt 01-A — Assess and Brief
 > **Updated by**: Every prompt upon completion
 > **Lifecycle**: Project-scoped — rolling-update pattern; never deleted
-> **Last updated**: 2026-03-12 by Prompt 01-B
+> **Last updated**: 2026-03-12 by Prompt 01-C
 
 ---
 
@@ -13,8 +13,8 @@
 | Field | Value |
 |-------|-------|
 | **Active phase** | Phase 2 — Architecture Generation (complete) |
-| **Last completed prompt** | 01-B — Generate Architecture |
-| **Next prompt** | 01-C — Create ADRs (ADR-001 through ADR-010) |
+| **Last completed prompt** | 01-C — Create ADRs |
+| **Next prompt** | 01-D — UX Assess and Brief |
 | **Blocked on** | _(nothing — execution proceeding normally)_ |
 
 ---
@@ -23,9 +23,9 @@
 
 | File | Status | Written by | Last updated |
 |------|--------|------------|--------------|
-| `docs/context/architecture-brief.md` | Active | Prompt 01-A | 2026-03-12 |
-| `docs/context/architecture-file-list.md` | Active | Prompt 01-B | 2026-03-12 |
-| `docs/context/generation-summary.md` | Not created | — | — |
+| `docs/context/architecture-brief.md` | Delivered | Prompt 01-A | 2026-03-12 |
+| `docs/context/architecture-file-list.md` | Delivered | Prompt 01-B | 2026-03-12 |
+| `docs/context/generation-summary.md` | Active | Prompt 01-C | 2026-03-12 |
 | `docs/context/ux-brief.md` | Not created | — | — |
 | `docs/context/ux-generation-summary.md` | Not created | — | — |
 
@@ -52,6 +52,15 @@ The Syntropy Ecosystem is a unified platform where learning, building, and resea
 - Architecture root: `docs/architecture/ARCHITECTURE.md`
 - Diagrams indexed: 68 Mermaid diagrams across all documents
 - Notes: All documents generated from confirmed Architecture Brief (55/55 quality). DIP established as single source of truth for all fundamental entities. Three-layer immutability model documented. Context Map with 10 integration patterns fully documented. 10 ADRs referenced but deferred to Prompt 01-C.
+
+### Phase 2 — Architecture Decisions (01-C)
+- Completed: 2026-03-12
+- Outcome: 10 ADRs created in `docs/architecture/decisions/`. Architecture Validation Skill executed — PASS WITH WARNINGS (2 non-blocking warnings in Vision Traceability section of root ARCHITECTURE.md). Generation Summary produced. `docs/llm/AGENTS.md` + `docs/llm/AGENTS-EXTENDED.md` created (`completeness: architecture-only`). Routing decision: proceed to Prompt 01-D (user-facing interfaces present — Web Application, Dashboard/Admin).
+- ADR files: `docs/architecture/decisions/ADR-001` through `ADR-010`
+- Generation summary: `docs/context/generation-summary.md`
+- LLM reference docs: `docs/llm/AGENTS.md`, `docs/llm/AGENTS-EXTENDED.md`
+- Total architecture documents: 58 (48 from 01-B + 10 ADRs)
+- Validation findings: 2 warnings (Vision Traceability capability number citations in root ARCHITECTURE.md); 0 critical failures
 
 ### Key Architecture Decisions Settled in 01-A
 - **Modular Monolith** chosen as architecture style (mandated by Vision's "Inviolable Decisions" — Turborepo + pnpm workspaces)

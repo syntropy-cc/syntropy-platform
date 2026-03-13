@@ -4,7 +4,7 @@
  * Architecture: COMP-001, COMP-038, COMP-040
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = void 0;
+exports.DEFAULT_JOB_TIMEOUT_MS = exports.DEFAULT_DB_TIMEOUT_MS = exports.DEFAULT_HTTP_TIMEOUT_MS = exports.withTimeout = exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = void 0;
 var logger_js_1 = require("./observability/logger.js");
 Object.defineProperty(exports, "createLogger", { enumerable: true, get: function () { return logger_js_1.createLogger; } });
 Object.defineProperty(exports, "withCorrelationId", { enumerable: true, get: function () { return logger_js_1.withCorrelationId; } });
@@ -13,3 +13,8 @@ Object.defineProperty(exports, "CircuitBreaker", { enumerable: true, get: functi
 var errors_js_1 = require("./resilience/errors.js");
 Object.defineProperty(exports, "CircuitOpenError", { enumerable: true, get: function () { return errors_js_1.CircuitOpenError; } });
 Object.defineProperty(exports, "TimeoutError", { enumerable: true, get: function () { return errors_js_1.TimeoutError; } });
+var timeout_js_1 = require("./resilience/timeout.js");
+Object.defineProperty(exports, "withTimeout", { enumerable: true, get: function () { return timeout_js_1.withTimeout; } });
+Object.defineProperty(exports, "DEFAULT_HTTP_TIMEOUT_MS", { enumerable: true, get: function () { return timeout_js_1.DEFAULT_HTTP_TIMEOUT_MS; } });
+Object.defineProperty(exports, "DEFAULT_DB_TIMEOUT_MS", { enumerable: true, get: function () { return timeout_js_1.DEFAULT_DB_TIMEOUT_MS; } });
+Object.defineProperty(exports, "DEFAULT_JOB_TIMEOUT_MS", { enumerable: true, get: function () { return timeout_js_1.DEFAULT_JOB_TIMEOUT_MS; } });

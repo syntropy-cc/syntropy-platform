@@ -28,12 +28,12 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 1 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 4 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **5** |
 
-**Component Coverage**: 20%
+**Component Coverage**: 40%
 
 ### Item List
 
@@ -98,23 +98,26 @@ Resilience cross-cutting concerns implement fault-tolerance patterns across all 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | cross-cutting/resilience/ARCHITECTURE.md, CON-002 |
 | **Dependencies** | COMP-001 |
 | **Size** | XS |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-13 |
 
 **Description**: Implement timeout wrapper ensuring all external calls respect timeout limits (CON-002).
 
 **Acceptance Criteria**:
-- [ ] `withTimeout<T>(fn: () => Promise<T>, timeoutMs: number): Promise<T>`
-- [ ] Throws `TimeoutError` with `operation` and `timeoutMs` fields
-- [ ] Default timeouts: HTTP external calls 30s, DB queries 10s, background jobs 5min (CON-002)
+- [x] `withTimeout<T>(fn: () => Promise<T>, timeoutMs: number): Promise<T>`
+- [x] Throws `TimeoutError` with `operation` and `timeoutMs` fields
+- [x] Default timeouts: HTTP external calls 30s, DB queries 10s, background jobs 5min (CON-002)
 - [ ] Applied to all adapters: `LLMAdapter`, `StripePaymentAdapter`, `DataCiteAdapter`, `NostrAnchor`
 
 **Files Created/Modified**:
-- `packages/platform-core/src/resilience/timeout.ts`
+- `packages/platform-core/src/resilience/timeout.ts` — `withTimeout`, `DEFAULT_HTTP_TIMEOUT_MS`, `DEFAULT_DB_TIMEOUT_MS`, `DEFAULT_JOB_TIMEOUT_MS`
+- `packages/platform-core/src/resilience/timeout.test.ts`
+- `packages/platform-core/src/index.ts` — exports timeout
 
 ---
 

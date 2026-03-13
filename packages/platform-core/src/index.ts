@@ -17,3 +17,9 @@ export {
   type CircuitBreakerCallbacks,
 } from "./resilience/circuit-breaker.js";
 export { CircuitOpenError, TimeoutError } from "./resilience/errors.js";
+export {
+  withTimeout,
+  DEFAULT_HTTP_TIMEOUT_MS,
+  DEFAULT_DB_TIMEOUT_MS,
+  DEFAULT_JOB_TIMEOUT_MS,
+} from "./resilience/timeout.js";

@@ -13,7 +13,9 @@
   "dependencies": {
     "@fastify/cors": "^10.0.0",
     "@syntropy/event-bus": "workspace:*",
+    "@syntropy/identity": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
+    "@supabase/supabase-js": "^2.47.0",
     "fastify": "^5.1.0",
     "fastify-plugin": "^5.0.0"
   },

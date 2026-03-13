@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S6 — Event Bus Completion + Identity Finalization
-CURRENT ITEM  : COMP-002.6 — Identity REST API endpoints
+CURRENT STAGE : S7 — Security + Resilience + Workers Foundation
+CURRENT ITEM  : COMP-037.1 — RBAC enforcement library
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 1 / 5 items done (S6)
-OVERALL       : 32 / 262 items done (12%)
+STAGE PROGRESS: 5 / 5 items done (S6)
+OVERALL       : 36 / 262 items done (14%)
 ```
 
 **Next 5 items**:
-1. `COMP-009.8` — Schema registry API ✅
-2. `COMP-002.6` — Identity REST API endpoints ← **START HERE**
-3. `COMP-002.7` — Session Kafka consumer
-4. `COMP-034.3` — DLQ processor
-5. `COMP-034.4` — Scheduled job runner
+1. `COMP-002.6` — Identity REST API endpoints ✅
+2. `COMP-002.7` — Session Kafka consumer ✅
+3. `COMP-034.3` — DLQ processor ✅
+4. `COMP-034.4` — Scheduled job runner ✅
+5. `COMP-037.1` — RBAC enforcement library ← **START HERE**
 
-**Component record**: [`COMP-002`](./components/COMP-002-identity.md)
+**Component record**: [`COMP-037`](./components/COMP-037-security.md)
 
-**Next item (COMP-002.6) acceptance criteria**: `POST /api/v1/auth/login`, `POST /api/v1/auth/logout`, `GET /api/v1/auth/me`, `GET /api/v1/users/{id}`, `PUT /api/v1/users/{id}/roles`; all return correct response envelopes; 401/403 on auth failure.
+**Next item (COMP-037.1) acceptance criteria**: `hasPermission(actorId, resource, action)` returns boolean; `requirePermission` throws `ForbiddenError`; `@RequireRole` decorator; Redis cache with 5min TTL.
 
-**Suggested steps**: (1) Write Fastify route handlers (2) Wire to identity use cases (3) Write API integration tests
+**Suggested steps**: (1) Write `hasPermission` function (2) Write `requirePermission` wrapper (3) Add Redis caching
 
 ---
 
@@ -1361,7 +1361,7 @@ Status: ✅ Done | **Deps**: COMP-009.2
 
 #### [COMP-002.6] Identity REST API endpoints
 `S6` `Critical` `M` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-002.5, COMP-033.1
+Status: ✅ Done | **Deps**: COMP-002.5, COMP-033.1
 **Criteria**: `POST /api/v1/auth/login`, `POST /api/v1/auth/logout`, `GET /api/v1/auth/me`, `GET /api/v1/users/{id}`, `PUT /api/v1/users/{id}/roles`; all return correct response envelopes; 401/403 on auth failure.
 **Steps**: (1) Write Fastify route handlers (2) Wire to identity use cases (3) Write API integration tests
 
@@ -1369,7 +1369,7 @@ Status: ⬜ | **Deps**: COMP-002.5, COMP-033.1
 
 #### [COMP-002.7] Session Kafka consumer
 `S6` `High` `S` [Record→](./components/COMP-002-identity.md)
-Status: ⬜ | **Deps**: COMP-002.5, COMP-009.7
+Status: ✅ Done | **Deps**: COMP-002.5, COMP-009.7
 **Criteria**: Consumes events that invalidate sessions (e.g., `identity.user.banned`); triggers `Session.invalidate()` and clears Redis token cache; registered in `WorkerRegistry`.
 **Steps**: (1) Write `SessionInvalidationConsumer` (2) Handle user-banned event (3) Clear Redis cache on invalidation
 
@@ -1377,7 +1377,7 @@ Status: ⬜ | **Deps**: COMP-002.5, COMP-009.7
 
 #### [COMP-034.3] DLQ processor
 `S6` `High` `S` [Record→](./components/COMP-034-background-services.md)
-Status: ⬜ | **Deps**: COMP-034.1
+Status: ✅ Done | **Deps**: COMP-034.1
 **Criteria**: DLQ consumer subscribes to `*.dlq` topics; 3 retry attempts with 5s/30s/5min backoff; after max retries: persisted to `dlq_archive` table; alert when DLQ depth > 100.
 **Steps**: (1) Write `DLQProcessor` consumer (2) Implement retry with backoff (3) Write `dlq_archive` migration
 
@@ -1385,7 +1385,7 @@ Status: ⬜ | **Deps**: COMP-034.1
 
 #### [COMP-034.4] Scheduled job runner
 `S6` `High` `S` [Record→](./components/COMP-034-background-services.md)
-Status: ⬜ | **Deps**: COMP-034.1
+Status: ✅ Done | **Deps**: COMP-034.1
 **Criteria**: `CronScheduler` using `node-cron`; distributed lock via Redis SETNX; 4 registered cron jobs; job execution time logged; alert if job > 5min.
 **Steps**: (1) Write `CronScheduler` with distributed lock (2) Register 4 cron jobs (3) Add duration logging
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 32 / 262 items (12%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 36 / 262 items (14%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S6 — Event Bus Completion + Identity Finalization | S56 | ⬜ |
+| **Current Stage** | S7 — Security + Resilience + Workers Foundation | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-034.4 — Scheduled job runner
+- 2026-03-13 COMP-034.3 — DLQ processor
+- 2026-03-13 COMP-002.7 — Session Kafka consumer
+- 2026-03-13 COMP-002.6 — Identity REST API endpoints
 - 2026-03-13 COMP-009.8 — Schema registry API
 - 2026-03-13 COMP-009.2 — Event schema versioning system
 - 2026-03-13 COMP-009.3 — AppendOnlyLog PostgreSQL schema + migrations
@@ -3254,7 +3258,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 32 | 71% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 36 | 80% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
@@ -3266,7 +3270,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | Component | Items | Done | Status |
 |-----------|-------|------|--------|
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
-| COMP-002 Identity | 7 | 5 | 🔵 In Progress |
+| COMP-002 Identity | 7 | 7 | ✅ Complete |
 | COMP-003 DIP Artifact Registry | 8 | 0 | ⬜ Not Started |
 | COMP-004 DIP Smart Contract Engine | 6 | 0 | ⬜ Not Started |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
@@ -3298,7 +3302,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
 | COMP-032 Web Application | 8 | 0 | ⬜ Not Started |
 | COMP-033 REST API Gateway | 7 | 0 | ⬜ Not Started |
-| COMP-034 Background Services | 7 | 2 | 🔵 In Progress |
+| COMP-034 Background Services | 7 | 5 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
 | COMP-037 Security | 6 | 3 | 🔵 In Progress |

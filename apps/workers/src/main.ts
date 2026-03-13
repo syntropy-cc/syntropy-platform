@@ -10,6 +10,9 @@
 
 import { createLogger } from "@syntropy/platform-core";
 import { getKafkaWorkers } from "./workers/kafka-workers.js";
+import { createSessionInvalidationConsumer } from "./workers/session-invalidation-consumer.js";
+import { createDlqProcessor } from "./workers/dlq-processor.js";
+import { createCronScheduler } from "./scheduler/cron-scheduler.js";
 import { WorkerRegistry } from "./worker-registry.js";
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -20,6 +23,9 @@ async function run(): Promise<void> {
   for (const worker of getKafkaWorkers()) {
     registry.register(worker);
   }
+  registry.register(createSessionInvalidationConsumer());
+  registry.register(createDlqProcessor());
+  registry.register(createCronScheduler());
 
   process.on("unhandledRejection", (reason: unknown, promise: Promise<unknown>) => {
     log.error({ err: reason, promise }, "Unhandled rejection; crashing process");

@@ -10,7 +10,12 @@ import cors from "@fastify/cors";
 import fp from "fastify-plugin";
 import { correlationIdPlugin } from "./middleware/correlation-id.js";
 import { requestLoggerPlugin } from "./middleware/request-logger.js";
+import type { AuthProvider } from "@syntropy/identity";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { authContextPluginFp } from "./plugins/auth-context.js";
 import { healthRoutes } from "./routes/health.js";
+import { authRoutes } from "./routes/auth.js";
+import { usersRoutes } from "./routes/users.js";
 import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
 
 const DEFAULT_ORIGINS = [
@@ -26,7 +31,12 @@ function getCorsOrigins(): string[] | true {
   return env.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
-export async function createApp() {
+export interface CreateAppOptions {
+  auth?: AuthProvider | null;
+  supabaseClient?: SupabaseClient | null;
+}
+
+export async function createApp(options?: CreateAppOptions) {
   const app = Fastify({ logger: false });
 
   await app.register(cors, {
@@ -34,7 +44,10 @@ export async function createApp() {
   });
   await app.register(fp(correlationIdPlugin));
   await app.register(fp(requestLoggerPlugin));
+  await app.register(fp(authContextPluginFp), options ?? {});
   await app.register(healthRoutes);
+  await app.register(authRoutes);
+  await app.register(usersRoutes);
   await app.register(internalEventSchemasPlugin);
 
   return app;

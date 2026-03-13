@@ -11,11 +11,17 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@syntropy/event-bus": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
+    "ioredis": "^5.4.1",
+    "node-cron": "^3.0.3",
+    "pg": "^8.13.0",
     "prom-client": "^15.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.11.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.0"
   }

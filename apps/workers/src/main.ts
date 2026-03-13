@@ -9,31 +9,17 @@
  */
 
 import { createLogger } from "@syntropy/platform-core";
+import { getKafkaWorkers } from "./workers/kafka-workers.js";
 import { WorkerRegistry } from "./worker-registry.js";
-import type { Worker } from "./types.js";
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
 const log = createLogger("workers");
 
-/** Stub worker for COMP-034.1; real Kafka workers added in COMP-034.2. */
-function createStubWorker(): Worker {
-  return {
-    name: "stub",
-    async start() {
-      log.debug("Stub worker started");
-    },
-    async stop() {
-      log.debug("Stub worker stopped");
-    },
-    async health() {
-      return { status: "ok" };
-    },
-  };
-}
-
 async function run(): Promise<void> {
   const registry = new WorkerRegistry();
-  registry.register(createStubWorker());
+  for (const worker of getKafkaWorkers()) {
+    registry.register(worker);
+  }
 
   process.on("unhandledRejection", (reason: unknown, promise: Promise<unknown>) => {
     log.error({ err: reason, promise }, "Unhandled rejection; crashing process");

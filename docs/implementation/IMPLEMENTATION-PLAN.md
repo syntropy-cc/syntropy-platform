@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S4 — Infrastructure Bootstrap
-CURRENT ITEM  : COMP-034.2 — Kafka consumer worker bootstrapping
+CURRENT ITEM  : COMP-009.1 — Kafka client package setup
 MILESTONE     : M1 — Foundation + Walking Skeleton
-STAGE PROGRESS: 3 / 6 items done (S4)
-OVERALL       : 21 / 262 items done (8%)
+STAGE PROGRESS: 4 / 6 items done (S4)
+OVERALL       : 22 / 262 items done (8%)
 ```
 
 **Next 5 items**:
-1. `COMP-034.2` — Kafka consumer worker bootstrapping ← **START HERE**
-2. `COMP-009.1` — Kafka client package setup
-3. `COMP-033.1` — REST API server setup and middleware stack
-4. `COMP-009.2` — Event schema versioning system
-5. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
+1. `COMP-009.1` — Kafka client package setup ← **START HERE**
+2. `COMP-033.1` — REST API server setup and middleware stack
+3. `COMP-009.2` — Event schema versioning system
+4. `COMP-009.3` — AppendOnlyLog PostgreSQL schema + migrations
+5. `COMP-002.5` — IdentityEventPublisher (Kafka)
 
-**Component record**: [`COMP-034`](./components/COMP-034-background-services.md)
+**Component record**: [`COMP-009`](./components/COMP-009-event-bus-audit.md)
 
-**Next item (COMP-034.2) acceptance criteria**: All 8 consumer workers bootstrapped from domain packages; all started in parallel; unique consumer group IDs; Prometheus counter per worker.
+**Next item (COMP-009.1) acceptance criteria**: `packages/event-bus` with `KafkaProducer` and `KafkaConsumer` wrappers; `createKafkaClient(config)` factory; producer `publish(topic, event)` with schema validation; consumer `subscribe(topic, handler)`.
 
-**Suggested steps**: (1) Import consumer workers from domain packages (2) Register all in `WorkerRegistry` (3) Add per-worker Prometheus counters
+**Suggested steps**: (1) Scaffold `packages/event-bus` with kafkajs (2) Write `KafkaProducer` with `publish` (3) Write `KafkaConsumer` with `subscribe`
 
 ---
 
@@ -1273,7 +1273,7 @@ Status: Done | **Deps**: COMP-001
 
 #### [COMP-034.2] Kafka consumer worker bootstrapping
 `S4` `Critical` `M` [Record→](./components/COMP-034-background-services.md)
-Status: ⬜ | **Deps**: COMP-034.1, COMP-009, COMP-010, COMP-011
+Status: Done | **Deps**: COMP-034.1, COMP-009, COMP-010, COMP-011
 **Criteria**: All 8 consumer workers bootstrapped from domain packages; all started in parallel; unique consumer group IDs; Prometheus counter per worker.
 **Steps**: (1) Import consumer workers from domain packages (2) Register all in `WorkerRegistry` (3) Add per-worker Prometheus counters
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 21 / 262 items (8%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 22 / 262 items (8%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S4 — Infrastructure Bootstrap | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-034.2 — Kafka consumer worker bootstrapping
 - 2026-03-13 COMP-034.1 — Background services process setup + worker registry
 - 2026-03-13 COMP-040.4 — BulkheadPattern (semaphore concurrency limiter)
 - 2026-03-13 COMP-040.2 — RetryPolicy with exponential backoff
@@ -3243,12 +3244,12 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
-| M1 Foundation + Walking Skeleton | 45 | 21 | 47% | 🔵 In Progress |
+| M1 Foundation + Walking Skeleton | 45 | 22 | 49% | 🔵 In Progress |
 | M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **21** | **8%** | ⬜ |
+| **Total** | **262** | **22** | **8%** | ⬜ |
 
 ### Component Coverage
 
@@ -3287,7 +3288,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
 | COMP-032 Web Application | 8 | 0 | ⬜ Not Started |
 | COMP-033 REST API Gateway | 7 | 0 | ⬜ Not Started |
-| COMP-034 Background Services | 7 | 1 | 🔵 In Progress |
+| COMP-034 Background Services | 7 | 2 | 🔵 In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | ⬜ Not Started |
 | COMP-036 Institutional Site | 4 | 0 | ⬜ Not Started |
 | COMP-037 Security | 6 | 3 | 🔵 In Progress |

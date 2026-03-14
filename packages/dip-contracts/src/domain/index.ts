@@ -3,4 +3,11 @@
  */
 
 export { GovernanceContract } from "./governance-contract.js";
-export type { ContractClause, EvaluationResult } from "./types.js";
+export type {
+  AmendmentProcedure,
+  ContractClause,
+  EvaluationResult,
+  ParticipationThreshold,
+  TransparencyClause,
+  VetoRight,
+} from "./types.js";

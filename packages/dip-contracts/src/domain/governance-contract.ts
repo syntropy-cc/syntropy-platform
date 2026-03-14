@@ -7,7 +7,8 @@ import type { ContractClause } from "./types.js";
 
 /**
  * Aggregate maintaining contract rules and current state for a digital institution.
- * Full behavior (evaluation, clause value objects) is implemented in COMP-004.2+.
+ * Clauses are immutable value objects: TransparencyClause, ParticipationThreshold,
+ * VetoRight, AmendmentProcedure. Evaluation is implemented in COMP-004.3+.
  */
 export class GovernanceContract {
   readonly id: string;
@@ -36,10 +37,11 @@ export class GovernanceContract {
     institutionId: string;
     clauses?: readonly ContractClause[];
   }): GovernanceContract {
+    const clauses = params.clauses ? [...params.clauses] : [];
     return new GovernanceContract({
       id: params.id,
       institutionId: params.institutionId,
-      clauses: params.clauses ?? [],
+      clauses,
     });
   }
 }

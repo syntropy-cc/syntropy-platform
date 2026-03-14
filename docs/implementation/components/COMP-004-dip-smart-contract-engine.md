@@ -50,12 +50,12 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 1 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **6** |
 
-**Component Coverage**: 17%
+**Component Coverage**: 33%
 
 ### Item List
 
@@ -88,31 +88,29 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 ---
 
-#### [COMP-004.2] ContractEvaluator domain service
+#### [COMP-004.2] GovernanceContract aggregate + clause value objects (Done)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
-| **Origin** | smart-contract-engine.md |
+| **Origin** | IMPLEMENTATION-PLAN.md Section 7 |
 | **Dependencies** | COMP-004.1 |
 | **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement the deterministic `ContractEvaluator` service. Evaluation is a pure function — same inputs always produce same outputs. Uses a sandboxed rule engine (JSON-based policy language, no external calls allowed inside evaluation).
+**Description**: Implement clause value objects and wire them into the existing `GovernanceContract` aggregate. Four immutable clause types: `TransparencyClause`, `ParticipationThreshold`, `VetoRight`, `AmendmentProcedure`. Unit tests for each clause type and for the aggregate.
 
-**Acceptance Criteria**:
-- [ ] `ContractEvaluator.evaluate(contract, request)` returns `EvaluationResult { permitted: boolean, newState: object }`
-- [ ] Evaluation is deterministic: same request + same state → same result always
-- [ ] No network calls, no randomness, no time-based logic inside evaluation
-- [ ] Evaluation result is persisted as `ContractEvaluationRecord` (append-only)
-- [ ] `dip.contract.evaluation_completed` event published after each evaluation
-- [ ] Unit tests: 15+ test cases covering permitted/denied scenarios
+**Acceptance Criteria** (per Implementation Plan):
+- [x] `GovernanceContract` aggregate with `clauses: ContractClause[]`
+- [x] Clause types: `TransparencyClause`, `ParticipationThreshold`, `VetoRight`, `AmendmentProcedure` (each immutable value object)
+- [x] Unit tests for aggregate and clauses
 
 **Files Created/Modified**:
-- `packages/dip/src/domain/smart-contract-engine/services/contract-evaluator.ts`
-- `packages/dip/src/domain/smart-contract-engine/services/rule-engine.ts`
-- `packages/dip/tests/unit/smart-contract-engine/contract-evaluator.test.ts`
+- `packages/dip-contracts/src/domain/types.ts` — four clause interfaces + `ContractClause` union
+- `packages/dip-contracts/src/domain/index.ts` — export clause types
+- `packages/dip-contracts/src/domain/governance-contract.ts` — docstring, defensive copy of clauses in `create()`
+- `packages/dip-contracts/tests/unit/governance-contract.test.ts` — clause value object tests, contract-with-clauses tests
 
 ---
 

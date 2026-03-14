@@ -56,9 +56,15 @@ importers:
       '@syntropy/identity':
         specifier: workspace:*
         version: link:../../packages/identity
+      '@syntropy/learn-package':
+        specifier: workspace:*
+        version: link:../../packages/learn
       '@syntropy/platform-core':
         specifier: workspace:*
         version: link:../../packages/platform-core
+      '@syntropy/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       fastify:
         specifier: ^5.1.0
         version: 5.8.2
@@ -481,10 +487,19 @@ importers:
       '@syntropy/types':
         specifier: workspace:*
         version: link:../types
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
     devDependencies:
+      '@testcontainers/postgresql':
+        specifier: ^10.14.0
+        version: 10.28.0
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.15
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.18.0
       typescript:
         specifier: ~5.6.0
         version: 5.6.3

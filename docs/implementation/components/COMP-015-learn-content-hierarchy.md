@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/learn/subdomains/content-hierarchy-navigation.md](../../architecture/domains/learn/subdomains/content-hierarchy-navigation.md)
 > **Stage Assignment**: S6 — Learn Domain
-> **Status**: 🔵 In Progress
+> **Status**: ✅ Complete
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -47,12 +47,12 @@ Content Hierarchy & Navigation is the foundation of the Learn domain. It owns th
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 2 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 4 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **6** |
 
-**Component Coverage**: 33%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -228,6 +228,34 @@ Content Hierarchy & Navigation is the foundation of the Learn domain. It owns th
 | COMP-016 Learn Fragment Engine | Fragment belongs to Course | Blocks Fragment implementation |
 | COMP-017 Learn Creator Tools | Creator workflow needs Track/Course | Blocks creator experience |
 | COMP-018 Learn Mentorship | ArtifactGallery references Tracks | Blocks mentorship views |
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S26 completion (per Implementation Plan)
+
+Implemented COMP-015.3 through COMP-015.6 per IMPLEMENTATION-PLAN.md (authority). Item numbering in this record differs; Plan order was: FogOfWarNavigationService (015.3), PrerequisiteEvaluator (015.4), ContentHierarchyRepository (015.5), REST API (015.6).
+
+**Files created**:
+- `packages/learn/src/domain/content-hierarchy/services/fog-of-war-navigation-service.ts`
+- `packages/learn/src/domain/content-hierarchy/services/prerequisite-evaluator.ts`
+- `packages/learn/src/domain/ports/content-hierarchy-repositories.ts`
+- `packages/learn/src/infrastructure/repositories/postgres-career-repository.ts`
+- `packages/learn/src/infrastructure/repositories/postgres-track-repository.ts`
+- `packages/learn/src/infrastructure/repositories/postgres-course-repository.ts`
+- `packages/learn/tests/unit/content-hierarchy/fog-of-war-navigation-service.test.ts`
+- `packages/learn/tests/unit/content-hierarchy/prerequisite-evaluator.test.ts`
+- `packages/learn/tests/integration/content-hierarchy-repositories.integration.test.ts`
+- `supabase/migrations/20260315100000_learn_content_hierarchy.sql`
+- `apps/api/src/types/learn-context.ts`
+- `apps/api/src/routes/learn.ts`
+- `apps/api/src/integration/learn-api.integration.test.ts`
+
+**Decisions**:
+- Fog-of-war progress: `GetCompletedCourseIds` port stub returns `[]` until COMP-016.3 (LearnerProgressRecord). Real implementation to be wired in S27.
+- Public API: `GET /api/v1/learn/careers`, `GET /api/v1/learn/careers/:id/tracks` (fog-of-war applied), `GET /api/v1/learn/courses/:id`. Auth required (COMP-033.2).
+- Integration tests (repos and Learn API) run only when `LEARN_INTEGRATION=true` (Docker/Testcontainers required).
 
 ---
 

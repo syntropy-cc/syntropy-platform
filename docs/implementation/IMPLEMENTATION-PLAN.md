@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S26: COMP-015.1, 015.2 done)
+> **Last Updated**: 2026-03-14 (S26: COMP-015.3–015.6 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S26 — Learn Content Hierarchy
-CURRENT ITEM  : COMP-015.3 — FogOfWarNavigationService
+CURRENT STAGE : S27 — Learn Fragment & Artifact Engine Core
+CURRENT ITEM  : COMP-016.1 — Fragment aggregate (IL1 invariant)
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 2 / 6 items done
-OVERALL       : 120 / 262 items done (46%)
+STAGE PROGRESS: 0 / 5 items done
+OVERALL       : 124 / 262 items done (47%)
 ```
 
 **Next 5 items**:
-1. `COMP-015.3` — FogOfWarNavigationService ← **START HERE**
-2. `COMP-015.4` — PrerequisiteEvaluator
-3. `COMP-015.5` — ContentHierarchyRepository (Postgres)
-4. `COMP-015.6` — Content hierarchy REST API endpoints
+1. `COMP-016.1` — Fragment aggregate (IL1 invariant) ← **START HERE**
+2. `COMP-016.2` — Artifact content types (Video, Text, Code, Quiz)
+3. `COMP-016.3` — LearnerProgressRecord entity and ProgressTrackingService
+4. `COMP-016.4` — Fragment repository and migrations
 5. …
 
-**Component record**: [`COMP-015`](./components/COMP-015-learn-content-hierarchy.md)
+**Component record**: [`COMP-016`](./components/COMP-016-learn-fragment-engine.md)
 
-**Next item (COMP-015.3) acceptance criteria**: `FogOfWarNavigationService.getAccessible(userId, careerId)` returns unlocked + locked content with lock reasons; unlocks next content on prerequisite completion; unit tests with various progress states.
+**Next item (COMP-016.1) acceptance criteria**: `Fragment` aggregate enforces IL1 (at least one DIP artifact before publish); `FragmentStatus` lifecycle; `Fragment.publish()` validates IL1 and throws `IL1ViolationError` if not met; unit tests.
 
-**Suggested steps**: (1) Write `FogOfWarNavigationService` (2) Implement lock/unlock logic (3) Write progress-based unlock tests
+**Suggested steps**: (1) Write `Fragment` aggregate (2) Implement IL1 guard in `publish()` (3) Write IL1 violation test
 
 ---
 
@@ -2065,7 +2065,7 @@ Status: ✅ Done | **Deps**: COMP-015.1
 
 #### [COMP-015.3] FogOfWarNavigationService
 `S26` `Critical` `M` [Record→](./components/COMP-015-learn-content-hierarchy.md)
-Status: ⬜ | **Deps**: COMP-015.2, COMP-010
+Status: ✅ Done | **Deps**: COMP-015.2, COMP-010
 **Criteria**: `FogOfWarNavigationService.getAccessible(userId, careerId)` returns unlocked + locked content with lock reasons; unlocks next content on prerequisite completion; unit tests with various progress states.
 **Steps**: (1) Write `FogOfWarNavigationService` (2) Implement lock/unlock logic (3) Write progress-based unlock tests
 
@@ -2073,7 +2073,7 @@ Status: ⬜ | **Deps**: COMP-015.2, COMP-010
 
 #### [COMP-015.4] PrerequisiteEvaluator
 `S26` `High` `S` [Record→](./components/COMP-015-learn-content-hierarchy.md)
-Status: ⬜ | **Deps**: COMP-015.3
+Status: ✅ Done | **Deps**: COMP-015.3
 **Criteria**: `PrerequisiteEvaluator.evaluate(userId, courseId)` checks if all prerequisites met via `LearnerProgressRecord`; returns `{met: bool, missing: CourseId[]}`; unit tests.
 **Steps**: (1) Write `PrerequisiteEvaluator` (2) Check progress records (3) Write missing prerequisites test
 
@@ -2081,7 +2081,7 @@ Status: ⬜ | **Deps**: COMP-015.3
 
 #### [COMP-015.5] ContentHierarchyRepository (Postgres)
 `S26` `High` `S` [Record→](./components/COMP-015-learn-content-hierarchy.md)
-Status: ⬜ | **Deps**: COMP-015.4, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-015.4, COMP-039.4
 **Criteria**: Migrations for `careers`, `tracks`, `courses` tables; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2089,7 +2089,7 @@ Status: ⬜ | **Deps**: COMP-015.4, COMP-039.4
 
 #### [COMP-015.6] Content hierarchy REST API endpoints
 `S26` `High` `M` [Record→](./components/COMP-015-learn-content-hierarchy.md)
-Status: ⬜ | **Deps**: COMP-015.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-015.5, COMP-033.2
 **Criteria**: `GET /api/v1/learn/careers`, `GET /api/v1/learn/careers/{id}/tracks`, `GET /api/v1/learn/courses/{id}`; fog-of-war applied to authenticated user; integration tests.
 **Steps**: (1) Write API routes (2) Apply fog-of-war in responses (3) Write integration tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S26 in progress (COMP-015.1, 015.2 done)
+> Last Updated: 2026-03-14 | S26 complete; S27 next (COMP-016.1)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 120 / 262 items (46%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 124 / 262 items (47%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S26 — Learn Content Hierarchy | S56 | ⬜ |
+| **Current Stage** | S27 — Learn Fragment & Artifact Engine Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-015.6 — Learn REST API (GET /learn/careers, careers/:id/tracks, courses/:id), LearnContext, fog-of-war applied; integration test
+- 2026-03-14 COMP-015.5 — Learn content hierarchy migration (learn.careers, tracks, courses), repository interfaces and Postgres implementations; integration test
+- 2026-03-14 COMP-015.4 — PrerequisiteEvaluator.evaluate(); unit tests
+- 2026-03-14 COMP-015.3 — FogOfWarNavigationService.getAccessible(), AccessibleContentResult; unit tests
 - 2026-03-14 COMP-015.2 — Track/Course prerequisites, CourseStatus enum, ordering; unit tests
 - 2026-03-14 COMP-015.1 — Learn package scaffold, @syntropy/types IDs (CareerId, TrackId, CourseId, FragmentId), Career/Track/Course entities, hierarchy tests
 - 2026-03-14 COMP-011.7 — Search & Recommendation REST API (GET /search, GET /recommendations/:userId), SearchContext, integration test

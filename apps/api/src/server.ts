@@ -33,9 +33,11 @@ import type { GovernanceContext } from "./types/governance-context.js";
 import type { PortfolioContext } from "./types/portfolio-context.js";
 import type { SearchContext } from "./types/search-context.js";
 import type { TreasuryContext } from "./types/treasury-context.js";
+import type { LearnContext } from "./types/learn-context.js";
 import { portfolioRoutes } from "./routes/portfolios.js";
 import { searchRoutes } from "./routes/search.js";
 import { recommendationRoutes } from "./routes/recommendations.js";
+import { learnRoutes } from "./routes/learn.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -61,6 +63,7 @@ export interface CreateAppOptions {
   search?: SearchContext | null;
   treasury?: TreasuryContext | null;
   aiAgents?: AiAgentsContext | null;
+  learn?: LearnContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -99,6 +102,9 @@ export async function createApp(options?: CreateAppOptions) {
   if (options?.aiAgents) {
     await app.register(aiAgentsRoutes, { aiAgents: options.aiAgents });
     await app.register(agentsRoutes, { aiAgents: options.aiAgents });
+  }
+  if (options?.learn) {
+    await app.register(learnRoutes, { learn: options.learn });
   }
   await app.register(internalEventSchemasPlugin);
 

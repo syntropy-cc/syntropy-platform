@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S41: COMP-026.3, 026.4, 026.5, 032.5 done)
+> **Last Updated**: 2026-03-14 (S42: COMP-027.1–027.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S42 — Sponsorship Core (M4)
-CURRENT ITEM  : COMP-027.1 — Sponsorship package setup + Sponsorship aggregate
+CURRENT STAGE : S43 — Sponsorship API + Communication (M4)
+CURRENT ITEM  : COMP-027.6 — Sponsorship REST API
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 4 / 4 items done (S41)
-OVERALL       : 195 / 262 items done (74%)
+STAGE PROGRESS: 5 / 5 items done (S42)
+OVERALL       : 200 / 262 items done (76%)
 ```
 
 **Next 5 items**:
-1. `COMP-027.1` — Sponsorship package setup + Sponsorship aggregate ← **START HERE**
+1. `COMP-027.6` — Sponsorship REST API ← **START HERE**
 2. (see Section 6 for full order)
 
 **Component record**: [`COMP-027`](./components/COMP-027-sponsorship.md)
 
-**Next item (COMP-027.1) acceptance criteria**: `packages/sponsorship` workspace; `Sponsorship` aggregate with `sponsorId`, `sponsoredId`, `type`, `amount`, `status`; `SponsorshipStatus` lifecycle; unit tests.
+**Next item (COMP-027.6) acceptance criteria**: `POST /api/v1/sponsorships`, `GET /api/v1/sponsorships/{id}`, `GET /api/v1/sponsorships/{id}/impact`, `POST /api/v1/sponsorships/{id}/payment-intent`; API tests.
 
-**Suggested steps**: (1) Scaffold `packages/sponsorship` (2) Write `Sponsorship` aggregate (3) Write lifecycle tests
+**Suggested steps**: (1) Write API routes (2) Wire to Stripe adapter (3) Write API tests
 
 ---
 
@@ -2662,7 +2662,7 @@ Status: Done | **Deps**: COMP-032.2, COMP-023, COMP-025, COMP-026
 
 #### [COMP-027.1] Sponsorship package setup + Sponsorship aggregate
 `S42` `High` `S` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-002, COMP-003
+Status: ✅ Done | **Deps**: COMP-002, COMP-003
 **Criteria**: `packages/sponsorship` workspace; `Sponsorship` aggregate with `sponsorId`, `sponsoredId`, `type`, `amount`, `status`; `SponsorshipStatus` lifecycle; unit tests.
 **Steps**: (1) Scaffold `packages/sponsorship` (2) Write `Sponsorship` aggregate (3) Write lifecycle tests
 
@@ -2670,7 +2670,7 @@ Status: ⬜ | **Deps**: COMP-002, COMP-003
 
 #### [COMP-027.2] StripePaymentAdapter
 `S42` `High` `M` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-027.1
+Status: ✅ Done | **Deps**: COMP-027.1
 **Criteria**: `StripePaymentAdapter` implements `PaymentGateway` interface; `createPaymentIntent(amount, currency)` → Stripe; `handleWebhook(event)` processes payment events; mock adapter for tests; circuit breaker applied.
 **Steps**: (1) Write `PaymentGateway` interface (2) Write `StripePaymentAdapter` (3) Write mock + circuit breaker test
 
@@ -2678,7 +2678,7 @@ Status: ⬜ | **Deps**: COMP-027.1
 
 #### [COMP-027.3] ImpactMetric computation
 `S42` `Medium` `M` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-027.2, COMP-010
+Status: ✅ Done | **Deps**: COMP-027.2, COMP-010
 **Criteria**: `ImpactMetricService.compute(sponsorshipId)` aggregates artifact views, portfolio growth, contribution activity; returns `ImpactMetric`; refreshed on `portfolio.updated`; unit tests.
 **Steps**: (1) Define impact metrics (2) Write `ImpactMetricService` (3) Write computation tests
 
@@ -2686,7 +2686,7 @@ Status: ⬜ | **Deps**: COMP-027.2, COMP-010
 
 #### [COMP-027.4] SponsorshipRepository (Postgres)
 `S42` `Medium` `S` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-027.3, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-027.3, COMP-039.4
 **Criteria**: Migration creates `sponsorships`, `impact_metrics` tables; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2694,7 +2694,7 @@ Status: ⬜ | **Deps**: COMP-027.3, COMP-039.4
 
 #### [COMP-027.5] SponsorshipEventPublisher (Kafka)
 `S42` `Medium` `S` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-027.4, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-027.4, COMP-009.1
 **Criteria**: Publishes `sponsorship.created`, `sponsorship.payment.completed`; unit tests.
 **Steps**: (1) Write `SponsorshipEventPublisher` (2) Map events (3) Write tests
 
@@ -3198,13 +3198,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S41 complete; next COMP-027.1
+> Last Updated: 2026-03-14 | S42 complete; next COMP-027.6
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 195 / 262 items (74%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 200 / 262 items (76%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
 | **Current Stage** | S42 — Sponsorship Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3214,6 +3214,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-027.5 — SponsorshipEventPublisher (Kafka); sponsorship.created, sponsorship.payment.completed; unit tests
+- 2026-03-14 COMP-027.4 — SponsorshipRepository (Postgres); migration sponsorships, impact_metrics; PostgresSponsorshipRepository, PostgresImpactMetricRepository; integration test
+- 2026-03-14 COMP-027.3 — ImpactMetricService, ImpactMetric, ImpactDataProvider port; unit tests
+- 2026-03-14 COMP-027.2 — StripePaymentAdapter, PaymentGateway port, MockPaymentGateway; circuit breaker; unit tests
+- 2026-03-14 COMP-027.1 — Sponsorship package + Sponsorship aggregate; SponsorshipStatus lifecycle; unit tests
 - 2026-03-14 COMP-032.5 — Labs pillar Next.js pages (/labs, /labs/articles/[id], reviews, edit); DOI badge; GET /api/v1/labs/articles list
 - 2026-03-14 COMP-026.5 — DOI REST API (POST/GET /api/v1/labs/articles/:id/doi); labs-doi routes and API tests
 - 2026-03-14 COMP-026.4 — ExternalIndexingNotifier (CrossRef, DOAJ webhooks; retry; fire-and-forget); unit tests

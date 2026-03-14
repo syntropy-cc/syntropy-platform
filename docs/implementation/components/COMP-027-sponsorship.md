@@ -3,10 +3,10 @@
 > **Component ID**: COMP-027
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/sponsorship/ARCHITECTURE.md](../../architecture/domains/sponsorship/ARCHITECTURE.md)
-> **Stage Assignment**: S11 — Supporting Domains
-> **Status**: ⬜ Not Started
+> **Stage Assignment**: S42–S43 (M4)
+> **Status**: 🔵 In Progress (S42 complete; 027.6–027.7 pending)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -45,12 +45,12 @@ Sponsorship is a **Supporting Subdomain** managing financial support flows: spon
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **7** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 71% (S42 complete)
 
 ### Item List
 
@@ -58,7 +58,7 @@ Sponsorship is a **Supporting Subdomain** managing financial support flows: spon
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | sponsorship/ARCHITECTURE.md |
 | **Dependencies** | COMP-001 |
@@ -84,7 +84,7 @@ Sponsorship is a **Supporting Subdomain** managing financial support flows: spon
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | sponsorship/ARCHITECTURE.md |
 | **Dependencies** | COMP-027.1 |
@@ -112,7 +112,7 @@ Sponsorship is a **Supporting Subdomain** managing financial support flows: spon
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | sponsorship/ARCHITECTURE.md |
 | **Dependencies** | COMP-027.1, COMP-009 |
@@ -162,7 +162,7 @@ Sponsorship is a **Supporting Subdomain** managing financial support flows: spon
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | sponsorship/ARCHITECTURE.md, ADR-004 |
 | **Dependencies** | COMP-027.1 |
@@ -225,6 +225,36 @@ Sponsorship is a **Supporting Subdomain** managing financial support flows: spon
 
 **Files Created/Modified**:
 - `packages/sponsorship/src/api/routes/webhook.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S42 (COMP-027.1–027.5) implemented
+
+**Files created**:
+- `packages/sponsorship/src/domain/sponsorship-status.ts` — SponsorshipStatus, isSponsorshipStatus
+- `packages/sponsorship/src/domain/sponsorship.ts` — Sponsorship aggregate, type, lifecycle (activate, pause, resume, cancel)
+- `packages/sponsorship/src/domain/errors.ts` — SponsorshipDomainError, InvalidSponsorshipTransitionError
+- `packages/sponsorship/src/domain/impact-metric.ts` — ImpactMetric value type
+- `packages/sponsorship/src/domain/ports/payment-gateway.ts` — PaymentGateway, PaymentIntentResult, WebhookResult
+- `packages/sponsorship/src/domain/ports/impact-data-provider.ts` — ImpactDataProvider, ImpactDataSnapshot
+- `packages/sponsorship/src/domain/ports/sponsorship-repository-port.ts` — SponsorshipRepositoryPort
+- `packages/sponsorship/src/domain/ports/impact-metric-repository-port.ts` — ImpactMetricRepositoryPort
+- `packages/sponsorship/src/application/impact-metric-service.ts` — ImpactMetricService.compute()
+- `packages/sponsorship/src/infrastructure/stripe-payment-adapter.ts` — StripePaymentAdapter (CircuitBreaker around createPaymentIntent)
+- `packages/sponsorship/src/infrastructure/mock-payment-gateway.ts` — MockPaymentGateway
+- `packages/sponsorship/src/infrastructure/repositories/postgres-sponsorship-repository.ts` — PostgresSponsorshipRepository
+- `packages/sponsorship/src/infrastructure/repositories/postgres-impact-metric-repository.ts` — PostgresImpactMetricRepository
+- `packages/sponsorship/src/infrastructure/sponsorship-event-publisher.ts` — SponsorshipEventPublisher (sponsorship.created, sponsorship.payment.completed)
+- `supabase/migrations/20260328000000_sponsorship.sql` — schema sponsorship, tables sponsorships, impact_metrics
+- Unit tests: sponsorship.test.ts, stripe-payment-adapter.test.ts, impact-metric-service.test.ts, sponsorship-event-publisher.test.ts
+- Integration test: sponsorship-repository.integration.test.ts (SPONSORSHIP_INTEGRATION=true, Testcontainers)
+
+**Decisions**:
+- Plan Section 7 numbering used: 027.4 = Repository, 027.5 = EventPublisher (component record 027.4/027.5 differ; plan is authority for this stage).
+- Amount in PaymentGateway.createPaymentIntent is in smallest currency unit (cents) for Stripe.
+- ImpactMetric has no period in domain; repository save(metric, period) and findBySponsorship returns latest snapshot.
 
 ---
 

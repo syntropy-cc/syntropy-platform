@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/learn/subdomains/fragment-artifact-engine.md](../../architecture/domains/learn/subdomains/fragment-artifact-engine.md)
 > **Stage Assignment**: S6 — Learn Domain
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress (S27 complete: COMP-016.1–016.5)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -50,20 +50,20 @@ Fragment & Artifact Engine is the heart of the Learn Core Domain. It owns the `F
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 8 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **8** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 62% (S27 items COMP-016.1–016.5 done)
 
 ### Item List
 
-#### [COMP-016.1] Fragment aggregate and FragmentSection entities
+#### [COMP-016.1] Fragment aggregate (IL1 invariant)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done (2026-03-14) |
 | **Priority** | Critical |
 | **Origin** | fragment-artifact-engine.md |
 | **Dependencies** | COMP-015.1 |
@@ -80,35 +80,19 @@ Fragment & Artifact Engine is the heart of the Learn Core Domain. It owns the `F
 - [ ] `Fragment.markSectionComplete(sectionType)` updates section status
 - [ ] Unit tests: IL1 (missing section throws), IL3 (double-publish throws)
 
-**Files Created/Modified**:
-- `packages/learn/src/domain/fragment-artifact/fragment.ts`
-- `packages/learn/src/domain/fragment-artifact/fragment-section.ts`
-- `packages/learn/tests/unit/fragment-artifact/fragment.test.ts`
+**Files Created/Modified**: `fragment.ts`, `fragment-section.ts`, `fragment-status.ts`, `errors.ts` (IL1ViolationError), `fragment.test.ts`.
 
 ---
 
-#### [COMP-016.2] CollectibleDefinition entity
+#### [COMP-016.2] Artifact content types (Video, Text, Code, Quiz)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | High |
-| **Origin** | fragment-artifact-engine.md |
-| **Dependencies** | COMP-016.1 |
-| **Size** | XS |
-| **Created** | 2026-03-13 |
+| **Status** | ✅ Done (2026-03-14) |
+| **Priority** | Critical |
+| **Origin** | IMPLEMENTATION-PLAN Section 7 |
 
-**Description**: Implement `CollectibleDefinition` entity — the template for collectible rewards. Instances (awarded to users) are owned by Platform Core (COMP-010).
-
-**Acceptance Criteria**:
-- [ ] `CollectibleDefinition` entity: `id`, `name`, `description`, `image_url`, `award_conditions (JSONB)`, `is_published`, `published_at`
-- [ ] Invariant (IL4): `award_conditions` immutable after publication
-- [ ] `learn.collectible_definition.published` event published when definition goes live
-- [ ] Unit tests: conditions immutability after publication
-
-**Files Created/Modified**:
-- `packages/learn/src/domain/fragment-artifact/collectible-definition.ts`
-- `packages/learn/tests/unit/fragment-artifact/collectible-definition.test.ts`
+**Files Created/Modified**: `artifact-content-types.ts`, `artifact-content-types.test.ts`.
 
 ---
 
@@ -116,103 +100,43 @@ Fragment & Artifact Engine is the heart of the Learn Core Domain. It owns the `F
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done (2026-03-14) |
 | **Priority** | Critical |
-| **Origin** | fragment-artifact-engine.md |
-| **Dependencies** | COMP-016.1 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
 
-**Description**: Implement `LearnerProgressRecord` entity and `ProgressTrackingService` that tracks fragment, course, and track completion.
-
-**Acceptance Criteria**:
-- [ ] `LearnerProgressRecord` entity: `user_id`, `entity_id` (fragment/course/track), `entity_type`, `status (not_started|in_progress|completed)`, `started_at`, `completed_at`
-- [ ] `ProgressTrackingService.markFragmentStarted(userId, fragmentId)` creates/updates record
-- [ ] `ProgressTrackingService.markFragmentCompleted(userId, fragmentId)` marks complete; checks if course complete
-- [ ] Course completion: all fragments completed → marks course complete; checks if track complete
-- [ ] Track completion: all courses complete → publishes `learn.track.completed`
-- [ ] Unit tests: cascade completion (fragment → course → track)
-
-**Files Created/Modified**:
-- `packages/learn/src/domain/fragment-artifact/learner-progress-record.ts`
-- `packages/learn/src/domain/fragment-artifact/services/progress-tracking-service.ts`
-- `packages/learn/tests/unit/fragment-artifact/progress-tracking-service.test.ts`
+**Files Created/Modified**: `learner-progress-record.ts`, `services/progress-tracking-service.ts`, ports `ProgressEventsPort`, `LearnerProgressRepositoryPort`, `CourseHierarchyPort`; unit tests.
 
 ---
 
-#### [COMP-016.4] DIPPublicationAdapter (ACL)
+#### [COMP-016.4] DIP artifact publication bridge (LearnArtifactBridge)
+
+| Field | Value |
+|-------|-------|
+| **Status** | ✅ Done (2026-03-14) |
+
+**Files Created/Modified**: `ports/artifact-publisher-port.ts`, `infrastructure/learn-artifact-bridge.ts` (implements port, uses `DipArtifactClientPort` for DIP); unit test with mock.
+
+---
+
+#### [COMP-016.5] FragmentRepository (Postgres) + migrations
+
+| Field | Value |
+|-------|-------|
+| **Status** | ✅ Done (2026-03-14) |
+
+**Files Created/Modified**: `ports/fragment-repository-port.ts`, `supabase/migrations/20260315110000_learn_fragment_artifact.sql`, `postgres-fragment-repository.ts`, `postgres-learner-progress-repository.ts`, `fragment-repository.integration.test.ts`.
+
+---
+
+#### [COMP-016.6] Fragment review workflow
 
 | Field | Value |
 |-------|-------|
 | **Status** | ⬜ Ready |
-| **Priority** | Critical |
-| **Origin** | fragment-artifact-engine.md |
-| **Dependencies** | COMP-016.1, COMP-003 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
+| **Priority** | High |
+| **Origin** | IMPLEMENTATION-PLAN Section 7, S28 |
+| **Dependencies** | COMP-016.5 |
 
-**Description**: Implement `DIPPublicationAdapter` — ACL wrapping the DIP Artifact Registry internal API. Translates Fragment publication request into DIP artifact creation call.
-
-**Acceptance Criteria**:
-- [ ] `DIPPublicationAdapter` implements `ArtifactPublisher` interface (defined in Learn domain)
-- [ ] `publish(fragmentId, authorActorId, content)` → calls DIP internal API, returns `ArtifactId`
-- [ ] DIP vocabulary does not appear in Learn domain types
-- [ ] Error handling: DIP unavailable → `ServiceUnavailableError` (fragment stays in InReview)
-- [ ] Integration test with mocked DIP API
-
-**Files Created/Modified**:
-- `packages/learn/src/domain/fragment-artifact/artifact-publisher.ts` (interface)
-- `packages/learn/src/infrastructure/dip-publication-adapter.ts`
-- `packages/learn/tests/integration/dip-publication-adapter.test.ts`
-
----
-
-#### [COMP-016.5] FragmentPublicationService
-
-| Field | Value |
-|-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | Critical |
-| **Origin** | fragment-artifact-engine.md |
-| **Dependencies** | COMP-016.4, COMP-016.3 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
-
-**Description**: Implement `FragmentPublicationService` that orchestrates fragment review and publication: validates IL1, calls DIP adapter, sets `published_artifact_id`, publishes `learn.fragment.artifact_published` event.
-
-**Acceptance Criteria**:
-- [ ] `FragmentPublicationService.publish(fragmentId, creatorActorId)` validates sections, calls DIP, sets artifact ID, publishes event
-- [ ] `learn.fragment.artifact_published` event: `fragment_id`, `artifact_id`, `creator_actor_id`, `track_id`, `correlation_id`
-- [ ] On DIP failure: Fragment remains InReview, error logged and retried (DLQ)
-- [ ] Unit tests: IL1 validation, success path, DIP failure handling
-
-**Files Created/Modified**:
-- `packages/learn/src/domain/fragment-artifact/services/fragment-publication-service.ts`
-- `packages/learn/tests/unit/fragment-artifact/fragment-publication-service.test.ts`
-
----
-
-#### [COMP-016.6] CollectibleAwardEvaluator
-
-| Field | Value |
-|-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | Medium |
-| **Origin** | fragment-artifact-engine.md |
-| **Dependencies** | COMP-016.3, COMP-016.2 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
-
-**Description**: Implement `CollectibleAwardEvaluator` that checks `award_conditions` of published `CollectibleDefinition`s after portfolio events and signals Platform Core to award collectibles.
-
-**Acceptance Criteria**:
-- [ ] `CollectibleAwardEvaluator.evaluate(userId, event)` checks all active CollectibleDefinitions
-- [ ] Signals Platform Core via event when condition met: `learn.collectible.award_signal`
-- [ ] Platform Core consumes signal and creates `CollectibleInstance`
-- [ ] Unit tests: condition evaluation for each type
-
-**Files Created/Modified**:
-- `packages/learn/src/domain/fragment-artifact/services/collectible-award-evaluator.ts`
+**Description**: `FragmentReviewService.submit(fragmentId)` moves to `in_review`; `approve(fragmentId)` by reviewer; `reject(fragmentId)` with reason; state machine transitions; unit tests.
 
 ---
 
@@ -266,6 +190,18 @@ Fragment & Artifact Engine is the heart of the Learn Core Domain. It owns the `F
 **Files Created/Modified**:
 - `packages/learn/src/api/routes/fragments.ts`
 - `packages/learn/src/api/routes/progress.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S27 complete (COMP-016.1–016.5)
+
+- **Fragment aggregate**: `Fragment`, `FragmentSection`, `FragmentStatus`; IL1 enforced in `publish()` (all three sections non-empty); IL3 in `setPublishedArtifactId()` (immutable once set). `IL1ViolationError` in domain errors.
+- **Artifact content types**: `VideoArtifact`, `TextArtifact`, `CodeArtifact`, `QuizArtifact` value objects with `validate()` per type.
+- **LearnerProgressRecord + ProgressTrackingService**: Entity and service with ports `ProgressEventsPort`, `LearnerProgressRepositoryPort`, `CourseHierarchyPort`; cascade fragment → course → track completion and event emission.
+- **LearnArtifactBridge**: Implements `ArtifactPublisherPort`; uses `DipArtifactClientPort` (injectable, no @syntropy/dip in learn). Serializes fragment to JSON content; returns published artifact id.
+- **Repositories + migration**: `learn.fragments` (id, course_id, creator_id, title, status, problem_content, theory_content, artifact_content, published_artifact_id), `learn.learner_progress_records` (user_id, entity_id, entity_type, status, started_at, completed_at, score). `PostgresFragmentRepository`, `PostgresLearnerProgressRepository`. Integration test in `fragment-repository.integration.test.ts` (run with LEARN_INTEGRATION=true).
 
 ---
 

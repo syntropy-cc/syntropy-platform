@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S26: COMP-015.3–015.6 done)
+> **Last Updated**: 2026-03-14 (S27: COMP-016.1–016.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S27 — Learn Fragment & Artifact Engine Core
-CURRENT ITEM  : COMP-016.1 — Fragment aggregate (IL1 invariant)
+CURRENT STAGE : S28 — Learn Fragment Review & API
+CURRENT ITEM  : COMP-016.6 — Fragment review workflow
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done
-OVERALL       : 124 / 262 items done (47%)
+STAGE PROGRESS: 0 / 4 items done (S27 complete: 5/5)
+OVERALL       : 129 / 262 items done (49%)
 ```
 
 **Next 5 items**:
-1. `COMP-016.1` — Fragment aggregate (IL1 invariant) ← **START HERE**
-2. `COMP-016.2` — Artifact content types (Video, Text, Code, Quiz)
-3. `COMP-016.3` — LearnerProgressRecord entity and ProgressTrackingService
-4. `COMP-016.4` — Fragment repository and migrations
+1. `COMP-016.6` — Fragment review workflow ← **START HERE**
+2. `COMP-016.7` — Fragment REST API endpoints
+3. `COMP-032.3` — Learn pillar Next.js pages
+4. …
 5. …
 
 **Component record**: [`COMP-016`](./components/COMP-016-learn-fragment-engine.md)
 
-**Next item (COMP-016.1) acceptance criteria**: `Fragment` aggregate enforces IL1 (at least one DIP artifact before publish); `FragmentStatus` lifecycle; `Fragment.publish()` validates IL1 and throws `IL1ViolationError` if not met; unit tests.
+**Next item (COMP-016.6) acceptance criteria**: `FragmentReviewService.submit(fragmentId)` moves to `in_review`; `approve(fragmentId)` by reviewer; `reject(fragmentId)` with reason; state machine transitions; unit tests.
 
-**Suggested steps**: (1) Write `Fragment` aggregate (2) Implement IL1 guard in `publish()` (3) Write IL1 violation test
+**Suggested steps**: (1) Write review state machine (2) Add role check (reviewer only) (3) Write review flow test
 
 ---
 
@@ -2097,7 +2097,7 @@ Status: ✅ Done | **Deps**: COMP-015.5, COMP-033.2
 
 #### [COMP-016.1] Fragment aggregate (IL1 invariant)
 `S27` `Critical` `M` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-015, COMP-003
+Status: ✅ Done | **Deps**: COMP-015, COMP-003
 **Criteria**: `Fragment` aggregate enforces IL1 (at least one DIP artifact before publish); `FragmentStatus` lifecycle; `Fragment.publish()` validates IL1 and throws `IL1ViolationError` if not met; unit tests.
 **Steps**: (1) Write `Fragment` aggregate (2) Implement IL1 guard in `publish()` (3) Write IL1 violation test
 
@@ -2105,7 +2105,7 @@ Status: ⬜ | **Deps**: COMP-015, COMP-003
 
 #### [COMP-016.2] Artifact content types (Video, Text, Code, Quiz)
 `S27` `Critical` `M` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.1
+Status: ✅ Done | **Deps**: COMP-016.1
 **Criteria**: `VideoArtifact`, `TextArtifact`, `CodeArtifact`, `QuizArtifact` value objects; each has type-specific metadata; `ArtifactContent.validate()` per type; unit tests.
 **Steps**: (1) Write 4 content type value objects (2) Add type-specific validation (3) Write content type tests
 
@@ -2113,7 +2113,7 @@ Status: ⬜ | **Deps**: COMP-016.1
 
 #### [COMP-016.3] LearnerProgressRecord
 `S27` `Critical` `M` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.2, COMP-010
+Status: ✅ Done | **Deps**: COMP-016.2, COMP-010
 **Criteria**: `LearnerProgressRecord` entity tracks completion per `(userId, fragmentId)`; `complete()` method publishes `learn.fragment.completed` event; stores completion timestamp and score; unit tests.
 **Steps**: (1) Write `LearnerProgressRecord` entity (2) Add completion event (3) Write completion tests
 
@@ -2121,7 +2121,7 @@ Status: ⬜ | **Deps**: COMP-016.2, COMP-010
 
 #### [COMP-016.4] DIP artifact publication bridge
 `S27` `High` `S` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.1, COMP-003.2
+Status: ✅ Done | **Deps**: COMP-016.1, COMP-003.2
 **Criteria**: `LearnArtifactBridge.publish(fragment)` creates a DIP `Artifact` from the fragment content; attaches Nostr anchor; called on `Fragment.publish()`; unit tests with mock DIP service.
 **Steps**: (1) Write `LearnArtifactBridge` (2) Map fragment to DIP artifact (3) Write bridge tests
 
@@ -2129,7 +2129,7 @@ Status: ⬜ | **Deps**: COMP-016.1, COMP-003.2
 
 #### [COMP-016.5] FragmentRepository (Postgres)
 `S27` `High` `S` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.4, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-016.4, COMP-039.4
 **Criteria**: Migrations for `fragments`, `learner_progress_records`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S26 complete; S27 next (COMP-016.1)
+> Last Updated: 2026-03-14 | S27 complete; S28 next (COMP-016.6)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 124 / 262 items (47%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 129 / 262 items (49%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S27 — Learn Fragment & Artifact Engine Core | S56 | ⬜ |
+| **Current Stage** | S28 — Learn Fragment Review & API | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-016.5 — FragmentRepository (Postgres), LearnerProgressRepository, migration learn.fragments + learner_progress_records; integration test
+- 2026-03-14 COMP-016.4 — LearnArtifactBridge (ArtifactPublisherPort), DipArtifactClientPort; unit test with mock DIP
+- 2026-03-14 COMP-016.3 — LearnerProgressRecord, ProgressTrackingService, ProgressEventsPort, CourseHierarchyPort; unit tests
+- 2026-03-14 COMP-016.2 — VideoArtifact, TextArtifact, CodeArtifact, QuizArtifact value objects and validate(); unit tests
+- 2026-03-14 COMP-016.1 — Fragment aggregate (IL1/IL3), FragmentStatus, FragmentSection, IL1ViolationError; unit tests
 - 2026-03-14 COMP-015.6 — Learn REST API (GET /learn/careers, careers/:id/tracks, courses/:id), LearnContext, fog-of-war applied; integration test
 - 2026-03-14 COMP-015.5 — Learn content hierarchy migration (learn.careers, tracks, courses), repository interfaces and Postgres implementations; integration test
 - 2026-03-14 COMP-015.4 — PrerequisiteEvaluator.evaluate(); unit tests

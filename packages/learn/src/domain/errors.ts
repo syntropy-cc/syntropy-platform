@@ -14,3 +14,16 @@ export class LearnDomainError extends Error {
     Object.setPrototypeOf(this, LearnDomainError.prototype);
   }
 }
+
+/**
+ * Thrown when Fragment.publish() is called but IL1 is not met:
+ * at least one section (problem, theory, or artifact) is incomplete.
+ * Architecture: COMP-016.1, fragment-artifact-engine.md IL1.
+ */
+export class IL1ViolationError extends LearnDomainError {
+  constructor(message: string) {
+    super(message);
+    this.name = "IL1ViolationError";
+    Object.setPrototypeOf(this, IL1ViolationError.prototype);
+  }
+}

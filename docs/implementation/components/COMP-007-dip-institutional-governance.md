@@ -6,7 +6,7 @@
 > **Stage Assignment**: S3 — DIP Protocol
 > **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-14
+> **Last Updated**: 2026-03-14 (S19 complete: COMP-007.5–007.8)
 
 ## Component Overview
 
@@ -50,14 +50,14 @@ Institutional Governance owns the `DigitalInstitution` aggregate and manages the
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 4 |
+| ✅ Done | 8 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **9** |
 
-**Component Coverage**: 44%
+**Component Coverage**: 89%
 
-**Implementation Plan items (Section 7) completed**: COMP-007.1 `packages/dip-governance` workspace, DigitalInstitution aggregate (create, fromPersistence, status forming|active|dissolved), domain events. COMP-007.2 Proposal aggregate (proposalId, institutionId, type, status), ProposalStatus enum, open/close/execute transitions, unit tests. COMP-007.3 VotingService (castVote, getVoteSummary), ProposalRepositoryPort, VoteStorePort, InMemoryVoteStore, eligibility check, double-vote prevention, unit tests. COMP-007.4 GovernanceService.executeProposal() with contract evaluation (SmartContractEvaluator), quorum enforcement, ProposalExecutionRejectedError, GovernanceContractResolverPort, ProposalExecutedPublisherPort, TotalEligibleResolverPort, ProposalExecutedEvent; unit tests (success, quorum rejected, not closed, not found, contract not found).
+**Implementation Plan items (Section 7) completed**: COMP-007.1 through COMP-007.4 (see above). COMP-007.5 LegitimacyChain, LegitimacyChainEntry, LegitimacyChainVerifier (hash-linked chain, append, verify), unit tests. COMP-007.6 Migration `20260314200000_dip_institutional_governance.sql` (digital_institutions, proposals, votes, legitimacy_chain_entries); GovernanceDbClient; LegitimacyChainRepositoryPort, DigitalInstitutionRepositoryPort; PostgresLegitimacyChainRepository, PostgresDigitalInstitutionRepository, PostgresProposalRepository, PostgresVoteStore; integration test with mock client. COMP-007.7 GovernanceEventPublisherPort, GovernanceEventPublisher (Kafka), ProposalOpenedEvent; unit tests. COMP-007.8 InstitutionSummary, ProposalHistoryItem, ProposalHistoryPage; GovernanceQueryService (getInstitutionSummary, getProposalHistory with pagination); ProposalRepositoryPort extended with findByInstitutionId, getProposalCountByInstitutionId; unit tests.
 
 ### Item List
 

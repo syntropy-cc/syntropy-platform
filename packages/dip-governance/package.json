@@ -12,7 +12,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@syntropy/dip-contracts": "workspace:*"
+    "@syntropy/dip-contracts": "workspace:*",
+    "@syntropy/event-bus": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

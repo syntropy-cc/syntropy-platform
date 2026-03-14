@@ -25,3 +25,14 @@ export interface ProposalExecutedEvent {
   readonly proposalType: string;
   readonly timestamp: string;
 }
+
+/**
+ * Emitted when a proposal is opened for voting (COMP-007.7).
+ */
+export interface ProposalOpenedEvent {
+  readonly eventType: "dip.governance.proposal_opened";
+  readonly institutionId: string;
+  readonly proposalId: string;
+  readonly proposalType: string;
+  readonly timestamp: string;
+}

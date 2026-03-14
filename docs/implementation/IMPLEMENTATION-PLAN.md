@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S19 progress: COMP-007.4 done)
+> **Last Updated**: 2026-03-14 (S19 complete: COMP-007.5–007.8 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S19 — Governance Service + Legitimacy Chain
-CURRENT ITEM  : COMP-007.5 — LegitimacyChain event chain
+CURRENT STAGE : S20 — Governance Completion + Treasury Start
+CURRENT ITEM  : COMP-007.9 — Governance REST API endpoints + integration tests
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 1 / 5 items done (S19)
-OVERALL       : 90 / 262 items done (34%)
+STAGE PROGRESS: 0 / 4 items done (S20)
+OVERALL       : 94 / 262 items done (36%)
 ```
 
 **Next 5 items**:
-1. `COMP-007.5` — LegitimacyChain event chain ← **START HERE**
-2. `COMP-007.6` — GovernanceRepository (Postgres)
-3. `COMP-007.7` — GovernanceEventPublisher (Kafka)
-4. `COMP-007.8` — Governance query service + read models
+1. `COMP-007.9` — Governance REST API endpoints + integration tests ← **START HERE**
+2. `COMP-008.1` — Value Distribution package setup + TreasuryAccount
+3. `COMP-008.2` — UsageRegistration event consumer
+4. `COMP-008.3` — AVU accounting (debit/credit)
 5. …
 
 **Component record**: [`COMP-007`](./components/COMP-007-dip-institutional-governance.md)
 
-**Next item (COMP-007.5) acceptance criteria**: `LegitimacyChain` append-only record of governance decisions; each entry references previous via hash; `append(event)` stores with causation chain; `verify()` checks chain integrity; unit tests.
+**Next item (COMP-007.9) acceptance criteria**: `POST /api/v1/institutions`, `GET /api/v1/institutions/{id}`, `POST /api/v1/institutions/{id}/proposals`, `POST /api/v1/proposals/{id}/vote`; full voting lifecycle integration test.
 
-**Suggested steps**: (1) Write `LegitimacyChain` class (2) Implement hash-linked chain (3) Write integrity verification test
+**Suggested steps**: (1) Write API routes (2) Wire to services (3) Write integration test
 
 ---
 
@@ -1825,7 +1825,7 @@ Status: ✅ Done | **Deps**: COMP-007.3, COMP-004.3
 
 #### [COMP-007.5] LegitimacyChain event chain
 `S19` `Critical` `M` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.4, COMP-009
+Status: ✅ Done | **Deps**: COMP-007.4, COMP-009
 **Criteria**: `LegitimacyChain` append-only record of governance decisions; each entry references previous via hash; `append(event)` stores with causation chain; `verify()` checks chain integrity; unit tests.
 **Steps**: (1) Write `LegitimacyChain` class (2) Implement hash-linked chain (3) Write integrity verification test
 
@@ -1833,7 +1833,7 @@ Status: ⬜ | **Deps**: COMP-007.4, COMP-009
 
 #### [COMP-007.6] GovernanceRepository (Postgres)
 `S19` `High` `S` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.5, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-007.5, COMP-039.4
 **Criteria**: Migrations for `digital_institutions`, `proposals`, `votes`, `legitimacy_chain` tables; repositories for each; integration test.
 **Steps**: (1) Write all migrations (2) Write repositories (3) Write integration tests
 
@@ -1841,7 +1841,7 @@ Status: ⬜ | **Deps**: COMP-007.5, COMP-039.4
 
 #### [COMP-007.7] GovernanceEventPublisher (Kafka)
 `S19` `High` `S` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.5, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-007.5, COMP-009.1
 **Criteria**: Publishes `dip.governance.institution_created`, `dip.governance.proposal_executed`, `dip.governance.proposal_opened`; unit tests.
 **Steps**: (1) Write `GovernanceEventPublisher` (2) Map events (3) Write tests
 
@@ -1849,7 +1849,7 @@ Status: ⬜ | **Deps**: COMP-007.5, COMP-009.1
 
 #### [COMP-007.8] Governance query service + read models
 `S19` `High` `S` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.6
+Status: ✅ Done | **Deps**: COMP-007.6
 **Criteria**: `InstitutionSummary` read model with governance stats; `ProposalHistory` read model; query service with pagination; unit tests.
 **Steps**: (1) Write read models (2) Write query service (3) Write query tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S19 progress (COMP-007.4 done)
+> Last Updated: 2026-03-14 | S19 complete (COMP-007.5–007.8 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 90 / 262 items (34%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 94 / 262 items (36%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S19 — Governance Service + Legitimacy Chain | S56 | ⬜ |
+| **Current Stage** | S20 — Governance Completion + Treasury Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-007.8 — Governance query service + read models (InstitutionSummary, ProposalHistory, pagination), unit tests
+- 2026-03-14 COMP-007.7 — GovernanceEventPublisher (Kafka), institution_created, proposal_executed, proposal_opened, unit tests
+- 2026-03-14 COMP-007.6 — GovernanceRepository (Postgres), migrations, Postgres* repos, integration test
+- 2026-03-14 COMP-007.5 — LegitimacyChain event chain (entry, chain, verifier), unit tests
 - 2026-03-14 COMP-007.4 — GovernanceService.executeProposal() (contract eval, quorum, publish proposal_executed), unit tests
 - 2026-03-14 COMP-007.3 — VotingService (eligibility, double-vote, getVoteSummary), unit tests
 - 2026-03-14 COMP-007.2 — Proposal aggregate (open/close/execute), unit tests

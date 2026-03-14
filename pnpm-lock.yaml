@@ -367,6 +367,9 @@ importers:
       '@syntropy/dip-contracts':
         specifier: workspace:*
         version: link:../dip-contracts
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
     devDependencies:
       '@types/node':
         specifier: ^22.10.0

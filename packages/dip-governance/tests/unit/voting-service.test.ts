@@ -14,6 +14,15 @@ function createInMemoryProposalRepo(initial: Map<string, Proposal>): ProposalRep
     async findById(proposalId: string) {
       return store.get(proposalId) ?? null;
     },
+    async findByInstitutionId(institutionId: string, options?: { limit?: number; offset?: number }) {
+      const list = [...store.values()].filter((p) => p.institutionId === institutionId);
+      const offset = options?.offset ?? 0;
+      const limit = options?.limit ?? 50;
+      return list.slice(offset, offset + limit);
+    },
+    async getProposalCountByInstitutionId(institutionId: string) {
+      return [...store.values()].filter((p) => p.institutionId === institutionId).length;
+    },
     async save(proposal: Proposal) {
       store.set(proposal.proposalId, proposal);
     },

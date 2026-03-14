@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PostgresTrackRepository = exports.PostgresFragmentReviewRecordRepository = exports.PostgresFragmentRepository = exports.PostgresCourseRepository = exports.PostgresCreatorWorkflowRepository = exports.PostgresCareerRepository = exports.PostgresApprovalRecordRepository = exports.LearnArtifactBridge = exports.CreatorCopilotService = exports.ApprovalService = exports.Track = exports.ProgressTrackingService = exports.PrerequisiteEvaluator = exports.NotReviewerError = exports.LearnDomainError = exports.FragmentStatus = exports.FragmentReviewService = exports.Fragment = exports.FogOfWarNavigationService = exports.CourseStatus = exports.CreatorWorkflow = exports.Course = exports.Career = void 0;
+exports.PostgresTrackRepository = exports.PostgresMentorshipRepository = exports.PostgresFragmentReviewRecordRepository = exports.PostgresFragmentRepository = exports.PostgresCourseRepository = exports.PostgresCreatorWorkflowRepository = exports.PostgresCareerRepository = exports.PostgresApprovalRecordRepository = exports.LearnArtifactBridge = exports.MentorshipService = exports.CreatorCopilotService = exports.ArtifactGalleryService = exports.ApprovalService = exports.Track = exports.ProgressTrackingService = exports.PrerequisiteEvaluator = exports.NotReviewerError = exports.NotMentorError = exports.MentorCapacityExceededError = exports.LearnDomainError = exports.FragmentStatus = exports.FragmentReviewService = exports.Fragment = exports.FogOfWarNavigationService = exports.CourseStatus = exports.CreatorWorkflow = exports.Course = exports.Career = void 0;
 var index_js_1 = require("./domain/index.js");
 Object.defineProperty(exports, "Career", { enumerable: true, get: function () { return index_js_1.Career; } });
 Object.defineProperty(exports, "Course", { enumerable: true, get: function () { return index_js_1.Course; } });
@@ -11,13 +11,17 @@ Object.defineProperty(exports, "Fragment", { enumerable: true, get: function () 
 Object.defineProperty(exports, "FragmentReviewService", { enumerable: true, get: function () { return index_js_1.FragmentReviewService; } });
 Object.defineProperty(exports, "FragmentStatus", { enumerable: true, get: function () { return index_js_1.FragmentStatus; } });
 Object.defineProperty(exports, "LearnDomainError", { enumerable: true, get: function () { return index_js_1.LearnDomainError; } });
+Object.defineProperty(exports, "MentorCapacityExceededError", { enumerable: true, get: function () { return index_js_1.MentorCapacityExceededError; } });
+Object.defineProperty(exports, "NotMentorError", { enumerable: true, get: function () { return index_js_1.NotMentorError; } });
 Object.defineProperty(exports, "NotReviewerError", { enumerable: true, get: function () { return index_js_1.NotReviewerError; } });
 Object.defineProperty(exports, "PrerequisiteEvaluator", { enumerable: true, get: function () { return index_js_1.PrerequisiteEvaluator; } });
 Object.defineProperty(exports, "ProgressTrackingService", { enumerable: true, get: function () { return index_js_1.ProgressTrackingService; } });
 Object.defineProperty(exports, "Track", { enumerable: true, get: function () { return index_js_1.Track; } });
 var index_js_2 = require("./application/index.js");
 Object.defineProperty(exports, "ApprovalService", { enumerable: true, get: function () { return index_js_2.ApprovalService; } });
+Object.defineProperty(exports, "ArtifactGalleryService", { enumerable: true, get: function () { return index_js_2.ArtifactGalleryService; } });
 Object.defineProperty(exports, "CreatorCopilotService", { enumerable: true, get: function () { return index_js_2.CreatorCopilotService; } });
+Object.defineProperty(exports, "MentorshipService", { enumerable: true, get: function () { return index_js_2.MentorshipService; } });
 var learn_artifact_bridge_js_1 = require("./infrastructure/learn-artifact-bridge.js");
 Object.defineProperty(exports, "LearnArtifactBridge", { enumerable: true, get: function () { return learn_artifact_bridge_js_1.LearnArtifactBridge; } });
 var postgres_approval_record_repository_js_1 = require("./infrastructure/repositories/postgres-approval-record-repository.js");
@@ -32,5 +36,7 @@ var postgres_fragment_repository_js_1 = require("./infrastructure/repositories/p
 Object.defineProperty(exports, "PostgresFragmentRepository", { enumerable: true, get: function () { return postgres_fragment_repository_js_1.PostgresFragmentRepository; } });
 var postgres_fragment_review_record_repository_js_1 = require("./infrastructure/repositories/postgres-fragment-review-record-repository.js");
 Object.defineProperty(exports, "PostgresFragmentReviewRecordRepository", { enumerable: true, get: function () { return postgres_fragment_review_record_repository_js_1.PostgresFragmentReviewRecordRepository; } });
+var postgres_mentorship_repository_js_1 = require("./infrastructure/repositories/postgres-mentorship-repository.js");
+Object.defineProperty(exports, "PostgresMentorshipRepository", { enumerable: true, get: function () { return postgres_mentorship_repository_js_1.PostgresMentorshipRepository; } });
 var postgres_track_repository_js_1 = require("./infrastructure/repositories/postgres-track-repository.js");
 Object.defineProperty(exports, "PostgresTrackRepository", { enumerable: true, get: function () { return postgres_track_repository_js_1.PostgresTrackRepository; } });

@@ -90,3 +90,34 @@ export function createApprovalRecordId(value: string): ApprovalRecordId {
 export function isApprovalRecordId(value: string): value is ApprovalRecordId {
   return isUuidBrand(value);
 }
+
+/** Branded type for MentorshipRelationshipId. UUID-based; immutable. (COMP-018.1) */
+export type MentorshipRelationshipId =
+  string & { readonly __brand: "MentorshipRelationshipId" };
+
+export function createMentorshipRelationshipId(
+  value: string
+): MentorshipRelationshipId {
+  return createUuidBrand(
+    value,
+    "MentorshipRelationshipId",
+    "MentorshipRelationshipId"
+  );
+}
+
+export function isMentorshipRelationshipId(
+  value: string
+): value is MentorshipRelationshipId {
+  return isUuidBrand(value);
+}
+
+/** Branded type for MentorReviewId. UUID-based; immutable. (COMP-018.2) */
+export type MentorReviewId = string & { readonly __brand: "MentorReviewId" };
+
+export function createMentorReviewId(value: string): MentorReviewId {
+  return createUuidBrand(value, "MentorReviewId", "MentorReviewId");
+}
+
+export function isMentorReviewId(value: string): value is MentorReviewId {
+  return isUuidBrand(value);
+}

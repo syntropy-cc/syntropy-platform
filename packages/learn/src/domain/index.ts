@@ -1,11 +1,14 @@
 /**
- * Learn domain layer (COMP-015, COMP-016, COMP-017).
+ * Learn domain layer (COMP-015, COMP-016, COMP-017, COMP-018).
  */
 
 export {
   IL1ViolationError,
+  InvalidMentorshipTransitionError,
   InvalidPhaseTransitionError,
   LearnDomainError,
+  MentorCapacityExceededError,
+  NotMentorError,
   NotReviewerError,
 } from "./errors.js";
 export {
@@ -52,3 +55,27 @@ export {
   type CreatorWorkflowDomainEvent,
   type CreatorWorkflowPhaseEntered,
 } from "./creator-tools/index.js";
+export {
+  MAX_ACTIVE_MENTORSHIPS_PER_MENTOR,
+  MentorReview,
+  MentorshipRelationship,
+  InvalidReviewRatingError,
+  RelationshipNotConcludedError,
+  ReviewerMustBeMentorError,
+  canAccept,
+  canConclude,
+  canDecline,
+  isMentorshipStatus,
+  MENTORSHIP_STATUSES,
+  type MentorReviewParams,
+  type MentorshipRelationshipParams,
+  type MentorshipStatus,
+  type ArtifactGallery,
+  type ArtifactGalleryItem,
+  type MentorshipRepositoryPort,
+  type MentorshipConcluded,
+  type MentorshipDeclined,
+  type MentorshipDomainEvent,
+  type MentorshipProposed,
+  type MentorshipStarted,
+} from "./mentorship/index.js";

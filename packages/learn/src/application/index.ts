@@ -1,10 +1,22 @@
 /**
- * Learn application layer (COMP-017).
- * Architecture: creator-tools-copilot.md.
+ * Learn application layer (COMP-017, COMP-018).
+ * Architecture: creator-tools-copilot.md, mentorship-community.md.
  */
 
 export { ApprovalService, type ApprovalServiceDeps, type ApproveResult } from "./approval-service.js";
+export {
+  ArtifactGalleryService,
+  type ArtifactGalleryServiceDeps,
+} from "./artifact-gallery-service.js";
 export { CreatorCopilotService, type CreatorCopilotServiceDeps } from "./creator-copilot-service.js";
+export {
+  MentorshipService,
+  type MentorshipServiceDeps,
+} from "./mentorship-service.js";
+export type {
+  ArtifactQueryPort,
+  PortfolioQueryPort,
+} from "./ports/artifact-gallery-ports.js";
 export type {
   ApprovalRecordRepositoryPort,
   CreatorWorkflowLoaderPort,

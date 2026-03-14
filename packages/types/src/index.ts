@@ -9,12 +9,16 @@ export {
   createCourseId,
   createCreatorWorkflowId,
   createFragmentId,
+  createMentorReviewId,
+  createMentorshipRelationshipId,
   createTrackId,
   isApprovalRecordId,
   isCareerId,
   isCourseId,
   isCreatorWorkflowId,
   isFragmentId,
+  isMentorReviewId,
+  isMentorshipRelationshipId,
   isTrackId,
 } from "./ids.js";
 export type {
@@ -23,5 +27,7 @@ export type {
   CourseId,
   CreatorWorkflowId,
   FragmentId,
+  MentorReviewId,
+  MentorshipRelationshipId,
   TrackId,
 } from "./ids.js";

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S29: COMP-017.6 done)
+> **Last Updated**: 2026-03-14 (S30: COMP-018.1–018.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S30 — Learn Mentorship & Community
-CURRENT ITEM  : COMP-018.1 — MentorshipRelationship aggregate
+CURRENT STAGE : S31 — Hub Collaboration Core
+CURRENT ITEM  : COMP-019.1 — Issue aggregate
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done
-OVERALL       : 139 / 262 items done (53%)
+STAGE PROGRESS: 0 / 5 items done (S30 complete)
+OVERALL       : 144 / 262 items done (55%)
 ```
 
 **Next 5 items**:
-1. `COMP-018.1` — MentorshipRelationship aggregate ← **START HERE**
-2. `COMP-018.2` — MentorReview entity
-3. `COMP-018.3` — ArtifactGallery read model
-4. `COMP-018.4` — MentorshipRepository (Postgres)
-5. `COMP-018.5` — Mentorship REST API + integration tests
+1. `COMP-019.1` — Issue aggregate ← **START HERE**
+2. `COMP-019.2` — Contribution aggregate
+3. `COMP-019.3` — ContributionSandbox aggregate (business logic only)
+4. `COMP-019.4` — DIPContributionAdapter (ACL)
+5. `COMP-019.5` — ContributionIntegrationService
 
-**Component record**: [`COMP-018`](./components/COMP-018-learn-mentorship.md)
+**Component record**: [`COMP-019`](./components/COMP-019-hub-collaboration-layer.md)
 
-**Next item (COMP-018.1) acceptance criteria**: `MentorshipRelationship` aggregate with `mentorId`, `learnerId`, `status`, `startDate`; `request()`, `accept()`, `end()` transitions; `MentorRole` check on mentor; unit tests.
+**Next item (COMP-019.1) acceptance criteria**: `Issue` aggregate with `issueId`, `projectId`, `title`, `type`, `status`; `IssueStatus` lifecycle; `open()`, `assign()`, `close()` transitions; `IssueType` enum; unit tests.
 
-**Suggested steps**: (1) Write `MentorshipRelationship` aggregate (2) Implement transition guards (3) Write role check test
+**Suggested steps**: (1) Write `Issue` aggregate (2) Implement lifecycle transitions (3) Write transition tests
 
 ---
 
@@ -2217,7 +2217,7 @@ Status: ✅ Done | **Deps**: COMP-017.5
 
 #### [COMP-018.1] MentorshipRelationship aggregate
 `S30` `High` `M` [Record→](./components/COMP-018-learn-mentorship.md)
-Status: ⬜ | **Deps**: COMP-016, COMP-002
+Status: ✅ Done | **Deps**: COMP-016, COMP-002
 **Criteria**: `MentorshipRelationship` aggregate with `mentorId`, `learnerId`, `status`, `startDate`; `request()`, `accept()`, `end()` transitions; `MentorRole` check on mentor; unit tests.
 **Steps**: (1) Write `MentorshipRelationship` aggregate (2) Implement transition guards (3) Write role check test
 
@@ -2225,7 +2225,7 @@ Status: ⬜ | **Deps**: COMP-016, COMP-002
 
 #### [COMP-018.2] MentorReview entity
 `S30` `High` `S` [Record→](./components/COMP-018-learn-mentorship.md)
-Status: ⬜ | **Deps**: COMP-018.1
+Status: ✅ Done | **Deps**: COMP-018.1
 **Criteria**: `MentorReview` entity with `reviewId`, `relationshipId`, `fragmentId`, `feedback`, `rating`; mentor can only review fragments of their learner; unit tests.
 **Steps**: (1) Write `MentorReview` entity (2) Add learner ownership check (3) Write review tests
 
@@ -2233,7 +2233,7 @@ Status: ⬜ | **Deps**: COMP-018.1
 
 #### [COMP-018.3] ArtifactGallery read model
 `S30` `High` `S` [Record→](./components/COMP-018-learn-mentorship.md)
-Status: ⬜ | **Deps**: COMP-018.2, COMP-003
+Status: ✅ Done | **Deps**: COMP-018.2, COMP-003
 **Criteria**: `ArtifactGallery` read model aggregates published artifacts per user; built from `dip.artifact.published` events; `getGallery(userId)` returns artifact list; unit tests.
 **Steps**: (1) Write `ArtifactGallery` read model (2) Build from events (3) Write gallery query test
 
@@ -2241,7 +2241,7 @@ Status: ⬜ | **Deps**: COMP-018.2, COMP-003
 
 #### [COMP-018.4] MentorshipRepository (Postgres)
 `S30` `Medium` `S` [Record→](./components/COMP-018-learn-mentorship.md)
-Status: ⬜ | **Deps**: COMP-018.3, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-018.3, COMP-039.4
 **Criteria**: Migrations for `mentorship_relationships`, `mentor_reviews`, `artifact_gallery`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2249,7 +2249,7 @@ Status: ⬜ | **Deps**: COMP-018.3, COMP-039.4
 
 #### [COMP-018.5] Mentorship REST API + integration tests
 `S30` `High` `M` [Record→](./components/COMP-018-learn-mentorship.md)
-Status: ⬜ | **Deps**: COMP-018.4, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-018.4, COMP-033.2
 **Criteria**: `POST /api/v1/learn/mentorships`, `PUT /api/v1/learn/mentorships/{id}/accept`, `POST /api/v1/learn/mentorships/{id}/reviews`, `GET /api/v1/users/{id}/gallery`; integration tests.
 **Steps**: (1) Write API routes (2) Wire to services (3) Write integration tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-017.6 done; S30 next (COMP-018.1)
+> Last Updated: 2026-03-14 | COMP-018.5 done; S31 next (COMP-019.1)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 139 / 262 items (53%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 144 / 262 items (55%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S30 — Learn Mentorship & Community | S56 | ⬜ |
+| **Current Stage** | S31 — Hub Collaboration Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-018.5 — Mentorship REST API (POST/GET mentorships, accept, decline, conclude, reviews); GET /api/v1/learn/users/:id/gallery; mentorship-api integration test
+- 2026-03-14 COMP-018.4 — Migration learn.mentorship_relationships, mentor_reviews, artifact_gallery; PostgresMentorshipRepository; mentorship-repository integration test
+- 2026-03-14 COMP-018.3 — ArtifactGallery read model types; ArtifactGalleryService (getGallery, getForTrack, getForCreator); ArtifactQueryPort, PortfolioQueryPort; unit tests
+- 2026-03-14 COMP-018.2 — MentorReview entity; create with relationship/reviewer/fragmentId/rating/feedback; guards (concluded, mentor); unit tests
+- 2026-03-14 COMP-018.1 — MentorshipRelationship aggregate (propose, accept, decline, conclude); capacity 3; MentorRole check; domain events; unit tests
 - 2026-03-14 COMP-017.6 — Creator workflow E2E integration test (create → generate draft → approve → phase transitions); creator-tools-repositories integration test
 - 2026-03-14 COMP-017.5 — Creator Tools REST API (POST/GET workflows, generate-draft, approve, reject); LearnContext extended with optional creator services
 - 2026-03-14 COMP-017.4 — Migration learn.creator_workflows + approval_records; PostgresCreatorWorkflowRepository, PostgresApprovalRecordRepository; CreatorWorkflow.fromStorage; integration test
@@ -3389,7 +3394,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-015 Learn Content Hierarchy | 6 | 2 | 🔵 In Progress |
 | COMP-016 Learn Fragment & Artifact Engine | 8 | 0 | ⬜ Not Started |
 | COMP-017 Learn Creator Tools | 6 | 0 | ⬜ Not Started |
-| COMP-018 Learn Mentorship & Community | 5 | 0 | ⬜ Not Started |
+| COMP-018 Learn Mentorship & Community | 5 | 5 | ✅ Complete |
 | COMP-019 Hub Collaboration Layer | 8 | 0 | ⬜ Not Started |
 | COMP-020 Hub Institution Orchestration | 6 | 0 | ⬜ Not Started |
 | COMP-021 Hub Public Square | 5 | 0 | ⬜ Not Started |

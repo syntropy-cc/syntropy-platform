@@ -3,10 +3,10 @@
 > **Component ID**: COMP-018
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/learn/subdomains/mentorship-community.md](../../architecture/domains/learn/subdomains/mentorship-community.md)
-> **Stage Assignment**: S7 — Learn Creator Experience
-> **Status**: ⬜ Not Started
+> **Stage Assignment**: S30 — Learn Mentorship & Community
+> **Status**: ✅ Complete
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -44,12 +44,12 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **5** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -57,7 +57,7 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | mentorship-community.md |
 | **Dependencies** | COMP-015.1 |
@@ -85,7 +85,7 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
 | **Origin** | mentorship-community.md |
 | **Dependencies** | COMP-018.1 |
@@ -108,7 +108,7 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
 | **Origin** | mentorship-community.md |
 | **Dependencies** | COMP-015.1, COMP-003, COMP-010 |
@@ -134,7 +134,7 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | mentorship-community.md, ADR-004 |
 | **Dependencies** | COMP-018.1 |
@@ -159,7 +159,7 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | learn/ARCHITECTURE.md |
 | **Dependencies** | COMP-018.4 |
@@ -194,6 +194,18 @@ Mentorship & Community is a Supporting subdomain in Learn. It manages `Mentorshi
 | COMP-010 Portfolio Aggregation | Internal | ⬜ Not Started | Creator portfolio in gallery |
 
 ---
+
+## Implementation Log
+
+### 2026-03-14 — S30 implementation complete
+
+- **COMP-018.1**: MentorshipRelationship aggregate in `packages/learn/src/domain/mentorship/` (mentorship-relationship.ts, mentorship-relationship-status.ts, events.ts). MentorshipRelationshipId, MentorReviewId in @syntropy/types. Errors: InvalidMentorshipTransitionError, MentorCapacityExceededError, NotMentorError. Unit tests: 14.
+- **COMP-018.2**: MentorReview entity (mentor-review.ts); reviewer must be mentor, relationship must be concluded; rating 1–5. Unit tests: 7.
+- **COMP-018.3**: ArtifactGalleryItem, ArtifactGallery types; ArtifactQueryPort, PortfolioQueryPort; ArtifactGalleryService (getGallery, getForTrack, getForCreator) with enrichment. Unit tests: 4.
+- **COMP-018.4**: Migration `supabase/migrations/20260318000000_learn_mentorship.sql` (mentorship_relationships, mentor_reviews, artifact_gallery). MentorshipRepositoryPort; PostgresMentorshipRepository. Integration test: mentorship-repository.integration.test.ts (skipped unless LEARN_INTEGRATION=true).
+- **COMP-018.5**: MentorshipService (propose, accept, decline, conclude, submitReview). LearnContext extended with mentorshipService, artifactGalleryService. Routes in apps/api/src/routes/learn.ts: POST/GET mentorships, PUT accept, POST decline, POST conclude, POST reviews, GET users/:id/gallery. Integration test: apps/api/src/integration/mentorship-api.integration.test.ts.
+
+**Files created**: packages/types (MentorshipRelationshipId, MentorReviewId); packages/learn domain/mentorship/*, application/mentorship-service.ts, artifact-gallery-service.ts, ports/artifact-gallery-ports.ts, infrastructure postgres-mentorship-repository; supabase migration; apps/api routes (in learn.ts), integration test.
 
 ## References
 

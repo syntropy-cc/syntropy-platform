@@ -1,5 +1,5 @@
 /**
- * Learn content hierarchy, fragment, and creator tools REST routes (COMP-015.6, COMP-016.7, COMP-017.5).
+ * Learn content hierarchy, fragment, creator tools, and mentorship REST routes (COMP-015.6, COMP-016.7, COMP-017.5, COMP-018.5).
  *
  * GET /api/v1/learn/careers — list careers.
  * GET /api/v1/learn/careers/:id/tracks — list tracks with fog-of-war.
@@ -16,6 +16,15 @@
  *   POST /api/v1/learn/creator/workflows/:id/generate-draft — generate AI draft.
  *   POST /api/v1/learn/creator/workflows/:id/approve — approve phase.
  *   POST /api/v1/learn/creator/workflows/:id/reject — reject phase.
+ * Mentorship (when mentorshipService provided):
+ *   POST /api/v1/learn/mentorships — propose mentorship.
+ *   GET /api/v1/learn/mentorships/:id — get relationship.
+ *   PUT /api/v1/learn/mentorships/:id/accept — mentor accepts.
+ *   POST /api/v1/learn/mentorships/:id/decline — mentor declines.
+ *   POST /api/v1/learn/mentorships/:id/conclude — conclude relationship.
+ *   POST /api/v1/learn/mentorships/:id/reviews — submit review.
+ * Gallery (when artifactGalleryService provided):
+ *   GET /api/v1/learn/users/:id/gallery — get user's artifact gallery.
  * All endpoints require auth; responses use CONV-017 envelope.
  */
 
@@ -26,6 +35,8 @@ import {
   FogOfWarNavigationService,
   Fragment,
   FragmentStatus,
+  MentorCapacityExceededError,
+  NotMentorError,
   NotReviewerError,
   type Course,
 } from "@syntropy/learn-package";
@@ -641,6 +652,305 @@ export async function learnRoutes(
           }
           throw err;
         }
+      }
+    );
+  }
+
+  // --- Mentorship routes (COMP-018.5) ---
+
+  const { mentorshipService, artifactGalleryService } = opts.learn;
+
+  if (mentorshipService) {
+    /** Body for POST /api/v1/learn/mentorships. */
+    interface ProposeMentorshipBody {
+      mentorId: string;
+      learnerId: string;
+      trackId: string;
+      scopeDescription?: string | null;
+    }
+
+    fastify.post<{ Body: ProposeMentorshipBody }>(
+      "/api/v1/learn/mentorships",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const body = request.body ?? {};
+        if (!body.mentorId?.trim() || !body.learnerId?.trim() || !body.trackId?.trim()) {
+          return reply.status(400).send(
+            errorEnvelope(
+              "VALIDATION_ERROR",
+              "mentorId, learnerId, and trackId are required",
+              getRequestId(request)
+            )
+          );
+        }
+        try {
+          const relationship = await mentorshipService.propose({
+            mentorId: body.mentorId.trim(),
+            learnerId: body.learnerId.trim(),
+            trackId: body.trackId.trim(),
+            scopeDescription: body.scopeDescription ?? null,
+          });
+          return reply.status(201).send(
+            successEnvelope(
+              {
+                id: relationship.id,
+                mentorId: relationship.mentorId,
+                learnerId: relationship.learnerId,
+                trackId: relationship.trackId,
+                status: relationship.status,
+                proposedAt: relationship.proposedAt.toISOString(),
+              },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof Error && err.message.includes("not found")) {
+            return reply.status(404).send(
+              errorEnvelope("NOT_FOUND", err.message, getRequestId(request))
+            );
+          }
+          throw err;
+        }
+      }
+    );
+
+    fastify.get<{ Params: { id: string } }>(
+      "/api/v1/learn/mentorships/:id",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const relationship = await mentorshipService.findById(request.params.id);
+        if (relationship === null) {
+          return reply.status(404).send(
+            errorEnvelope(
+              "NOT_FOUND",
+              `Mentorship not found: ${request.params.id}`,
+              getRequestId(request)
+            )
+          );
+        }
+        return reply.status(200).send(
+          successEnvelope(
+            {
+              id: relationship.id,
+              mentorId: relationship.mentorId,
+              learnerId: relationship.learnerId,
+              trackId: relationship.trackId,
+              status: relationship.status,
+              scopeDescription: relationship.scopeDescription,
+              proposedAt: relationship.proposedAt.toISOString(),
+              startedAt: relationship.startedAt?.toISOString() ?? null,
+              concludedAt: relationship.concludedAt?.toISOString() ?? null,
+            },
+            getRequestId(request)
+          )
+        );
+      }
+    );
+
+    fastify.put<{ Params: { id: string } }>(
+      "/api/v1/learn/mentorships/:id/accept",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const userId = request.user!.userId;
+        try {
+          const relationship = await mentorshipService.accept(
+            request.params.id,
+            userId
+          );
+          return reply.status(200).send(
+            successEnvelope(
+              {
+                id: relationship.id,
+                status: relationship.status,
+                startedAt: relationship.startedAt?.toISOString() ?? null,
+              },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof NotMentorError) {
+            return reply.status(403).send(
+              errorEnvelope(
+                "FORBIDDEN",
+                "Only the mentor can accept this relationship",
+                getRequestId(request)
+              )
+            );
+          }
+          if (err instanceof MentorCapacityExceededError) {
+            return reply.status(400).send(
+              errorEnvelope(
+                "VALIDATION_ERROR",
+                (err as Error).message,
+                getRequestId(request)
+              )
+            );
+          }
+          if (err instanceof Error && err.message.includes("not found")) {
+            return reply.status(404).send(
+              errorEnvelope("NOT_FOUND", err.message, getRequestId(request))
+            );
+          }
+          throw err;
+        }
+      }
+    );
+
+    fastify.post<{ Params: { id: string } }>(
+      "/api/v1/learn/mentorships/:id/decline",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const userId = request.user!.userId;
+        try {
+          const relationship = await mentorshipService.decline(
+            request.params.id,
+            userId
+          );
+          return reply.status(200).send(
+            successEnvelope(
+              { id: relationship.id, status: relationship.status },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof NotMentorError) {
+            return reply.status(403).send(
+              errorEnvelope(
+                "FORBIDDEN",
+                "Only the mentor can decline this relationship",
+                getRequestId(request)
+              )
+            );
+          }
+          if (err instanceof Error && err.message.includes("not found")) {
+            return reply.status(404).send(
+              errorEnvelope("NOT_FOUND", err.message, getRequestId(request))
+            );
+          }
+          throw err;
+        }
+      }
+    );
+
+    fastify.post<{ Params: { id: string } }>(
+      "/api/v1/learn/mentorships/:id/conclude",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        try {
+          const relationship = await mentorshipService.conclude(
+            request.params.id
+          );
+          return reply.status(200).send(
+            successEnvelope(
+              {
+                id: relationship.id,
+                status: relationship.status,
+                concludedAt: relationship.concludedAt?.toISOString() ?? null,
+              },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof Error && err.message.includes("not found")) {
+            return reply.status(404).send(
+              errorEnvelope("NOT_FOUND", err.message, getRequestId(request))
+            );
+          }
+          if (err instanceof Error && err.message.includes("Only active")) {
+            return reply.status(400).send(
+              errorEnvelope("VALIDATION_ERROR", err.message, getRequestId(request))
+            );
+          }
+          throw err;
+        }
+      }
+    );
+
+    /** Body for POST /api/v1/learn/mentorships/:id/reviews. */
+    interface SubmitReviewBody {
+      fragmentId: string;
+      rating: number;
+      feedback?: string;
+    }
+
+    fastify.post<{
+      Params: { id: string };
+      Body: SubmitReviewBody;
+    }>(
+      "/api/v1/learn/mentorships/:id/reviews",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const userId = request.user!.userId;
+        const body = request.body ?? {};
+        if (!body.fragmentId?.trim() || typeof body.rating !== "number") {
+          return reply.status(400).send(
+            errorEnvelope(
+              "VALIDATION_ERROR",
+              "fragmentId and rating (1-5) are required",
+              getRequestId(request)
+            )
+          );
+        }
+        try {
+          const review = await mentorshipService.submitReview({
+            relationshipId: request.params.id,
+            reviewerId: userId,
+            fragmentId: body.fragmentId.trim(),
+            rating: body.rating,
+            feedback: body.feedback,
+          });
+          return reply.status(201).send(
+            successEnvelope(
+              {
+                id: review.id,
+                relationshipId: review.relationshipId,
+                rating: review.rating,
+                feedback: review.feedback,
+              },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof Error && err.message.includes("not found")) {
+            return reply.status(404).send(
+              errorEnvelope("NOT_FOUND", err.message, getRequestId(request))
+            );
+          }
+          if (err instanceof Error && (err.message.includes("not the mentor") || err.message.includes("not concluded"))) {
+            return reply.status(400).send(
+              errorEnvelope("VALIDATION_ERROR", err.message, getRequestId(request))
+            );
+          }
+          if (err instanceof Error && err.message.includes("between 1 and 5")) {
+            return reply.status(400).send(
+              errorEnvelope("VALIDATION_ERROR", err.message, getRequestId(request))
+            );
+          }
+          throw err;
+        }
+      }
+    );
+  }
+
+  if (artifactGalleryService) {
+    fastify.get<{ Params: { id: string } }>(
+      "/api/v1/learn/users/:id/gallery",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const gallery = await artifactGalleryService.getGallery(
+          request.params.id
+        );
+        const data = gallery.map((item) => ({
+          artifactId: item.artifactId,
+          title: item.title,
+          creatorId: item.creatorId,
+          trackId: item.trackId,
+          artifactType: item.artifactType,
+          publishedAt: item.publishedAt.toISOString(),
+          creatorXp: item.creatorXp ?? null,
+          creatorSkillLevel: item.creatorSkillLevel ?? null,
+        }));
+        return reply.status(200).send(successEnvelope(data, getRequestId(request)));
       }
     );
   }

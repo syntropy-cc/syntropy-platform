@@ -8,6 +8,8 @@ export {
   FragmentReviewService,
   FragmentStatus,
   LearnDomainError,
+  MentorCapacityExceededError,
+  NotMentorError,
   NotReviewerError,
   PrerequisiteEvaluator,
   ProgressTrackingService,
@@ -33,10 +35,14 @@ export type { FragmentRepositoryPort } from "./domain/fragment-artifact/ports/fr
 
 export {
   ApprovalService,
+  ArtifactGalleryService,
   CreatorCopilotService,
+  MentorshipService,
   type ApprovalServiceDeps,
   type ApproveResult,
+  type ArtifactGalleryServiceDeps,
   type CreatorCopilotServiceDeps,
+  type MentorshipServiceDeps,
 } from "./application/index.js";
 export type {
   ApprovalRecordRepositoryPort,
@@ -44,6 +50,10 @@ export type {
   CreatorWorkflowSavePort,
   ReviewerApprovalPort,
 } from "./application/ports/approval-ports.js";
+export type {
+  ArtifactQueryPort,
+  PortfolioQueryPort,
+} from "./application/ports/artifact-gallery-ports.js";
 
 export { LearnArtifactBridge } from "./infrastructure/learn-artifact-bridge.js";
 export { PostgresApprovalRecordRepository } from "./infrastructure/repositories/postgres-approval-record-repository.js";
@@ -52,4 +62,7 @@ export { PostgresCreatorWorkflowRepository } from "./infrastructure/repositories
 export { PostgresCourseRepository } from "./infrastructure/repositories/postgres-course-repository.js";
 export { PostgresFragmentRepository } from "./infrastructure/repositories/postgres-fragment-repository.js";
 export { PostgresFragmentReviewRecordRepository } from "./infrastructure/repositories/postgres-fragment-review-record-repository.js";
+export { PostgresMentorshipRepository } from "./infrastructure/repositories/postgres-mentorship-repository.js";
 export { PostgresTrackRepository } from "./infrastructure/repositories/postgres-track-repository.js";
+
+export type { MentorshipRepositoryPort } from "./domain/mentorship/ports/mentorship-repository-port.js";

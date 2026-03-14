@@ -59,3 +59,57 @@ export class InvalidPhaseTransitionError extends LearnDomainError {
     Object.setPrototypeOf(this, InvalidPhaseTransitionError.prototype);
   }
 }
+
+/**
+ * Thrown when a mentorship transition is invalid (e.g. accept when not proposed).
+ * Architecture: COMP-018.1, mentorship-community.md.
+ */
+export class InvalidMentorshipTransitionError extends LearnDomainError {
+  constructor(
+    currentStatus: string,
+    attemptedStatus: string,
+    message?: string
+  ) {
+    super(
+      message ??
+        `Invalid mentorship transition: from "${currentStatus}" to "${attemptedStatus}".`
+    );
+    this.name = "InvalidMentorshipTransitionError";
+    Object.setPrototypeOf(this, InvalidMentorshipTransitionError.prototype);
+  }
+}
+
+/**
+ * Thrown when mentor already has max active relationships (3).
+ * Architecture: COMP-018.1, mentorship-community.md.
+ */
+export class MentorCapacityExceededError extends LearnDomainError {
+  constructor(
+    mentorId: string,
+    currentCount: number,
+    maxAllowed: number
+  ) {
+    super(
+      `Mentor ${mentorId} has ${currentCount} active relationship(s); maximum allowed is ${maxAllowed}.`
+    );
+    this.name = "MentorCapacityExceededError";
+    Object.setPrototypeOf(this, MentorCapacityExceededError.prototype);
+  }
+}
+
+/**
+ * Thrown when accept/decline is called by a user who is not the mentor.
+ * Architecture: COMP-018.1, MentorRole check.
+ */
+export class NotMentorError extends LearnDomainError {
+  constructor(
+    actorId: string,
+    relationshipId: { toString(): string }
+  ) {
+    super(
+      `User ${actorId} is not the mentor for relationship ${relationshipId}.`
+    );
+    this.name = "NotMentorError";
+    Object.setPrototypeOf(this, NotMentorError.prototype);
+  }
+}

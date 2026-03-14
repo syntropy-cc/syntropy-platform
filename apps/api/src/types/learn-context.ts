@@ -1,11 +1,12 @@
 /**
- * Learn context for REST API (COMP-015.6, COMP-016.7, COMP-017.5).
- * Injects repositories and services for content hierarchy, fragment/review, and creator tools.
+ * Learn context for REST API (COMP-015.6, COMP-016.7, COMP-017.5, COMP-018.5).
+ * Injects repositories and services for content hierarchy, fragment/review, creator tools, and mentorship.
  */
 
 import type { FragmentId } from "@syntropy/types";
 import type {
   ApprovalService,
+  ArtifactGalleryService,
   CareerRepository,
   CourseRepository,
   CreatorCopilotService,
@@ -13,6 +14,7 @@ import type {
   CreatorWorkflowSavePort,
   FragmentRepositoryPort,
   FragmentReviewService,
+  MentorshipService,
   TrackRepository,
 } from "@syntropy/learn-package";
 
@@ -38,4 +40,8 @@ export interface LearnContext {
   creatorWorkflowSave?: CreatorWorkflowSavePort;
   approvalService?: ApprovalService;
   creatorCopilotService?: CreatorCopilotService;
+  /** Mentorship (COMP-018.5). When set, mentorship routes are registered. */
+  mentorshipService?: MentorshipService;
+  /** Gallery (COMP-018.5). When set, gallery route is registered. */
+  artifactGalleryService?: ArtifactGalleryService;
 }

@@ -68,3 +68,14 @@ export function createFragmentId(value: string): FragmentId {
 export function isFragmentId(value: string): value is FragmentId {
   return isUuidBrand(value);
 }
+
+/** Branded type for CreatorWorkflowId. UUID-based; immutable. (COMP-017.1) */
+export type CreatorWorkflowId = string & { readonly __brand: "CreatorWorkflowId" };
+
+export function createCreatorWorkflowId(value: string): CreatorWorkflowId {
+  return createUuidBrand(value, "CreatorWorkflowId", "CreatorWorkflowId");
+}
+
+export function isCreatorWorkflowId(value: string): value is CreatorWorkflowId {
+  return isUuidBrand(value);
+}

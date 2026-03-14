@@ -1,9 +1,10 @@
 /**
- * Learn domain layer (COMP-015, COMP-016).
+ * Learn domain layer (COMP-015, COMP-016, COMP-017).
  */
 
 export {
   IL1ViolationError,
+  InvalidPhaseTransitionError,
   LearnDomainError,
   NotReviewerError,
 } from "./errors.js";
@@ -38,3 +39,14 @@ export {
   type TrackParams,
   type UnlockedCourse,
 } from "./content-hierarchy/index.js";
+export {
+  CreatorWorkflow,
+  CREATOR_WORKFLOW_PHASES,
+  getNextPhase,
+  isValidNextPhase,
+  isCreatorWorkflowPhase,
+  type CreatorWorkflowParams,
+  type CreatorWorkflowPhase,
+  type CreatorWorkflowDomainEvent,
+  type CreatorWorkflowPhaseEntered,
+} from "./creator-tools/index.js";

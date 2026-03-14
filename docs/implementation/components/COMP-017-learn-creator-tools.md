@@ -3,10 +3,10 @@
 > **Component ID**: COMP-017
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/learn/subdomains/creator-tools-copilot.md](../../architecture/domains/learn/subdomains/creator-tools-copilot.md)
-> **Stage Assignment**: S7 — Learn Creator Experience
-> **Status**: ⬜ Not Started
+> **Stage Assignment**: S29 — Learn Creator Tools
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -44,12 +44,12 @@ Creator Tools & AI Copilot is a Supporting subdomain within Learn. It manages th
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 5 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 17%
 
 ### Item List
 
@@ -57,25 +57,32 @@ Creator Tools & AI Copilot is a Supporting subdomain within Learn. It manages th
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | creator-tools-copilot.md |
-| **Dependencies** | COMP-016, COMP-015 |
-| **Size** | S |
+| **Origin** | creator-tools-copilot.md, IMPLEMENTATION-PLAN Section 7 |
+| **Dependencies** | COMP-016, COMP-012 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Implement `CreatorWorkflow` aggregate managing the 5-phase creation process.
+**Description**: Implement `CreatorWorkflow` aggregate managing the 5-phase creation process. Phase names per Implementation Plan: `ideation`, `drafting`, `review`, `refinement`, `publication`.
 
 **Acceptance Criteria**:
-- [ ] `CreatorWorkflow` aggregate: `id`, `track_id`, `creator_id`, `current_phase`, `phases_completed[]`, `started_at`
-- [ ] Phases: `ProjectScoping | CurriculumArchitecture | FragmentDrafting | PedagogicalValidation | Iteration`
-- [ ] `CreatorWorkflow.advancePhase(approvalRecord)` validates `ApprovalRecord` exists before advancing
-- [ ] Invariant: cannot advance without explicit `ApprovalRecord` from creator — throws `PhaseAdvanceWithoutApprovalError`
-- [ ] Unit tests: all advance-without-approval attempts throw
+- [x] `CreatorWorkflow` aggregate: `id`, `trackId`, `creatorId`, `currentPhase`, `phasesCompleted[]`, `startedAt`, `completedAt`
+- [x] Phases: `ideation` → `drafting` → `review` → `refinement` → `publication` (sequential only)
+- [x] `CreatorWorkflow.transition(nextPhase)` enforces immediate next phase; throws `InvalidPhaseTransitionError` otherwise
+- [x] Domain event `CreatorWorkflowPhaseEntered` returned from `transition()` for application layer to publish
+- [x] Unit tests: create, transition in order, reject same phase, skip phase, backwards transition
 
 **Files Created/Modified**:
+- `packages/learn/src/domain/creator-tools/creator-workflow-phase.ts` (phase enum and ordering)
 - `packages/learn/src/domain/creator-tools/creator-workflow.ts`
+- `packages/learn/src/domain/creator-tools/events.ts` (CreatorWorkflowPhaseEntered)
+- `packages/learn/src/domain/creator-tools/index.ts`
+- `packages/learn/src/domain/errors.ts` (InvalidPhaseTransitionError)
+- `packages/learn/src/domain/index.ts` (exports)
 - `packages/learn/tests/unit/creator-tools/creator-workflow.test.ts`
+- `packages/types/src/ids.ts`, `packages/types/src/index.ts` (CreatorWorkflowId)
 
 ---
 
@@ -202,6 +209,16 @@ Creator Tools & AI Copilot is a Supporting subdomain within Learn. It manages th
 **Files Created/Modified**:
 - `packages/learn/tests/unit/creator-tools/*.test.ts`
 - `packages/learn/tests/integration/creator-tools/*.test.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — COMP-017.1 complete
+
+- Added `CreatorWorkflowId` to `@syntropy/types`.
+- Implemented `CreatorWorkflow` aggregate with 5 phases (ideation → drafting → review → refinement → publication), `transition(nextPhase)` with strict ordering, and `CreatorWorkflowPhaseEntered` domain event returned from transition for application-layer publishing.
+- Phase ordering in `creator-workflow-phase.ts`; `InvalidPhaseTransitionError` in domain errors. Unit tests cover create, full transition chain, same-phase rejection, skip-phase rejection, and backwards rejection.
 
 ---
 

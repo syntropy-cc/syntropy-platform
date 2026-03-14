@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S29 — Learn Creator Tools
-CURRENT ITEM  : COMP-017.1 — CreatorWorkflow aggregate (5-phase lifecycle)
+CURRENT ITEM  : COMP-017.2 — AIGeneratedDraft (AI Copilot integration)
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 4 / 4 items done (S28 complete)
-OVERALL       : 133 / 262 items done (51%)
+STAGE PROGRESS: 1 / 6 items done
+OVERALL       : 134 / 262 items done (51%)
 ```
 
 **Next 5 items**:
-1. `COMP-017.1` — CreatorWorkflow aggregate (5-phase lifecycle) ← **START HERE**
-2. `COMP-017.2` — AIGeneratedDraft (AI Copilot integration)
-3. `COMP-017.3` — ApprovalRecord and review workflow
-4. `COMP-017.4` — CreatorRepository (Postgres)
-5. `COMP-017.5` — Creator Tools REST API
+1. `COMP-017.2` — AIGeneratedDraft (AI Copilot integration) ← **START HERE**
+2. `COMP-017.3` — ApprovalRecord and review workflow
+3. `COMP-017.4` — CreatorRepository (Postgres)
+4. `COMP-017.5` — Creator Tools REST API
+5. `COMP-017.6` — Creator Tools integration tests
 
 **Component record**: [`COMP-017`](./components/COMP-017-learn-creator-tools.md)
 
-**Next item (COMP-017.1) acceptance criteria**: `CreatorWorkflow` aggregate with 5 phases: `ideation`, `drafting`, `review`, `refinement`, `publication`; `transition(nextPhase)` enforces ordering; domain events per phase; unit tests.
+**Next item (COMP-017.2) acceptance criteria**: `AIGeneratedDraft` value object stores draft content + AI invocation metadata; `CreatorCopilotService.generateDraft(workflow, prompt)` calls AI agent; draft linked to workflow; unit tests with mock AI.
 
-**Suggested steps**: (1) Write `CreatorWorkflow` aggregate (2) Implement phase transition guard (3) Write phase tests
+**Suggested steps**: (1) Write `AIGeneratedDraft` value object (2) Write `CreatorCopilotService` (3) Write draft generation tests
 
 ---
 
@@ -2169,7 +2169,7 @@ Status: ✅ Done | **Deps**: COMP-032.2, COMP-015, COMP-016
 
 #### [COMP-017.1] CreatorWorkflow aggregate (5-phase lifecycle)
 `S29` `High` `M` [Record→](./components/COMP-017-learn-creator-tools.md)
-Status: ⬜ | **Deps**: COMP-016, COMP-012
+Status: ✅ Done | **Deps**: COMP-016, COMP-012
 **Criteria**: `CreatorWorkflow` aggregate with 5 phases: `ideation`, `drafting`, `review`, `refinement`, `publication`; `transition(nextPhase)` enforces ordering; domain events per phase; unit tests.
 **Steps**: (1) Write `CreatorWorkflow` aggregate (2) Implement phase transition guard (3) Write phase tests
 
@@ -3201,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S28 complete; S29 next (COMP-017.1)
+> Last Updated: 2026-03-14 | COMP-017.1 done; S29 next (COMP-017.2)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 133 / 262 items (51%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 134 / 262 items (51%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
 | **Current Stage** | S29 — Learn Creator Tools | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-017.1 — CreatorWorkflow aggregate (5-phase lifecycle: ideation→drafting→review→refinement→publication); transition guard; CreatorWorkflowPhaseEntered event; unit tests
 - 2026-03-14 COMP-032.3 — Learn pillar Next.js pages (/learn, /learn/careers/[id], /learn/courses/[id], /learn/fragments/[id]); fog-of-war UI
 - 2026-03-14 COMP-016.8 — Fragment lifecycle integration test (create → submit → approve → learner complete); real DB
 - 2026-03-14 COMP-016.7 — Fragment REST API (POST/GET fragments, complete, submit, approve, reject); LearnContext extended

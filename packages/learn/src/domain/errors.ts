@@ -39,3 +39,23 @@ export class NotReviewerError extends LearnDomainError {
     Object.setPrototypeOf(this, NotReviewerError.prototype);
   }
 }
+
+/**
+ * Thrown when CreatorWorkflow.transition() is called with a phase that is not
+ * the immediate next phase in order (e.g. ideation → review, or same phase).
+ * Architecture: COMP-017.1, creator-tools-copilot.md.
+ */
+export class InvalidPhaseTransitionError extends LearnDomainError {
+  constructor(
+    currentPhase: string,
+    attemptedNextPhase: string,
+    message?: string
+  ) {
+    super(
+      message ??
+        `Invalid phase transition: from "${currentPhase}" to "${attemptedNextPhase}". Only the immediate next phase is allowed.`
+    );
+    this.name = "InvalidPhaseTransitionError";
+    Object.setPrototypeOf(this, InvalidPhaseTransitionError.prototype);
+  }
+}

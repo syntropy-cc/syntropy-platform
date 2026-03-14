@@ -58,12 +58,13 @@ Experiment Design is a Core subdomain in Labs that manages the full lifecycle of
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | experiment-design.md |
 | **Dependencies** | COMP-022.1 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
 **Description**: Implement `ExperimentDesign` aggregate capturing experiment structure, protocol, and pre-registration.
 

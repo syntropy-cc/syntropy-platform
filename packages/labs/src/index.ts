@@ -3,7 +3,11 @@
  * Architecture: domains/labs/subdomains/scientific-context-extension.md
  */
 
-export { LabsDomainError } from "./domain/errors.js";
+export {
+  LabsDomainError,
+  ArticleNotFoundError,
+  ArticleForbiddenError,
+} from "./domain/errors.js";
 export {
   SubjectArea,
   createSubjectAreaId,
@@ -52,6 +56,17 @@ export type {
   ArticlePublisherPort,
   PublishArticleResult,
 } from "./domain/article-editor/ports/article-publisher-port.js";
+export type { ArticleSubmissionNotifierPort } from "./domain/article-editor/ports/article-submission-notifier-port.js";
+export {
+  ArticleSubmissionService,
+  type ArticleSubmissionServiceDeps,
+} from "./application/article-submission-service.js";
+export {
+  ExperimentDesign,
+  ExperimentStatus,
+  isExperimentStatus,
+  type ExperimentDesignParams,
+} from "./domain/experiment-design/index.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";

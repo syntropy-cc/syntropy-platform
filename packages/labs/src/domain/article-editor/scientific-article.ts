@@ -83,6 +83,19 @@ export class ScientificArticle {
     });
   }
 
+  /** Retract from review: transition back to draft (only when under_review). */
+  retractFromReview(): ScientificArticle {
+    if (this.status !== "under_review") {
+      throw new Error(
+        `Cannot retract: current status is ${this.status}, expected under_review`
+      );
+    }
+    return new ScientificArticle({
+      ...this,
+      status: "draft",
+    });
+  }
+
   /** Transition to published and set DIP artifact id. */
   publish(artifactId: string): ScientificArticle {
     if (this.status === "published") {

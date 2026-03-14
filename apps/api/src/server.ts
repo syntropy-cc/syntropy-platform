@@ -44,6 +44,7 @@ import { hubRoutes } from "./routes/hub.js";
 import { hubInstitutionsRoutes } from "./routes/hub-institutions.js";
 import { hubDiscoverRoutes } from "./routes/hub-discover.js";
 import { labsScientificContextRoutes } from "./routes/labs-scientific-context.js";
+import { labsArticlesRoutes } from "./routes/labs-articles.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -121,6 +122,7 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.labs) {
     await app.register(labsScientificContextRoutes, { labs: options.labs });
+    await app.register(labsArticlesRoutes, { labs: options.labs });
   }
   await app.register(internalEventSchemasPlugin);
 

@@ -131,6 +131,23 @@ describe("ScientificArticle", () => {
     expect(() => published.submitForReview()).toThrow("expected draft");
   });
 
+  it("retractFromReview() transitions under_review to draft", () => {
+    const underReview = createArticle({ status: "under_review" });
+    const retracted = underReview.retractFromReview();
+    expect(retracted.status).toBe("draft");
+    expect(underReview.status).toBe("under_review");
+  });
+
+  it("retractFromReview() throws when not under_review", () => {
+    const draft = createArticle();
+    expect(() => draft.retractFromReview()).toThrow("expected under_review");
+    const published = createArticle({
+      status: "published",
+      publishedArtifactId: DIP_ARTIFACT_ID,
+    });
+    expect(() => published.retractFromReview()).toThrow("expected under_review");
+  });
+
   it("publish() transitions to published and sets artifact id", () => {
     const article = createArticle({ status: "under_review" });
     const published = article.publish(DIP_ARTIFACT_ID);

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S36: COMP-023.1–023.5 done)
+> **Last Updated**: 2026-03-14 (S37: COMP-023.6–023.8, COMP-024.1 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S37 — Article Completion + Experiment Start (M3)
-CURRENT ITEM  : COMP-023.6 — Article submission workflow
+CURRENT STAGE : S38 — Experiment Design (M3)
+CURRENT ITEM  : COMP-024.2 — ExperimentResult entity
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 4 items done (S37)
-OVERALL       : 173 / 262 items done (66%)
+STAGE PROGRESS: 0 / 5 items done (S38)
+OVERALL       : 177 / 262 items done (68%)
 ```
 
 **Next 5 items**:
-1. `COMP-023.6` — Article submission workflow ← **START HERE**
-2. `COMP-023.7` — Article REST API endpoints
-3. `COMP-023.8` — Article integration tests
-4. `COMP-024.1` — ExperimentDesign aggregate
-5. `COMP-024.2` — ExperimentResult entity
+1. `COMP-024.2` — ExperimentResult entity ← **START HERE**
+2. `COMP-024.3` — AnonymizationPolicyEnforcer
+3. `COMP-024.4` — ExperimentRepository (Postgres)
+4. `COMP-024.5` — Experiment Design REST API
+5. `COMP-024.6` — Experiment integration tests
 
-**Component record**: [`COMP-023`](./components/COMP-023-labs-article-editor.md)
+**Component record**: [`COMP-024`](./components/COMP-024-labs-experiment-design.md)
 
-**Next item (COMP-023.6) acceptance criteria**: `ArticleSubmissionService.submit(articleId)` transitions to `submitted`; notifies reviewers; `retract()` moves back to `draft`; `accept()` triggers DIP publication; unit tests.
+**Next item (COMP-024.2) acceptance criteria**: `ExperimentResult` entity with raw data, statistical summary, `pValue`; linked to experiment; immutable once created; unit tests.
 
-**Suggested steps**: (1) Write submission service (2) Add reviewer notification (3) Write submission flow test
+**Suggested steps**: (1) Write `ExperimentResult` entity (2) Add immutability guard (3) Write tests
 
 ---
 
@@ -2489,7 +2489,7 @@ Status: Done | **Deps**: COMP-023.4, COMP-039.4
 
 #### [COMP-023.6] Article submission workflow
 `S37` `High` `M` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.5
+Status: Done | **Deps**: COMP-023.5
 **Criteria**: `ArticleSubmissionService.submit(articleId)` transitions to `submitted`; notifies reviewers; `retract()` moves back to `draft`; `accept()` triggers DIP publication; unit tests.
 **Steps**: (1) Write submission service (2) Add reviewer notification (3) Write submission flow test
 
@@ -2497,7 +2497,7 @@ Status: ⬜ | **Deps**: COMP-023.5
 
 #### [COMP-023.7] Article REST API endpoints
 `S37` `High` `M` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.6, COMP-033.2
+Status: Done | **Deps**: COMP-023.6, COMP-033.2
 **Criteria**: `POST /api/v1/labs/articles`, `GET /api/v1/labs/articles/{id}`, `PUT /api/v1/labs/articles/{id}`, `POST /api/v1/labs/articles/{id}/submit`, `GET /api/v1/labs/articles/{id}/versions`; auth required.
 **Steps**: (1) Write API routes (2) Wire to services (3) Write API tests
 
@@ -2505,7 +2505,7 @@ Status: ⬜ | **Deps**: COMP-023.6, COMP-033.2
 
 #### [COMP-023.8] Article integration tests
 `S37` `High` `M` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.7
+Status: Done | **Deps**: COMP-023.7
 **Criteria**: Full lifecycle: create → version snapshot → render MyST → submit → DIP artifact published; Kafka event emitted; uses real DB.
 **Steps**: (1) Write lifecycle integration test (2) Assert MyST render (3) Assert DIP publication
 
@@ -2513,7 +2513,7 @@ Status: ⬜ | **Deps**: COMP-023.7
 
 #### [COMP-024.1] ExperimentDesign aggregate
 `S37` `High` `S` [Record→](./components/COMP-024-labs-experiment-design.md)
-Status: ⬜ | **Deps**: COMP-022, COMP-023
+Status: Done | **Deps**: COMP-022, COMP-023
 **Criteria**: `ExperimentDesign` aggregate with `experimentId`, `hypothesisId`, `methodology`, `protocol`, `status`; linked to article; `ExperimentStatus` enum; unit tests.
 **Steps**: (1) Write `ExperimentDesign` aggregate (2) Link to hypothesis (3) Write unit tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S36 complete; next COMP-023.6
+> Last Updated: 2026-03-14 | S37 complete; next COMP-024.2
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 173 / 262 items (66%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 177 / 262 items (68%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S37 — Article Completion + Experiment Start | S56 | ⬜ |
+| **Current Stage** | S38 — Experiment Design | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-024.1 — ExperimentDesign aggregate; ExperimentStatus; register(); unit tests
+- 2026-03-14 COMP-023.8 — Article submission lifecycle integration test (create → submit → accept; MyST render); LABS_INTEGRATION=true
+- 2026-03-14 COMP-023.7 — Article REST API (POST/GET/PUT articles, POST submit, GET versions); labs-articles routes and tests
+- 2026-03-14 COMP-023.6 — ArticleSubmissionService (submit, retract, accept); ArticleSubmissionNotifierPort; retractFromReview on ScientificArticle; unit tests
 - 2026-03-14 COMP-023.5 — ArticleRepository (Postgres); migrations scientific_articles, article_versions; PostgresScientificArticleRepository, PostgresArticleVersionRepository; article-editor-repository integration test
 - 2026-03-14 COMP-023.4 — LabsArtifactBridge (ArticlePublisherPort); content hash and Nostr anchor; unit tests with mocked DIP
 - 2026-03-14 COMP-023.3 — MystRenderer (myst-parser, myst-to-html); MyST to HTML; unit tests

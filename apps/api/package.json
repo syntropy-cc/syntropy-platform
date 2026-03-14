@@ -26,6 +26,7 @@
     "@syntropy/identity": "workspace:*",
     "@syntropy/labs-package": "workspace:*",
     "@syntropy/learn-package": "workspace:*",
+    "@syntropy/planning": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
     "@syntropy/sponsorship": "workspace:*",
     "@syntropy/types": "workspace:*",

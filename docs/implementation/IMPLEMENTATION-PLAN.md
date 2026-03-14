@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S45: COMP-029.5 done)
+> **Last Updated**: 2026-03-14 (S46: COMP-029.6, COMP-030.1–030.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S46 — Planning API + IDE Core (M4)
-CURRENT ITEM  : COMP-029.6 — Planning REST API + integration tests
+CURRENT STAGE : S47 — IDE Domain Core (M4)
+CURRENT ITEM  : COMP-030.4 — WorkspaceSnapshot entity
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 0 / 4 items done (S46)
-OVERALL       : 214 / 262 items done (82%)
+STAGE PROGRESS: 0 / 5 items done (S47)
+OVERALL       : 218 / 262 items done (83%)
 ```
 
 **Next 5 items**:
-1. `COMP-029.6` — Planning REST API + integration tests ← **START HERE**
+1. `COMP-030.4` — WorkspaceSnapshot entity ← **START HERE**
 2. (see Section 6 for full order)
 
-**Component record**: [`COMP-029`](./components/COMP-029-planning.md)
+**Component record**: [`COMP-030`](./components/COMP-030-ide-domain.md)
 
-**Next item (COMP-029.6) acceptance criteria**: `POST /api/v1/planning/tasks`, `GET /api/v1/planning/goals`, `POST /api/v1/planning/study-plans/generate`, `POST /api/v1/planning/mentor-sessions`; integration tests.
+**Next item (COMP-030.4) acceptance criteria**: `WorkspaceSnapshot` entity stores file system state; `save(sessionId, files)` creates snapshot; `restore(sessionId)` retrieves; snapshots versioned; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire study plan generation (3) Write integration tests
+**Suggested steps**: (1) Write `WorkspaceSnapshot` entity (2) Add save/restore methods (3) Write snapshot tests
 
 ---
 
@@ -2814,7 +2814,7 @@ Status: ✅ Done | **Deps**: COMP-029.4, COMP-039.4
 
 #### [COMP-029.6] Planning REST API + integration tests
 `S46` `High` `M` [Record→](./components/COMP-029-planning.md)
-Status: ⬜ | **Deps**: COMP-029.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-029.5, COMP-033.2
 **Criteria**: `POST /api/v1/planning/tasks`, `GET /api/v1/planning/goals`, `POST /api/v1/planning/study-plans/generate`, `POST /api/v1/planning/mentor-sessions`; integration tests.
 **Steps**: (1) Write API routes (2) Wire study plan generation (3) Write integration tests
 
@@ -2822,7 +2822,7 @@ Status: ⬜ | **Deps**: COMP-029.5, COMP-033.2
 
 #### [COMP-030.1] IDE package setup + IDESession aggregate
 `S46` `Critical` `S` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-002
+Status: ✅ Done | **Deps**: COMP-001, COMP-002
 **Criteria**: `packages/ide` workspace; `IDESession` aggregate with `sessionId`, `userId`, `projectId`, `status`; `IDESessionStatus` lifecycle; `create()`, `start()`, `suspend()`, `terminate()` transitions; unit tests.
 **Steps**: (1) Scaffold `packages/ide` (2) Write `IDESession` aggregate (3) Write lifecycle tests
 
@@ -2830,7 +2830,7 @@ Status: ⬜ | **Deps**: COMP-001, COMP-002
 
 #### [COMP-030.2] Container value object + ContainerOrchestrator interface
 `S46` `Critical` `S` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.1
+Status: ✅ Done | **Deps**: COMP-030.1
 **Criteria**: `Container` value object with `containerId`, `image`, `cpuLimit`, `memoryLimit`, `status`; `ContainerOrchestrator` interface with `provision()`, `stop()`, `getStatus()`; unit tests.
 **Steps**: (1) Write `Container` value object (2) Write `ContainerOrchestrator` interface (3) Write interface tests
 
@@ -2838,7 +2838,7 @@ Status: ⬜ | **Deps**: COMP-030.1
 
 #### [COMP-030.3] ResourceQuotaEnforcer
 `S46` `Critical` `M` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.2, COMP-037.1
+Status: ✅ Done | **Deps**: COMP-030.2, COMP-037.1
 **Criteria**: `ResourceQuotaEnforcer.enforce(userId)` checks active session count ≤ quota; checks CPU/memory budget; throws `QuotaExceededError` if exceeded; quota configurable per role; unit tests.
 **Steps**: (1) Define quota config per role (2) Write `ResourceQuotaEnforcer` (3) Write quota exceeded test
 
@@ -3198,15 +3198,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S45 COMP-029.5 done; next COMP-029.6
+> Last Updated: 2026-03-14 | S46 COMP-029.6, COMP-030.1–030.3 done; next COMP-030.4
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 214 / 262 items (82%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 218 / 262 items (83%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S46 — Planning API + IDE Core | S56 | ⬜ |
+| **Current Stage** | S47 — IDE Domain Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3214,6 +3214,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-030.3 — ResourceQuotaEnforcer; UsagePort, RolePort; QuotaConfigByRole; QuotaExceededError; unit tests
+- 2026-03-14 COMP-030.2 — Container value object; ContainerOrchestrator interface; unit tests
+- 2026-03-14 COMP-030.1 — packages/ide scaffold; IDESession aggregate; IDESessionStatus; create/start/suspend/terminate; unit tests
+- 2026-03-14 COMP-029.6 — Planning REST API; PlanningContext; POST/GET tasks, GET goals, POST study-plans/generate, POST mentor-sessions; planning.test.ts
 - 2026-03-14 COMP-029.5 — PlanningRepository (Postgres); migration planning.tasks, goals, sprints, study_plans, mentor_sessions; Task/Goal/Sprint/StudyPlan/MentorSession repo ports and Postgres impls; planning-repository integration test
 - 2026-03-14 COMP-029.4 — MentorSession entity; MentorSessionSchedulingService + MentorAvailabilityPort; schedule/complete/cancel; unit tests
 - 2026-03-14 COMP-029.3 — StudyPlan aggregate; StudyPlanService.generate + LearnerProgressPort; unit tests

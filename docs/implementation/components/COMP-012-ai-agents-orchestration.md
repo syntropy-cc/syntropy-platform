@@ -52,12 +52,12 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 1 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **8** |
 
-**Component Coverage**: 12.5%
+**Component Coverage**: 75%
 
 ### Item List
 
@@ -98,7 +98,7 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | orchestration-context-engine.md |
 | **Dependencies** | COMP-012.1 |
@@ -125,7 +125,7 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | orchestration-context-engine.md, ADR-006 |
 | **Dependencies** | COMP-012.1 |
@@ -156,7 +156,7 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | orchestration-context-engine.md |
 | **Dependencies** | COMP-012.1, COMP-009.7 |
@@ -185,7 +185,7 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | orchestration-context-engine.md |
 | **Dependencies** | COMP-012.1, COMP-013 |
@@ -212,7 +212,7 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | orchestration-context-engine.md |
 | **Dependencies** | COMP-012.2 |
@@ -289,6 +289,14 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 ---
 
 ## Implementation Log
+
+### 2026-03-13 — Stage S12 (COMP-012.2–012.6) completed
+
+- **COMP-012.2**: `AgentSession` aggregate with `sessionId`, `userId`, `agentId`, `status`, `history[]`; `create()`, `addMessage()`, `close()`; immutable updates. AgentMemory deferred to later item.
+- **COMP-012.3**: `LLMAdapter` interface in domain; `OpenAIAdapter` in infrastructure with `complete()` and `completeStreaming()`; 30s timeout; mock adapter used in unit tests.
+- **COMP-012.4**: `ToolRouter` with domain `ToolRegistry`/`ToolDefinition` (Zod schema); `ToolNotFoundError`; unit tests with mock registry.
+- **COMP-012.5**: `ContextModelUpdater` with `UserContextModelRepository`; `update(userId, event)` and `updateBatch(userId, events)`; unit tests with in-memory repo.
+- **COMP-012.6**: `AgentOrchestrator` with `invoke(sessionId, message)` and `invokeStreaming()`; depends on `AgentSessionStore`, `ContextSnapshotProvider`, `LLMAdapter`; `AgentResponse` type; unit tests with mocks.
 
 ### 2026-03-13 — COMP-012.1 completed
 

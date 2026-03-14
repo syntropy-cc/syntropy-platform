@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S12 — AI Agents Orchestration Core
-CURRENT ITEM  : COMP-012.2 — AgentSession aggregate
+CURRENT STAGE : S13 — Agent Registry + Repository + API
+CURRENT ITEM  : COMP-012.7 — AgentRepository + AgentEventPublisher
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 6 / 6 items done (S11) | 0 / 5 items done (S12)
-OVERALL       : 60 / 262 items done (23%)
+STAGE PROGRESS: 6 / 6 items done (S11) | 5 / 5 items done (S12) | 0 / 3 items done (S13)
+OVERALL       : 65 / 262 items done (25%)
 ```
 
 **Next 5 items**:
-1. `COMP-012.2` — AgentSession aggregate ← **START HERE**
-2. `COMP-012.3` — LLMAdapter (OpenAI)
-3. `COMP-012.4` — ToolRouter
-4. `COMP-012.5` — ContextModelUpdater
-5. `COMP-012.6` — AgentOrchestrator
+1. `COMP-012.7` — AgentRepository + AgentEventPublisher ← **START HERE**
+2. `COMP-012.8` — AI Agents REST API endpoints
+3. `COMP-013.1` — Agent Registry package setup + AIAgentDefinition
+4. `COMP-006.1` — DIP Project package setup + DigitalProject aggregate
+5. `COMP-006.2` — ProjectManifest value object
 
 **Component record**: [`COMP-012`](./components/COMP-012-ai-agents-orchestration.md)
 
-**Next item (COMP-012.2) acceptance criteria**: `AgentSession` aggregate with `sessionId`, `userId`, `agentId`, `status`, `history[]`; `create()` factory; `addMessage(message)` appends to history; `close()` terminates; unit tests.
+**Next item (COMP-012.7) acceptance criteria**: `AgentSessionRepository` saves/loads sessions; migration creates `agent_sessions` table; `AgentEventPublisher` publishes `ai.agent.session_started`, `ai.agent.invoked`; integration test.
 
-**Suggested steps**: (1) Write `AgentSession` aggregate (2) Add message history methods (3) Write session lifecycle tests
+**Suggested steps**: (1) Write repository + migration (2) Write event publisher (3) Write integration test
 
 ---
 
@@ -1585,7 +1585,7 @@ Status: ✅ Done | **Deps**: COMP-004.5, COMP-033.2
 
 #### [COMP-012.2] AgentSession aggregate
 `S12` `Critical` `S` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.1
+Status: ✅ Done | **Deps**: COMP-012.1
 **Criteria**: `AgentSession` aggregate with `sessionId`, `userId`, `agentId`, `status`, `history[]`; `create()` factory; `addMessage(message)` appends to history; `close()` terminates; unit tests.
 **Steps**: (1) Write `AgentSession` aggregate (2) Add message history methods (3) Write session lifecycle tests
 
@@ -1593,7 +1593,7 @@ Status: ⬜ | **Deps**: COMP-012.1
 
 #### [COMP-012.3] LLMAdapter (OpenAI)
 `S12` `Critical` `M` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.1
+Status: ✅ Done | **Deps**: COMP-012.1
 **Criteria**: `LLMAdapter` interface + `OpenAIAdapter` implementation; `complete(prompt, context)` returns `LLMResponse`; streaming support via async generator; mock adapter for tests; respects timeout (30s).
 **Steps**: (1) Write `LLMAdapter` interface (2) Write `OpenAIAdapter` (3) Write mock adapter + tests
 
@@ -1601,7 +1601,7 @@ Status: ⬜ | **Deps**: COMP-012.1
 
 #### [COMP-012.4] ToolRouter
 `S12` `Critical` `S` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.1, COMP-013.1
+Status: ✅ Done | **Deps**: COMP-012.1, COMP-013.1
 **Criteria**: `ToolRouter.route(toolName, params)` looks up `ToolDefinition` in registry and calls handler; validates params against tool schema (Zod); returns `ToolResult`; throws `ToolNotFoundError` for unknown tools.
 **Steps**: (1) Write `ToolRouter` (2) Add Zod schema validation (3) Write routing tests
 
@@ -1609,7 +1609,7 @@ Status: ⬜ | **Deps**: COMP-012.1, COMP-013.1
 
 #### [COMP-012.5] ContextModelUpdater
 `S12` `High` `S` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.1
+Status: ✅ Done | **Deps**: COMP-012.1
 **Criteria**: `ContextModelUpdater.update(userId, event)` updates `UserContextModel` with latest activity; batches updates; refreshes from Kafka consumer; unit tests.
 **Steps**: (1) Write `ContextModelUpdater` (2) Add event-to-context mapping (3) Write update tests
 
@@ -1617,7 +1617,7 @@ Status: ⬜ | **Deps**: COMP-012.1
 
 #### [COMP-012.6] AgentOrchestrator
 `S12` `Critical` `M` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.2, COMP-012.3, COMP-012.4, COMP-012.5
+Status: ✅ Done | **Deps**: COMP-012.2, COMP-012.3, COMP-012.4, COMP-012.5
 **Criteria**: `AgentOrchestrator.invoke(sessionId, message)` builds prompt from context, calls LLM, routes tool calls, returns `AgentResponse`; handles multi-turn; streaming mode via SSE; unit tests with mock LLM.
 **Steps**: (1) Write `AgentOrchestrator` main loop (2) Add tool call parsing from LLM response (3) Add SSE streaming support
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 60 / 262 items (23%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 65 / 262 items (25%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S12 — AI Agents Orchestration Core | S56 | ⬜ |
+| **Current Stage** | S13 — Agent Registry + Repository + API | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-012.6 — AgentOrchestrator
+- 2026-03-13 COMP-012.5 — ContextModelUpdater
+- 2026-03-13 COMP-012.4 — ToolRouter
+- 2026-03-13 COMP-012.3 — LLMAdapter (OpenAI)
+- 2026-03-13 COMP-012.2 — AgentSession aggregate
 - 2026-03-13 COMP-004.6 — Smart Contract API + integration tests
 - 2026-03-13 COMP-004.5 — ContractRepository (Postgres)
 - 2026-03-13 COMP-004.4 — Contract DSL parser
@@ -3287,7 +3292,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **45** | **17%** | ⬜ |
+| **Total** | **262** | **65** | **25%** | ⬜ |
 
 ### Component Coverage
 
@@ -3304,7 +3309,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-009 Event Bus & Audit | 8 | 8 | ✅ Complete |
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
 | COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
-| COMP-012 AI Agents Orchestration | 8 | 0 | ⬜ Not Started |
+| COMP-012 AI Agents Orchestration | 8 | 6 | 🔵 In Progress |
 | COMP-013 AI Agents Registry | 5 | 0 | ⬜ Not Started |
 | COMP-014 AI Agents Pillar Tools | 6 | 0 | ⬜ Not Started |
 | COMP-015 Learn Content Hierarchy | 6 | 0 | ⬜ Not Started |

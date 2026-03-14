@@ -4,7 +4,6 @@
 
 import {
   IACPRecord,
-  IACPStatus,
   createIACPId,
   createIACPParty,
   isIACPStatus,

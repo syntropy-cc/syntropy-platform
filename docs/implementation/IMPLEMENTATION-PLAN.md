@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-13 (COMP-005.7 complete)
+> **Last Updated**: 2026-03-14 (S18 complete: COMP-005.8, COMP-007.1–007.3)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,24 +9,24 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S18 — IACP Completion + Governance Start
-CURRENT ITEM  : COMP-005.8 — IACP REST API endpoints + integration tests
-MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 0 / 4 items done (S18)
-OVERALL       : 85 / 262 items done (32%)
+CURRENT STAGE : S19 — Governance Service + Legitimacy Chain
+CURRENT ITEM  : COMP-007.4 — GovernanceService.executeProposal()
+MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
+STAGE PROGRESS: 4 / 4 items done (S18)
+OVERALL       : 89 / 262 items done (34%)
 ```
 
 **Next 5 items**:
-1. `COMP-005.8` — IACP REST API endpoints + integration tests ← **START HERE**
-2. `COMP-007.1` — DIP Governance package setup + DigitalInstitution
-3. `COMP-007.2` — Proposal aggregate
-4. `COMP-007.3` — VotingService
+1. `COMP-007.4` — GovernanceService.executeProposal() ← **START HERE**
+2. `COMP-007.5` — LegitimacyChain event chain
+3. `COMP-007.6` — Governance REST API + integration tests
+4. …
 
-**Component record**: [`COMP-005`](./components/COMP-005-dip-iacp-engine.md)
+**Component record**: [`COMP-007`](./components/COMP-007-dip-institutional-governance.md)
 
-**Next item (COMP-005.8) acceptance criteria**: `POST /api/v1/iacp`, `GET /api/v1/iacp/{id}`, `POST /api/v1/iacp/{id}/sign`, `POST /api/v1/iacp/{id}/activate`; full lifecycle integration test.
+**Next item (COMP-007.4) acceptance criteria**: `GovernanceService.executeProposal(proposal)` evaluates governance contract first; rejects if quorum not met; applies proposal effects; publishes `governance.proposal.executed`; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire to state machine (3) Write integration test
+**Suggested steps**: (1) Write `GovernanceService` (2) Wire to `SmartContractEvaluator` (3) Write quorum enforcement test
 
 ---
 
@@ -1784,7 +1784,7 @@ Status: ✅ Done | **Deps**: COMP-005.5, COMP-009.1
 
 #### [COMP-005.8] IACP REST API endpoints + integration tests
 `S18` `High` `M` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.7, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-005.7, COMP-033.2
 **Criteria**: `POST /api/v1/iacp`, `GET /api/v1/iacp/{id}`, `POST /api/v1/iacp/{id}/sign`, `POST /api/v1/iacp/{id}/activate`; full lifecycle integration test.
 **Steps**: (1) Write API routes (2) Wire to state machine (3) Write integration test
 
@@ -1792,7 +1792,7 @@ Status: ⬜ | **Deps**: COMP-005.7, COMP-033.2
 
 #### [COMP-007.1] DIP Governance package setup + DigitalInstitution
 `S18` `Critical` `M` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-004, COMP-005
+Status: ✅ Done | **Deps**: COMP-004, COMP-005
 **Criteria**: `packages/dip-governance` workspace; `DigitalInstitution` aggregate with `institutionId`, `type`, `governanceContract`, `status`; `create()` factory; domain events.
 **Steps**: (1) Scaffold `packages/dip-governance` (2) Write `DigitalInstitution` aggregate (3) Write unit tests
 
@@ -1800,7 +1800,7 @@ Status: ⬜ | **Deps**: COMP-004, COMP-005
 
 #### [COMP-007.2] Proposal aggregate
 `S18` `Critical` `S` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.1
+Status: ✅ Done | **Deps**: COMP-007.1
 **Criteria**: `Proposal` aggregate with `proposalId`, `institutionId`, `type`, `status`; `ProposalStatus` enum; `open()`, `close()`, `execute()` transitions; unit tests.
 **Steps**: (1) Write `Proposal` aggregate (2) Add status transitions (3) Write transition tests
 
@@ -1808,7 +1808,7 @@ Status: ⬜ | **Deps**: COMP-007.1
 
 #### [COMP-007.3] VotingService
 `S18` `Critical` `M` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.2, COMP-037.1
+Status: ✅ Done | **Deps**: COMP-007.2, COMP-037.1
 **Criteria**: `VotingService.castVote(proposalId, actorId, vote)` validates eligibility; prevents double-voting; tallies votes; `getVoteSummary(proposalId)` returns tally; unit tests.
 **Steps**: (1) Write `VotingService` (2) Add eligibility check (3) Add double-vote prevention
 
@@ -3200,15 +3200,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-13 | COMP-005.7 complete
+> Last Updated: 2026-03-14 | S18 complete (COMP-005.8, COMP-007.1–007.3)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 85 / 262 items (32%) | 262 / 262 | ⬜ |
-| **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S18 — IACP Completion + Governance Start | S56 | ⬜ |
+| **Overall Progress** | 89 / 262 items (34%) | 262 / 262 | ⬜ |
+| **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
+| **Current Stage** | S19 — Governance Service + Legitimacy Chain | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3216,6 +3216,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-007.3 — VotingService (eligibility, double-vote, getVoteSummary), unit tests
+- 2026-03-14 COMP-007.2 — Proposal aggregate (open/close/execute), unit tests
+- 2026-03-14 COMP-007.1 — DIP Governance package + DigitalInstitution aggregate, unit tests
+- 2026-03-14 COMP-005.8 — IACP REST API (create, get, sign, activate) + integration test
 - 2026-03-13 COMP-005.7 — IACPEventPublisher (Kafka), port, events, unit tests
 - 2026-03-13 COMP-005.6 — IACPRepository (Postgres), migration, integration test
 - 2026-03-13 COMP-005.5 — IACPEngine.evaluate() + ConsensusEvaluatorPort, unit tests

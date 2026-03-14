@@ -51,14 +51,14 @@ The IACP Engine implements the **Institutional Artifact Consumption Protocol** �
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 7 |
+| ✅ Done | 8 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 1 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **8** |
 
-**Component Coverage**: 88%
+**Component Coverage**: 100%
 
-**Implementation Plan items (Section 7) completed**: COMP-005.1, 005.2 (see above). COMP-005.3 IACPStateMachine (submit/activate/terminate, InvalidTransitionError). COMP-005.4 SignatureCollector (n-of-m, DuplicateSignatureError). COMP-005.5 IACPEngine.evaluate() + ConsensusEvaluatorPort + EvaluationResult. COMP-005.6 IACPRepository interface (dip-iacp), migration `20260313270000_dip_iacp.sql`, PostgresIACPRepository (dip), integration test. COMP-005.7 IACPEventPublisher port, events, Kafka impl (dip-iacp), unit tests.
+**Implementation Plan items (Section 7) completed**: COMP-005.1 through COMP-005.7 (see above). COMP-005.8 IACP REST API: `apps/api/src/routes/iacp.ts` (POST/GET /api/v1/iacp, POST sign, POST activate), DipContext extended with iacpRepository/iacpEngine/iacpEventPublisher, `apps/api/src/integration/iacp-lifecycle.integration.test.ts` (full lifecycle). Exported PostgresIACPRepository and PgIacpDbClient from `@syntropy/dip`.
 
 ### Item List
 

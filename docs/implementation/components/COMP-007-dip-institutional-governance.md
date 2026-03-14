@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/institutional-governance.md](../../architecture/domains/digital-institutions-protocol/subdomains/institutional-governance.md)
 > **Stage Assignment**: S3 — DIP Protocol
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -50,12 +50,14 @@ Institutional Governance owns the `DigitalInstitution` aggregate and manages the
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 9 |
+| ⬜ Ready/Backlog | 6 |
 | **Total** | **9** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 33%
+
+**Implementation Plan items (Section 7) completed**: COMP-007.1 `packages/dip-governance` workspace, DigitalInstitution aggregate (create, fromPersistence, status forming|active|dissolved), domain events. COMP-007.2 Proposal aggregate (proposalId, institutionId, type, status), ProposalStatus enum, open/close/execute transitions, unit tests. COMP-007.3 VotingService (castVote, getVoteSummary), ProposalRepositoryPort, VoteStorePort, InMemoryVoteStore, eligibility check, double-vote prevention, unit tests.
 
 ### Item List
 

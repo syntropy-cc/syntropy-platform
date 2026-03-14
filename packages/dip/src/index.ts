@@ -69,12 +69,15 @@ export { NostrRelayAdapter } from "./infrastructure/nostr-relay-adapter.js";
 export { PostgresArtifactRepository } from "./infrastructure/repositories/postgres-artifact-repository.js";
 export { PostgresContractRepository } from "./infrastructure/repositories/postgres-contract-repository.js";
 export { PostgresProjectRepository } from "./infrastructure/repositories/postgres-project-repository.js";
+export { PostgresIACPRepository } from "./infrastructure/repositories/postgres-iacp-repository.js";
 export { PgArtifactDbClient } from "./infrastructure/pg-artifact-db-client.js";
 export { PgContractDbClient } from "./infrastructure/pg-contract-db-client.js";
 export { PgProjectDbClient } from "./infrastructure/pg-project-db-client.js";
+export { PgIacpDbClient } from "./infrastructure/pg-iacp-db-client.js";
 export type { ArtifactDbClient } from "./infrastructure/artifact-db-client.js";
 export type { ContractDbClient } from "./infrastructure/contract-db-client.js";
 export type { ProjectDbClient } from "./infrastructure/project-db-client.js";
+export type { IacpDbClient } from "./infrastructure/iacp-db-client.js";
 export { ArtifactEventPublisher } from "./infrastructure/artifact-event-publisher.js";
 export { ProjectEventPublisher } from "./infrastructure/project-event-publisher.js";
 export type {

@@ -23,6 +23,7 @@ import { agentsRoutes } from "./routes/agents.js";
 import { artifactRoutes } from "./routes/artifacts.js";
 import { contractRoutes } from "./routes/contracts.js";
 import { projectRoutes } from "./routes/projects.js";
+import { iacpRoutes } from "./routes/iacp.js";
 import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
 import type { AiAgentsContext } from "./types/ai-agents-context.js";
 import type { DipContext } from "./types/dip-context.js";
@@ -67,6 +68,7 @@ export async function createApp(options?: CreateAppOptions) {
     await app.register(artifactRoutes, { dip: options.dip });
     await app.register(contractRoutes, { dip: options.dip });
     await app.register(projectRoutes, { dip: options.dip });
+    await app.register(iacpRoutes, { dip: options.dip });
   }
   if (options?.aiAgents) {
     await app.register(aiAgentsRoutes, { aiAgents: options.aiAgents });

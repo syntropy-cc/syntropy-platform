@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/iacp-engine.md](../../architecture/domains/digital-institutions-protocol/subdomains/iacp-engine.md)
 > **Stage Assignment**: S3 — DIP Protocol
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -51,12 +51,14 @@ The IACP Engine implements the **Institutional Artifact Consumption Protocol** �
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 8 |
+| ⬜ Ready/Backlog | 6 |
 | **Total** | **8** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 25%
+
+**Implementation Plan items (Section 7) completed**: COMP-005.1 (dip-iacp package, IACPRecord, IACPStatus), COMP-005.2 (IACPParty, SignatureThreshold, IACPRecord.addParty()). Package: `packages/dip-iacp`. IACPRecord is immutable; addParty() returns a new instance and rejects duplicate actorId.
 
 ### Item List
 

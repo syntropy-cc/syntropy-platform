@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (COMP-013.5 complete)
+> **Last Updated**: 2026-03-14 (COMP-005.2 complete)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S16 — Agent Registry Completion + IACP Start
-CURRENT ITEM  : COMP-005.1 — IACP Engine package setup + IACPRecord aggregate
+CURRENT STAGE : S17 — IACP Engine Core
+CURRENT ITEM  : COMP-005.3 — IACPStateMachine (draft→pending→active→terminated)
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 1 / 3 items done (S16)
-OVERALL       : 78 / 262 items done (30%)
+STAGE PROGRESS: 0 / 5 items done (S17)
+OVERALL       : 80 / 262 items done (31%)
 ```
 
 **Next 5 items**:
-1. `COMP-005.1` — IACP Engine package setup + IACPRecord aggregate ← **START HERE**
-2. `COMP-005.2` — IACPParty value object + multi-party signing setup
-3. `COMP-005.3` — IACPStateMachine (draft→pending→active→terminated)
-4. `COMP-005.4` — SignatureCollector (n-of-m threshold logic)
-5. `COMP-005.5` — IACPEngine.evaluate() consensus check
+1. `COMP-005.3` — IACPStateMachine (draft→pending→active→terminated) ← **START HERE**
+2. `COMP-005.4` — SignatureCollector (n-of-m threshold logic)
+3. `COMP-005.5` — IACPEngine.evaluate() consensus check
+4. `COMP-005.6` — IACPRepository (Postgres)
+5. `COMP-005.7` — IACPEventPublisher (Kafka)
 
 **Component record**: [`COMP-005`](./components/COMP-005-dip-iacp-engine.md)
 
-**Next item (COMP-005.1) acceptance criteria**: `packages/dip-iacp` workspace; `IACPRecord` aggregate with `id`, `type`, `parties[]`, `status`; `IACPStatus` enum (`draft/pending_signatures/active/terminated`); unit tests.
+**Next item (COMP-005.3) acceptance criteria**: `IACPStateMachine` enforces valid transitions; `submit()` moves to `pending_signatures`; `activate()` requires signature threshold met; `terminate()` available from any state; invalid transitions throw `InvalidTransitionError`.
 
-**Suggested steps**: (1) Scaffold `packages/dip-iacp` (2) Write `IACPRecord` aggregate (3) Write status tests
+**Suggested steps**: (1) Write state machine class (2) Implement transition guards (3) Write invalid transition test
 
 ---
 
@@ -1729,7 +1729,7 @@ Status: ✅ Done | **Deps**: COMP-013.4
 
 #### [COMP-005.1] IACP Engine package setup + IACPRecord aggregate
 `S16` `Critical` `S` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-003
+Status: ✅ Done | **Deps**: COMP-003
 **Criteria**: `packages/dip-iacp` workspace; `IACPRecord` aggregate with `id`, `type`, `parties[]`, `status`; `IACPStatus` enum (`draft/pending_signatures/active/terminated`); unit tests.
 **Steps**: (1) Scaffold `packages/dip-iacp` (2) Write `IACPRecord` aggregate (3) Write status tests
 
@@ -1737,7 +1737,7 @@ Status: ⬜ | **Deps**: COMP-003
 
 #### [COMP-005.2] IACPParty value object + multi-party signing setup
 `S16` `Critical` `S` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.1
+Status: ✅ Done | **Deps**: COMP-005.1
 **Criteria**: `IACPParty` value object with `actorId`, `role`, `signature?`; `SignatureThreshold` value object (n-of-m); `IACPRecord.addParty()` method; unit tests.
 **Steps**: (1) Write `IACPParty` value object (2) Write `SignatureThreshold` (3) Write party management tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-013.4 complete
+> Last Updated: 2026-03-14 | COMP-005.2 complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 78 / 262 items (30%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 80 / 262 items (31%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S15 — Project Manifest Completion + Agent Registry Core | S56 | ⬜ |
+| **Current Stage** | S17 — IACP Engine Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,8 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-005.2 — IACPParty, SignatureThreshold, IACPRecord.addParty() + unit tests
+- 2026-03-14 COMP-005.1 — IACP Engine package (dip-iacp), IACPRecord aggregate, IACPStatus + unit tests
 - 2026-03-14 COMP-013.5 — Agent Registry integration tests (real DB, can-invoke 403, tool validate 400)
 - 2026-03-14 COMP-013.4 — Agent Registry REST API (register, list, get)
 - 2026-03-14 COMP-013.3 — ToolPermissionEvaluator

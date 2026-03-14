@@ -56,6 +56,9 @@ importers:
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus
+      '@syntropy/governance-moderation':
+        specifier: workspace:*
+        version: link:../../packages/governance-moderation
       '@syntropy/hub-package':
         specifier: workspace:*
         version: link:../../packages/hub

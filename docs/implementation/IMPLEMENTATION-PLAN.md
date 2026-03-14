@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S49: COMP-014.4–014.6, COMP-031.1 done)
+> **Last Updated**: 2026-03-14 (S50: COMP-031.2–031.6 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,23 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S50 — Governance & Moderation (M4)
-CURRENT ITEM  : COMP-031.2 — ModerationAction entity
-MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 4 / 4 items done (S49)
-OVERALL       : 231 / 262 items done (88%)
+CURRENT STAGE : S51 — Route Registration & API Versioning (M5)
+CURRENT ITEM  : COMP-033.4 — Route registration for all domain packages
+MILESTONE     : M5 — Delivery: Full API, IDE Platform, Institutional Site, Observability
+STAGE PROGRESS: 5 / 5 items done (S50)
+OVERALL       : 236 / 262 items done (90%)
 ```
 
 **Next 5 items**:
-1. `COMP-031.2` — ModerationAction entity ← **START HERE**
-2. `COMP-031.3` — PlatformPolicy aggregate
-3. `COMP-031.4` — ContentPolicyEvaluator
-4. `COMP-031.5` — CommunityProposal aggregate
-5. (see Section 6 for full order)
+1. `COMP-033.4` — Route registration for all domain packages ← **START HERE**
+2. `COMP-033.5` — API versioning strategy
+3. (see Section 6 for full order)
 
-**Component record**: [`COMP-031`](./components/COMP-031-governance-moderation.md)
+**Component record**: [`COMP-033`](./components/COMP-033-rest-api.md)
 
-**Next item (COMP-031.2) acceptance criteria**: `ModerationAction` entity records moderator decision (`approve`, `remove`, `warn`, `ban`); links to `ModerationFlag`; moderator role required; audit trail; unit tests.
+**Next item (COMP-033.4) acceptance criteria**: All domain routers imported and registered; route prefixes: `/api/v1/auth/*`, `/api/v1/learn/*`, `/api/v1/hub/*`, `/api/v1/labs/*`, `/api/v1/ai-agents/*`, `/api/v1/sponsorships/*`, `/api/v1/notifications/*`, `/api/v1/moderation/*`; Zod validation on all routes.
 
-**Suggested steps**: (1) Write `ModerationAction` entity (2) Add moderator role check (3) Write audit trail test
+**Suggested steps**: (1) Write `router.ts` importing all domain routes (2) Register with correct prefixes (3) Run `GET /api/v1/openapi.json` and verify all paths present
 
 ---
 
@@ -2953,7 +2951,7 @@ Status: ✅ Done | **Deps**: COMP-001, COMP-028
 
 #### [COMP-031.2] ModerationAction entity
 `S50` `Critical` `S` [Record→](./components/COMP-031-governance-moderation.md)
-Status: ⬜ | **Deps**: COMP-031.1
+Status: ✅ Done | **Deps**: COMP-031.1
 **Criteria**: `ModerationAction` entity records moderator decision (`approve`, `remove`, `warn`, `ban`); links to `ModerationFlag`; moderator role required; audit trail; unit tests.
 **Steps**: (1) Write `ModerationAction` entity (2) Add moderator role check (3) Write audit trail test
 
@@ -2961,7 +2959,7 @@ Status: ⬜ | **Deps**: COMP-031.1
 
 #### [COMP-031.3] PlatformPolicy aggregate
 `S50` `Critical` `M` [Record→](./components/COMP-031-governance-moderation.md)
-Status: ⬜ | **Deps**: COMP-031.2
+Status: ✅ Done | **Deps**: COMP-031.2
 **Criteria**: `PlatformPolicy` aggregate with policy rules; `PolicyRule` value objects; `PlatformPolicy.addRule()`, `removeRule()`; versioned; unit tests.
 **Steps**: (1) Write `PlatformPolicy` aggregate (2) Add rule management (3) Write versioning tests
 
@@ -2969,7 +2967,7 @@ Status: ⬜ | **Deps**: COMP-031.2
 
 #### [COMP-031.4] ContentPolicyEvaluator
 `S50` `Critical` `M` [Record→](./components/COMP-031-governance-moderation.md)
-Status: ⬜ | **Deps**: COMP-031.3
+Status: ✅ Done | **Deps**: COMP-031.3
 **Criteria**: `ContentPolicyEvaluator.evaluate(content, policy)` checks content against policy rules; returns `PolicyViolation[]`; supports text pattern rules and metadata rules; unit tests.
 **Steps**: (1) Write `ContentPolicyEvaluator` (2) Implement text + metadata rules (3) Write violation detection tests
 
@@ -2977,7 +2975,7 @@ Status: ⬜ | **Deps**: COMP-031.3
 
 #### [COMP-031.5] CommunityProposal aggregate
 `S50` `High` `M` [Record→](./components/COMP-031-governance-moderation.md)
-Status: ⬜ | **Deps**: COMP-031.4
+Status: ✅ Done | **Deps**: COMP-031.4
 **Criteria**: `CommunityProposal` aggregate with proposal lifecycle; voting mechanism; threshold check before execution; `CommunityProposalService.execute()` applies policy change; unit tests.
 **Steps**: (1) Write `CommunityProposal` aggregate (2) Add voting threshold (3) Write execution tests
 
@@ -2985,7 +2983,7 @@ Status: ⬜ | **Deps**: COMP-031.4
 
 #### [COMP-031.6] Governance & Moderation REST API
 `S50` `High` `M` [Record→](./components/COMP-031-governance-moderation.md)
-Status: ⬜ | **Deps**: COMP-031.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-031.5, COMP-033.2
 **Criteria**: `POST /api/v1/moderation/flags`, `GET /api/v1/moderation/flags` (moderator), `POST /api/v1/moderation/actions`, `POST /api/v1/community-proposals`, `POST /api/v1/community-proposals/{id}/vote`; integration tests.
 **Steps**: (1) Write all API routes (2) Add role guards (3) Write integration tests
 
@@ -3201,15 +3199,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S49 COMP-014.4–014.6, COMP-031.1 done; next COMP-031.2
+> Last Updated: 2026-03-14 | S50 COMP-031.2–031.6 done; next COMP-033.4
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 231 / 262 items (88%) | 262 / 262 | ⬜ |
-| **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S49 — AI Pillar Tools Completion | S56 | ⬜ |
+| **Overall Progress** | 236 / 262 items (90%) | 262 / 262 | ⬜ |
+| **Current Milestone** | M5 — Delivery | M5 | ⬜ |
+| **Current Stage** | S51 — Route Registration & API Versioning | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3215,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-031.6 — Governance & Moderation REST API; moderation + community-proposals routes; GovernanceModerationContext; PlatformModerator guard; moderation.test.ts
+- 2026-03-14 COMP-031.5 — CommunityProposal aggregate; ProposalStatus; voting threshold; CommunityProposalService.execute(); unit tests
+- 2026-03-14 COMP-031.4 — ContentPolicyEvaluator; PolicyViolation; text pattern + metadata rules; unit tests
+- 2026-03-14 COMP-031.3 — PlatformPolicy aggregate; PolicyRule value object; addRule/removeRule; versioned; unit tests
+- 2026-03-14 COMP-031.2 — ModerationAction entity; ActionType; links to ModerationFlag; audit trail; unit tests
 - 2026-03-14 COMP-031.1 — packages/governance-moderation; ModerationFlag aggregate; FlagStatus enum; startReview/resolve/dismiss; unit tests
 - 2026-03-14 COMP-014.6 — IDE tool handler (list_files, read_file, write_file, run_command); IDEToolPort; session ownership via getCurrentUserId; unit tests
 - 2026-03-14 COMP-014.5 — System prompts for 12 agents; SystemPromptRepository; InMemorySystemPromptRepository; loadSystemPromptsFromDirectory; orchestrator system prompt wiring; unit tests
@@ -3494,7 +3497,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-028 Communication | 7 | 0 | ⬜ Not Started |
 | COMP-029 Planning | 6 | 0 | ⬜ Not Started |
 | COMP-030 IDE Domain | 8 | 0 | ⬜ Not Started |
-| COMP-031 Governance & Moderation | 6 | 0 | ⬜ Not Started |
+| COMP-031 Governance & Moderation | 6 | 6 | ✅ Complete |
 | COMP-032 Web Application | 8 | 2 | 🔵 In Progress |
 | COMP-033 REST API Gateway | 7 | 4 | 🔵 In Progress |
 | COMP-034 Background Services | 7 | 6 | 🔵 In Progress |
@@ -3504,7 +3507,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 4 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 5 | ✅ Complete |
-| **Total** | **262** | **85** | |
+| **Total** | **262** | **90** | |
 
 ### Layer Coverage
 

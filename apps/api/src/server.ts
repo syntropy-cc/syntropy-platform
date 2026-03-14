@@ -52,10 +52,13 @@ import { sponsorshipRoutes } from "./routes/sponsorships.js";
 import { communicationRoutes } from "./routes/communication.js";
 import { planningRoutes } from "./routes/planning.js";
 import { ideRoutes } from "./routes/ide.js";
+import { moderationRoutes } from "./routes/moderation.js";
+import { communityProposalsRoutes } from "./routes/community-proposals.js";
 import type { SponsorshipContext } from "./types/sponsorship-context.js";
 import type { CommunicationContext } from "./types/communication-context.js";
 import type { PlanningContext } from "./types/planning-context.js";
 import type { IDEContext } from "./types/ide-context.js";
+import type { GovernanceModerationContext } from "./types/governance-moderation-context.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -88,6 +91,7 @@ export interface CreateAppOptions {
   communication?: CommunicationContext | null;
   planning?: PlanningContext | null;
   ide?: IDEContext | null;
+  governanceModeration?: GovernanceModerationContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -155,6 +159,14 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.ide) {
     await app.register(ideRoutes, { ide: options.ide });
+  }
+  if (options?.governanceModeration) {
+    await app.register(moderationRoutes, {
+      governanceModeration: options.governanceModeration,
+    });
+    await app.register(communityProposalsRoutes, {
+      governanceModeration: options.governanceModeration,
+    });
   }
   await app.register(internalEventSchemasPlugin);
 

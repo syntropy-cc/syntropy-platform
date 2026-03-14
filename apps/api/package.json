@@ -17,6 +17,7 @@
     "@syntropy/ai-agents": "workspace:*",
     "@syntropy/dip": "workspace:*",
     "@syntropy/dip-governance": "workspace:*",
+    "@syntropy/governance-moderation": "workspace:*",
     "@syntropy/dip-iacp": "workspace:*",
     "@syntropy/dip-treasury": "workspace:*",
     "@syntropy/dip-contracts": "workspace:*",

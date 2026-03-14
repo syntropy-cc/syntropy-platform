@@ -8,6 +8,8 @@
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
+**Note**: Implementation Plan Section 7 is the authority for work item IDs. Plan COMP-028.4 = Notification delivery service (done this session).
+
 ## Component Overview
 
 ### Architecture Summary
@@ -32,14 +34,14 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 3 |
+| ✅ Done | 4 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 4 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **7** |
 
-**Component Coverage**: 43%
+**Component Coverage**: 57%
 
-*Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.3 in the Plan = NotificationEventConsumer (Kafka).*
+*Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.3 = NotificationEventConsumer (Kafka). COMP-028.4 = Notification delivery service (NotificationDeliveryService, SendGrid/FCM adapters, preference resolver stubs).*
 
 ### Item List
 

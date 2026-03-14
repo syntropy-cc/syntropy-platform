@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S44: COMP-028.3 done)
+> **Last Updated**: 2026-03-14 (S44: COMP-028.4 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,21 +10,21 @@
 
 ```
 CURRENT STAGE : S44 — Communication Core (M4)
-CURRENT ITEM  : COMP-028.4 — Notification delivery service
+CURRENT ITEM  : COMP-028.5 — User notification preferences
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 1 / 5 items done (S44)
-OVERALL       : 205 / 262 items done (78%)
+STAGE PROGRESS: 2 / 5 items done (S44)
+OVERALL       : 206 / 262 items done (79%)
 ```
 
 **Next 5 items**:
-1. `COMP-028.4` — Notification delivery service ← **START HERE**
+1. `COMP-028.5` — User notification preferences ← **START HERE**
 2. (see Section 6 for full order)
 
 **Component record**: [`COMP-028`](./components/COMP-028-communication.md)
 
-**Next item (COMP-028.4) acceptance criteria**: `NotificationDeliveryService.deliver(notification)` delivers via: in-app (DB), email (SendGrid adapter), push (FCM adapter); respects user preferences; retry on failure; unit tests.
+**Next item (COMP-028.5) acceptance criteria**: `NotificationPreferences` entity per user; per-notification-type enable/disable; `mute_until` snooze feature; repository; unit tests.
 
-**Suggested steps**: (1) Write `NotificationDeliveryService` (2) Add channel adapters (3) Write delivery tests
+**Suggested steps**: (1) Write `NotificationPreferences` entity (2) Add preference check in delivery (3) Write preference tests
 
 ---
 
@@ -2742,7 +2742,7 @@ Status: ✅ Done | **Deps**: COMP-028.2, COMP-009.1
 
 #### [COMP-028.4] Notification delivery service
 `S44` `High` `M` [Record→](./components/COMP-028-communication.md)
-Status: ⬜ | **Deps**: COMP-028.3
+Status: ✅ Done | **Deps**: COMP-028.3
 **Criteria**: `NotificationDeliveryService.deliver(notification)` delivers via: in-app (DB), email (SendGrid adapter), push (FCM adapter); respects user preferences; retry on failure; unit tests.
 **Steps**: (1) Write `NotificationDeliveryService` (2) Add channel adapters (3) Write delivery tests
 
@@ -3198,13 +3198,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S44 COMP-028.3 done; next COMP-028.4
+> Last Updated: 2026-03-14 | S44 COMP-028.4 done; next COMP-028.5
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 205 / 262 items (78%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 206 / 262 items (79%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
 | **Current Stage** | S44 — Communication Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3214,6 +3214,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-028.4 — Notification delivery service; NotificationDeliveryService (in-app, email SendGrid, push FCM); preference resolver, stubs, RetryPolicy; consumer wired to delivery; unit + integration tests
 - 2026-03-14 COMP-028.3 — NotificationEventConsumer (Kafka); Notification entity, NotificationRepository, event mapping; Postgres + InMemory repos; worker registered; integration test
 - 2026-03-14 COMP-028.2 — Message entity (messageId, threadId, authorId, content, sentAt); SoftDeletable; unit tests
 - 2026-03-14 COMP-028.1 — Communication package + Thread aggregate (threadId, participants, type); ThreadType; addParticipant; unit tests

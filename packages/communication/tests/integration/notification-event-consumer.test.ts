@@ -1,12 +1,16 @@
 /**
- * Integration tests for NotificationEventConsumer (COMP-028.3).
- * Uses in-memory repository and mock consumer; no real Kafka.
+ * Integration tests for NotificationEventConsumer (COMP-028.3, 028.4).
+ * Uses in-memory repository and mock consumer; delivery via NotificationDeliveryService.
  */
 
 import { describe, it, expect } from "vitest";
 import type { ConsumedMessage } from "@syntropy/event-bus";
 import { NotificationEventConsumer } from "../../src/infrastructure/consumers/notification-event-consumer.js";
 import { InMemoryNotificationRepository } from "../../src/infrastructure/repositories/in-memory-notification-repository.js";
+import { NotificationDeliveryService } from "../../src/application/notification-delivery-service.js";
+import { DefaultNotificationPreferenceResolver } from "../../src/infrastructure/default-notification-preference-resolver.js";
+import { StubUserEmailResolver } from "../../src/infrastructure/stub-user-email-resolver.js";
+import { StubPushTokenProvider } from "../../src/infrastructure/stub-push-token-provider.js";
 
 function makeMessage(
   topic: string,
@@ -23,9 +27,21 @@ function makeMessage(
   };
 }
 
+function createDeliveryService(repository: InMemoryNotificationRepository): NotificationDeliveryService {
+  return new NotificationDeliveryService({
+    repository,
+    preferenceResolver: new DefaultNotificationPreferenceResolver(),
+    userEmailResolver: new StubUserEmailResolver({ email: null }),
+    pushTokenProvider: new StubPushTokenProvider(),
+    emailSender: null,
+    pushSender: null,
+  });
+}
+
 describe("NotificationEventConsumer (COMP-028.3)", () => {
   it("creates and persists notification when processing dip.artifact.published event", async () => {
     const repository = new InMemoryNotificationRepository();
+    const deliveryService = createDeliveryService(repository);
     let capturedHandler: ((msg: ConsumedMessage) => Promise<void>) | null = null;
     const mockConsumer = {
       subscribeMany(_topics: string[], handler: (msg: ConsumedMessage) => Promise<void>) {
@@ -36,7 +52,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
     const consumer = new NotificationEventConsumer({
       consumer: mockConsumer as any,
-      repository,
+      deliveryService,
     });
     consumer.start();
     expect(capturedHandler).not.toBeNull();
@@ -62,6 +78,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
   it("does not create notification for event type that does not trigger notifications", async () => {
     const repository = new InMemoryNotificationRepository();
+    const deliveryService = createDeliveryService(repository);
     let capturedHandler: ((msg: ConsumedMessage) => Promise<void>) | null = null;
     const mockConsumer = {
       subscribeMany(_topics: string[], handler: (msg: ConsumedMessage) => Promise<void>) {
@@ -72,7 +89,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
     const consumer = new NotificationEventConsumer({
       consumer: mockConsumer as any,
-      repository,
+      deliveryService,
     });
     consumer.start();
 
@@ -87,6 +104,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
   it("does not create notification when payload has no recipient", async () => {
     const repository = new InMemoryNotificationRepository();
+    const deliveryService = createDeliveryService(repository);
     let capturedHandler: ((msg: ConsumedMessage) => Promise<void>) | null = null;
     const mockConsumer = {
       subscribeMany(_topics: string[], handler: (msg: ConsumedMessage) => Promise<void>) {
@@ -97,7 +115,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
     const consumer = new NotificationEventConsumer({
       consumer: mockConsumer as any,
-      repository,
+      deliveryService,
     });
     consumer.start();
 
@@ -111,6 +129,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
   it("accepts envelope with type instead of eventType", async () => {
     const repository = new InMemoryNotificationRepository();
+    const deliveryService = createDeliveryService(repository);
     let capturedHandler: ((msg: ConsumedMessage) => Promise<void>) | null = null;
     const mockConsumer = {
       subscribeMany(_topics: string[], handler: (msg: ConsumedMessage) => Promise<void>) {
@@ -121,7 +140,7 @@ describe("NotificationEventConsumer (COMP-028.3)", () => {
 
     const consumer = new NotificationEventConsumer({
       consumer: mockConsumer as any,
-      repository,
+      deliveryService,
     });
     consumer.start();
 

@@ -1,8 +1,9 @@
 /**
- * Notification event consumer worker (COMP-028.3).
+ * Notification event consumer worker (COMP-028.3, 028.4).
  *
  * Subscribes to learn.events, hub.events, labs.events, dip.events; creates
- * Notification entities from domain events and persists via NotificationRepository.
+ * Notification entities from domain events and delivers via NotificationDeliveryService
+ * (in-app, optional email via SendGrid, optional push via FCM).
  * When DATABASE_URL is set uses Postgres; otherwise in-memory (stub).
  */
 
@@ -14,6 +15,12 @@ import {
   NOTIFICATION_CONSUMER_GROUP_ID,
   InMemoryNotificationRepository,
   PostgresNotificationRepository,
+  NotificationDeliveryService,
+  DefaultNotificationPreferenceResolver,
+  StubUserEmailResolver,
+  StubPushTokenProvider,
+  SendGridEmailSender,
+  FCMPushSender,
   type CommunicationDbClient,
 } from "@syntropy/communication";
 import type { Worker } from "../types.js";
@@ -62,9 +69,28 @@ export function createNotificationEventConsumerWorker(): Worker {
         log.warn("DATABASE_URL not set; notifications worker using in-memory repository");
       }
 
+      const sendgridKey = process.env.SENDGRID_API_KEY;
+      const fromEmail = process.env.SENDGRID_FROM_EMAIL ?? "noreply@localhost";
+      const emailSender =
+        sendgridKey?.trim() ?
+          new SendGridEmailSender({ apiKey: sendgridKey, fromEmail })
+        : null;
+      if (!emailSender) {
+        log.warn("SENDGRID_API_KEY not set; email notifications disabled");
+      }
+
+      const deliveryService = new NotificationDeliveryService({
+        repository,
+        preferenceResolver: new DefaultNotificationPreferenceResolver(),
+        userEmailResolver: new StubUserEmailResolver({ email: process.env.NOTIFICATION_USER_EMAIL ?? null }),
+        pushTokenProvider: new StubPushTokenProvider(),
+        emailSender: emailSender ?? undefined,
+        pushSender: new FCMPushSender(),
+      });
+
       consumer = new NotificationEventConsumer({
         consumer: kafkaClient.consumer,
-        repository,
+        deliveryService,
       });
       consumer.start();
       log.info("Notification event consumer started");

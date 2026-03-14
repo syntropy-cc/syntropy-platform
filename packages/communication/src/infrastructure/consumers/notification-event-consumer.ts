@@ -1,14 +1,14 @@
 /**
- * Kafka consumer that creates Notification entities from domain events (COMP-028.3).
+ * Kafka consumer that creates Notification entities from domain events (COMP-028.3, 028.4).
  * Subscribes to learn.events, hub.events, labs.events, dip.events; maps events to
- * notifications and persists via NotificationRepository.
+ * notifications and delivers via NotificationDeliveryService (in-app, email, push).
  */
 
 import type { KafkaConsumer as EventBusKafkaConsumer } from "@syntropy/event-bus";
 import type { ConsumedMessage } from "@syntropy/event-bus";
 import { randomUUID } from "crypto";
-import type { NotificationRepository } from "../../domain/ports/notification-repository.js";
 import { Notification } from "../../domain/notification.js";
+import type { NotificationDeliveryService } from "../../application/notification-delivery-service.js";
 import { mapEventToNotifications } from "../notification-event-mapping.js";
 
 const NOTIFICATION_TOPICS = [
@@ -22,21 +22,22 @@ export const NOTIFICATION_CONSUMER_GROUP_ID = "notifications";
 
 export interface NotificationEventConsumerOptions {
   consumer: EventBusKafkaConsumer;
-  repository: NotificationRepository;
+  deliveryService: NotificationDeliveryService;
   topics?: string[];
 }
 
 /**
- * Consumer that creates and persists notifications from domain events. Use with WorkerRegistry.
+ * Consumer that creates notifications from domain events and delivers via NotificationDeliveryService.
+ * Use with WorkerRegistry.
  */
 export class NotificationEventConsumer {
   private readonly consumer: EventBusKafkaConsumer;
-  private readonly repository: NotificationRepository;
+  private readonly deliveryService: NotificationDeliveryService;
   private readonly topics: string[];
 
   constructor(options: NotificationEventConsumerOptions) {
     this.consumer = options.consumer;
-    this.repository = options.repository;
+    this.deliveryService = options.deliveryService;
     this.topics = options.topics ?? NOTIFICATION_TOPICS;
   }
 
@@ -82,11 +83,11 @@ export class NotificationEventConsumer {
           isRead: false,
           createdAt,
         });
-        await this.repository.save(notification);
+        await this.deliveryService.deliver(notification);
       } catch (err) {
         // Log and skip so consumer keeps running (ARCH-007)
         console.error(
-          `[NotificationEventConsumer] Failed to save notification for ${eventType}:`,
+          `[NotificationEventConsumer] Failed to deliver notification for ${eventType}:`,
           err
         );
       }

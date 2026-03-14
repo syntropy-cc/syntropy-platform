@@ -12,8 +12,13 @@ export {
   type NotificationPreferencesParams,
 } from "./domain/notification-preferences.js";
 export type { DeliveryChannel, DeliveryResult } from "./domain/delivery-channel.js";
-export type { NotificationRepository } from "./domain/ports/notification-repository.js";
+export type {
+  NotificationRepository,
+  FindByUserIdOptions,
+} from "./domain/ports/notification-repository.js";
 export type { NotificationPreferencesRepository } from "./domain/ports/notification-preferences-repository.js";
+export type { ThreadRepository } from "./domain/ports/thread-repository.js";
+export type { MessageRepository } from "./domain/ports/message-repository.js";
 export type { NotificationPreferenceResolver } from "./domain/ports/notification-preference-resolver.js";
 export type { UserEmailResolver } from "./domain/ports/user-email-resolver.js";
 export type { PushTokenProvider } from "./domain/ports/push-token-provider.js";
@@ -31,6 +36,8 @@ export { InMemoryNotificationRepository } from "./infrastructure/repositories/in
 export { PostgresNotificationRepository } from "./infrastructure/repositories/postgres-notification-repository.js";
 export { InMemoryNotificationPreferencesRepository } from "./infrastructure/repositories/in-memory-notification-preferences-repository.js";
 export { PostgresNotificationPreferencesRepository } from "./infrastructure/repositories/postgres-notification-preferences-repository.js";
+export { InMemoryThreadRepository } from "./infrastructure/repositories/in-memory-thread-repository.js";
+export { InMemoryMessageRepository } from "./infrastructure/repositories/in-memory-message-repository.js";
 export { DefaultNotificationPreferenceResolver } from "./infrastructure/default-notification-preference-resolver.js";
 export { PreferenceBackedNotificationPreferenceResolver } from "./infrastructure/preference-backed-notification-preference-resolver.js";
 export { StubUserEmailResolver } from "./infrastructure/stub-user-email-resolver.js";

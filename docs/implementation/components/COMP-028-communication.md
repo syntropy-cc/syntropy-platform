@@ -6,7 +6,7 @@
 > **Stage Assignment**: S11 — Supporting Domains
 > **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-14
+> **Last Updated**: 2026-03-14 (COMP-028.6 done)
 
 **Note**: Implementation Plan Section 7 is the authority for work item IDs. COMP-028.5 = User notification preferences (NotificationPreferences entity, repository, PreferenceBackedNotificationPreferenceResolver).
 
@@ -34,12 +34,12 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 5 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 2 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **7** |
 
-**Component Coverage**: 71%
+**Component Coverage**: 86%
 
 *Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.5 = User notification preferences (NotificationPreferences entity, mute_until, channelPreferences; NotificationPreferencesRepository; InMemory + Postgres; PreferenceBackedNotificationPreferenceResolver; DefaultNotificationPreferenceResolver kept as stub).*
 
@@ -190,26 +190,40 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | communication/ARCHITECTURE.md |
-| **Dependencies** | COMP-028.5 |
-| **Size** | S |
+| **Origin** | communication/ARCHITECTURE.md, IMPLEMENTATION-PLAN.md Section 7 |
+| **Dependencies** | COMP-028.5, COMP-033.2 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: REST API for thread management and notifications.
+**Description**: REST API for notifications and message threads (per Implementation Plan: GET/PUT notifications, POST/GET messages/threads; auth required).
 
 **Acceptance Criteria**:
-- [ ] `POST /internal/communication/threads` → create thread for anchor
-- [ ] `GET /internal/communication/threads/{anchor_type}/{anchor_id}` → thread for entity
-- [ ] `POST /internal/communication/threads/{id}/replies` → add reply
-- [ ] `GET /api/v1/notifications` → user's notifications (paginated)
-- [ ] `PATCH /api/v1/notifications/{id}/read` → mark read
-- [ ] `GET/PUT /api/v1/notification-preferences` → user preferences
+- [x] `GET /api/v1/notifications` → user's notifications (paginated, auth)
+- [x] `PUT /api/v1/notifications/{id}/read` → mark read (auth)
+- [x] `POST /api/v1/messages/threads` → create thread (auth)
+- [x] `GET /api/v1/messages/threads/{id}` → get thread (auth, participant only)
 
 **Files Created/Modified**:
-- `packages/communication/src/api/routes/threads.ts`
-- `packages/communication/src/api/routes/notifications.ts`
+- `packages/communication/src/domain/ports/notification-repository.ts` (findByUserId, markAsRead)
+- `packages/communication/src/domain/ports/thread-repository.ts` (new)
+- `packages/communication/src/domain/ports/message-repository.ts` (new)
+- `packages/communication/src/infrastructure/repositories/in-memory-notification-repository.ts`
+- `packages/communication/src/infrastructure/repositories/postgres-notification-repository.ts`
+- `packages/communication/src/infrastructure/repositories/in-memory-thread-repository.ts` (new)
+- `packages/communication/src/infrastructure/repositories/in-memory-message-repository.ts` (new)
+- `packages/communication/src/index.ts` (exports)
+- `packages/communication/tests/unit/notification-repository.test.ts` (new)
+- `packages/communication/tests/unit/thread-message-repositories.test.ts` (new)
+- `apps/api/package.json` (@syntropy/communication)
+- `apps/api/src/types/communication-context.ts` (new)
+- `apps/api/src/routes/communication.ts` (new)
+- `apps/api/src/server.ts` (register communication routes)
+- `apps/api/src/routes/communication.test.ts` (new)
+
+**Note**: Thread/message persistence is in-memory only in this stage; no migration for threads/messages. Internal thread/reply endpoints (per component record) deferred; Plan authority is the four public endpoints above.
 
 ---
 
@@ -238,6 +252,13 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — COMP-028.6 Communication REST API
+
+- **NotificationRepository** extended with `findByUserId(userId, { limit, offset })` and `markAsRead(id, userId): Promise<boolean>`. In-memory and Postgres implementations updated.
+- **ThreadRepository** and **MessageRepository** ports added; **InMemoryThreadRepository** and **InMemoryMessageRepository** implemented (no DB migration for threads/messages in this stage).
+- **apps/api**: CommunicationContext (notificationRepository, threadRepository, messageRepository); communication routes: GET/PUT /api/v1/notifications, POST/GET /api/v1/messages/threads; all auth-required; envelope responses.
+- Unit tests: notification-repository.test.ts (findByUserId pagination/ordering, markAsRead owner-only); thread-message-repositories.test.ts. API tests: communication.test.ts (401/200/201/403/404 cases).
 
 ### 2026-03-14 — COMP-028.5 (Plan) User notification preferences
 

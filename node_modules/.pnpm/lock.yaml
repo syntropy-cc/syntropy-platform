@@ -35,6 +35,9 @@ importers:
       '@syntropy/ai-agents':
         specifier: workspace:*
         version: link:../../packages/ai-agents
+      '@syntropy/communication':
+        specifier: workspace:*
+        version: link:../../packages/communication
       '@syntropy/dip':
         specifier: workspace:*
         version: link:../../packages/dip

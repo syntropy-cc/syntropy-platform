@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/hub/subdomains/collaboration-layer.md](../../architecture/domains/hub/subdomains/collaboration-layer.md)
 > **Stage Assignment**: S8 — Hub Domain
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress (S31 complete: 019.1–019.5)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -48,12 +48,12 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 8 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **8** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 62% (S31 complete)
 
 ### Item List
 
@@ -61,7 +61,7 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | hub/ARCHITECTURE.md, collaboration-layer.md |
 | **Dependencies** | COMP-001 |
@@ -88,7 +88,7 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | collaboration-layer.md, ADR-011 |
 | **Dependencies** | COMP-019.1 |
@@ -115,7 +115,7 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | collaboration-layer.md, ADR-011 |
 | **Dependencies** | COMP-019.1 |
@@ -142,7 +142,7 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | collaboration-layer.md |
 | **Dependencies** | COMP-019.2, COMP-003 |
@@ -167,7 +167,7 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | collaboration-layer.md |
 | **Dependencies** | COMP-019.4, COMP-019.2 |
@@ -262,6 +262,19 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 - `packages/hub/src/api/routes/issues.ts`
 - `packages/hub/src/api/routes/contributions.ts`
 - `packages/hub/src/api/routes/sandboxes.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S31 Hub Collaboration Core (COMP-019.1–019.5)
+
+- **Package**: `packages/hub` — vitest, 4-layer layout (domain, application, infrastructure, tests).
+- **Domain**: `Issue` (issueId, projectId, title, type, status; open/assign/close); `Contribution` (submit, assignReviewer, requestRevision, accept, reject, merge); `ContributionSandbox` (create, activate, complete; SandboxConfig, StubContainerOrchestrator); value objects `IssueId`, `ContributionId`; status enums and events.
+- **Ports**: `ArtifactPublisherPort`, `ContributionRepositoryPort`, `IssueRepositoryPort`, `ContainerOrchestratorPort`.
+- **Infrastructure**: `DIPContributionAdapter` implementing `ArtifactPublisherPort`; uses `DipArtifactPublishClient` (no @syntropy/dip dependency in hub; app wires DIP).
+- **Application**: `ContributionIntegrationService.merge(contributionId)` — publish artifact, merge contribution, close linked issues; returns `MergeResult` (events for caller to publish).
+- **Tests**: 36 unit tests (issue, contribution, contribution-sandbox, dip-contribution-adapter, contribution-integration-service).
 
 ---
 

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S30: COMP-018.1–018.5 done)
+> **Last Updated**: 2026-03-14 (S31: COMP-019.1–019.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S31 — Hub Collaboration Core
-CURRENT ITEM  : COMP-019.1 — Issue aggregate
+CURRENT STAGE : S32 — Hub Collaboration Persistence & API
+CURRENT ITEM  : COMP-019.7 — CollaborationRepository (Postgres)
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done (S30 complete)
-OVERALL       : 144 / 262 items done (55%)
+STAGE PROGRESS: 5 / 5 items done (S31 complete)
+OVERALL       : 149 / 262 items done (57%)
 ```
 
 **Next 5 items**:
-1. `COMP-019.1` — Issue aggregate ← **START HERE**
-2. `COMP-019.2` — Contribution aggregate
-3. `COMP-019.3` — ContributionSandbox aggregate (business logic only)
-4. `COMP-019.4` — DIPContributionAdapter (ACL)
-5. `COMP-019.5` — ContributionIntegrationService
+1. `COMP-019.7` — CollaborationRepository (Postgres) ← **START HERE**
+2. `COMP-019.8` — Collaboration REST API endpoints
+3. `COMP-020.1` — ContractTemplate entity
+4. `COMP-020.2` — InstitutionCreationWorkflow aggregate
+5. `COMP-020.3` — InstitutionProfile read model
 
 **Component record**: [`COMP-019`](./components/COMP-019-hub-collaboration-layer.md)
 
-**Next item (COMP-019.1) acceptance criteria**: `Issue` aggregate with `issueId`, `projectId`, `title`, `type`, `status`; `IssueStatus` lifecycle; `open()`, `assign()`, `close()` transitions; `IssueType` enum; unit tests.
+**Next item (COMP-019.7) acceptance criteria**: Migrations for `issues`, `contributions`, `contribution_sandboxes`; repositories; integration test.
 
-**Suggested steps**: (1) Write `Issue` aggregate (2) Implement lifecycle transitions (3) Write transition tests
+**Suggested steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
 ---
 
@@ -2257,7 +2257,7 @@ Status: ✅ Done | **Deps**: COMP-018.4, COMP-033.2
 
 #### [COMP-019.1] Issue aggregate
 `S31` `Critical` `M` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-003, COMP-007
+Status: ✅ Done | **Deps**: COMP-003, COMP-007
 **Criteria**: `Issue` aggregate with `issueId`, `projectId`, `title`, `type`, `status`; `IssueStatus` lifecycle; `open()`, `assign()`, `close()` transitions; `IssueType` enum; unit tests.
 **Steps**: (1) Write `Issue` aggregate (2) Implement lifecycle transitions (3) Write transition tests
 
@@ -2265,7 +2265,7 @@ Status: ⬜ | **Deps**: COMP-003, COMP-007
 
 #### [COMP-019.2] Contribution aggregate
 `S31` `Critical` `M` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.1, COMP-003
+Status: ✅ Done | **Deps**: COMP-019.1, COMP-003
 **Criteria**: `Contribution` aggregate linked to `Issue`; `ContributionStatus` lifecycle; `submit()`, `requestRevision()`, `merge()` transitions; `merge()` publishes DIP artifact; unit tests.
 **Steps**: (1) Write `Contribution` aggregate (2) Implement merge event (3) Write merge DIP publication test
 
@@ -2273,7 +2273,7 @@ Status: ⬜ | **Deps**: COMP-019.1, COMP-003
 
 #### [COMP-019.3] ContributionSandbox aggregate (business logic only)
 `S31` `Critical` `M` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.2
+Status: ✅ Done | **Deps**: COMP-019.2
 **Criteria**: `ContributionSandbox` aggregate with sandbox configuration, resource limits, DIP artifact bridge; business logic only (no container provisioning — wired in COMP-019.6); `ContainerOrchestrator` dependency injected as null/stub; unit tests.
 **Steps**: (1) Write `ContributionSandbox` aggregate (2) Inject null orchestrator stub (3) Write business logic tests
 
@@ -2281,7 +2281,7 @@ Status: ⬜ | **Deps**: COMP-019.2
 
 #### [COMP-019.4] DIPContributionAdapter (ACL)
 `S31` `High` `S` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.2, COMP-003.2
+Status: ✅ Done | **Deps**: COMP-019.2, COMP-003.2
 **Criteria**: `DIPContributionAdapter` translates Hub `Contribution` to DIP `Artifact` on merge; ACL layer prevents DIP concepts leaking into Hub domain; unit tests with mock DIP service.
 **Steps**: (1) Write `DIPContributionAdapter` (2) Map Hub contribution to DIP artifact (3) Write ACL translation tests
 
@@ -2289,7 +2289,7 @@ Status: ⬜ | **Deps**: COMP-019.2, COMP-003.2
 
 #### [COMP-019.5] ContributionIntegrationService
 `S31` `High` `M` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.4
+Status: ✅ Done | **Deps**: COMP-019.4
 **Criteria**: `ContributionIntegrationService.merge(contributionId)` orchestrates: merge contribution → publish DIP artifact → update issue status → emit events; transaction boundary; unit tests.
 **Steps**: (1) Write integration service (2) Add transaction handling (3) Write orchestration test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-018.5 done; S31 next (COMP-019.1)
+> Last Updated: 2026-03-14 | COMP-019.5 done; S32 next (COMP-019.7)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 144 / 262 items (55%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 149 / 262 items (57%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S31 — Hub Collaboration Core | S56 | ⬜ |
+| **Current Stage** | S32 — Hub Collaboration Persistence & API | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-019.5 — ContributionIntegrationService.merge(); orchestration (publish DIP, merge contribution, close issues); unit tests with mocks
+- 2026-03-14 COMP-019.4 — DIPContributionAdapter (ACL); DipArtifactPublishClient; unit tests with mock DIP
+- 2026-03-14 COMP-019.3 — ContributionSandbox aggregate (config, resource limits, activate/complete); StubContainerOrchestrator; unit tests
+- 2026-03-14 COMP-019.2 — Contribution aggregate (submit, requestRevision, accept, reject, merge); ContributionStatus; unit tests
+- 2026-03-14 COMP-019.1 — Issue aggregate (open, assign, close); IssueStatus, IssueType; unit tests
 - 2026-03-14 COMP-018.5 — Mentorship REST API (POST/GET mentorships, accept, decline, conclude, reviews); GET /api/v1/learn/users/:id/gallery; mentorship-api integration test
 - 2026-03-14 COMP-018.4 — Migration learn.mentorship_relationships, mentor_reviews, artifact_gallery; PostgresMentorshipRepository; mentorship-repository integration test
 - 2026-03-14 COMP-018.3 — ArtifactGallery read model types; ArtifactGalleryService (getGallery, getForTrack, getForCreator); ArtifactQueryPort, PortfolioQueryPort; unit tests

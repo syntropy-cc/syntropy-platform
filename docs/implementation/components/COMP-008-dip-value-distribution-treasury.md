@@ -3,8 +3,8 @@
 > **Component ID**: COMP-008
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/value-distribution-treasury.md](../../architecture/domains/digital-institutions-protocol/subdomains/value-distribution-treasury.md)
-> **Stage Assignment**: S3 — DIP Protocol
-> **Status**: ⬜ Not Started
+> **Stage Assignment**: S20–S21 (per IMPLEMENTATION-PLAN.md)
+> **Status**: 🔵 In Progress (S20 done: 008.1–008.3)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -266,6 +266,32 @@ Value Distribution & Treasury owns the `Treasury` aggregate and manages AVU (Abs
 **Files Created/Modified**:
 - `packages/dip/tests/unit/value-distribution-treasury/*.test.ts`
 - `packages/dip/tests/integration/value-distribution-treasury/*.test.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-13 — S20 implementation (COMP-008.1–008.3)
+
+**Package**: `packages/dip-treasury` (new workspace). Execution follows IMPLEMENTATION-PLAN.md Section 7; plan uses `TreasuryAccount` (not Treasury) and `packages/dip-treasury` as source of truth.
+
+**COMP-008.1** — Value Distribution package setup + TreasuryAccount
+- Created `packages/dip-treasury` with package.json, tsconfig.json, vitest.config.ts.
+- `TreasuryAccount` aggregate: `accountId`, `institutionId`, `avuBalance` (integer); `credit(amount)`, `debit(amount)`; `InsufficientBalanceError` on debit that would go negative.
+- Unit tests: 9 tests in `tests/unit/treasury-account.test.ts`.
+
+**COMP-008.2** — UsageRegistration event consumer
+- `UsageRegistryPort` and `UsageContributionRecord`; `InMemoryUsageRegistry`.
+- `UsageRegisteredConsumer`: handles messages with `type: "dip.artifact.published"`, computes contribution (fixed 1 per event), records via `UsageRegistryPort`. Topic: consume from `dip.events` (filter by type in payload).
+- Unit tests: 5 tests in `tests/unit/usage-registered-consumer.test.ts` (mock message payloads, no live Kafka).
+
+**COMP-008.3** — AVU accounting (debit/credit)
+- `AVUTransaction` entity; `TreasuryAccountRepositoryPort`, `AVUTransactionJournalPort`.
+- `AVUAccountingService.record(params)`: load account, apply credit/debit (throws before journal if debit insufficient), append transaction to journal, save account. Copy account before mutate so failed journal append does not persist balance change.
+- In-memory implementations: `InMemoryTreasuryAccountRepository`, `InMemoryAVUJournal`.
+- Unit tests: 5 tests in `tests/unit/avu-accounting-service.test.ts` (balance update, journal append, debit guard, missing account, failing journal).
+
+**Files created**: `src/domain/treasury-account.ts`, `src/domain/avu-transaction.ts`, `src/domain/ports/usage-registry-port.ts`, `src/domain/ports/treasury-account-repository-port.ts`, `src/domain/ports/avu-transaction-journal-port.ts`, `src/domain/services/avu-accounting-service.ts`, `src/infrastructure/in-memory-usage-registry.ts`, `src/infrastructure/in-memory-treasury-account-repository.ts`, `src/infrastructure/in-memory-avu-journal.ts`, `src/infrastructure/usage-registered-consumer.ts`, `src/index.ts`, plus config and 3 test files.
 
 ---
 

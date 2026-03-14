@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S20: COMP-007.9 done)
+> **Last Updated**: 2026-03-13 (S20: COMP-008.1–008.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S20 — Governance Completion + Treasury Start
-CURRENT ITEM  : COMP-008.1 — Value Distribution package setup + TreasuryAccount
+CURRENT STAGE : S21 — Value Distribution & Treasury Core
+CURRENT ITEM  : COMP-008.4 — ValueDistributionService.compute()
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 1 / 4 items done (S20)
-OVERALL       : 95 / 262 items done (36%)
+STAGE PROGRESS: 0 / 4 items done (S21)
+OVERALL       : 98 / 262 items done (37%)
 ```
 
 **Next 5 items**:
-1. `COMP-008.1` — Value Distribution package setup + TreasuryAccount ← **START HERE**
-2. `COMP-008.2` — UsageRegistration event consumer
-3. `COMP-008.3` — AVU accounting (debit/credit)
-4. `COMP-008.4` — ValueDistributionService.compute()
+1. `COMP-008.4` — ValueDistributionService.compute() ← **START HERE**
+2. `COMP-008.5` — Liquidation oracle integration
+3. `COMP-008.6` — TreasuryTransfer aggregate
+4. `COMP-008.7` — TreasuryRepository (Postgres)
 5. …
 
 **Component record**: [`COMP-008`](./components/COMP-008-dip-value-distribution-treasury.md)
 
-**Next item (COMP-008.1) acceptance criteria**: `packages/dip-treasury` workspace; `TreasuryAccount` aggregate with `accountId`, `institutionId`, `avuBalance`; `credit()` and `debit()` methods enforce non-negative balance; unit tests.
+**Next item (COMP-008.4) acceptance criteria**: `ValueDistributionService.compute(institutionId, period)` distributes treasury balance proportionally to contributor scores; returns `DistributionResult`; unit tests with various contribution ratios.
 
-**Suggested steps**: (1) Scaffold `packages/dip-treasury` (2) Write `TreasuryAccount` aggregate (3) Write balance tests
+**Suggested steps**: (1) Write distribution computation (2) Implement proportional split (3) Write distribution tests
 
 ---
 
@@ -1865,7 +1865,7 @@ Status: ✅ Done | **Deps**: COMP-007.8, COMP-033.2
 
 #### [COMP-008.1] Value Distribution package setup + TreasuryAccount
 `S20` `Critical` `S` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-007
+Status: ✅ Done | **Deps**: COMP-007
 **Criteria**: `packages/dip-treasury` workspace; `TreasuryAccount` aggregate with `accountId`, `institutionId`, `avuBalance`; `credit()` and `debit()` methods enforce non-negative balance; unit tests.
 **Steps**: (1) Scaffold `packages/dip-treasury` (2) Write `TreasuryAccount` aggregate (3) Write balance tests
 
@@ -1873,7 +1873,7 @@ Status: ⬜ | **Deps**: COMP-007
 
 #### [COMP-008.2] UsageRegistration event consumer
 `S20` `Critical` `S` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.1, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-008.1, COMP-009.1
 **Criteria**: `UsageRegisteredConsumer` subscribes to `dip.artifact.published`; computes usage contribution; records in `UsageRegistry`; unit tests with mock Kafka.
 **Steps**: (1) Write consumer (2) Compute contribution score (3) Write consumer tests
 
@@ -1881,7 +1881,7 @@ Status: ⬜ | **Deps**: COMP-008.1, COMP-009.1
 
 #### [COMP-008.3] AVU accounting (debit/credit)
 `S20` `Critical` `M` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.2
+Status: ✅ Done | **Deps**: COMP-008.2
 **Criteria**: `AVUAccountingService.record(transaction)` updates `TreasuryAccount` balance; all transactions journalled in `avuTransaction`; atomic via DB transaction; unit tests.
 **Steps**: (1) Write `AVUAccountingService` (2) Add double-entry journalling (3) Write atomicity test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S19 complete (COMP-007.5–007.8 done)
+> Last Updated: 2026-03-13 | S20 complete (COMP-008.1–008.3 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 95 / 262 items (36%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 98 / 262 items (37%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S20 — Governance Completion + Treasury Start | S56 | ⬜ |
+| **Current Stage** | S21 — Value Distribution & Treasury Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-008.3 — AVU accounting (AVUAccountingService, journal, TreasuryAccount update), unit tests
+- 2026-03-13 COMP-008.2 — UsageRegisteredConsumer (dip.artifact.published), UsageRegistry, unit tests
+- 2026-03-13 COMP-008.1 — Value Distribution package (dip-treasury), TreasuryAccount aggregate, unit tests
 - 2026-03-14 COMP-007.9 — Governance REST API endpoints (POST/GET institutions, proposals, vote) + full voting lifecycle integration test
 - 2026-03-14 COMP-007.8 — Governance query service + read models (InstitutionSummary, ProposalHistory, pagination), unit tests
 - 2026-03-14 COMP-007.7 — GovernanceEventPublisher (Kafka), institution_created, proposal_executed, proposal_opened, unit tests

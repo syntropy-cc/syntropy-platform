@@ -15,8 +15,11 @@ import {
   NOTIFICATION_CONSUMER_GROUP_ID,
   InMemoryNotificationRepository,
   PostgresNotificationRepository,
+  InMemoryNotificationPreferencesRepository,
+  PostgresNotificationPreferencesRepository,
   NotificationDeliveryService,
   DefaultNotificationPreferenceResolver,
+  PreferenceBackedNotificationPreferenceResolver,
   StubUserEmailResolver,
   StubPushTokenProvider,
   SendGridEmailSender,
@@ -57,13 +60,22 @@ export function createNotificationEventConsumerWorker(): Worker {
       await kafkaClient.consumer.connect();
 
       const databaseUrl = getDatabaseUrl();
-      const repository = databaseUrl
+      const dbClient = databaseUrl
         ? (() => {
             pool = new Pool({ connectionString: databaseUrl });
-            const client = createDbClient(pool);
-            return new PostgresNotificationRepository(client);
+            return createDbClient(pool);
           })()
+        : null;
+      const repository = dbClient
+        ? new PostgresNotificationRepository(dbClient)
         : new InMemoryNotificationRepository();
+
+      const preferencesRepository = dbClient
+        ? new PostgresNotificationPreferencesRepository(dbClient)
+        : new InMemoryNotificationPreferencesRepository();
+      const preferenceResolver = dbClient
+        ? new PreferenceBackedNotificationPreferenceResolver(preferencesRepository)
+        : new DefaultNotificationPreferenceResolver();
 
       if (!databaseUrl) {
         log.warn("DATABASE_URL not set; notifications worker using in-memory repository");
@@ -81,7 +93,7 @@ export function createNotificationEventConsumerWorker(): Worker {
 
       const deliveryService = new NotificationDeliveryService({
         repository,
-        preferenceResolver: new DefaultNotificationPreferenceResolver(),
+        preferenceResolver,
         userEmailResolver: new StubUserEmailResolver({ email: process.env.NOTIFICATION_USER_EMAIL ?? null }),
         pushTokenProvider: new StubPushTokenProvider(),
         emailSender: emailSender ?? undefined,

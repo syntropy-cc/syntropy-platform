@@ -8,7 +8,7 @@
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
-**Note**: Implementation Plan Section 7 is the authority for work item IDs. Plan COMP-028.4 = Notification delivery service (done this session).
+**Note**: Implementation Plan Section 7 is the authority for work item IDs. COMP-028.5 = User notification preferences (NotificationPreferences entity, repository, PreferenceBackedNotificationPreferenceResolver).
 
 ## Component Overview
 
@@ -34,14 +34,14 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 4 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 3 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **7** |
 
-**Component Coverage**: 57%
+**Component Coverage**: 71%
 
-*Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.3 = NotificationEventConsumer (Kafka). COMP-028.4 = Notification delivery service (NotificationDeliveryService, SendGrid/FCM adapters, preference resolver stubs).*
+*Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.5 = User notification preferences (NotificationPreferences entity, mute_until, channelPreferences; NotificationPreferencesRepository; InMemory + Postgres; PreferenceBackedNotificationPreferenceResolver; DefaultNotificationPreferenceResolver kept as stub).*
 
 ### Item List
 
@@ -234,6 +234,19 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 **Files Created/Modified**:
 - `packages/communication/src/api/routes/notification-stream.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — COMP-028.5 (Plan) User notification preferences
+
+- **NotificationPreferences** entity: `userId`, `muteUntil`, `channelPreferences` (per-type channels). Validates channels and muteUntil.
+- **NotificationPreferencesRepository** port; **InMemoryNotificationPreferencesRepository** and **PostgresNotificationPreferencesRepository**.
+- **PreferenceBackedNotificationPreferenceResolver**: loads prefs from repository; returns `[]` when `muteUntil` is in future; per-type channels or all when type missing.
+- Migration `20260314000000_communication_notification_preferences.sql`: `communication.notification_preferences` (user_id PK, mute_until, channel_preferences JSONB).
+- Worker wires **PreferenceBackedNotificationPreferenceResolver** with Postgres prefs repo when `DATABASE_URL` set; otherwise **DefaultNotificationPreferenceResolver**.
+- Unit tests: notification-preferences.test.ts, preference-backed-notification-preference-resolver.test.ts, in-memory-notification-preferences-repository.test.ts.
 
 ---
 

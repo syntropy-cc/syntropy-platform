@@ -7,8 +7,13 @@ export { Thread, type ThreadParams } from "./domain/thread.js";
 export { isThreadType, type ThreadType } from "./domain/thread-type.js";
 export { Message, type MessageParams } from "./domain/message.js";
 export { Notification, type NotificationParams } from "./domain/notification.js";
+export {
+  NotificationPreferences,
+  type NotificationPreferencesParams,
+} from "./domain/notification-preferences.js";
 export type { DeliveryChannel, DeliveryResult } from "./domain/delivery-channel.js";
 export type { NotificationRepository } from "./domain/ports/notification-repository.js";
+export type { NotificationPreferencesRepository } from "./domain/ports/notification-preferences-repository.js";
 export type { NotificationPreferenceResolver } from "./domain/ports/notification-preference-resolver.js";
 export type { UserEmailResolver } from "./domain/ports/user-email-resolver.js";
 export type { PushTokenProvider } from "./domain/ports/push-token-provider.js";
@@ -24,7 +29,10 @@ export { NotificationDeliveryService } from "./application/notification-delivery
 export type { NotificationDeliveryServiceOptions } from "./application/notification-delivery-service.js";
 export { InMemoryNotificationRepository } from "./infrastructure/repositories/in-memory-notification-repository.js";
 export { PostgresNotificationRepository } from "./infrastructure/repositories/postgres-notification-repository.js";
+export { InMemoryNotificationPreferencesRepository } from "./infrastructure/repositories/in-memory-notification-preferences-repository.js";
+export { PostgresNotificationPreferencesRepository } from "./infrastructure/repositories/postgres-notification-preferences-repository.js";
 export { DefaultNotificationPreferenceResolver } from "./infrastructure/default-notification-preference-resolver.js";
+export { PreferenceBackedNotificationPreferenceResolver } from "./infrastructure/preference-backed-notification-preference-resolver.js";
 export { StubUserEmailResolver } from "./infrastructure/stub-user-email-resolver.js";
 export type { StubUserEmailResolverOptions } from "./infrastructure/stub-user-email-resolver.js";
 export { StubPushTokenProvider } from "./infrastructure/stub-push-token-provider.js";

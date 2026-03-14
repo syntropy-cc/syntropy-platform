@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S44: COMP-028.4 done)
+> **Last Updated**: 2026-03-14 (S44: COMP-028.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,21 +10,21 @@
 
 ```
 CURRENT STAGE : S44 — Communication Core (M4)
-CURRENT ITEM  : COMP-028.5 — User notification preferences
+CURRENT ITEM  : COMP-028.6 — Communication REST API
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 2 / 5 items done (S44)
-OVERALL       : 206 / 262 items done (79%)
+STAGE PROGRESS: 3 / 5 items done (S44)
+OVERALL       : 207 / 262 items done (79%)
 ```
 
 **Next 5 items**:
-1. `COMP-028.5` — User notification preferences ← **START HERE**
+1. `COMP-028.6` — Communication REST API ← **START HERE**
 2. (see Section 6 for full order)
 
 **Component record**: [`COMP-028`](./components/COMP-028-communication.md)
 
-**Next item (COMP-028.5) acceptance criteria**: `NotificationPreferences` entity per user; per-notification-type enable/disable; `mute_until` snooze feature; repository; unit tests.
+**Next item (COMP-028.6) acceptance criteria**: `GET /api/v1/notifications` (paginated), `PUT /api/v1/notifications/{id}/read`, `POST /api/v1/messages/threads`, `GET /api/v1/messages/threads/{id}`; auth required.
 
-**Suggested steps**: (1) Write `NotificationPreferences` entity (2) Add preference check in delivery (3) Write preference tests
+**Suggested steps**: (1) Write notification routes (2) Write message/thread routes (3) Write API tests
 
 ---
 
@@ -2750,7 +2750,7 @@ Status: ✅ Done | **Deps**: COMP-028.3
 
 #### [COMP-028.5] User notification preferences
 `S44` `High` `S` [Record→](./components/COMP-028-communication.md)
-Status: ⬜ | **Deps**: COMP-028.4
+Status: ✅ Done | **Deps**: COMP-028.4
 **Criteria**: `NotificationPreferences` entity per user; per-notification-type enable/disable; `mute_until` snooze feature; repository; unit tests.
 **Steps**: (1) Write `NotificationPreferences` entity (2) Add preference check in delivery (3) Write preference tests
 
@@ -3198,13 +3198,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S44 COMP-028.4 done; next COMP-028.5
+> Last Updated: 2026-03-14 | S44 COMP-028.5 done; next COMP-028.6
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 206 / 262 items (79%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 207 / 262 items (79%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
 | **Current Stage** | S44 — Communication Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3214,6 +3214,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-028.5 — User notification preferences; NotificationPreferences entity (muteUntil, channelPreferences); NotificationPreferencesRepository; InMemory + Postgres repos; PreferenceBackedNotificationPreferenceResolver; migration notification_preferences; worker wired to preference-backed resolver when DB present; unit tests
 - 2026-03-14 COMP-028.4 — Notification delivery service; NotificationDeliveryService (in-app, email SendGrid, push FCM); preference resolver, stubs, RetryPolicy; consumer wired to delivery; unit + integration tests
 - 2026-03-14 COMP-028.3 — NotificationEventConsumer (Kafka); Notification entity, NotificationRepository, event mapping; Postgres + InMemory repos; worker registered; integration test
 - 2026-03-14 COMP-028.2 — Message entity (messageId, threadId, authorId, content, sentAt); SoftDeletable; unit tests

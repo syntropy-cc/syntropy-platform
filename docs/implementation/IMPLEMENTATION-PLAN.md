@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S40: COMP-025.6, 025.7, 026.1, 026.2 done)
+> **Last Updated**: 2026-03-14 (S41: COMP-026.3, 026.4, 026.5, 032.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S41 — DOI registration + Labs UI (M3)
-CURRENT ITEM  : COMP-026.3 — DOIRegistrationService
-MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 4 items done (S41)
-OVERALL       : 191 / 262 items done (73%)
+CURRENT STAGE : S42 — Sponsorship Core (M4)
+CURRENT ITEM  : COMP-027.1 — Sponsorship package setup + Sponsorship aggregate
+MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
+STAGE PROGRESS: 4 / 4 items done (S41)
+OVERALL       : 195 / 262 items done (74%)
 ```
 
 **Next 5 items**:
-1. `COMP-026.3` — DOIRegistrationService ← **START HERE**
-2. `COMP-026.4` — ExternalIndexingNotifier
-3. `COMP-026.5` — DOI REST API + integration tests
-4. `COMP-032.5` — Labs pillar Next.js pages
-5. (see Section 6 for full order)
+1. `COMP-027.1` — Sponsorship package setup + Sponsorship aggregate ← **START HERE**
+2. (see Section 6 for full order)
 
-**Component record**: [`COMP-026`](./components/COMP-026-labs-doi-publication.md)
+**Component record**: [`COMP-027`](./components/COMP-027-sponsorship.md)
 
-**Next item (COMP-026.3) acceptance criteria**: `DOIRegistrationService.register(articleId)` validates article state (must be accepted), calls `DataCiteAdapter`, stores `DOIRecord`; retries on transient failure; unit tests.
+**Next item (COMP-027.1) acceptance criteria**: `packages/sponsorship` workspace; `Sponsorship` aggregate with `sponsorId`, `sponsoredId`, `type`, `amount`, `status`; `SponsorshipStatus` lifecycle; unit tests.
 
-**Suggested steps**: (1) Write `DOIRegistrationService` (2) Add state validation (3) Write retry + failure tests
+**Suggested steps**: (1) Scaffold `packages/sponsorship` (2) Write `Sponsorship` aggregate (3) Write lifecycle tests
 
 ---
 
@@ -2633,7 +2630,7 @@ Status: Done | **Deps**: COMP-026.1
 
 #### [COMP-026.3] DOIRegistrationService
 `S41` `High` `M` [Record→](./components/COMP-026-labs-doi-publication.md)
-Status: ⬜ | **Deps**: COMP-026.2
+Status: Done | **Deps**: COMP-026.2
 **Criteria**: `DOIRegistrationService.register(articleId)` validates article state (must be accepted), calls `DataCiteAdapter`, stores `DOIRecord`; retries on transient failure; unit tests.
 **Steps**: (1) Write `DOIRegistrationService` (2) Add state validation (3) Write retry + failure tests
 
@@ -2641,7 +2638,7 @@ Status: ⬜ | **Deps**: COMP-026.2
 
 #### [COMP-026.4] ExternalIndexingNotifier
 `S41` `Medium` `S` [Record→](./components/COMP-026-labs-doi-publication.md)
-Status: ⬜ | **Deps**: COMP-026.3
+Status: Done | **Deps**: COMP-026.3
 **Criteria**: `ExternalIndexingNotifier.notify(doiRecord)` submits to CrossRef, DOAJ via webhooks; retry policy applied; non-blocking (fire-and-forget with DLQ fallback); unit tests.
 **Steps**: (1) Write `ExternalIndexingNotifier` (2) Apply retry policy (3) Write notification tests
 
@@ -2649,7 +2646,7 @@ Status: ⬜ | **Deps**: COMP-026.3
 
 #### [COMP-026.5] DOI REST API + integration tests
 `S41` `High` `M` [Record→](./components/COMP-026-labs-doi-publication.md)
-Status: ⬜ | **Deps**: COMP-026.4, COMP-033.2
+Status: Done | **Deps**: COMP-026.4, COMP-033.2
 **Criteria**: `POST /api/v1/labs/articles/{id}/doi` triggers registration; `GET /api/v1/labs/articles/{id}/doi` returns DOI status; integration test with mock DataCite.
 **Steps**: (1) Write API routes (2) Wire to registration service (3) Write integration test with mock
 
@@ -2657,7 +2654,7 @@ Status: ⬜ | **Deps**: COMP-026.4, COMP-033.2
 
 #### [COMP-032.5] Labs pillar Next.js pages
 `S41` `High` `M` [Record→](./components/COMP-032-web-application.md)
-Status: ⬜ | **Deps**: COMP-032.2, COMP-023, COMP-025, COMP-026
+Status: Done | **Deps**: COMP-032.2, COMP-023, COMP-025, COMP-026
 **Criteria**: `apps/labs` pages: `/labs` (article list), `/labs/articles/[id]` (article with MyST render), `/labs/articles/[id]/reviews` (peer review panel), `/labs/articles/[id]/edit` (editor); DOI badge shown.
 **Steps**: (1) Write article list page (2) Write article detail + MyST render (3) Write review panel page
 
@@ -3201,15 +3198,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S40 complete; next COMP-026.3
+> Last Updated: 2026-03-14 | S41 complete; next COMP-027.1
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 191 / 262 items (73%) | 262 / 262 | ⬜ |
-| **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S41 — DOI registration + Labs UI | S56 | ⬜ |
+| **Overall Progress** | 195 / 262 items (74%) | 262 / 262 | ⬜ |
+| **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
+| **Current Stage** | S42 — Sponsorship Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3214,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-032.5 — Labs pillar Next.js pages (/labs, /labs/articles/[id], reviews, edit); DOI badge; GET /api/v1/labs/articles list
+- 2026-03-14 COMP-026.5 — DOI REST API (POST/GET /api/v1/labs/articles/:id/doi); labs-doi routes and API tests
+- 2026-03-14 COMP-026.4 — ExternalIndexingNotifier (CrossRef, DOAJ webhooks; retry; fire-and-forget); unit tests
+- 2026-03-14 COMP-026.3 — DOIRegistrationService; DOIRecordRepositoryPort; PostgresDOIRecordRepository; migration doi_records; unit tests
 - 2026-03-14 COMP-026.2 — DataCiteAdapter; DOIProvider; MockDOIProvider; circuit breaker; unit tests
 - 2026-03-14 COMP-026.1 — DOIRecord entity; DOIStatus; immutability; unit tests
 - 2026-03-14 COMP-025.7 — Peer Review REST API (POST/GET reviews, POST responses); visibility enforced; API tests

@@ -7,6 +7,7 @@ export {
   LabsDomainError,
   ArticleNotFoundError,
   ArticleForbiddenError,
+  ArticleNotEligibleForDOIError,
 } from "./domain/errors.js";
 export {
   SubjectArea,
@@ -107,7 +108,14 @@ export type {
   ArticleDOIMetadata,
   RegisterDOIResult,
 } from "./domain/doi-publication/ports/doi-provider.js";
+export type { DOIRecordRepositoryPort } from "./domain/doi-publication/ports/doi-record-repository-port.js";
 export { DataCiteAdapter, CircuitOpenError } from "./infrastructure/datacite-adapter.js";
+export { DOIRegistrationService, type DOIRegistrationServiceDeps } from "./application/doi-registration-service.js";
+export { PostgresDOIRecordRepository } from "./infrastructure/repositories/postgres-doi-record-repository.js";
+export {
+  ExternalIndexingNotifier,
+  type ExternalIndexingNotifierConfig,
+} from "./infrastructure/external-indexing-notifier.js";
 export { MockDOIProvider } from "./infrastructure/mock-doi-provider.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";

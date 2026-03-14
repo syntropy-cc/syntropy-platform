@@ -29,3 +29,12 @@ export class ArticleForbiddenError extends LabsDomainError {
     Object.setPrototypeOf(this, ArticleForbiddenError.prototype);
   }
 }
+
+/** Raised when an article is not eligible for DOI registration (e.g. not published) (COMP-026.3). */
+export class ArticleNotEligibleForDOIError extends LabsDomainError {
+  constructor(articleId: string, reason: string) {
+    super(`Article ${articleId} not eligible for DOI: ${reason}`);
+    this.name = "ArticleNotEligibleForDOIError";
+    Object.setPrototypeOf(this, ArticleNotEligibleForDOIError.prototype);
+  }
+}

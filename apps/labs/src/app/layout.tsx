@@ -9,7 +9,7 @@ const LABS_NAV_LINKS = [
   { href: "http://localhost:3000", label: "Platform" },
   { href: "http://localhost:3001", label: "Learn" },
   { href: "http://localhost:3002", label: "Hub" },
-  { href: "/", label: "Labs" },
+  { href: "/labs", label: "Labs" },
 ];
 
 export const metadata: Metadata = {

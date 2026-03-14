@@ -1,7 +1,7 @@
 /**
- * Labs scientific context for REST API (COMP-022.5, COMP-023.7, COMP-024.5, COMP-025.7).
+ * Labs scientific context for REST API (COMP-022.5, COMP-023.7, COMP-024.5, COMP-025.7, COMP-026.5).
  * Injects repositories for subject areas, methodologies, hypothesis records,
- * articles, versions, article submission service, experiment design, and peer review.
+ * articles, versions, article submission service, experiment design, peer review, and DOI.
  */
 
 import type {
@@ -17,7 +17,10 @@ import type {
   ReviewPassageLinkRepositoryPort,
   AuthorResponseRepositoryPort,
   ReviewVisibilityEvaluator,
+  DOIRegistrationService,
+  DOIRecordRepositoryPort,
 } from "@syntropy/labs-package";
+import type { ExternalIndexingNotifier } from "@syntropy/labs-package";
 
 export interface LabsScientificContext {
   subjectAreaRepository: SubjectAreaRepositoryPort;
@@ -35,4 +38,9 @@ export interface LabsScientificContext {
   reviewPassageLinkRepository?: ReviewPassageLinkRepositoryPort;
   authorResponseRepository?: AuthorResponseRepositoryPort;
   reviewVisibilityEvaluator?: ReviewVisibilityEvaluator;
+  /** DOI registration (COMP-026.5). When set with doiRecordRepository, DOI routes are registered. */
+  doiRegistrationService?: DOIRegistrationService;
+  doiRecordRepository?: DOIRecordRepositoryPort;
+  /** Optional: notify external indexers after DOI registration (fire-and-forget). */
+  externalIndexingNotifier?: ExternalIndexingNotifier;
 }

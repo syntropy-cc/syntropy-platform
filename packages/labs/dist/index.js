@@ -2,7 +2,7 @@
  * Labs domain package (COMP-022 through COMP-026).
  * Architecture: domains/labs/subdomains/scientific-context-extension.md
  */
-export { LabsDomainError, ArticleNotFoundError, ArticleForbiddenError, } from "./domain/errors.js";
+export { LabsDomainError, ArticleNotFoundError, ArticleForbiddenError, ArticleNotEligibleForDOIError, } from "./domain/errors.js";
 export { SubjectArea, createSubjectAreaId, isSubjectAreaId, ResearchMethodology, createResearchMethodologyId, isMethodologyType, isResearchMethodologyId, HypothesisRecord, createHypothesisId, isHypothesisId, isHypothesisStatus, } from "./domain/scientific-context/index.js";
 export { ScientificArticle, isArticleStatus, ArticleVersion, } from "./domain/article-editor/index.js";
 export { MystRenderer } from "./infrastructure/myst-renderer.js";
@@ -11,6 +11,12 @@ export { ArticleSubmissionService, } from "./application/article-submission-serv
 export { runReviewPublication } from "./application/review-publication-job.js";
 export { AnonymizationPolicyEnforcer, ExperimentDesign, ExperimentResult, isExperimentStatus, PERSONAL_DATA_FIELDS, } from "./domain/experiment-design/index.js";
 export { Review, isReviewStatus, ReviewPassageLink, getLinkedText, AuthorResponse, ReviewVisibilityEvaluator, } from "./domain/open-peer-review/index.js";
+export { isDOIStatus, isRegisteredOrFindable, DOIRecord, createDoiRecordId, isDoiRecordId, } from "./domain/doi-publication/index.js";
+export { DataCiteAdapter, CircuitOpenError } from "./infrastructure/datacite-adapter.js";
+export { DOIRegistrationService } from "./application/doi-registration-service.js";
+export { PostgresDOIRecordRepository } from "./infrastructure/repositories/postgres-doi-record-repository.js";
+export { ExternalIndexingNotifier, } from "./infrastructure/external-indexing-notifier.js";
+export { MockDOIProvider } from "./infrastructure/mock-doi-provider.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";

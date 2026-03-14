@@ -2,6 +2,7 @@
  * Labs article editor REST routes (COMP-023.7).
  *
  * POST  /api/v1/labs/articles           — create draft article (auth)
+ * GET   /api/v1/labs/articles           — list articles by current user (auth)
  * GET   /api/v1/labs/articles/:id       — get article by id (auth)
  * PUT   /api/v1/labs/articles/:id       — update draft (auth)
  * POST  /api/v1/labs/articles/:id/submit — submit for review (auth)
@@ -136,6 +137,41 @@ export async function labsArticlesRoutes(
           errorEnvelope(
             "INTERNAL_ERROR",
             "Failed to create article.",
+            getRequestId(request)
+          )
+        );
+      }
+    }
+  );
+
+  fastify.get(
+    "/api/v1/labs/articles",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user?.userId;
+      if (!userId) {
+        return reply.status(401).send(
+          errorEnvelope(
+            "UNAUTHORIZED",
+            "Authentication required.",
+            getRequestId(request)
+          )
+        );
+      }
+      try {
+        const articles = await scientificArticleRepository.findByAuthor(userId);
+        return reply.status(200).send(
+          successEnvelope(
+            articles.map((a) => articleToPayload(a)),
+            getRequestId(request)
+          )
+        );
+      } catch (err) {
+        fastify.log.error({ err }, "List articles failed");
+        return reply.status(500).send(
+          errorEnvelope(
+            "INTERNAL_ERROR",
+            "Failed to list articles.",
             getRequestId(request)
           )
         );

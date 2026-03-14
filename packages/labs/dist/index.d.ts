@@ -2,7 +2,7 @@
  * Labs domain package (COMP-022 through COMP-026).
  * Architecture: domains/labs/subdomains/scientific-context-extension.md
  */
-export { LabsDomainError, ArticleNotFoundError, ArticleForbiddenError, } from "./domain/errors.js";
+export { LabsDomainError, ArticleNotFoundError, ArticleForbiddenError, ArticleNotEligibleForDOIError, } from "./domain/errors.js";
 export { SubjectArea, createSubjectAreaId, isSubjectAreaId, type SubjectAreaId, type SubjectAreaLevel, type SubjectAreaParams, ResearchMethodology, createResearchMethodologyId, isMethodologyType, isResearchMethodologyId, type MethodologyType, type ResearchMethodologyId, type ResearchMethodologyParams, HypothesisRecord, createHypothesisId, isHypothesisId, isHypothesisStatus, type HypothesisId, type HypothesisRecordParams, type HypothesisStatus, } from "./domain/scientific-context/index.js";
 export { ScientificArticle, ArticleStatus, isArticleStatus, ArticleVersion, type ScientificArticleParams, type ArticleVersionParams, } from "./domain/article-editor/index.js";
 export type { SubjectAreaRepositoryPort, SubjectAreaTreeNode, } from "./domain/scientific-context/ports/subject-area-repository-port.js";
@@ -24,6 +24,14 @@ export { ArticleSubmissionService, type ArticleSubmissionServiceDeps, } from "./
 export { runReviewPublication } from "./application/review-publication-job.js";
 export { AnonymizationPolicyEnforcer, ExperimentDesign, ExperimentResult, ExperimentStatus, isExperimentStatus, PERSONAL_DATA_FIELDS, type AnonymizationPolicy, type ExperimentDesignParams, type ExperimentResultParams, type PersonalDataField, } from "./domain/experiment-design/index.js";
 export { Review, ReviewStatus, isReviewStatus, ReviewPassageLink, getLinkedText, AuthorResponse, ReviewVisibilityEvaluator, type ReviewParams, type ReviewPassageLinkParams, type ArticleContent, type AuthorResponseParams, } from "./domain/open-peer-review/index.js";
+export { DOIStatus, isDOIStatus, isRegisteredOrFindable, DOIRecord, createDoiRecordId, isDoiRecordId, type DOIRecordParams, type DoiRecordId, } from "./domain/doi-publication/index.js";
+export type { DOIProvider, ArticleDOIMetadata, RegisterDOIResult, } from "./domain/doi-publication/ports/doi-provider.js";
+export type { DOIRecordRepositoryPort } from "./domain/doi-publication/ports/doi-record-repository-port.js";
+export { DataCiteAdapter, CircuitOpenError } from "./infrastructure/datacite-adapter.js";
+export { DOIRegistrationService, type DOIRegistrationServiceDeps } from "./application/doi-registration-service.js";
+export { PostgresDOIRecordRepository } from "./infrastructure/repositories/postgres-doi-record-repository.js";
+export { ExternalIndexingNotifier, type ExternalIndexingNotifierConfig, } from "./infrastructure/external-indexing-notifier.js";
+export { MockDOIProvider } from "./infrastructure/mock-doi-provider.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";

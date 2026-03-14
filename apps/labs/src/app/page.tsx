@@ -1,12 +1,9 @@
 /**
- * Labs app stub (COMP-032.1).
+ * Labs app root — redirect to /labs (COMP-032.5).
  */
 
-export default function LabsPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold text-foreground">Labs</h1>
-      <p className="text-muted-foreground">Scientific publishing and peer review — coming soon.</p>
-    </div>
-  );
+import { redirect } from "next/navigation";
+
+export default function RootPage() {
+  redirect("/labs");
 }

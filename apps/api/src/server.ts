@@ -47,6 +47,7 @@ import { labsScientificContextRoutes } from "./routes/labs-scientific-context.js
 import { labsArticlesRoutes } from "./routes/labs-articles.js";
 import { labsExperimentsRoutes } from "./routes/labs-experiments.js";
 import { labsReviewsRoutes } from "./routes/labs-reviews.js";
+import { labsDoiRoutes } from "./routes/labs-doi.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -127,6 +128,7 @@ export async function createApp(options?: CreateAppOptions) {
     await app.register(labsArticlesRoutes, { labs: options.labs });
     await app.register(labsExperimentsRoutes, { labs: options.labs });
     await app.register(labsReviewsRoutes, { labs: options.labs });
+    await app.register(labsDoiRoutes, { labs: options.labs });
   }
   await app.register(internalEventSchemasPlugin);
 

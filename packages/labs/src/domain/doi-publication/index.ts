@@ -15,3 +15,9 @@ export {
   type DOIRecordParams,
   type DoiRecordId,
 } from "./doi-record.js";
+export type { DOIRecordRepositoryPort } from "./ports/doi-record-repository-port.js";
+export type {
+  DOIProvider,
+  ArticleDOIMetadata,
+  RegisterDOIResult,
+} from "./ports/doi-provider.js";

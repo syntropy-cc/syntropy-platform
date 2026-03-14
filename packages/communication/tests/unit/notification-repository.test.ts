@@ -99,6 +99,74 @@ describe("InMemoryNotificationRepository (COMP-028.6)", () => {
       expect(page2).toHaveLength(2);
       expect(page1[0].id).not.toBe(page2[0].id);
     });
+
+    it("with since returns only notifications with createdAt > since (COMP-028.7)", async () => {
+      const t0 = new Date("2026-03-14T10:00:00Z");
+      const t1 = new Date("2026-03-14T11:00:00Z");
+      const t2 = new Date("2026-03-14T12:00:00Z");
+      await repo.save(
+        new Notification({
+          id: "old",
+          userId: "u1",
+          notificationType: "t",
+          sourceEventType: "e",
+          payload: {},
+          isRead: false,
+          createdAt: t0,
+        })
+      );
+      await repo.save(
+        new Notification({
+          id: "mid",
+          userId: "u1",
+          notificationType: "t",
+          sourceEventType: "e",
+          payload: {},
+          isRead: false,
+          createdAt: t1,
+        })
+      );
+      await repo.save(
+        new Notification({
+          id: "new",
+          userId: "u1",
+          notificationType: "t",
+          sourceEventType: "e",
+          payload: {},
+          isRead: false,
+          createdAt: t2,
+        })
+      );
+
+      const since = new Date("2026-03-14T10:30:00Z");
+      const items = await repo.findByUserId("u1", { since, limit: 10 });
+      expect(items).toHaveLength(2);
+      expect(items.map((n) => n.id)).toEqual(["new", "mid"]);
+      expect(items[0].createdAt.getTime()).toBeGreaterThan(since.getTime());
+      expect(items[1].createdAt.getTime()).toBeGreaterThan(since.getTime());
+    });
+
+    it("with since and offset applies offset after filtering", async () => {
+      const base = new Date("2026-03-14T12:00:00Z");
+      for (let i = 0; i < 4; i++) {
+        await repo.save(
+          new Notification({
+            id: `n-${i}`,
+            userId: "u1",
+            notificationType: "t",
+            sourceEventType: "e",
+            payload: {},
+            isRead: false,
+            createdAt: new Date(base.getTime() + i * 1000),
+          })
+        );
+      }
+      const since = new Date(base.getTime() - 1000);
+      const page = await repo.findByUserId("u1", { since, limit: 2, offset: 1 });
+      expect(page).toHaveLength(2);
+      expect(page[0].id).toBe("n-2");
+      expect(page[1].id).toBe("n-1");
+    });
   });
 
   describe("markAsRead", () => {

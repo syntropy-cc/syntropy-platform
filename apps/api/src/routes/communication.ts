@@ -1,11 +1,12 @@
 /**
- * Communication REST routes (COMP-028.6).
+ * Communication REST routes (COMP-028.6, COMP-028.7).
  *
  * GET  /api/v1/notifications — list notifications for current user (paginated, auth).
+ * GET  /api/v1/notifications/stream — SSE stream for real-time notifications (auth).
  * PUT  /api/v1/notifications/:id/read — mark notification as read (auth).
  * POST /api/v1/messages/threads — create message thread (auth).
  * GET  /api/v1/messages/threads/:id — get thread by id (auth, participant only).
- * All responses use CONV-017 envelope.
+ * All JSON responses use CONV-017 envelope.
  */
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
@@ -20,6 +21,27 @@ import type { CommunicationContext } from "../types/communication-context.js";
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
+const SSE_POLL_INTERVAL_MS = 2000;
+const SSE_HEARTBEAT_INTERVAL_MS = 30_000;
+const SSE_BATCH_LIMIT = 50;
+
+function formatNotificationSseEvent(notification: Notification): string {
+  const payload = {
+    id: notification.id,
+    userId: notification.userId,
+    notificationType: notification.notificationType,
+    sourceEventType: notification.sourceEventType,
+    payload: notification.payload,
+    isRead: notification.isRead,
+    createdAt: notification.createdAt.toISOString(),
+  };
+  const id = notification.createdAt.getTime();
+  return `id: ${id}\ndata: ${JSON.stringify(payload)}\n\n`;
+}
+
+function formatSseHeartbeat(): string {
+  return `: heartbeat ${Date.now()}\n\n`;
+}
 
 /** Request body for POST /api/v1/messages/threads */
 interface CreateThreadBody {
@@ -51,6 +73,98 @@ export async function communicationRoutes(
     messageRepository,
   } = opts.communication;
   const requireAuth = fastify.requireAuth;
+
+  fastify.get(
+    "/api/v1/notifications/stream",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user!.userId;
+      const lastEventIdHeader = request.headers["last-event-id"];
+      let since: Date | undefined;
+      if (typeof lastEventIdHeader === "string" && lastEventIdHeader.trim() !== "") {
+        const ts = Number(lastEventIdHeader.trim());
+        if (!Number.isNaN(ts) && Number.isFinite(ts)) {
+          since = new Date(ts);
+        }
+      }
+
+      reply.raw.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      });
+      reply.raw.flushHeaders?.();
+
+      let closed = false;
+      request.raw.on("close", () => {
+        closed = true;
+      });
+      request.raw.on("error", () => {
+        closed = true;
+      });
+
+      let lastHeartbeat = Date.now();
+      const sendHeartbeatIfDue = (): void => {
+        if (closed || reply.raw.writableEnded) return;
+        if (Date.now() - lastHeartbeat >= SSE_HEARTBEAT_INTERVAL_MS) {
+          reply.raw.write(formatSseHeartbeat());
+          lastHeartbeat = Date.now();
+        }
+      };
+
+      const poll = async (): Promise<void> => {
+        if (closed || reply.raw.writableEnded) return;
+        try {
+          const items = await notificationRepository.findByUserId(userId, {
+            since,
+            limit: SSE_BATCH_LIMIT,
+            offset: 0,
+          });
+          for (const n of items) {
+            if (closed || reply.raw.writableEnded) break;
+            reply.raw.write(formatNotificationSseEvent(n));
+          }
+          if (items.length > 0 && items[0]) {
+            since = new Date(items[0].createdAt.getTime());
+          }
+        } catch {
+          if (!closed && !reply.raw.writableEnded) {
+            reply.raw.end();
+          }
+          return;
+        }
+        sendHeartbeatIfDue();
+      };
+
+      await poll();
+      const intervalId = setInterval(() => {
+        if (closed || reply.raw.writableEnded) {
+          clearInterval(intervalId);
+          return;
+        }
+        void poll();
+      }, SSE_POLL_INTERVAL_MS);
+
+      const heartbeatId = setInterval(() => {
+        if (closed || reply.raw.writableEnded) {
+          clearInterval(heartbeatId);
+          return;
+        }
+        sendHeartbeatIfDue();
+      }, SSE_HEARTBEAT_INTERVAL_MS);
+
+      await new Promise<void>((resolve) => {
+        request.raw.on("close", () => {
+          clearInterval(intervalId);
+          clearInterval(heartbeatId);
+          if (!reply.raw.writableEnded) {
+            reply.raw.end();
+          }
+          resolve();
+        });
+      });
+    }
+  );
 
   fastify.get<{
     Querystring: { limit?: string; offset?: string };

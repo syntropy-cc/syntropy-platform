@@ -8,6 +8,8 @@ import type { Notification } from "../notification.js";
 export interface FindByUserIdOptions {
   limit?: number;
   offset?: number;
+  /** When set, return only notifications with createdAt > since (for SSE stream / reconnection). */
+  since?: Date;
 }
 
 /**

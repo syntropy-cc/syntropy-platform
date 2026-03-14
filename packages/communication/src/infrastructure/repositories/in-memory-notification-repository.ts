@@ -25,9 +25,14 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   ): Promise<Notification[]> {
     const limit = options?.limit ?? DEFAULT_LIMIT;
     const offset = options?.offset ?? DEFAULT_OFFSET;
-    const filtered = this.notifications
+    const since = options?.since;
+    let filtered = this.notifications
       .filter((n) => n.userId === userId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    if (since != null) {
+      const sinceTime = since.getTime();
+      filtered = filtered.filter((n) => n.createdAt.getTime() > sinceTime);
+    }
     return filtered.slice(offset, offset + limit);
   }
 

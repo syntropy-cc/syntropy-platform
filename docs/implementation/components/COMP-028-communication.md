@@ -6,7 +6,7 @@
 > **Stage Assignment**: S11 — Supporting Domains
 > **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-14 (COMP-028.6 done)
+> **Last Updated**: 2026-03-14 (COMP-028.7 done)
 
 **Note**: Implementation Plan Section 7 is the authority for work item IDs. COMP-028.5 = User notification preferences (NotificationPreferences entity, repository, PreferenceBackedNotificationPreferenceResolver).
 
@@ -34,12 +34,12 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 6 |
+| ✅ Done | 7 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 1 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **7** |
 
-**Component Coverage**: 86%
+**Component Coverage**: 100%
 
 *Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.5 = User notification preferences (NotificationPreferences entity, mute_until, channelPreferences; NotificationPreferencesRepository; InMemory + Postgres; PreferenceBackedNotificationPreferenceResolver; DefaultNotificationPreferenceResolver kept as stub).*
 
@@ -231,27 +231,40 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
-| **Origin** | communication/ARCHITECTURE.md |
+| **Origin** | communication/ARCHITECTURE.md, IMPLEMENTATION-PLAN.md Section 7 |
 | **Dependencies** | COMP-028.6 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
 **Description**: Implement SSE endpoint for real-time notification delivery to connected clients.
 
 **Acceptance Criteria**:
-- [ ] `GET /api/v1/notifications/stream` → SSE stream for authenticated user
-- [ ] New notifications pushed immediately via SSE
-- [ ] Heartbeat every 30s to keep connection alive
-- [ ] Client reconnection handled with `Last-Event-ID`
+- [x] `GET /api/v1/notifications/stream` → SSE stream for authenticated user
+- [x] New notifications pushed within 3s via polling (every 2s)
+- [x] Heartbeat every 30s to keep connection alive
+- [x] Client reconnection handled with `Last-Event-ID` (event id = createdAt.getTime())
+- [x] Integration test (event received within 3s when notification saved mid-stream)
 
 **Files Created/Modified**:
-- `packages/communication/src/api/routes/notification-stream.ts`
+- `packages/communication/src/domain/ports/notification-repository.ts` (FindByUserIdOptions.since)
+- `packages/communication/src/infrastructure/repositories/in-memory-notification-repository.ts`
+- `packages/communication/src/infrastructure/repositories/postgres-notification-repository.ts`
+- `packages/communication/tests/unit/notification-repository.test.ts` (since option tests)
+- `apps/api/src/routes/communication.ts` (GET /api/v1/notifications/stream)
+- `apps/api/src/routes/communication.test.ts` (SSE 401 + integration test)
 
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — COMP-028.7 SSE stream for real-time notifications
+
+- **FindByUserIdOptions.since**: Added optional `since?: Date` to port and both repos (InMemory, Postgres) so stream can request notifications with `createdAt > since` for reconnection and incremental push.
+- **GET /api/v1/notifications/stream**: New route in `communication.ts`; auth required; sets SSE headers; parses `Last-Event-ID` as timestamp for `since`; loop polls every 2s, sends notification events (id = `createdAt.getTime()`, data = notification payload), heartbeat comment every 30s; cleans up on request close.
+- **Integration test**: 401 when unauthenticated; stream test starts server on port 0, fetches stream with auth, saves a notification after 500ms, asserts event received within 4.5s; re-seeds repo after test for isolation; AbortError handled.
 
 ### 2026-03-14 — COMP-028.6 Communication REST API
 

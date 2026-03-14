@@ -24,6 +24,14 @@ const SELECT_BY_USER_SQL = `
   LIMIT $2 OFFSET $3
 `;
 
+const SELECT_BY_USER_SINCE_SQL = `
+  SELECT id, user_id, notification_type, source_event_type, payload, is_read, created_at
+  FROM ${TABLE}
+  WHERE user_id = $1 AND created_at > $2
+  ORDER BY created_at DESC
+  LIMIT $3 OFFSET $4
+`;
+
 const UPDATE_READ_SQL = `
   UPDATE ${TABLE}
   SET is_read = true
@@ -73,11 +81,19 @@ export class PostgresNotificationRepository implements NotificationRepository {
   ): Promise<Notification[]> {
     const limit = options?.limit ?? 20;
     const offset = options?.offset ?? 0;
-    const rows = await this.client.query<NotificationRow>(SELECT_BY_USER_SQL, [
-      userId,
-      limit,
-      offset,
-    ]);
+    const since = options?.since;
+    const rows = since
+      ? await this.client.query<NotificationRow>(SELECT_BY_USER_SINCE_SQL, [
+          userId,
+          since,
+          limit,
+          offset,
+        ])
+      : await this.client.query<NotificationRow>(SELECT_BY_USER_SQL, [
+          userId,
+          limit,
+          offset,
+        ]);
     return rows.map(rowToNotification);
   }
 

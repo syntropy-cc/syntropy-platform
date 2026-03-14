@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S44: COMP-028.6 done)
+> **Last Updated**: 2026-03-14 (S44: COMP-028.7 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S44 — Communication Core (M4)
-CURRENT ITEM  : COMP-028.7 — SSE stream for real-time notifications
+CURRENT STAGE : S45 — Planning Core (M4)
+CURRENT ITEM  : COMP-029.1 — Task aggregate
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 4 / 5 items done (S44)
-OVERALL       : 208 / 262 items done (79%)
+STAGE PROGRESS: 0 / 5 items done (S45)
+OVERALL       : 209 / 262 items done (80%)
 ```
 
 **Next 5 items**:
-1. `COMP-028.7` — SSE stream for real-time notifications ← **START HERE**
+1. `COMP-029.1` — Task aggregate ← **START HERE**
 2. (see Section 6 for full order)
 
-**Component record**: [`COMP-028`](./components/COMP-028-communication.md)
+**Component record**: [`COMP-029`](./components/COMP-029-planning.md)
 
-**Next item (COMP-028.7) acceptance criteria**: `GET /api/v1/notifications/stream` opens SSE connection; pushes new notifications within 3s of event; reconnection via `Last-Event-ID`; integration test.
+**Next item (COMP-029.1) acceptance criteria**: `packages/planning` workspace; `Task` aggregate with `taskId`, `userId`, `title`, `status`; `TaskStatus` enum; `start()`, `complete()`, `cancel()` transitions; unit tests.
 
-**Suggested steps**: (1) Write SSE endpoint (2) Subscribe to notification events (3) Write SSE integration test
+**Suggested steps**: (1) Scaffold `packages/planning` (2) Write `Task` aggregate (3) Write transition tests
 
 ---
 
@@ -2766,7 +2766,7 @@ Status: ✅ Done | **Deps**: COMP-028.5, COMP-033.2
 
 #### [COMP-028.7] SSE stream for real-time notifications
 `S44` `High` `M` [Record→](./components/COMP-028-communication.md)
-Status: ⬜ | **Deps**: COMP-028.6
+Status: ✅ Done | **Deps**: COMP-028.6
 **Criteria**: `GET /api/v1/notifications/stream` opens SSE connection; pushes new notifications within 3s of event; reconnection via `Last-Event-ID`; integration test.
 **Steps**: (1) Write SSE endpoint (2) Subscribe to notification events (3) Write SSE integration test
 
@@ -3198,15 +3198,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S44 COMP-028.6 done; next COMP-028.7
+> Last Updated: 2026-03-14 | S44 COMP-028.7 done; next COMP-029.1
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 208 / 262 items (79%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 209 / 262 items (80%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S44 — Communication Core | S56 | ⬜ |
+| **Current Stage** | S45 — Planning Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3214,6 +3214,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-028.7 — SSE stream for real-time notifications; GET /api/v1/notifications/stream (auth); polling every 2s; Last-Event-ID reconnection; heartbeat 30s; FindByUserIdOptions.since; integration test (event within 3s)
 - 2026-03-14 COMP-028.6 — Communication REST API; NotificationRepository extended (findByUserId, markAsRead); ThreadRepository and MessageRepository ports + InMemory impls; GET/PUT /api/v1/notifications, POST/GET /api/v1/messages/threads; CommunicationContext; API tests and unit tests
 - 2026-03-14 COMP-028.5 — User notification preferences; NotificationPreferences entity (muteUntil, channelPreferences); NotificationPreferencesRepository; InMemory + Postgres repos; PreferenceBackedNotificationPreferenceResolver; migration notification_preferences; worker wired to preference-backed resolver when DB present; unit tests
 - 2026-03-14 COMP-028.4 — Notification delivery service; NotificationDeliveryService (in-app, email SendGrid, push FCM); preference resolver, stubs, RetryPolicy; consumer wired to delivery; unit + integration tests

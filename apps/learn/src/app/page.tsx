@@ -1,12 +1,9 @@
 /**
- * Learn app stub (COMP-032.1).
+ * Learn app root — redirect to /learn (COMP-032.3).
  */
 
-export default function LearnPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold text-foreground">Learn</h1>
-      <p className="text-muted-foreground">Structured learning paths — coming soon.</p>
-    </div>
-  );
+import { redirect } from "next/navigation";
+
+export default function RootPage() {
+  redirect("/learn");
 }

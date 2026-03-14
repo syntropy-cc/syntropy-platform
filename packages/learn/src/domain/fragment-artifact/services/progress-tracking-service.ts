@@ -8,10 +8,7 @@ import type { FragmentId } from "@syntropy/types";
 import type { CourseHierarchyPort } from "../ports/course-hierarchy-port.js";
 import type { LearnerProgressRepositoryPort } from "../ports/learner-progress-repository-port.js";
 import type { ProgressEventsPort } from "../ports/progress-events-port.js";
-import {
-  LearnerProgressRecord,
-  type LearnerProgressStatus,
-} from "../learner-progress-record.js";
+import { LearnerProgressRecord } from "../learner-progress-record.js";
 
 export interface ProgressTrackingServiceParams {
   progressRepository: LearnerProgressRepositoryPort;
@@ -67,7 +64,7 @@ export class ProgressTrackingService {
       entityType: "fragment",
       status: "not_started",
     });
-    record.complete(score);
+    record.complete(score ?? undefined);
     await this._repo.save(record);
 
     const completedAt = record.completedAt ?? new Date();

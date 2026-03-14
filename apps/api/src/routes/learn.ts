@@ -1,18 +1,29 @@
 /**
- * Learn content hierarchy REST routes (COMP-015.6).
+ * Learn content hierarchy and fragment REST routes (COMP-015.6, COMP-016.7).
  *
  * GET /api/v1/learn/careers — list careers.
- * GET /api/v1/learn/careers/:id/tracks — list tracks for career with fog-of-war applied.
+ * GET /api/v1/learn/careers/:id/tracks — list tracks with fog-of-war.
  * GET /api/v1/learn/courses/:id — get course by id.
+ * POST /api/v1/learn/fragments — create draft fragment.
+ * GET /api/v1/learn/fragments/:id — get fragment by id.
+ * POST /api/v1/learn/fragments/:id/complete — learner marks complete.
+ * POST /api/v1/learn/fragments/:id/submit — creator submits for review.
+ * POST /api/v1/learn/fragments/:id/approve — reviewer approves.
+ * POST /api/v1/learn/fragments/:id/reject — reviewer rejects with reason.
  * All endpoints require auth; responses use CONV-017 envelope.
  */
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import type { CareerId, CourseId } from "@syntropy/types";
+import type { CareerId, CourseId, FragmentId } from "@syntropy/types";
 import {
   FogOfWarNavigationService,
+  Fragment,
+  FragmentStatus,
+  NotReviewerError,
   type Course,
 } from "@syntropy/learn-package";
+import { createCourseId, createFragmentId } from "@syntropy/types";
+import { randomUUID } from "node:crypto";
 import { successEnvelope, errorEnvelope } from "../types/api-envelope.js";
 import type { LearnContext } from "../types/learn-context.js";
 
@@ -47,6 +58,17 @@ interface CourseDto {
   status: string;
 }
 
+/** Body for POST /api/v1/learn/fragments. */
+interface CreateFragmentBody {
+  courseId: string;
+  title: string;
+}
+
+/** Body for POST /api/v1/learn/fragments/:id/reject. */
+interface RejectFragmentBody {
+  reason: string;
+}
+
 export async function learnRoutes(
   fastify: FastifyInstance,
   opts: { learn: LearnContext }
@@ -56,6 +78,9 @@ export async function learnRoutes(
     trackRepository,
     courseRepository,
     getCompletedCourseIds,
+    fragmentRepository,
+    fragmentReviewService,
+    markFragmentComplete,
   } = opts.learn;
   const requireAuth = fastify.requireAuth;
   const fogOfWar = new FogOfWarNavigationService();
@@ -105,7 +130,7 @@ export async function learnRoutes(
         career,
         tracks,
         allCourses,
-        completedCourseIds
+        completedCourseIds as CourseId[]
       );
 
       const trackIdToUnlocked = new Map<string, typeof result.unlocked>();
@@ -171,6 +196,208 @@ export async function learnRoutes(
       return reply
         .status(200)
         .send(successEnvelope(data, getRequestId(request)));
+    }
+  );
+
+  // --- Fragment routes (COMP-016.7) ---
+
+  fastify.post<{ Body: CreateFragmentBody }>(
+    "/api/v1/learn/fragments",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user!.userId;
+      const { courseId, title } = request.body;
+      if (!courseId || !title?.trim()) {
+        return reply.status(400).send(
+          errorEnvelope(
+            "VALIDATION_ERROR",
+            "courseId and title are required",
+            getRequestId(request)
+          )
+        );
+      }
+      const id = createFragmentId(randomUUID());
+      const fragment = Fragment.create({
+        id,
+        courseId: createCourseId(courseId),
+        creatorId: userId,
+        title: title.trim(),
+      });
+      await fragmentRepository.save(fragment);
+      return reply.status(201).send(
+        successEnvelope(
+          {
+            id: fragment.id,
+            courseId: fragment.courseId,
+            creatorId: fragment.creatorId,
+            title: fragment.title,
+            status: fragment.status,
+          },
+          getRequestId(request)
+        )
+      );
+    }
+  );
+
+  fastify.get<{ Params: { id: string } }>(
+    "/api/v1/learn/fragments/:id",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const fragmentId = request.params.id as FragmentId;
+      const fragment = await fragmentRepository.findById(fragmentId);
+      if (fragment === null) {
+        return reply.status(404).send(
+          errorEnvelope(
+            "NOT_FOUND",
+            `Fragment not found: ${request.params.id}`,
+            getRequestId(request)
+          )
+        );
+      }
+      return reply.status(200).send(
+        successEnvelope(
+          {
+            id: fragment.id,
+            courseId: fragment.courseId,
+            creatorId: fragment.creatorId,
+            title: fragment.title,
+            status: fragment.status,
+            problemContent: fragment.problemSection.content,
+            theoryContent: fragment.theorySection.content,
+            artifactContent: fragment.artifactSection.content,
+            publishedArtifactId: fragment.publishedArtifactId,
+          },
+          getRequestId(request)
+        )
+      );
+    }
+  );
+
+  fastify.post<{ Params: { id: string } }>(
+    "/api/v1/learn/fragments/:id/complete",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user!.userId;
+      const fragmentId = request.params.id as FragmentId;
+      const fragment = await fragmentRepository.findById(fragmentId);
+      if (fragment === null) {
+        return reply.status(404).send(
+          errorEnvelope(
+            "NOT_FOUND",
+            `Fragment not found: ${request.params.id}`,
+            getRequestId(request)
+          )
+        );
+      }
+      if (fragment.status !== FragmentStatus.Published) {
+        return reply.status(400).send(
+          errorEnvelope(
+            "VALIDATION_ERROR",
+            "Only published fragments can be completed",
+            getRequestId(request)
+          )
+        );
+      }
+      await markFragmentComplete(userId, fragmentId);
+      return reply.status(200).send(
+        successEnvelope({ ok: true }, getRequestId(request))
+      );
+    }
+  );
+
+  fastify.post<{ Params: { id: string } }>(
+    "/api/v1/learn/fragments/:id/submit",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const fragmentId = request.params.id as FragmentId;
+      try {
+        await fragmentReviewService.submit(fragmentId);
+      } catch (err) {
+        if (err instanceof Error && err.message.includes("not found")) {
+          return reply.status(404).send(
+            errorEnvelope(
+              "NOT_FOUND",
+              `Fragment not found: ${request.params.id}`,
+              getRequestId(request)
+            )
+          );
+        }
+        throw err;
+      }
+      return reply.status(200).send(
+        successEnvelope({ ok: true }, getRequestId(request))
+      );
+    }
+  );
+
+  fastify.post<{ Params: { id: string } }>(
+    "/api/v1/learn/fragments/:id/approve",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user!.userId;
+      const fragmentId = request.params.id as FragmentId;
+      try {
+        await fragmentReviewService.approve(fragmentId, userId);
+      } catch (err) {
+        if (err instanceof NotReviewerError) {
+          return reply.status(403).send(
+            errorEnvelope(
+              "FORBIDDEN",
+              "Reviewer role required to approve fragments",
+              getRequestId(request)
+            )
+          );
+        }
+        if (err instanceof Error && err.message.includes("not found")) {
+          return reply.status(404).send(
+            errorEnvelope(
+              "NOT_FOUND",
+              `Fragment not found: ${request.params.id}`,
+              getRequestId(request)
+            )
+          );
+        }
+        throw err;
+      }
+      return reply.status(200).send(
+        successEnvelope({ ok: true }, getRequestId(request))
+      );
+    }
+  );
+
+  fastify.post<{ Params: { id: string }; Body: RejectFragmentBody }>(
+    "/api/v1/learn/fragments/:id/reject",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user!.userId;
+      const fragmentId = request.params.id as FragmentId;
+      const reason = request.body?.reason ?? "";
+      try {
+        await fragmentReviewService.reject(fragmentId, reason, userId);
+      } catch (err) {
+        if (err instanceof NotReviewerError) {
+          return reply.status(403).send(
+            errorEnvelope(
+              "FORBIDDEN",
+              "Reviewer role required to reject fragments",
+              getRequestId(request)
+            )
+          );
+        }
+        if (err instanceof Error && err.message.includes("not found")) {
+          return reply.status(404).send(
+            errorEnvelope(
+              "NOT_FOUND",
+              `Fragment not found: ${request.params.id}`,
+              getRequestId(request)
+            )
+          );
+        }
+        throw err;
+      }
+      return reply.status(200).send(
+        successEnvelope({ ok: true }, getRequestId(request))
+      );
     }
   );
 }

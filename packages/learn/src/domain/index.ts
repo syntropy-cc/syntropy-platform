@@ -2,18 +2,26 @@
  * Learn domain layer (COMP-015, COMP-016).
  */
 
-export { IL1ViolationError, LearnDomainError } from "./errors.js";
+export {
+  IL1ViolationError,
+  LearnDomainError,
+  NotReviewerError,
+} from "./errors.js";
 export {
   CodeArtifact,
   Fragment,
+  FragmentReviewService,
   FragmentSection,
   FragmentStatus,
+  ProgressTrackingService,
   QuizArtifact,
   TextArtifact,
   VideoArtifact,
   type FragmentParams,
+  type FragmentReviewServiceParams,
   type FragmentSectionParams,
   type FragmentSectionType,
+  type ProgressTrackingServiceParams,
 } from "./fragment-artifact/index.js";
 export {
   Career,

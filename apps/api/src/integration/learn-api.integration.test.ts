@@ -22,8 +22,11 @@ import {
   Career,
   Course,
   CourseStatus,
+  FragmentReviewService,
   PostgresCareerRepository,
   PostgresCourseRepository,
+  PostgresFragmentRepository,
+  PostgresFragmentReviewRecordRepository,
   PostgresTrackRepository,
   Track,
 } from "@syntropy/learn-package";
@@ -64,11 +67,12 @@ function getMigrationsDir(): string {
   return join(currentDir, "..", "..", "..", "..", "supabase", "migrations");
 }
 
-async function runLearnMigration(pool: Pool, migrationsDir: string): Promise<void> {
-  const sql = readFileSync(
-    join(migrationsDir, "20260315100000_learn_content_hierarchy.sql"),
-    "utf8"
-  );
+async function runMigration(
+  pool: Pool,
+  migrationsDir: string,
+  name: string
+): Promise<void> {
+  const sql = readFileSync(join(migrationsDir, name), "utf8");
   await pool.query(sql);
 }
 
@@ -85,11 +89,45 @@ describeLearnApi("Learn API integration (COMP-015.6)", () => {
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     pool = new Pool({ connectionString: container.getConnectionUri() });
-    await runLearnMigration(pool, getMigrationsDir());
+    const migrationsDir = getMigrationsDir();
+    await runMigration(
+      pool,
+      migrationsDir,
+      "20260315100000_learn_content_hierarchy.sql"
+    );
+    await runMigration(
+      pool,
+      migrationsDir,
+      "20260315110000_learn_fragment_artifact.sql"
+    );
+    await runMigration(
+      pool,
+      migrationsDir,
+      "20260316000000_learn_fragment_review_log.sql"
+    );
 
     const careerRepo = new PostgresCareerRepository(pool);
     const trackRepo = new PostgresTrackRepository(pool);
     const courseRepo = new PostgresCourseRepository(pool);
+    const fragmentRepo = new PostgresFragmentRepository(pool);
+    const reviewRecordRepo = new PostgresFragmentReviewRecordRepository(pool);
+    const artifactPublisher = {
+      publish: async () => "test-dip-artifact-id",
+    };
+    const reviewerRole = {
+      hasReviewerRole: async (userId: string) =>
+        userId === TEST_USER_ID || userId === "reviewer-user",
+    };
+    const fragmentReviewService = new FragmentReviewService({
+      fragmentRepository: fragmentRepo,
+      artifactPublisher,
+      reviewerRole,
+      reviewRecord: reviewRecordRepo,
+    });
+    const markFragmentComplete = async (
+      _userId: string,
+      _fragmentId: string
+    ): Promise<void> => {};
 
     const careerId = createCareerId("a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d");
     const trackId = createTrackId("b2c3d4e5-f6a7-4b6c-9d0e-1f2a3b4c5d6e");
@@ -140,6 +178,9 @@ describeLearnApi("Learn API integration (COMP-015.6)", () => {
         trackRepository: trackRepo,
         courseRepository: courseRepo,
         getCompletedCourseIds,
+        fragmentRepository: fragmentRepo,
+        fragmentReviewService,
+        markFragmentComplete,
       },
     });
   }, 60_000);
@@ -241,5 +282,42 @@ describeLearnApi("Learn API integration (COMP-015.6)", () => {
       url: "/api/v1/learn/careers",
     });
     expect(res.statusCode).toBe(401);
+  });
+
+  it("POST /api/v1/learn/fragments creates draft and GET returns it", async () => {
+    const courseId = "c3d4e5f6-a7b8-4c7d-8e1f-2a3b4c5d6e7f";
+    const createRes = await app.inject({
+      method: "POST",
+      url: "/api/v1/learn/fragments",
+      headers: { authorization: `Bearer ${VALID_JWT}` },
+      payload: { courseId, title: "New Fragment" },
+    });
+    expect(createRes.statusCode).toBe(201);
+    const createBody = createRes.json() as {
+      data: { id: string; status: string; title: string };
+      meta: unknown;
+    };
+    expect(createBody.data.id).toBeDefined();
+    expect(createBody.data.status).toBe("draft");
+    expect(createBody.data.title).toBe("New Fragment");
+
+    const getRes = await app.inject({
+      method: "GET",
+      url: `/api/v1/learn/fragments/${createBody.data.id}`,
+      headers: { authorization: `Bearer ${VALID_JWT}` },
+    });
+    expect(getRes.statusCode).toBe(200);
+    const getBody = getRes.json() as { data: { id: string; status: string }; meta: unknown };
+    expect(getBody.data.id).toBe(createBody.data.id);
+    expect(getBody.data.status).toBe("draft");
+  });
+
+  it("GET /api/v1/learn/fragments/:id returns 404 when not found", async () => {
+    const res = await app.inject({
+      method: "GET",
+      url: "/api/v1/learn/fragments/00000000-0000-0000-0000-000000000000",
+      headers: { authorization: `Bearer ${VALID_JWT}` },
+    });
+    expect(res.statusCode).toBe(404);
   });
 });

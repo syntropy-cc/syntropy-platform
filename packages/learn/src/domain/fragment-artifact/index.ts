@@ -31,8 +31,17 @@ export {
 export type { ArtifactPublisherPort } from "./ports/artifact-publisher-port.js";
 export type { CourseHierarchyPort } from "./ports/course-hierarchy-port.js";
 export type { FragmentRepositoryPort } from "./ports/fragment-repository-port.js";
+export type {
+  FragmentReviewAction,
+  FragmentReviewRecordPort,
+} from "./ports/fragment-review-record-port.js";
 export type { LearnerProgressRepositoryPort } from "./ports/learner-progress-repository-port.js";
 export type { ProgressEventsPort } from "./ports/progress-events-port.js";
+export type { ReviewerRolePort } from "./ports/reviewer-role-port.js";
+export {
+  FragmentReviewService,
+  type FragmentReviewServiceParams,
+} from "./services/fragment-review-service.js";
 export {
   ProgressTrackingService,
   type ProgressTrackingServiceParams,

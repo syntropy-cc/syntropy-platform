@@ -27,3 +27,15 @@ export class IL1ViolationError extends LearnDomainError {
     Object.setPrototypeOf(this, IL1ViolationError.prototype);
   }
 }
+
+/**
+ * Thrown when approve/reject is called by a user who does not have reviewer role.
+ * Architecture: COMP-016.6, fragment-artifact-engine.md.
+ */
+export class NotReviewerError extends LearnDomainError {
+  constructor(userId: string) {
+    super(`User ${userId} does not have reviewer role`);
+    this.name = "NotReviewerError";
+    Object.setPrototypeOf(this, NotReviewerError.prototype);
+  }
+}

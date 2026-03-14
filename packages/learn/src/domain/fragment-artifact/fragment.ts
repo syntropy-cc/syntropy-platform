@@ -116,8 +116,8 @@ export class Fragment {
       case "artifact":
         return this._artifact;
       default: {
-        const _: never = sectionType;
-        throw new Error(`Unknown section type: ${sectionType}`);
+        const exhaustive: never = sectionType;
+        throw new Error(`Unknown section type: ${String(exhaustive)}`);
       }
     }
   }

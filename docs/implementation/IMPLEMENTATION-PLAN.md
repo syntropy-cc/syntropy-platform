@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S27: COMP-016.1–016.5 done)
+> **Last Updated**: 2026-03-14 (S28: COMP-016.6–016.8, COMP-032.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S28 — Learn Fragment Review & API
-CURRENT ITEM  : COMP-016.6 — Fragment review workflow
+CURRENT STAGE : S29 — Learn Creator Tools
+CURRENT ITEM  : COMP-017.1 — CreatorWorkflow aggregate (5-phase lifecycle)
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 4 items done (S27 complete: 5/5)
-OVERALL       : 129 / 262 items done (49%)
+STAGE PROGRESS: 4 / 4 items done (S28 complete)
+OVERALL       : 133 / 262 items done (51%)
 ```
 
 **Next 5 items**:
-1. `COMP-016.6` — Fragment review workflow ← **START HERE**
-2. `COMP-016.7` — Fragment REST API endpoints
-3. `COMP-032.3` — Learn pillar Next.js pages
-4. …
-5. …
+1. `COMP-017.1` — CreatorWorkflow aggregate (5-phase lifecycle) ← **START HERE**
+2. `COMP-017.2` — AIGeneratedDraft (AI Copilot integration)
+3. `COMP-017.3` — ApprovalRecord and review workflow
+4. `COMP-017.4` — CreatorRepository (Postgres)
+5. `COMP-017.5` — Creator Tools REST API
 
-**Component record**: [`COMP-016`](./components/COMP-016-learn-fragment-engine.md)
+**Component record**: [`COMP-017`](./components/COMP-017-learn-creator-tools.md)
 
-**Next item (COMP-016.6) acceptance criteria**: `FragmentReviewService.submit(fragmentId)` moves to `in_review`; `approve(fragmentId)` by reviewer; `reject(fragmentId)` with reason; state machine transitions; unit tests.
+**Next item (COMP-017.1) acceptance criteria**: `CreatorWorkflow` aggregate with 5 phases: `ideation`, `drafting`, `review`, `refinement`, `publication`; `transition(nextPhase)` enforces ordering; domain events per phase; unit tests.
 
-**Suggested steps**: (1) Write review state machine (2) Add role check (reviewer only) (3) Write review flow test
+**Suggested steps**: (1) Write `CreatorWorkflow` aggregate (2) Implement phase transition guard (3) Write phase tests
 
 ---
 
@@ -2137,7 +2137,7 @@ Status: ✅ Done | **Deps**: COMP-016.4, COMP-039.4
 
 #### [COMP-016.6] Fragment review workflow
 `S28` `High` `M` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.5
+Status: ✅ Done | **Deps**: COMP-016.5
 **Criteria**: `FragmentReviewService.submit(fragmentId)` moves to `in_review`; `approve(fragmentId)` by reviewer; `reject(fragmentId)` with reason; state machine transitions; unit tests.
 **Steps**: (1) Write review state machine (2) Add role check (reviewer only) (3) Write review flow test
 
@@ -2145,7 +2145,7 @@ Status: ⬜ | **Deps**: COMP-016.5
 
 #### [COMP-016.7] Fragment REST API endpoints
 `S28` `High` `M` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.6, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-016.6, COMP-033.2
 **Criteria**: `POST /api/v1/learn/fragments`, `GET /api/v1/learn/fragments/{id}`, `POST /api/v1/learn/fragments/{id}/complete`, `POST /api/v1/learn/fragments/{id}/submit`; auth required.
 **Steps**: (1) Write API routes (2) Wire to services (3) Write API tests
 
@@ -2153,7 +2153,7 @@ Status: ⬜ | **Deps**: COMP-016.6, COMP-033.2
 
 #### [COMP-016.8] Fragment integration tests
 `S28` `High` `M` [Record→](./components/COMP-016-learn-fragment-engine.md)
-Status: ⬜ | **Deps**: COMP-016.7
+Status: ✅ Done | **Deps**: COMP-016.7
 **Criteria**: Full lifecycle: create fragment, add artifact, publish (IL1 check), learner completes → portfolio XP updated; Kafka event emitted; uses real DB.
 **Steps**: (1) Write lifecycle integration test (2) Assert XP update (3) Assert Kafka event
 
@@ -2161,7 +2161,7 @@ Status: ⬜ | **Deps**: COMP-016.7
 
 #### [COMP-032.3] Learn pillar Next.js pages
 `S28` `High` `M` [Record→](./components/COMP-032-web-application.md)
-Status: ⬜ | **Deps**: COMP-032.2, COMP-015, COMP-016
+Status: ✅ Done | **Deps**: COMP-032.2, COMP-015, COMP-016
 **Criteria**: `apps/learn` pages: `/learn` (career list), `/learn/tracks/[id]` (track detail), `/learn/courses/[id]` (course + fragments), `/learn/fragments/[id]` (fragment view + progress); fog-of-war UI.
 **Steps**: (1) Write career list page (2) Write track/course pages (3) Write fragment view page
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S27 complete; S28 next (COMP-016.6)
+> Last Updated: 2026-03-14 | S28 complete; S29 next (COMP-017.1)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 129 / 262 items (49%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 133 / 262 items (51%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S28 — Learn Fragment Review & API | S56 | ⬜ |
+| **Current Stage** | S29 — Learn Creator Tools | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-032.3 — Learn pillar Next.js pages (/learn, /learn/careers/[id], /learn/courses/[id], /learn/fragments/[id]); fog-of-war UI
+- 2026-03-14 COMP-016.8 — Fragment lifecycle integration test (create → submit → approve → learner complete); real DB
+- 2026-03-14 COMP-016.7 — Fragment REST API (POST/GET fragments, complete, submit, approve, reject); LearnContext extended
+- 2026-03-14 COMP-016.6 — FragmentReviewService (submit/approve/reject), ReviewerRolePort, FragmentReviewRecordPort, fragment_review_log migration; unit tests
 - 2026-03-14 COMP-016.5 — FragmentRepository (Postgres), LearnerProgressRepository, migration learn.fragments + learner_progress_records; integration test
 - 2026-03-14 COMP-016.4 — LearnArtifactBridge (ArtifactPublisherPort), DipArtifactClientPort; unit test with mock DIP
 - 2026-03-14 COMP-016.3 — LearnerProgressRecord, ProgressTrackingService, ProgressEventsPort, CourseHierarchyPort; unit tests

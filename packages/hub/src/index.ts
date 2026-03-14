@@ -56,6 +56,20 @@ export type {
   HubContributionEventPayload,
   DiscoveryDocumentEventPayload,
 } from "./domain/public-square/discovery-document.js";
+export {
+  computeProminenceScore,
+  timeDecayFactor,
+  ProminenceScorer,
+  PROMINENCE_WEIGHTS,
+} from "./domain/public-square/services/prominence-scorer.js";
+export type { ProminenceSignals } from "./domain/public-square/services/prominence-scorer.js";
+export type { DiscoveryRepositoryPort } from "./domain/public-square/ports/discovery-repository-port.js";
+export {
+  PublicSquareIndexer,
+  PUBLIC_SQUARE_INDEXER_GROUP_ID,
+} from "./infrastructure/consumers/public-square-indexer.js";
+export { InMemoryDiscoveryRepository } from "./infrastructure/repositories/in-memory-discovery-repository.js";
+export { PostgresDiscoveryRepository } from "./infrastructure/repositories/postgres-discovery-repository.js";
 export { PostgresInstitutionWorkflowRepository } from "./infrastructure/repositories/postgres-institution-workflow-repository.js";
 export { PostgresContractTemplateRepository } from "./infrastructure/repositories/postgres-contract-template-repository.js";
 export { InMemoryContractTemplateRepository } from "./infrastructure/institution-orchestration/contract-template-repository-in-memory.js";

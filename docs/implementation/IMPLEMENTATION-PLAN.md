@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S33: COMP-020.4, COMP-020.5, COMP-020.6, COMP-021.1 done)
+> **Last Updated**: 2026-03-14 (S34: COMP-021.2–021.5, COMP-032.4 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S34 — Hub Public Square Completion (M3)
-CURRENT ITEM  : COMP-021.2 — ProminenceScorer
+CURRENT STAGE : S35 — Labs Scientific Context (M3)
+CURRENT ITEM  : COMP-022.1 — Labs package setup + SubjectArea taxonomy
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done (S34)
-OVERALL       : 158 / 262 items done (60%)
+STAGE PROGRESS: 0 / 5 items done (S35)
+OVERALL       : 163 / 262 items done (62%)
 ```
 
 **Next 5 items**:
-1. `COMP-021.2` — ProminenceScorer ← **START HERE**
-2. `COMP-021.3` — PublicSquareIndexer (Kafka consumer)
-3. `COMP-021.4` — DiscoveryRepository (Postgres)
-4. `COMP-021.5` — Public Square REST API
-5. `COMP-032.4` — Hub pillar Next.js pages
+1. `COMP-022.1` — Labs package setup + SubjectArea taxonomy ← **START HERE**
+2. `COMP-022.2` — ResearchMethodology entity
+3. `COMP-022.3` — HypothesisRecord aggregate
+4. `COMP-022.4` — ScientificContextRepository (Postgres)
+5. `COMP-022.5` — Scientific Context REST API
 
-**Component record**: [`COMP-021`](./components/COMP-021-hub-public-square.md)
+**Component record**: [`COMP-022`](./components/COMP-022-labs-scientific-context.md)
 
-**Next item (COMP-021.2) acceptance criteria**: `ProminenceScorer.score(institutionId)` computes weighted score from: artifact count (30%), contributor count (25%), governance activity (20%), recent contributions (15%), cross-links (10%); time-decayed; unit tests.
+**Next item (COMP-022.1) acceptance criteria**: `packages/labs` workspace; `SubjectArea` taxonomy (hierarchical: domain → field → subfield); `SubjectArea` entity with parent reference; seeded from standard taxonomy (e.g., ACM CCS); unit tests.
 
-**Suggested steps**: (1) Define scoring weights (2) Write `ProminenceScorer` (3) Write scoring scenarios
+**Suggested steps**: (1) Scaffold `packages/labs` (2) Write `SubjectArea` entity (3) Seed taxonomy data
 
 ---
 
@@ -2369,7 +2369,7 @@ Status: ✅ Done | **Deps**: COMP-020.6, COMP-009
 
 #### [COMP-021.2] ProminenceScorer
 `S34` `High` `M` [Record→](./components/COMP-021-hub-public-square.md)
-Status: ⬜ | **Deps**: COMP-021.1
+Status: ✅ Done | **Deps**: COMP-021.1
 **Criteria**: `ProminenceScorer.score(institutionId)` computes weighted score from: artifact count (30%), contributor count (25%), governance activity (20%), recent contributions (15%), cross-links (10%); time-decayed; unit tests.
 **Steps**: (1) Define scoring weights (2) Write `ProminenceScorer` (3) Write scoring scenarios
 
@@ -2377,7 +2377,7 @@ Status: ⬜ | **Deps**: COMP-021.1
 
 #### [COMP-021.3] PublicSquareIndexer (Kafka consumer)
 `S34` `High` `S` [Record→](./components/COMP-021-hub-public-square.md)
-Status: ⬜ | **Deps**: COMP-021.2, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-021.2, COMP-009.1
 **Criteria**: `PublicSquareIndexer` subscribes to `dip.governance.*`, `hub.contribution.merged`; updates `DiscoveryDocument` and recomputes prominence; registered in `WorkerRegistry`; integration test.
 **Steps**: (1) Write indexer consumer (2) Wire to scorer (3) Write indexing test
 
@@ -2385,7 +2385,7 @@ Status: ⬜ | **Deps**: COMP-021.2, COMP-009.1
 
 #### [COMP-021.4] DiscoveryRepository (Postgres)
 `S34` `Medium` `S` [Record→](./components/COMP-021-hub-public-square.md)
-Status: ⬜ | **Deps**: COMP-021.3, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-021.3, COMP-039.4
 **Criteria**: Migration creates `discovery_documents` table; `DiscoveryRepository` with `findTop(limit)`, `findById`; integration test.
 **Steps**: (1) Write migration (2) Write repository (3) Write integration test
 
@@ -2393,7 +2393,7 @@ Status: ⬜ | **Deps**: COMP-021.3, COMP-039.4
 
 #### [COMP-021.5] Public Square REST API
 `S34` `High` `S` [Record→](./components/COMP-021-hub-public-square.md)
-Status: ⬜ | **Deps**: COMP-021.4, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-021.4, COMP-033.2
 **Criteria**: `GET /api/v1/hub/discover` returns top institutions by prominence; `GET /api/v1/hub/discover?search=...` FTS on institutions; public endpoint (no auth required).
 **Steps**: (1) Write discover endpoint (2) Add search filter (3) Write API tests
 
@@ -2401,7 +2401,7 @@ Status: ⬜ | **Deps**: COMP-021.4, COMP-033.2
 
 #### [COMP-032.4] Hub pillar Next.js pages
 `S34` `High` `M` [Record→](./components/COMP-032-web-application.md)
-Status: ⬜ | **Deps**: COMP-032.2, COMP-019, COMP-020, COMP-021
+Status: ✅ Done | **Deps**: COMP-032.2, COMP-019, COMP-020, COMP-021
 **Criteria**: `apps/hub` pages: `/hub` (discover), `/hub/institutions/[id]` (institution detail), `/hub/issues` (issue board), `/hub/contribute/[id]` (contribution flow); prominence ranking visible.
 **Steps**: (1) Write discover page (2) Write issue board page (3) Write contribution flow page
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S33 complete; next COMP-021.2
+> Last Updated: 2026-03-14 | S34 complete; next COMP-022.1
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 158 / 262 items (60%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 163 / 262 items (62%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S34 — Hub Public Square Completion | S56 | ⬜ |
+| **Current Stage** | S35 — Labs Scientific Context | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-032.4 — Hub pillar Next.js pages (/hub discover, /hub/institutions/[id], /hub/issues, /hub/contribute/[id]); prominence ranking visible
+- 2026-03-14 COMP-021.5 — Public Square REST API (GET /api/v1/hub/discover, search, public); hub-discover-api integration test
+- 2026-03-14 COMP-021.4 — Migration hub.discovery_documents; PostgresDiscoveryRepository (findTop, findById, upsert); discovery-repository integration test
+- 2026-03-14 COMP-021.3 — PublicSquareIndexer (dip.governance.events, hub.events); DiscoveryRepositoryPort; worker in apps/workers; integration test
+- 2026-03-14 COMP-021.2 — ProminenceScorer (weights, time decay, 0–100); unit tests
 - 2026-03-14 COMP-021.1 — DiscoveryDocument read model; applyDiscoveryEvent for dip.governance.* and hub.contribution.*; unit tests
 - 2026-03-14 COMP-020.6 — Hub institution REST API (POST /api/v1/hub/institutions/create, GET /api/v1/hub/institutions/:id, GET /api/v1/hub/contract-templates); DIP adapter; hub-institutions-api integration test
 - 2026-03-14 COMP-020.5 — Migrations hub.contract_templates, institution_creation_workflows, institution_profiles; PostgresInstitutionWorkflowRepository, PostgresContractTemplateRepository; integration test

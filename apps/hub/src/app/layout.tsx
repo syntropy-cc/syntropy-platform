@@ -9,6 +9,7 @@ const HUB_NAV_LINKS = [
   { href: "http://localhost:3000", label: "Platform" },
   { href: "http://localhost:3001", label: "Learn" },
   { href: "/", label: "Hub" },
+  { href: "/hub", label: "Discover" },
   { href: "http://localhost:3003", label: "Labs" },
 ];
 

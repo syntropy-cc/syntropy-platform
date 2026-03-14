@@ -274,6 +274,9 @@ importers:
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus
+      '@syntropy/hub-package':
+        specifier: workspace:*
+        version: link:../../packages/hub
       '@syntropy/platform-core':
         specifier: workspace:*
         version: link:../../packages/platform-core
@@ -464,6 +467,10 @@ importers:
   packages/governance-moderation: {}
 
   packages/hub:
+    dependencies:
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
     devDependencies:
       '@testcontainers/postgresql':
         specifier: ^10.14.0

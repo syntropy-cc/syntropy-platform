@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@syntropy/event-bus": "workspace:*",
+    "@syntropy/hub-package": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
     "ioredis": "^5.4.1",
     "node-cron": "^3.0.3",

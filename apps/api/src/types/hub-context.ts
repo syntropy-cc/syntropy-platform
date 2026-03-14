@@ -7,6 +7,7 @@ import type {
   ContributionIntegrationService,
   ContributionRepositoryPort,
   ContractTemplateRepositoryPort,
+  DiscoveryRepositoryPort,
   InstitutionOrchestrationService,
   InstitutionProfileProjector,
   InstitutionWorkflowRepositoryPort,
@@ -22,4 +23,6 @@ export interface HubCollaborationContext {
   institutionWorkflowRepository?: InstitutionWorkflowRepositoryPort;
   institutionOrchestrationService?: InstitutionOrchestrationService;
   institutionProfileProjector?: InstitutionProfileProjector;
+  /** Optional: for GET /api/v1/hub/discover (COMP-021.5). */
+  discoveryRepository?: DiscoveryRepositoryPort;
 }

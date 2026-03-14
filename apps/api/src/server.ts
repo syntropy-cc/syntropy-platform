@@ -41,6 +41,7 @@ import { recommendationRoutes } from "./routes/recommendations.js";
 import { learnRoutes } from "./routes/learn.js";
 import { hubRoutes } from "./routes/hub.js";
 import { hubInstitutionsRoutes } from "./routes/hub-institutions.js";
+import { hubDiscoverRoutes } from "./routes/hub-discover.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -113,6 +114,7 @@ export async function createApp(options?: CreateAppOptions) {
   if (options?.hub) {
     await app.register(hubRoutes, { hub: options.hub });
     await app.register(hubInstitutionsRoutes, { hub: options.hub });
+    await app.register(hubDiscoverRoutes, { hub: options.hub });
   }
   await app.register(internalEventSchemasPlugin);
 

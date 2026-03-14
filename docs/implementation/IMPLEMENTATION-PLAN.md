@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S25: COMP-011.4, 011.5, 011.6, 011.7 done)
+> **Last Updated**: 2026-03-14 (S26: COMP-015.1, 015.2 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S26 — Learn Content Hierarchy
-CURRENT ITEM  : COMP-015.1 — Learn package setup + Career aggregate
-MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 4 / 4 items done (S25 complete)
-OVERALL       : 118 / 262 items done (45%)
+CURRENT ITEM  : COMP-015.3 — FogOfWarNavigationService
+MILESTONE     : M3 — Pillars: Learn, Hub, Labs
+STAGE PROGRESS: 2 / 6 items done
+OVERALL       : 120 / 262 items done (46%)
 ```
 
 **Next 5 items**:
-1. `COMP-015.1` — Learn package setup + Career aggregate ← **START HERE**
-2. `COMP-015.2` — Track and Course entities
-3. `COMP-015.3` — FogOfWarNavigationService
-4. `COMP-015.4` — PrerequisiteEvaluator
+1. `COMP-015.3` — FogOfWarNavigationService ← **START HERE**
+2. `COMP-015.4` — PrerequisiteEvaluator
+3. `COMP-015.5` — ContentHierarchyRepository (Postgres)
+4. `COMP-015.6` — Content hierarchy REST API endpoints
 5. …
 
 **Component record**: [`COMP-015`](./components/COMP-015-learn-content-hierarchy.md)
 
-**Next item (COMP-015.1) acceptance criteria**: `packages/learn` workspace; `Career` aggregate with `careerId`, `title`, `tracks[]`; `Track` entity; `Course` entity; hierarchical relationship enforced; unit tests.
+**Next item (COMP-015.3) acceptance criteria**: `FogOfWarNavigationService.getAccessible(userId, careerId)` returns unlocked + locked content with lock reasons; unlocks next content on prerequisite completion; unit tests with various progress states.
 
-**Suggested steps**: (1) Scaffold `packages/learn` (2) Write `Career`, `Track`, `Course` entities (3) Write hierarchy tests
+**Suggested steps**: (1) Write `FogOfWarNavigationService` (2) Implement lock/unlock logic (3) Write progress-based unlock tests
 
 ---
 
@@ -2049,7 +2049,7 @@ Status: ✅ Done | **Deps**: COMP-011.6, COMP-033.2
 
 #### [COMP-015.1] Learn package setup + Career aggregate
 `S26` `Critical` `S` [Record→](./components/COMP-015-learn-content-hierarchy.md)
-Status: ⬜ | **Deps**: COMP-003, COMP-010
+Status: ✅ Done | **Deps**: COMP-003, COMP-010
 **Criteria**: `packages/learn` workspace; `Career` aggregate with `careerId`, `title`, `tracks[]`; `Track` entity; `Course` entity; hierarchical relationship enforced; unit tests.
 **Steps**: (1) Scaffold `packages/learn` (2) Write `Career`, `Track`, `Course` entities (3) Write hierarchy tests
 
@@ -2057,7 +2057,7 @@ Status: ⬜ | **Deps**: COMP-003, COMP-010
 
 #### [COMP-015.2] Track and Course entities
 `S26` `Critical` `S` [Record→](./components/COMP-015-learn-content-hierarchy.md)
-Status: ⬜ | **Deps**: COMP-015.1
+Status: ✅ Done | **Deps**: COMP-015.1
 **Criteria**: `Track` entity with `prerequisites: CourseId[]`; `Course` entity with `fragments: FragmentId[]`; ordering enforced; `CourseStatus` enum; unit tests.
 **Steps**: (1) Write `Track` entity with prerequisites (2) Write `Course` entity (3) Write ordering tests
 
@@ -3201,14 +3201,14 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S26 next (S25 complete: COMP-011.4, 011.5, 011.6, 011.7 done)
+> Last Updated: 2026-03-14 | S26 in progress (COMP-015.1, 015.2 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 118 / 262 items (45%) | 262 / 262 | ⬜ |
-| **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
+| **Overall Progress** | 120 / 262 items (46%) | 262 / 262 | ⬜ |
+| **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
 | **Current Stage** | S26 — Learn Content Hierarchy | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
@@ -3217,6 +3217,8 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-015.2 — Track/Course prerequisites, CourseStatus enum, ordering; unit tests
+- 2026-03-14 COMP-015.1 — Learn package scaffold, @syntropy/types IDs (CareerId, TrackId, CourseId, FragmentId), Career/Track/Course entities, hierarchy tests
 - 2026-03-14 COMP-011.7 — Search & Recommendation REST API (GET /search, GET /recommendations/:userId), SearchContext, integration test
 - 2026-03-14 COMP-011.6 — SearchRepository findById/deleteByEntity, RecommendationRepository, recommendation_sets migration, integration tests
 - 2026-03-14 COMP-011.5 — RecommendationService.compute(), RecommendationSet from portfolio + search, unit tests
@@ -3365,7 +3367,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-012 AI Agents Orchestration | 8 | 8 | ✅ Complete |
 | COMP-013 AI Agents Registry | 5 | 4 | 🔵 In Progress |
 | COMP-014 AI Agents Pillar Tools | 6 | 0 | ⬜ Not Started |
-| COMP-015 Learn Content Hierarchy | 6 | 0 | ⬜ Not Started |
+| COMP-015 Learn Content Hierarchy | 6 | 2 | 🔵 In Progress |
 | COMP-016 Learn Fragment & Artifact Engine | 8 | 0 | ⬜ Not Started |
 | COMP-017 Learn Creator Tools | 6 | 0 | ⬜ Not Started |
 | COMP-018 Learn Mentorship & Community | 5 | 0 | ⬜ Not Started |

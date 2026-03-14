@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/learn/subdomains/content-hierarchy-navigation.md](../../architecture/domains/learn/subdomains/content-hierarchy-navigation.md)
 > **Stage Assignment**: S6 — Learn Domain
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -47,20 +47,20 @@ Content Hierarchy & Navigation is the foundation of the Learn domain. It owns th
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 33%
 
 ### Item List
 
-#### [COMP-015.1] Learn package setup
+#### [COMP-015.1] Learn package setup + Career aggregate
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | learn/ARCHITECTURE.md |
 | **Dependencies** | COMP-001 |
@@ -80,11 +80,11 @@ Content Hierarchy & Navigation is the foundation of the Learn domain. It owns th
 
 ---
 
-#### [COMP-015.2] Career, Track, Course aggregates
+#### [COMP-015.2] Track and Course entities (prerequisites, CourseStatus)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | content-hierarchy-navigation.md |
 | **Dependencies** | COMP-015.1 |

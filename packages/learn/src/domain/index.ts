@@ -1,15 +1,14 @@
 /**
- * Learn domain package.
- * Architecture: COMP-015 through COMP-018
+ * Learn domain layer (COMP-015).
  */
 
+export { LearnDomainError } from "./errors.js";
 export {
   Career,
   Course,
   CourseStatus,
-  LearnDomainError,
   Track,
   type CareerParams,
   type CourseParams,
   type TrackParams,
-} from "./domain/index.js";
+} from "./content-hierarchy/index.js";

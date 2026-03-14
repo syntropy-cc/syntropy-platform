@@ -144,6 +144,21 @@ export function isExperimentId(value: string): value is ExperimentId {
   return isUuidBrand(value);
 }
 
+/** Branded type for ExperimentResultId (Labs experiment result). UUID-based; immutable. (COMP-024.2) */
+export type ExperimentResultId = string & {
+  readonly __brand: "ExperimentResultId";
+};
+
+export function createExperimentResultId(value: string): ExperimentResultId {
+  return createUuidBrand(value, "ExperimentResultId", "ExperimentResultId");
+}
+
+export function isExperimentResultId(
+  value: string
+): value is ExperimentResultId {
+  return isUuidBrand(value);
+}
+
 /** Branded type for ReviewId (Labs peer review). UUID-based; immutable. (COMP-022) */
 export type ReviewId = string & { readonly __brand: "ReviewId" };
 

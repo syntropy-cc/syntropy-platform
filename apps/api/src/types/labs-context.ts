@@ -1,7 +1,7 @@
 /**
- * Labs scientific context for REST API (COMP-022.5, COMP-023.7).
+ * Labs scientific context for REST API (COMP-022.5, COMP-023.7, COMP-024.5).
  * Injects repositories for subject areas, methodologies, hypothesis records,
- * articles, versions, and article submission service.
+ * articles, versions, article submission service, and experiment design.
  */
 
 import type {
@@ -11,6 +11,8 @@ import type {
   ScientificArticleRepositoryPort,
   ArticleVersionRepositoryPort,
   ArticleSubmissionService,
+  ExperimentDesignRepositoryPort,
+  ExperimentResultRepositoryPort,
 } from "@syntropy/labs-package";
 
 export interface LabsScientificContext {
@@ -21,4 +23,7 @@ export interface LabsScientificContext {
   scientificArticleRepository?: ScientificArticleRepositoryPort;
   articleVersionRepository?: ArticleVersionRepositoryPort;
   articleSubmissionService?: ArticleSubmissionService;
+  /** Experiment design (COMP-024.5). When set, experiment routes are registered. */
+  experimentDesignRepository?: ExperimentDesignRepositoryPort;
+  experimentResultRepository?: ExperimentResultRepositoryPort;
 }

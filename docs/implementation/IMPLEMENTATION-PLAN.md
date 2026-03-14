@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S37: COMP-023.6–023.8, COMP-024.1 done)
+> **Last Updated**: 2026-03-14 (S38: COMP-024.2–024.6 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S38 — Experiment Design (M3)
-CURRENT ITEM  : COMP-024.2 — ExperimentResult entity
+CURRENT STAGE : S39 — Peer Review Core (M3)
+CURRENT ITEM  : COMP-025.1 — Review aggregate
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done (S38)
-OVERALL       : 177 / 262 items done (68%)
+STAGE PROGRESS: 0 / 5 items done (S39)
+OVERALL       : 182 / 262 items done (69%)
 ```
 
 **Next 5 items**:
-1. `COMP-024.2` — ExperimentResult entity ← **START HERE**
-2. `COMP-024.3` — AnonymizationPolicyEnforcer
-3. `COMP-024.4` — ExperimentRepository (Postgres)
-4. `COMP-024.5` — Experiment Design REST API
-5. `COMP-024.6` — Experiment integration tests
+1. `COMP-025.1` — Review aggregate ← **START HERE**
+2. `COMP-025.2` — ReviewPassageLink value object
+3. `COMP-025.3` — AuthorResponse entity
+4. `COMP-025.4` — ReviewVisibilityEvaluator
+5. `COMP-025.5` — ReviewRepository (Postgres)
 
-**Component record**: [`COMP-024`](./components/COMP-024-labs-experiment-design.md)
+**Component record**: [`COMP-025`](./components/COMP-025-labs-open-peer-review.md)
 
-**Next item (COMP-024.2) acceptance criteria**: `ExperimentResult` entity with raw data, statistical summary, `pValue`; linked to experiment; immutable once created; unit tests.
+**Next item (COMP-025.1) acceptance criteria**: `Review` aggregate with `reviewId`, `articleId`, `reviewerId`, `status`, `content`; `ReviewStatus` lifecycle; `submit()`, `revise()`, `publish()` transitions; unit tests.
 
-**Suggested steps**: (1) Write `ExperimentResult` entity (2) Add immutability guard (3) Write tests
+**Suggested steps**: (1) Write `Review` aggregate (2) Implement lifecycle transitions (3) Write status tests
 
 ---
 
@@ -2521,7 +2521,7 @@ Status: Done | **Deps**: COMP-022, COMP-023
 
 #### [COMP-024.2] ExperimentResult entity
 `S38` `High` `S` [Record→](./components/COMP-024-labs-experiment-design.md)
-Status: ⬜ | **Deps**: COMP-024.1
+Status: Done | **Deps**: COMP-024.1
 **Criteria**: `ExperimentResult` entity with raw data, statistical summary, `pValue`; linked to experiment; immutable once created; unit tests.
 **Steps**: (1) Write `ExperimentResult` entity (2) Add immutability guard (3) Write tests
 
@@ -2529,7 +2529,7 @@ Status: ⬜ | **Deps**: COMP-024.1
 
 #### [COMP-024.3] AnonymizationPolicyEnforcer
 `S38` `Critical` `M` [Record→](./components/COMP-024-labs-experiment-design.md)
-Status: ⬜ | **Deps**: COMP-024.2
+Status: Done | **Deps**: COMP-024.2
 **Criteria**: `AnonymizationPolicyEnforcer.enforce(result)` redacts PII fields based on experiment type policy; `PersonalDataField` marked fields redacted before storage; configurable per `SubjectArea`; unit tests.
 **Steps**: (1) Define `PersonalDataField` marker (2) Write `AnonymizationPolicyEnforcer` (3) Write PII redaction tests
 
@@ -2537,7 +2537,7 @@ Status: ⬜ | **Deps**: COMP-024.2
 
 #### [COMP-024.4] ExperimentRepository (Postgres)
 `S38` `High` `S` [Record→](./components/COMP-024-labs-experiment-design.md)
-Status: ⬜ | **Deps**: COMP-024.3, COMP-039.4
+Status: Done | **Deps**: COMP-024.3, COMP-039.4
 **Criteria**: Migrations for `experiment_designs`, `experiment_results`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2545,7 +2545,7 @@ Status: ⬜ | **Deps**: COMP-024.3, COMP-039.4
 
 #### [COMP-024.5] Experiment Design REST API
 `S38` `High` `M` [Record→](./components/COMP-024-labs-experiment-design.md)
-Status: ⬜ | **Deps**: COMP-024.4, COMP-033.2
+Status: Done | **Deps**: COMP-024.4, COMP-033.2
 **Criteria**: `POST /api/v1/labs/experiments`, `GET /api/v1/labs/experiments/{id}`, `POST /api/v1/labs/experiments/{id}/results`; anonymization applied transparently; API tests.
 **Steps**: (1) Write API routes (2) Wire anonymization to result submission (3) Write API tests
 
@@ -2553,7 +2553,7 @@ Status: ⬜ | **Deps**: COMP-024.4, COMP-033.2
 
 #### [COMP-024.6] Experiment integration tests
 `S38` `High` `M` [Record→](./components/COMP-024-labs-experiment-design.md)
-Status: ⬜ | **Deps**: COMP-024.5
+Status: Done | **Deps**: COMP-024.5
 **Criteria**: Create experiment, submit result with PII, verify PII redacted in stored result; verify hypothesis linked; uses real DB.
 **Steps**: (1) Write PII redaction integration test (2) Assert stored result has no PII (3) Assert hypothesis link
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S37 complete; next COMP-024.2
+> Last Updated: 2026-03-14 | S38 complete; next COMP-025.1
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 177 / 262 items (68%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 182 / 262 items (69%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S38 — Experiment Design | S56 | ⬜ |
+| **Current Stage** | S39 — Peer Review Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-024.6 — Experiment integration tests (PII redaction, hypothesis link); real DB
+- 2026-03-14 COMP-024.5 — Experiment Design REST API (POST/GET experiments, POST results); anonymization applied; API tests
+- 2026-03-14 COMP-024.4 — ExperimentRepository (migrations experiment_designs, experiment_results); Postgres repos; integration test
+- 2026-03-14 COMP-024.3 — AnonymizationPolicyEnforcer; PersonalDataField; PII redaction; unit tests
+- 2026-03-14 COMP-024.2 — ExperimentResult entity; raw data, statistical summary, pValue; immutable; unit tests; ExperimentResultId in types
 - 2026-03-14 COMP-024.1 — ExperimentDesign aggregate; ExperimentStatus; register(); unit tests
 - 2026-03-14 COMP-023.8 — Article submission lifecycle integration test (create → submit → accept; MyST render); LABS_INTEGRATION=true
 - 2026-03-14 COMP-023.7 — Article REST API (POST/GET/PUT articles, POST submit, GET versions); labs-articles routes and tests

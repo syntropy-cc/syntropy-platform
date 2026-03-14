@@ -46,6 +46,8 @@ export type { ResearchMethodologyRepositoryPort } from "./domain/scientific-cont
 export type { HypothesisRecordRepositoryPort } from "./domain/scientific-context/ports/hypothesis-record-repository-port.js";
 export type { ScientificArticleRepositoryPort } from "./domain/article-editor/ports/scientific-article-repository-port.js";
 export type { ArticleVersionRepositoryPort } from "./domain/article-editor/ports/article-version-repository-port.js";
+export type { ExperimentDesignRepositoryPort } from "./domain/experiment-design/ports/experiment-design-repository-port.js";
+export type { ExperimentResultRepositoryPort } from "./domain/experiment-design/ports/experiment-result-repository-port.js";
 export type { LabsDbClient } from "./infrastructure/labs-db-client.js";
 export { MystRenderer } from "./infrastructure/myst-renderer.js";
 export {
@@ -62,13 +64,21 @@ export {
   type ArticleSubmissionServiceDeps,
 } from "./application/article-submission-service.js";
 export {
+  AnonymizationPolicyEnforcer,
   ExperimentDesign,
+  ExperimentResult,
   ExperimentStatus,
   isExperimentStatus,
+  PERSONAL_DATA_FIELDS,
+  type AnonymizationPolicy,
   type ExperimentDesignParams,
+  type ExperimentResultParams,
+  type PersonalDataField,
 } from "./domain/experiment-design/index.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";
 export { PostgresScientificArticleRepository } from "./infrastructure/repositories/postgres-scientific-article-repository.js";
 export { PostgresArticleVersionRepository } from "./infrastructure/repositories/postgres-article-version-repository.js";
+export { PostgresExperimentDesignRepository } from "./infrastructure/repositories/postgres-experiment-design-repository.js";
+export { PostgresExperimentResultRepository } from "./infrastructure/repositories/postgres-experiment-result-repository.js";

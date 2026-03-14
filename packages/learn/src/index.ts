@@ -1,6 +1,7 @@
 export {
   Career,
   Course,
+  CreatorWorkflow,
   CourseStatus,
   FogOfWarNavigationService,
   Fragment,
@@ -30,8 +31,24 @@ export type {
 
 export type { FragmentRepositoryPort } from "./domain/fragment-artifact/ports/fragment-repository-port.js";
 
+export {
+  ApprovalService,
+  CreatorCopilotService,
+  type ApprovalServiceDeps,
+  type ApproveResult,
+  type CreatorCopilotServiceDeps,
+} from "./application/index.js";
+export type {
+  ApprovalRecordRepositoryPort,
+  CreatorWorkflowLoaderPort,
+  CreatorWorkflowSavePort,
+  ReviewerApprovalPort,
+} from "./application/ports/approval-ports.js";
+
 export { LearnArtifactBridge } from "./infrastructure/learn-artifact-bridge.js";
+export { PostgresApprovalRecordRepository } from "./infrastructure/repositories/postgres-approval-record-repository.js";
 export { PostgresCareerRepository } from "./infrastructure/repositories/postgres-career-repository.js";
+export { PostgresCreatorWorkflowRepository } from "./infrastructure/repositories/postgres-creator-workflow-repository.js";
 export { PostgresCourseRepository } from "./infrastructure/repositories/postgres-course-repository.js";
 export { PostgresFragmentRepository } from "./infrastructure/repositories/postgres-fragment-repository.js";
 export { PostgresFragmentReviewRecordRepository } from "./infrastructure/repositories/postgres-fragment-review-record-repository.js";

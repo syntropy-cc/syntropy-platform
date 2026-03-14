@@ -79,3 +79,14 @@ export function createCreatorWorkflowId(value: string): CreatorWorkflowId {
 export function isCreatorWorkflowId(value: string): value is CreatorWorkflowId {
   return isUuidBrand(value);
 }
+
+/** Branded type for ApprovalRecordId. UUID-based; immutable. (COMP-017.3) */
+export type ApprovalRecordId = string & { readonly __brand: "ApprovalRecordId" };
+
+export function createApprovalRecordId(value: string): ApprovalRecordId {
+  return createUuidBrand(value, "ApprovalRecordId", "ApprovalRecordId");
+}
+
+export function isApprovalRecordId(value: string): value is ApprovalRecordId {
+  return isUuidBrand(value);
+}

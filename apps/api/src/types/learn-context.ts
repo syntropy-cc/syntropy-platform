@@ -1,12 +1,16 @@
 /**
- * Learn context for REST API (COMP-015.6, COMP-016.7).
- * Injects repositories and services for content hierarchy and fragment/review workflow.
+ * Learn context for REST API (COMP-015.6, COMP-016.7, COMP-017.5).
+ * Injects repositories and services for content hierarchy, fragment/review, and creator tools.
  */
 
 import type { FragmentId } from "@syntropy/types";
 import type {
+  ApprovalService,
   CareerRepository,
   CourseRepository,
+  CreatorCopilotService,
+  CreatorWorkflowLoaderPort,
+  CreatorWorkflowSavePort,
   FragmentRepositoryPort,
   FragmentReviewService,
   TrackRepository,
@@ -29,4 +33,9 @@ export interface LearnContext {
   fragmentRepository: FragmentRepositoryPort;
   fragmentReviewService: FragmentReviewService;
   markFragmentComplete: MarkFragmentComplete;
+  /** Creator tools (COMP-017.5). When set, creator routes are registered. */
+  creatorWorkflowLoader?: CreatorWorkflowLoaderPort;
+  creatorWorkflowSave?: CreatorWorkflowSavePort;
+  approvalService?: ApprovalService;
+  creatorCopilotService?: CreatorCopilotService;
 }

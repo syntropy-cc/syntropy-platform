@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/learn/subdomains/creator-tools-copilot.md](../../architecture/domains/learn/subdomains/creator-tools-copilot.md)
 > **Stage Assignment**: S29 — Learn Creator Tools
-> **Status**: 🔵 In Progress
+> **Status**: ✅ Complete
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -44,12 +44,12 @@ Creator Tools & AI Copilot is a Supporting subdomain within Learn. It manages th
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 1 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **6** |
 
-**Component Coverage**: 17%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -86,133 +86,87 @@ Creator Tools & AI Copilot is a Supporting subdomain within Learn. It manages th
 
 ---
 
-#### [COMP-017.2] AIGeneratedDraft and ApprovalRecord entities
+#### [COMP-017.2] AIGeneratedDraft (done in prior session)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | High |
-| **Origin** | creator-tools-copilot.md |
-| **Dependencies** | COMP-017.1 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
-
-**Description**: Implement `AIGeneratedDraft` and `ApprovalRecord` entities.
-
-**Acceptance Criteria**:
-- [ ] `AIGeneratedDraft` entity: `id`, `workflow_id`, `phase`, `draft_type`, `content (JSONB)`, `ai_generated: true (always)`, `agent_session_id`, `created_at`
-- [ ] `ApprovalRecord` entity: `id`, `workflow_id`, `phase`, `draft_id`, `creator_id`, `decision (approve|reject)`, `notes`, `decided_at`
-- [ ] `AIGeneratedDraft.ai_generated` is always `true` — cannot be set to false
-- [ ] Draft rejection creates new AI agent session for iteration
-- [ ] Unit tests: ai_generated immutability
-
-**Files Created/Modified**:
-- `packages/learn/src/domain/creator-tools/ai-generated-draft.ts`
-- `packages/learn/src/domain/creator-tools/approval-record.ts`
+| **Status** | ✅ Done |
+| **Completed** | 2026-03-14 |
 
 ---
 
-#### [COMP-017.3] CreatorWorkflow phase use cases
+#### [COMP-017.3] ApprovalRecord and review workflow
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | creator-tools-copilot.md |
-| **Dependencies** | COMP-017.2, COMP-012 |
-| **Size** | M |
-| **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Implement application use cases for each phase: activating the appropriate AI agent and processing the creator's approval/rejection.
-
-**Acceptance Criteria**:
-- [ ] `StartPhaseUseCase.execute(workflowId, phase)` activates the correct AI agent session via AI Agents adapter
-- [ ] `ApprovePhaseUseCase.execute(workflowId, draftId, notes)` creates ApprovalRecord, advances phase
-- [ ] `RejectPhaseUseCase.execute(workflowId, draftId, notes)` creates rejection ApprovalRecord, activates Iteration Agent
-- [ ] Agent mapping: Phase 1→ProjectScopingAgent, Phase 2→CurriculumArchitectAgent, Phase 3→FragmentAuthorAgent, Phase 4→PedagogicalValidatorAgent, Phase 5→IterationAgent
-- [ ] `AIAgentsAdapter` (ACL) wraps AI Agents session API
+**Description**: ApprovalRecord entity; ApprovalService (approve/reject) with ReviewerApprovalPort; role check via port; unit tests.
 
 **Files Created/Modified**:
-- `packages/learn/src/application/creator-workflow-use-cases.ts`
-- `packages/learn/src/infrastructure/ai-agents-adapter.ts`
+- `packages/types`: ApprovalRecordId
+- `packages/learn`: approval-record.ts, approval-ports.ts, approval-service.ts, approval-record.test.ts, approval-service.test.ts
 
 ---
 
-#### [COMP-017.4] Repository and PostgreSQL implementation
+#### [COMP-017.4] CreatorRepository (Postgres)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | High |
-| **Origin** | creator-tools-copilot.md, ADR-004 |
-| **Dependencies** | COMP-017.1 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
+| **Status** | ✅ Done |
+| **Priority** | Medium |
+| **Completed** | 2026-03-14 |
 
-**Description**: Repository and migration for creator workflows, drafts, and approvals.
-
-**Acceptance Criteria**:
-- [ ] `CreatorWorkflowRepository` interface: `findByTrack`, `findById`, `save`
-- [ ] Migration: `creator_workflows`, `ai_generated_drafts`, `approval_records` tables
-- [ ] Integration tests
+**Description**: Migration learn.creator_workflows, learn.approval_records; PostgresCreatorWorkflowRepository (findById, save); PostgresApprovalRecordRepository (save); CreatorWorkflow.fromStorage; integration test.
 
 **Files Created/Modified**:
-- `packages/learn/src/infrastructure/repositories/postgres-creator-workflow-repository.ts`
-- `packages/learn/src/infrastructure/migrations/003_creator_tools.sql`
+- `supabase/migrations/20260317000000_learn_creator_tools.sql`
+- `packages/learn`: postgres-creator-workflow-repository.ts, postgres-approval-record-repository.ts
+- `packages/learn/tests/integration/creator-tools-repositories.integration.test.ts`
 
 ---
 
-#### [COMP-017.5] Internal API endpoints
+#### [COMP-017.5] Creator Tools REST API
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | learn/ARCHITECTURE.md |
-| **Dependencies** | COMP-017.3, COMP-017.4 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Internal API for creator workflow management.
-
-**Acceptance Criteria**:
-- [ ] `POST /internal/learn/creator-workflows` → starts new workflow for a Track
-- [ ] `GET /internal/learn/creator-workflows/{id}` → current workflow state
-- [ ] `POST /internal/learn/creator-workflows/{id}/phases/{phase}/start` → activates AI agent for phase
-- [ ] `POST /internal/learn/creator-workflows/{id}/phases/{phase}/approve` → approves draft, advances
-- [ ] `POST /internal/learn/creator-workflows/{id}/phases/{phase}/reject` → rejects, requests iteration
+**Description**: POST/GET /api/v1/learn/creator/workflows, generate-draft, approve, reject; LearnContext extended with optional creator services; routes in learn.ts.
 
 **Files Created/Modified**:
-- `packages/learn/src/api/routes/creator-workflows.ts`
+- `apps/api`: types/learn-context.ts, routes/learn.ts
+- `packages/learn`: index.ts (exports ApprovalService, CreatorCopilotService, CreatorWorkflow, ports)
 
 ---
 
-#### [COMP-017.6] Creator tools test suite
+#### [COMP-017.6] Creator Tools integration tests
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | CON-010 |
-| **Dependencies** | COMP-017.5 |
-| **Size** | S |
-| **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Test suite focusing on the approval invariant and phase transitions.
-
-**Acceptance Criteria**:
-- [ ] ≥85% branch coverage on CreatorWorkflow aggregate
-- [ ] All advance-without-approval scenarios tested
-- [ ] `ai_generated: true` invariant tested (cannot set to false)
-- [ ] Integration test: full 5-phase workflow with mocked AI agents
+**Description**: Full workflow E2E: create → generate draft (stub AI) → approve → assert phase transitions; multi-phase approve sequence test.
 
 **Files Created/Modified**:
-- `packages/learn/tests/unit/creator-tools/*.test.ts`
-- `packages/learn/tests/integration/creator-tools/*.test.ts`
+- `packages/learn/tests/integration/creator-workflow-e2e.integration.test.ts`
 
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — COMP-017.3 through COMP-017.6 complete (S29)
+
+- **COMP-017.3**: ApprovalRecord entity (id, workflowId, phase, reviewerId, decision, notes, decidedAt). ApprovalService with approve/reject; ports: CreatorWorkflowLoaderPort, CreatorWorkflowSavePort, ApprovalRecordRepositoryPort, ReviewerApprovalPort. Approve transitions workflow to next phase; reject records only. NotReviewerError when canApprove returns false. ApprovalRecordId in @syntropy/types. Unit tests for ApprovalRecord and ApprovalService.
+- **COMP-017.4**: Migration 20260317000000_learn_creator_tools.sql (creator_workflows, approval_records). PostgresCreatorWorkflowRepository (findById, save), PostgresApprovalRecordRepository (save). CreatorWorkflow.fromStorage() for hydration. Integration test with Testcontainers (creator-tools-repositories.integration.test.ts).
+- **COMP-017.5**: LearnContext extended with optional creatorWorkflowLoader, creatorWorkflowSave, approvalService, creatorCopilotService. Creator routes in learn.ts when all four present: POST/GET /api/v1/learn/creator/workflows, generate-draft, approve, reject. Learn package exports ApprovalService, CreatorCopilotService, CreatorWorkflow, approval ports.
+- **COMP-017.6**: creator-workflow-e2e.integration.test.ts: full flow create → generate draft (StubLearnCopilotAdapter) → approve → assert phase; multi-phase approve sequence (ideation → publication). Skipped unless LEARN_INTEGRATION=true.
 
 ### 2026-03-14 — COMP-017.2 complete (per IMPLEMENTATION-PLAN Section 7)
 

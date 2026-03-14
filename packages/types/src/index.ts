@@ -4,11 +4,13 @@
  */
 
 export {
+  createApprovalRecordId,
   createCareerId,
   createCourseId,
   createCreatorWorkflowId,
   createFragmentId,
   createTrackId,
+  isApprovalRecordId,
   isCareerId,
   isCourseId,
   isCreatorWorkflowId,
@@ -16,6 +18,7 @@ export {
   isTrackId,
 } from "./ids.js";
 export type {
+  ApprovalRecordId,
   CareerId,
   CourseId,
   CreatorWorkflowId,

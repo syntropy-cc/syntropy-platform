@@ -1,5 +1,5 @@
 /**
- * Learn content hierarchy and fragment REST routes (COMP-015.6, COMP-016.7).
+ * Learn content hierarchy, fragment, and creator tools REST routes (COMP-015.6, COMP-016.7, COMP-017.5).
  *
  * GET /api/v1/learn/careers — list careers.
  * GET /api/v1/learn/careers/:id/tracks — list tracks with fog-of-war.
@@ -10,19 +10,26 @@
  * POST /api/v1/learn/fragments/:id/submit — creator submits for review.
  * POST /api/v1/learn/fragments/:id/approve — reviewer approves.
  * POST /api/v1/learn/fragments/:id/reject — reviewer rejects with reason.
+ * Creator tools (when context provided):
+ *   POST /api/v1/learn/creator/workflows — create workflow.
+ *   GET /api/v1/learn/creator/workflows/:id — get workflow.
+ *   POST /api/v1/learn/creator/workflows/:id/generate-draft — generate AI draft.
+ *   POST /api/v1/learn/creator/workflows/:id/approve — approve phase.
+ *   POST /api/v1/learn/creator/workflows/:id/reject — reject phase.
  * All endpoints require auth; responses use CONV-017 envelope.
  */
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { CareerId, CourseId, FragmentId } from "@syntropy/types";
 import {
+  CreatorWorkflow,
   FogOfWarNavigationService,
   Fragment,
   FragmentStatus,
   NotReviewerError,
   type Course,
 } from "@syntropy/learn-package";
-import { createCourseId, createFragmentId } from "@syntropy/types";
+import { createCourseId, createCreatorWorkflowId, createFragmentId, createTrackId } from "@syntropy/types";
 import { randomUUID } from "node:crypto";
 import { successEnvelope, errorEnvelope } from "../types/api-envelope.js";
 import type { LearnContext } from "../types/learn-context.js";
@@ -400,4 +407,241 @@ export async function learnRoutes(
       );
     }
   );
+
+  // --- Creator tools routes (COMP-017.5) ---
+
+  const {
+    creatorWorkflowLoader,
+    creatorWorkflowSave,
+    approvalService,
+    creatorCopilotService,
+  } = opts.learn;
+
+  if (
+    creatorWorkflowLoader &&
+    creatorWorkflowSave &&
+    approvalService &&
+    creatorCopilotService
+  ) {
+    /** Body for POST /api/v1/learn/creator/workflows. */
+    interface CreateWorkflowBody {
+      trackId: string;
+    }
+
+    /** Body for POST generate-draft. */
+    interface GenerateDraftBody {
+      prompt: string;
+    }
+
+    /** Body for POST approve/reject. */
+    interface ApproveRejectBody {
+      comments?: string;
+    }
+
+    fastify.post<{ Body: CreateWorkflowBody }>(
+      "/api/v1/learn/creator/workflows",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const userId = request.user!.userId;
+        const { trackId } = request.body ?? {};
+        if (!trackId?.trim()) {
+          return reply.status(400).send(
+            errorEnvelope(
+              "VALIDATION_ERROR",
+              "trackId is required",
+              getRequestId(request)
+            )
+          );
+        }
+        const id = createCreatorWorkflowId(randomUUID());
+        const workflow = CreatorWorkflow.create({
+          id,
+          trackId: createTrackId(trackId.trim()),
+          creatorId: userId,
+          startedAt: new Date(),
+        });
+        await creatorWorkflowSave.save(workflow);
+        return reply.status(201).send(
+          successEnvelope(
+            {
+              id: workflow.id,
+              trackId: workflow.trackId,
+              creatorId: workflow.creatorId,
+              currentPhase: workflow.currentPhase,
+              phasesCompleted: [...workflow.phasesCompleted],
+              startedAt: workflow.startedAt.toISOString(),
+            },
+            getRequestId(request)
+          )
+        );
+      }
+    );
+
+    fastify.get<{ Params: { id: string } }>(
+      "/api/v1/learn/creator/workflows/:id",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const workflowId = createCreatorWorkflowId(request.params.id);
+        const workflow = await creatorWorkflowLoader.findById(workflowId);
+        if (workflow === null) {
+          return reply.status(404).send(
+            errorEnvelope(
+              "NOT_FOUND",
+              `Workflow not found: ${request.params.id}`,
+              getRequestId(request)
+            )
+          );
+        }
+        return reply.status(200).send(
+          successEnvelope(
+            {
+              id: workflow.id,
+              trackId: workflow.trackId,
+              creatorId: workflow.creatorId,
+              currentPhase: workflow.currentPhase,
+              phasesCompleted: [...workflow.phasesCompleted],
+              startedAt: workflow.startedAt.toISOString(),
+              completedAt: workflow.completedAt?.toISOString() ?? null,
+            },
+            getRequestId(request)
+          )
+        );
+      }
+    );
+
+    fastify.post<{ Params: { id: string }; Body: GenerateDraftBody }>(
+      "/api/v1/learn/creator/workflows/:id/generate-draft",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const workflowId = createCreatorWorkflowId(request.params.id);
+        const workflow = await creatorWorkflowLoader.findById(workflowId);
+        if (workflow === null) {
+          return reply.status(404).send(
+            errorEnvelope(
+              "NOT_FOUND",
+              `Workflow not found: ${request.params.id}`,
+              getRequestId(request)
+            )
+          );
+        }
+        const prompt = request.body?.prompt ?? "";
+        const draft = await creatorCopilotService.generateDraft(workflow, prompt);
+        return reply.status(201).send(
+          successEnvelope(
+            {
+              workflowId: draft.workflowId,
+              phase: draft.phase,
+              content: draft.content,
+              agentSessionId: draft.agentSessionId,
+              aiGenerated: draft.ai_generated,
+              createdAt: draft.createdAt.toISOString(),
+            },
+            getRequestId(request)
+          )
+        );
+      }
+    );
+
+    fastify.post<{ Params: { id: string }; Body: ApproveRejectBody }>(
+      "/api/v1/learn/creator/workflows/:id/approve",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const userId = request.user!.userId;
+        const workflowId = createCreatorWorkflowId(request.params.id);
+        try {
+          const result = await approvalService.approve(
+            workflowId,
+            userId,
+            request.body?.comments
+          );
+          return reply.status(200).send(
+            successEnvelope(
+              {
+                recordId: result.record.id,
+                phase: result.record.phase,
+                decision: result.record.decision,
+                nextPhase: result.event.phase,
+              },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof NotReviewerError) {
+            return reply.status(403).send(
+              errorEnvelope(
+                "FORBIDDEN",
+                "Reviewer/creator role required to approve",
+                getRequestId(request)
+              )
+            );
+          }
+          if (err instanceof Error && err.message.includes("Workflow not found")) {
+            return reply.status(404).send(
+              errorEnvelope(
+                "NOT_FOUND",
+                `Workflow not found: ${request.params.id}`,
+                getRequestId(request)
+              )
+            );
+          }
+          if (err instanceof Error && err.message.includes("already at final phase")) {
+            return reply.status(400).send(
+              errorEnvelope(
+                "VALIDATION_ERROR",
+                err.message,
+                getRequestId(request)
+              )
+            );
+          }
+          throw err;
+        }
+      }
+    );
+
+    fastify.post<{ Params: { id: string }; Body: ApproveRejectBody }>(
+      "/api/v1/learn/creator/workflows/:id/reject",
+      { preHandler: [requireAuth] },
+      async (request, reply) => {
+        const userId = request.user!.userId;
+        const workflowId = createCreatorWorkflowId(request.params.id);
+        try {
+          const record = await approvalService.reject(
+            workflowId,
+            userId,
+            request.body?.comments
+          );
+          return reply.status(200).send(
+            successEnvelope(
+              {
+                recordId: record.id,
+                phase: record.phase,
+                decision: record.decision,
+              },
+              getRequestId(request)
+            )
+          );
+        } catch (err) {
+          if (err instanceof NotReviewerError) {
+            return reply.status(403).send(
+              errorEnvelope(
+                "FORBIDDEN",
+                "Reviewer/creator role required to reject",
+                getRequestId(request)
+              )
+            );
+          }
+          if (err instanceof Error && err.message.includes("Workflow not found")) {
+            return reply.status(404).send(
+              errorEnvelope(
+                "NOT_FOUND",
+                `Workflow not found: ${request.params.id}`,
+                getRequestId(request)
+              )
+            );
+          }
+          throw err;
+        }
+      }
+    );
+  }
 }

@@ -3,6 +3,7 @@
  * Architecture: creator-tools-copilot.md.
  */
 
+export type { ApprovalRecordId } from "@syntropy/types";
 export {
   CreatorWorkflow,
   CREATOR_WORKFLOW_PHASES,
@@ -22,3 +23,8 @@ export {
   AIGeneratedDraft,
   type AIGeneratedDraftParams,
 } from "./ai-generated-draft.js";
+export {
+  ApprovalRecord,
+  type ApprovalRecordParams,
+  type ApprovalDecision,
+} from "./approval-record.js";

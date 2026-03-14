@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S29: COMP-017.2 done)
+> **Last Updated**: 2026-03-14 (S29: COMP-017.6 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S29 — Learn Creator Tools
-CURRENT ITEM  : COMP-017.3 — ApprovalRecord and review workflow
+CURRENT STAGE : S30 — Learn Mentorship & Community
+CURRENT ITEM  : COMP-018.1 — MentorshipRelationship aggregate
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 2 / 6 items done
-OVERALL       : 135 / 262 items done (52%)
+STAGE PROGRESS: 0 / 5 items done
+OVERALL       : 139 / 262 items done (53%)
 ```
 
 **Next 5 items**:
-1. `COMP-017.3` — ApprovalRecord and review workflow ← **START HERE**
-2. `COMP-017.4` — CreatorRepository (Postgres)
-3. `COMP-017.5` — Creator Tools REST API
-4. `COMP-017.6` — Creator Tools integration tests
-5. `COMP-018.1` — MentorshipRelationship aggregate
+1. `COMP-018.1` — MentorshipRelationship aggregate ← **START HERE**
+2. `COMP-018.2` — MentorReview entity
+3. `COMP-018.3` — ArtifactGallery read model
+4. `COMP-018.4` — MentorshipRepository (Postgres)
+5. `COMP-018.5` — Mentorship REST API + integration tests
 
-**Component record**: [`COMP-017`](./components/COMP-017-learn-creator-tools.md)
+**Component record**: [`COMP-018`](./components/COMP-018-learn-mentorship.md)
 
-**Next item (COMP-017.3) acceptance criteria**: `ApprovalRecord` entity stores reviewer decision, comments, timestamp; `ApprovalService.approve/reject(workflowId, reviewerId)` transitions workflow; role check (reviewer only); unit tests.
+**Next item (COMP-018.1) acceptance criteria**: `MentorshipRelationship` aggregate with `mentorId`, `learnerId`, `status`, `startDate`; `request()`, `accept()`, `end()` transitions; `MentorRole` check on mentor; unit tests.
 
-**Suggested steps**: (1) Write `ApprovalRecord` entity (2) Write `ApprovalService` (3) Write role-check test
+**Suggested steps**: (1) Write `MentorshipRelationship` aggregate (2) Implement transition guards (3) Write role check test
 
 ---
 
@@ -2185,7 +2185,7 @@ Status: ✅ Done | **Deps**: COMP-017.1, COMP-012
 
 #### [COMP-017.3] ApprovalRecord and review workflow
 `S29` `High` `S` [Record→](./components/COMP-017-learn-creator-tools.md)
-Status: ⬜ | **Deps**: COMP-017.2
+Status: ✅ Done | **Deps**: COMP-017.2
 **Criteria**: `ApprovalRecord` entity stores reviewer decision, comments, timestamp; `ApprovalService.approve/reject(workflowId, reviewerId)` transitions workflow; role check (reviewer only); unit tests.
 **Steps**: (1) Write `ApprovalRecord` entity (2) Write `ApprovalService` (3) Write role-check test
 
@@ -2193,7 +2193,7 @@ Status: ⬜ | **Deps**: COMP-017.2
 
 #### [COMP-017.4] CreatorRepository (Postgres)
 `S29` `Medium` `S` [Record→](./components/COMP-017-learn-creator-tools.md)
-Status: ⬜ | **Deps**: COMP-017.3, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-017.3, COMP-039.4
 **Criteria**: Migrations for `creator_workflows`, `approval_records`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2201,7 +2201,7 @@ Status: ⬜ | **Deps**: COMP-017.3, COMP-039.4
 
 #### [COMP-017.5] Creator Tools REST API
 `S29` `High` `M` [Record→](./components/COMP-017-learn-creator-tools.md)
-Status: ⬜ | **Deps**: COMP-017.4, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-017.4, COMP-033.2
 **Criteria**: `POST /api/v1/learn/creator/workflows`, `GET /api/v1/learn/creator/workflows/{id}`, `POST /api/v1/learn/creator/workflows/{id}/generate-draft`, `POST /api/v1/learn/creator/workflows/{id}/approve`; creator role required.
 **Steps**: (1) Write API routes (2) Wire to services (3) Write API tests
 
@@ -2209,7 +2209,7 @@ Status: ⬜ | **Deps**: COMP-017.4, COMP-033.2
 
 #### [COMP-017.6] Creator Tools integration tests
 `S29` `High` `M` [Record→](./components/COMP-017-learn-creator-tools.md)
-Status: ⬜ | **Deps**: COMP-017.5
+Status: ✅ Done | **Deps**: COMP-017.5
 **Criteria**: Full workflow: create → generate draft (AI mock) → submit for review → approve → publish fragment; all phase transitions verified.
 **Steps**: (1) Write end-to-end workflow test (2) Assert AI integration (3) Assert phase transitions
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-017.2 done; S29 next (COMP-017.3)
+> Last Updated: 2026-03-14 | COMP-017.6 done; S30 next (COMP-018.1)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 135 / 262 items (52%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 139 / 262 items (53%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S29 — Learn Creator Tools | S56 | ⬜ |
+| **Current Stage** | S30 — Learn Mentorship & Community | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-017.6 — Creator workflow E2E integration test (create → generate draft → approve → phase transitions); creator-tools-repositories integration test
+- 2026-03-14 COMP-017.5 — Creator Tools REST API (POST/GET workflows, generate-draft, approve, reject); LearnContext extended with optional creator services
+- 2026-03-14 COMP-017.4 — Migration learn.creator_workflows + approval_records; PostgresCreatorWorkflowRepository, PostgresApprovalRecordRepository; CreatorWorkflow.fromStorage; integration test
+- 2026-03-14 COMP-017.3 — ApprovalRecord entity; ApprovalService (approve/reject); ReviewerApprovalPort, CreatorWorkflowLoaderPort, CreatorWorkflowSavePort; ApprovalRecordId in types; unit tests
 - 2026-03-14 COMP-017.2 — AIGeneratedDraft value object; CreatorCopilotService.generateDraft(workflow, prompt); LearnCopilotAgentPort; StubLearnCopilotAdapter; unit tests with mock AI
 - 2026-03-14 COMP-017.1 — CreatorWorkflow aggregate (5-phase lifecycle: ideation→drafting→review→refinement→publication); transition guard; CreatorWorkflowPhaseEntered event; unit tests
 - 2026-03-14 COMP-032.3 — Learn pillar Next.js pages (/learn, /learn/careers/[id], /learn/courses/[id], /learn/fragments/[id]); fog-of-war UI

@@ -1,5 +1,4 @@
 
 > @syntropy/hub@0.1.0 build /home/jescott/syntropy-cc/syntropy-platform/apps/hub
-> echo 'build placeholder'
+> next build
 
-build placeholder

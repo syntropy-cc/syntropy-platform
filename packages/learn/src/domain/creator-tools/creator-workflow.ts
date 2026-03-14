@@ -8,7 +8,6 @@ import type { CreatorWorkflowId, TrackId } from "@syntropy/types";
 import { InvalidPhaseTransitionError } from "../errors.js";
 import type { CreatorWorkflowPhaseEntered } from "./events.js";
 import {
-  CREATOR_WORKFLOW_PHASES,
   type CreatorWorkflowPhase,
   isValidNextPhase,
 } from "./creator-workflow-phase.js";
@@ -54,6 +53,11 @@ export class CreatorWorkflow {
       currentPhase: INITIAL_PHASE,
       phasesCompleted: [],
     });
+  }
+
+  /** Hydrate from persistence (COMP-017.4). */
+  static fromStorage(params: CreatorWorkflowParams): CreatorWorkflow {
+    return new CreatorWorkflow(params);
   }
 
   get currentPhase(): CreatorWorkflowPhase {

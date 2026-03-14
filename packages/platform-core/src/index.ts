@@ -72,6 +72,7 @@ export {
 
 export {
   PostgresAppendOnlyLogRepository,
+  PgEventLogClient,
   CausalChainTracer,
   AuditLogConsumer,
   AUDIT_LOG_TOPICS,

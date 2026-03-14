@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/platform-core/subdomains/portfolio-aggregation.md](../../architecture/domains/platform-core/subdomains/portfolio-aggregation.md)
 > **Stage Assignment**: S4 — Platform Core Aggregation
-> **Status**: 🔵 In Progress (S23 done: 010.4–010.7)
+> **Status**: 🔵 In Progress (S24: 010.8 done)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -248,27 +248,30 @@ Portfolio Aggregation builds and maintains each user's verifiable dynamic portfo
 
 ---
 
-#### [COMP-010.8] Internal API endpoints
+#### [COMP-010.8] Portfolio REST API endpoints + integration tests
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | platform-core/ARCHITECTURE.md |
-| **Dependencies** | COMP-010.6 |
-| **Size** | XS |
+| **Origin** | IMPLEMENTATION-PLAN Section 7 |
+| **Dependencies** | COMP-010.7, COMP-033.2 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Internal REST API for portfolio data access consumed by AI Agents, Labs Peer Review, and frontend.
+**Description**: Public REST API for portfolio data: GET full portfolio and GET achievements; integration test with Testcontainers Postgres.
 
 **Acceptance Criteria**:
-- [ ] `GET /internal/platform-core/portfolio/{user_id}` → full portfolio (p99 < 200ms)
-- [ ] `GET /internal/platform-core/portfolio/{user_id}/skills` → skill records
-- [ ] `GET /internal/platform-core/portfolio/{user_id}/reputation` → reputation score
-- [ ] `GET /internal/platform-core/portfolio/{user_id}/achievements` → unlocked achievements
+- [x] `GET /api/v1/portfolios/{userId}` → full portfolio (userId, xp, reputationScore, skills, achievements)
+- [x] `GET /api/v1/portfolios/{userId}/achievements` → achievements array
+- [x] Integration test: seed portfolio, assert 200 and response shape; 404 for unknown user; 401 without auth
 
 **Files Created/Modified**:
-- `packages/platform-core/src/api/routes/portfolio.ts`
+- `apps/api/src/routes/portfolios.ts` — portfolio and achievements routes
+- `apps/api/src/types/portfolio-context.ts` — PortfolioContext
+- `apps/api/src/integration/portfolio-api.integration.test.ts` — integration test
+- `packages/platform-core/src/event-log/PgEventLogClient.ts` — Pool → EventLogClient adapter
+- Migration: `CREATE SCHEMA IF NOT EXISTS platform_core` added to portfolio migration
 
 ---
 
@@ -317,6 +320,14 @@ Portfolio Aggregation builds and maintains each user's verifiable dynamic portfo
 - `infrastructure/repositories/postgres-portfolio-repository.ts`: PostgresPortfolioRepository, optimistic locking (version).
 - Portfolio.create(params), Portfolio.version for persistence.
 - Integration test: postgres-portfolio-repository.test.ts (mock client).
+
+### 2026-03-14 — S24 (COMP-010.8)
+
+**COMP-010.8** — Portfolio REST API + integration test
+- `apps/api`: PortfolioContext type; portfolio routes (GET /api/v1/portfolios/:userId, GET .../achievements); requireAuth; success/error envelope.
+- `packages/platform-core`: PgEventLogClient (pg.Pool → EventLogClient) for PostgresPortfolioRepository; exported from event-log and package index.
+- Migration: CREATE SCHEMA IF NOT EXISTS platform_core in 20260314220000.
+- Integration test: Testcontainers Postgres, run portfolio migration, seed portfolio via repository, createApp with portfolio context + mock auth, assert 200/404/401 and DTO shape.
 
 ### 2026-03-14 — S22 (COMP-010.1–010.3)
 

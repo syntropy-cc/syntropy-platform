@@ -1,5 +1,7 @@
 -- COMP-010.7: Portfolio Aggregation — portfolios, achievements, skill_records.
 
+CREATE SCHEMA IF NOT EXISTS platform_core;
+
 CREATE TABLE IF NOT EXISTS platform_core.portfolios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id TEXT NOT NULL UNIQUE,

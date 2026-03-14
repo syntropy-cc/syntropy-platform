@@ -165,8 +165,8 @@ describe("PostgresPortfolioRepository", () => {
       userId: "user-2",
       xp: XPTotal.create(150),
       reputationScore: ReputationScore.create(0.2),
-      achievements: loaded1!.achievements,
-      skills: loaded1!.skills,
+      achievements: [...loaded1!.achievements],
+      skills: [...loaded1!.skills],
       version: loaded1!.version,
     });
     await repo.save(p2);

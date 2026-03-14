@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S23: COMP-010.4–010.7 done)
+> **Last Updated**: 2026-03-14 (S24: COMP-010.8 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S24 — Portfolio API + Search Core
-CURRENT ITEM  : COMP-010.8 — Portfolio REST API endpoints + integration tests
+CURRENT ITEM  : COMP-011.1 — Search package setup + SearchIndex entity
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 4 / 4 items done (S23 complete)
-OVERALL       : 110 / 262 items done (42%)
+STAGE PROGRESS: 1 / 4 items done (S24)
+OVERALL       : 111 / 262 items done (42%)
 ```
 
 **Next 5 items**:
-1. `COMP-010.8` — Portfolio REST API endpoints + integration tests ← **START HERE**
-2. `COMP-011.1` — Search package setup + SearchIndex entity
-3. `COMP-011.2` — Full-text search implementation (tsvector)
-4. `COMP-011.3` — …
+1. `COMP-011.1` — Search package setup + SearchIndex entity ← **START HERE**
+2. `COMP-011.2` — Full-text search implementation (tsvector)
+3. `COMP-011.3` — EventIndexingConsumer (Kafka)
+4. `COMP-011.4` — Semantic search (pgvector embeddings)
 5. …
 
-**Component record**: [`COMP-010`](./components/COMP-010-portfolio-aggregation.md)
+**Component record**: [`COMP-011`](./components/COMP-011-search-recommendation.md)
 
-**Next item (COMP-010.8) acceptance criteria**: `GET /api/v1/portfolios/{userId}` returns full portfolio; `GET /api/v1/portfolios/{userId}/achievements`; integration test covering event-to-portfolio flow.
+**Next item (COMP-011.1) acceptance criteria**: `SearchIndex` entity with `indexId`, `entityType`, `entityId`, `tsvector_content`, `embedding?`; migration creates `search_index` table with `tsvector` column; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire to query service (3) Write integration test
+**Suggested steps**: (1) Write `SearchIndex` entity (2) Write migration with `tsvector` column (3) Write entity tests
 
 ---
 
@@ -1985,7 +1985,7 @@ Status: Done | **Deps**: COMP-010.5, COMP-039.4
 
 #### [COMP-010.8] Portfolio REST API endpoints + integration tests
 `S24` `High` `M` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.7, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-010.7, COMP-033.2
 **Criteria**: `GET /api/v1/portfolios/{userId}` returns full portfolio; `GET /api/v1/portfolios/{userId}/achievements`; integration test covering event-to-portfolio flow.
 **Steps**: (1) Write API routes (2) Wire to query service (3) Write integration test
 
@@ -3201,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S23 complete (COMP-010.4–010.7 done)
+> Last Updated: 2026-03-14 | S24 in progress (COMP-010.8 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 110 / 262 items (42%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 111 / 262 items (42%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
 | **Current Stage** | S24 — Portfolio API + Search Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-010.8 — Portfolio REST API (GET /portfolios/:userId, /achievements), PortfolioContext, PgEventLogClient, integration test
 - 2026-03-14 COMP-010.7 — PortfolioRepository (Postgres), migration, port, integration test
 - 2026-03-14 COMP-010.6 — PortfolioEventConsumer (Kafka), applyEvent, portfolio-update tests
 - 2026-03-14 COMP-010.5 — ReputationService, ReputationSignals, time decay, unit tests

@@ -5,7 +5,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.levelFromSignalCount = exports.SIGNAL_COUNT_TO_LEVEL = exports.KNOWN_SKILL_AREAS = exports.SkillProfileService = exports.computeSkillProfile = exports.createSkillProfile = exports.createAchievementUnlockedEvent = exports.ACHIEVEMENT_UNLOCKED = exports.DEFAULT_ACHIEVEMENT_DEFINITIONS = exports.AchievementService = exports.evaluateAchievements = exports.levelFromXp = exports.LEVEL_THRESHOLDS = exports.DEFAULT_XP_WEIGHTS = exports.XPCalculator = exports.calculateXp = exports.createSkillRecord = exports.createAchievement = exports.ReputationScore = exports.XPTotal = exports.Portfolio = exports.AppendOnlyLogAdapter = exports.AUDIT_LOG_CONSUMER_GROUP = exports.AUDIT_LOG_TOPICS = exports.AuditLogConsumer = exports.CausalChainTracer = exports.PgEventLogClient = exports.PostgresAppendOnlyLogRepository = exports.BulkheadRejectedError = exports.Bulkhead = exports.isRetryableError = exports.RetryPolicy = exports.DEFAULT_JOB_TIMEOUT_MS = exports.DEFAULT_DB_TIMEOUT_MS = exports.DEFAULT_HTTP_TIMEOUT_MS = exports.withTimeout = exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = exports.MockAppendOnlyLog = exports.appendToLog = exports.getAuditColumnsMigrationSnippet = exports.AuditColumnsMixin = exports.SoftDeletableMixin = exports.getEncryptionKey = exports.decryptField = exports.encryptField = exports.validateEnv = void 0;
-exports.PORTFOLIO_CONSUMER_GROUP_ID = exports.PORTFOLIO_TOPICS = exports.PortfolioEventConsumer = exports.applyEvent = exports.PostgresPortfolioRepository = exports.ReputationService = exports.calculateReputation = exports.DECAY_AFTER_DAYS = exports.REPUTATION_WEIGHTS = exports.normalizeSkillName = void 0;
+exports.EVENT_INDEXING_CONSUMER_GROUP_ID = exports.SEARCH_INDEX_TOPICS = exports.EventIndexingConsumer = exports.PostgresSearchRepository = exports.SearchService = exports.SearchIndex = exports.PORTFOLIO_CONSUMER_GROUP_ID = exports.PORTFOLIO_TOPICS = exports.PortfolioEventConsumer = exports.applyEvent = exports.PostgresPortfolioRepository = exports.ReputationService = exports.calculateReputation = exports.DECAY_AFTER_DAYS = exports.REPUTATION_WEIGHTS = exports.normalizeSkillName = void 0;
 var env_validator_js_1 = require("./config/env-validator.js");
 Object.defineProperty(exports, "validateEnv", { enumerable: true, get: function () { return env_validator_js_1.validateEnv; } });
 var encrypted_field_js_1 = require("./security/encrypted-field.js");
@@ -96,3 +96,13 @@ var portfolio_event_consumer_js_1 = require("./infrastructure/consumers/portfoli
 Object.defineProperty(exports, "PortfolioEventConsumer", { enumerable: true, get: function () { return portfolio_event_consumer_js_1.PortfolioEventConsumer; } });
 Object.defineProperty(exports, "PORTFOLIO_TOPICS", { enumerable: true, get: function () { return portfolio_event_consumer_js_1.PORTFOLIO_TOPICS; } });
 Object.defineProperty(exports, "PORTFOLIO_CONSUMER_GROUP_ID", { enumerable: true, get: function () { return portfolio_event_consumer_js_1.PORTFOLIO_CONSUMER_GROUP_ID; } });
+var search_index_js_1 = require("./domain/search-recommendation/search-index.js");
+Object.defineProperty(exports, "SearchIndex", { enumerable: true, get: function () { return search_index_js_1.SearchIndex; } });
+var search_service_js_1 = require("./domain/search-recommendation/services/search-service.js");
+Object.defineProperty(exports, "SearchService", { enumerable: true, get: function () { return search_service_js_1.SearchService; } });
+var postgres_search_repository_js_1 = require("./infrastructure/repositories/postgres-search-repository.js");
+Object.defineProperty(exports, "PostgresSearchRepository", { enumerable: true, get: function () { return postgres_search_repository_js_1.PostgresSearchRepository; } });
+var event_indexing_consumer_js_1 = require("./infrastructure/consumers/event-indexing-consumer.js");
+Object.defineProperty(exports, "EventIndexingConsumer", { enumerable: true, get: function () { return event_indexing_consumer_js_1.EventIndexingConsumer; } });
+Object.defineProperty(exports, "SEARCH_INDEX_TOPICS", { enumerable: true, get: function () { return event_indexing_consumer_js_1.SEARCH_INDEX_TOPICS; } });
+Object.defineProperty(exports, "EVENT_INDEXING_CONSUMER_GROUP_ID", { enumerable: true, get: function () { return event_indexing_consumer_js_1.EVENT_INDEXING_CONSUMER_GROUP_ID; } });

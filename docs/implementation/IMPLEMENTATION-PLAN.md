@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S24: COMP-010.8 done)
+> **Last Updated**: 2026-03-14 (S24: COMP-011.1, 011.2, 011.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S24 — Portfolio API + Search Core
-CURRENT ITEM  : COMP-011.1 — Search package setup + SearchIndex entity
+CURRENT STAGE : S25 — Search & Recommendation Completion
+CURRENT ITEM  : COMP-011.4 — Semantic search (pgvector embeddings)
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 1 / 4 items done (S24)
-OVERALL       : 111 / 262 items done (42%)
+STAGE PROGRESS: 0 / 4 items done (S25)
+OVERALL       : 114 / 262 items done (44%)
 ```
 
 **Next 5 items**:
-1. `COMP-011.1` — Search package setup + SearchIndex entity ← **START HERE**
-2. `COMP-011.2` — Full-text search implementation (tsvector)
-3. `COMP-011.3` — EventIndexingConsumer (Kafka)
-4. `COMP-011.4` — Semantic search (pgvector embeddings)
+1. `COMP-011.4` — Semantic search (pgvector embeddings) ← **START HERE**
+2. `COMP-011.5` — RecommendationSet computation
+3. `COMP-011.6` — SearchRepository (Postgres)
+4. `COMP-011.7` — Search & Recommendation REST API
 5. …
 
 **Component record**: [`COMP-011`](./components/COMP-011-search-recommendation.md)
 
-**Next item (COMP-011.1) acceptance criteria**: `SearchIndex` entity with `indexId`, `entityType`, `entityId`, `tsvector_content`, `embedding?`; migration creates `search_index` table with `tsvector` column; unit tests.
+**Next item (COMP-011.4) acceptance criteria**: `EmbeddingService.embed(text)` calls OpenAI embeddings API; stores in `vector(1536)` column; `SemanticSearchService.search(query)` finds nearest neighbors via `<=>` operator; hybrid score combines FTS + semantic; integration test.
 
-**Suggested steps**: (1) Write `SearchIndex` entity (2) Write migration with `tsvector` column (3) Write entity tests
+**Suggested steps**: (1) Add pgvector extension (2) Write `EmbeddingService` (3) Write hybrid search combining FTS + vector
 
 ---
 
@@ -1993,7 +1993,7 @@ Status: ✅ Done | **Deps**: COMP-010.7, COMP-033.2
 
 #### [COMP-011.1] Search package setup + SearchIndex entity
 `S24` `Critical` `S` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-003, COMP-009
+Status: ✅ Done | **Deps**: COMP-003, COMP-009
 **Criteria**: `SearchIndex` entity with `indexId`, `entityType`, `entityId`, `tsvector_content`, `embedding?`; migration creates `search_index` table with `tsvector` column; unit tests.
 **Steps**: (1) Write `SearchIndex` entity (2) Write migration with `tsvector` column (3) Write entity tests
 
@@ -2001,7 +2001,7 @@ Status: ⬜ | **Deps**: COMP-003, COMP-009
 
 #### [COMP-011.2] Full-text search implementation (tsvector)
 `S24` `Critical` `M` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-011.1
+Status: ✅ Done | **Deps**: COMP-011.1
 **Criteria**: `SearchService.search(query)` uses `to_tsquery` with `plainto_tsquery` fallback; ranked by `ts_rank`; supports prefix search; filters by `entityType`; integration test with real DB.
 **Steps**: (1) Write `SearchService.search` with ts_query (2) Add ranking (3) Write integration test
 
@@ -2009,7 +2009,7 @@ Status: ⬜ | **Deps**: COMP-011.1
 
 #### [COMP-011.3] EventIndexingConsumer (Kafka)
 `S24` `High` `S` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-011.1, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-011.1, COMP-009.1
 **Criteria**: `EventIndexingConsumer` subscribes to all `*.published` events; indexes entity content into `search_index`; updates existing index on `*.updated`; registered in `WorkerRegistry`.
 **Steps**: (1) Write consumer (2) Build tsvector from entity content (3) Write indexing test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S24 in progress (COMP-010.8 done)
+> Last Updated: 2026-03-14 | S25 next (S24 complete: COMP-011.1, 011.2, 011.3 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 111 / 262 items (42%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 114 / 262 items (44%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S24 — Portfolio API + Search Core | S56 | ⬜ |
+| **Current Stage** | S25 — Search & Recommendation Completion | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-011.3 — EventIndexingConsumer (Kafka), search-index worker in WorkerRegistry, unit tests
+- 2026-03-14 COMP-011.2 — SearchService, PostgresSearchRepository (FTS ts_rank, entityType filter), integration test
+- 2026-03-14 COMP-011.1 — SearchIndex entity, platform_core.search_index migration, unit tests
 - 2026-03-14 COMP-010.8 — Portfolio REST API (GET /portfolios/:userId, /achievements), PortfolioContext, PgEventLogClient, integration test
 - 2026-03-14 COMP-010.7 — PortfolioRepository (Postgres), migration, port, integration test
 - 2026-03-14 COMP-010.6 — PortfolioEventConsumer (Kafka), applyEvent, portfolio-update tests
@@ -3354,7 +3357,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-008 DIP Value Distribution & Treasury | 8 | 0 | ⬜ Not Started |
 | COMP-009 Event Bus & Audit | 8 | 8 | ✅ Complete |
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
-| COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
+| COMP-011 Search & Recommendation | 7 | 3 | 🔵 In Progress |
 | COMP-012 AI Agents Orchestration | 8 | 8 | ✅ Complete |
 | COMP-013 AI Agents Registry | 5 | 4 | 🔵 In Progress |
 | COMP-014 AI Agents Pillar Tools | 6 | 0 | ⬜ Not Started |

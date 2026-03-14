@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/platform-core/subdomains/search-recommendation.md](../../architecture/domains/platform-core/subdomains/search-recommendation.md)
 > **Stage Assignment**: S4 — Platform Core Aggregation
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -47,12 +47,12 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **7** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 43% (3/7)
 
 ### Item List
 
@@ -60,7 +60,7 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | search-recommendation.md |
 | **Dependencies** | COMP-009.1 |
@@ -86,7 +86,7 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | search-recommendation.md |
 | **Dependencies** | COMP-011.1, COMP-009.7 |
@@ -111,7 +111,7 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | 🔵 In Progress (FTS + SearchService done; semantic in Plan COMP-011.4) |
 | **Priority** | Critical |
 | **Origin** | search-recommendation.md |
 | **Dependencies** | COMP-011.1 |
@@ -237,6 +237,16 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 
 **Files Created/Modified**:
 - `packages/platform-core/src/domain/search-recommendation/services/opportunity-surfacing-service.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S24 (COMP-011.1, 011.2, 011.3)
+
+- **COMP-011.1**: Added `SearchIndex` entity (`indexId`, `entityType`, `entityId`, `tsvectorContent`, `embedding?`), migration `20260314230000_platform_core_search_index.sql` (table `platform_core.search_index` with tsvector, GIN index), unit tests. Exported from `@syntropy/platform-core`.
+- **COMP-011.2**: Added `SearchRepository` port (search, upsert), `PostgresSearchRepository` (FTS via `plainto_tsquery`, `ts_rank`, entityType filter), `SearchService.search()`. Integration test with mock client. Test files excluded from platform-core build (tsconfig exclude `**/*.test.ts`).
+- **COMP-011.3**: Added `EventIndexingConsumer` (topics: learn/hub/labs/dip.events; indexes `*.published` and `*.updated`; payload → SearchIndex, upsert). Registered in WorkerRegistry via `createSearchIndexWorker()` in apps/workers (real consumer when DATABASE_URL set; stub otherwise). Unit tests for payload mapping and idempotence.
 
 ---
 

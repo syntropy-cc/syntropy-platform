@@ -11,6 +11,7 @@
 
 import { createLogger } from "@syntropy/platform-core";
 import { getKafkaWorkers } from "./workers/kafka-workers.js";
+import { createSearchIndexWorker } from "./workers/search-index-consumer.js";
 import { createSessionInvalidationConsumer } from "./workers/session-invalidation-consumer.js";
 import { createDlqProcessor } from "./workers/dlq-processor.js";
 import { createCronScheduler } from "./scheduler/cron-scheduler.js";
@@ -22,7 +23,9 @@ const log = createLogger("workers");
 
 async function run(): Promise<void> {
   const registry = new WorkerRegistry();
+  registry.register(createSearchIndexWorker());
   for (const worker of getKafkaWorkers()) {
+    if (worker.name === "search-index") continue;
     registry.register(worker);
   }
   registry.register(createSessionInvalidationConsumer());

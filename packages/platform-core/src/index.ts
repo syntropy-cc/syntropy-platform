@@ -155,3 +155,17 @@ export {
   PORTFOLIO_CONSUMER_GROUP_ID,
   type PortfolioEventConsumerOptions,
 } from "./infrastructure/consumers/portfolio-event-consumer.js";
+
+export {
+  SearchIndex,
+  type SearchIndexParams,
+} from "./domain/search-recommendation/search-index.js";
+export type { SearchRepository, SearchFilters } from "./domain/search-recommendation/ports/search-repository.js";
+export { SearchService } from "./domain/search-recommendation/services/search-service.js";
+export { PostgresSearchRepository } from "./infrastructure/repositories/postgres-search-repository.js";
+export {
+  EventIndexingConsumer,
+  SEARCH_INDEX_TOPICS,
+  EVENT_INDEXING_CONSUMER_GROUP_ID,
+  type EventIndexingConsumerOptions,
+} from "./infrastructure/consumers/event-indexing-consumer.js";

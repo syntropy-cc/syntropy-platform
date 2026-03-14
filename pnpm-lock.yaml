@@ -68,6 +68,9 @@ importers:
       '@syntropy/platform-core':
         specifier: workspace:*
         version: link:../../packages/platform-core
+      '@syntropy/sponsorship':
+        specifier: workspace:*
+        version: link:../../packages/sponsorship
       '@syntropy/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -340,7 +343,21 @@ importers:
         specifier: ^2.1.0
         version: 2.1.9(@types/node@22.19.15)(jsdom@25.0.1)
 
-  packages/communication: {}
+  packages/communication:
+    dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../platform-core
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.0
+        version: 22.19.15
+      typescript:
+        specifier: ~5.6.0
+        version: 5.6.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.19.15)(jsdom@25.0.1)
 
   packages/dip:
     dependencies:

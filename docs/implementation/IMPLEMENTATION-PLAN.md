@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S42: COMP-027.1–027.5 done)
+> **Last Updated**: 2026-03-14 (S43: COMP-027.6–027.7, COMP-028.1–028.2 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S43 — Sponsorship API + Communication (M4)
-CURRENT ITEM  : COMP-027.6 — Sponsorship REST API
+CURRENT STAGE : S44 — Communication Core (M4)
+CURRENT ITEM  : COMP-028.3 — NotificationEventConsumer (Kafka)
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 5 / 5 items done (S42)
-OVERALL       : 200 / 262 items done (76%)
+STAGE PROGRESS: 4 / 4 items done (S43)
+OVERALL       : 204 / 262 items done (78%)
 ```
 
 **Next 5 items**:
-1. `COMP-027.6` — Sponsorship REST API ← **START HERE**
+1. `COMP-028.3` — NotificationEventConsumer (Kafka) ← **START HERE**
 2. (see Section 6 for full order)
 
-**Component record**: [`COMP-027`](./components/COMP-027-sponsorship.md)
+**Component record**: [`COMP-028`](./components/COMP-028-communication.md)
 
-**Next item (COMP-027.6) acceptance criteria**: `POST /api/v1/sponsorships`, `GET /api/v1/sponsorships/{id}`, `GET /api/v1/sponsorships/{id}/impact`, `POST /api/v1/sponsorships/{id}/payment-intent`; API tests.
+**Next item (COMP-028.3) acceptance criteria**: `NotificationEventConsumer` subscribes to all domain events that trigger notifications; creates `Notification` entities; maps events to notification templates; registered in `WorkerRegistry`; integration test.
 
-**Suggested steps**: (1) Write API routes (2) Wire to Stripe adapter (3) Write API tests
+**Suggested steps**: (1) Write consumer (2) Map events to notifications (3) Write consumer integration test
 
 ---
 
@@ -2702,7 +2702,7 @@ Status: ✅ Done | **Deps**: COMP-027.4, COMP-009.1
 
 #### [COMP-027.6] Sponsorship REST API
 `S43` `High` `M` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-027.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-027.5, COMP-033.2
 **Criteria**: `POST /api/v1/sponsorships`, `GET /api/v1/sponsorships/{id}`, `GET /api/v1/sponsorships/{id}/impact`, `POST /api/v1/sponsorships/{id}/payment-intent`; API tests.
 **Steps**: (1) Write API routes (2) Wire to Stripe adapter (3) Write API tests
 
@@ -2710,7 +2710,7 @@ Status: ⬜ | **Deps**: COMP-027.5, COMP-033.2
 
 #### [COMP-027.7] Sponsorship integration tests
 `S43` `Medium` `M` [Record→](./components/COMP-027-sponsorship.md)
-Status: ⬜ | **Deps**: COMP-027.6
+Status: ✅ Done | **Deps**: COMP-027.6
 **Criteria**: Full flow: create sponsorship → payment intent → webhook → status update; impact metric computed; uses real DB + mock Stripe.
 **Steps**: (1) Write sponsorship flow test (2) Assert Stripe mock called (3) Assert status update
 
@@ -2718,7 +2718,7 @@ Status: ⬜ | **Deps**: COMP-027.6
 
 #### [COMP-028.1] Communication package setup + Thread aggregate
 `S43` `Critical` `S` [Record→](./components/COMP-028-communication.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-002
+Status: ✅ Done | **Deps**: COMP-001, COMP-002
 **Criteria**: `packages/communication` workspace; `Thread` aggregate with `threadId`, `participants[]`, `type`; `ThreadType` enum (direct/group/notification); `Thread.addParticipant()`; unit tests.
 **Steps**: (1) Scaffold `packages/communication` (2) Write `Thread` aggregate (3) Write participant tests
 
@@ -2726,7 +2726,7 @@ Status: ⬜ | **Deps**: COMP-001, COMP-002
 
 #### [COMP-028.2] Message entity
 `S43` `Critical` `S` [Record→](./components/COMP-028-communication.md)
-Status: ⬜ | **Deps**: COMP-028.1
+Status: ✅ Done | **Deps**: COMP-028.1
 **Criteria**: `Message` entity with `messageId`, `threadId`, `authorId`, `content`, `sentAt`; `SoftDeletable` mixin applied; unit tests.
 **Steps**: (1) Write `Message` entity (2) Apply `SoftDeletable` (3) Write message tests
 
@@ -3198,15 +3198,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S42 complete; next COMP-027.6
+> Last Updated: 2026-03-14 | S43 complete; next COMP-028.3
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 200 / 262 items (76%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 204 / 262 items (78%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S42 — Sponsorship Core | S56 | ⬜ |
+| **Current Stage** | S44 — Communication Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3214,6 +3214,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-028.2 — Message entity (messageId, threadId, authorId, content, sentAt); SoftDeletable; unit tests
+- 2026-03-14 COMP-028.1 — Communication package + Thread aggregate (threadId, participants, type); ThreadType; addParticipant; unit tests
+- 2026-03-14 COMP-027.7 — Sponsorship API integration tests (create → GET → payment-intent; real DB + MockPaymentGateway)
+- 2026-03-14 COMP-027.6 — Sponsorship REST API (POST/GET /api/v1/sponsorships, impact, payment-intent); API tests
 - 2026-03-14 COMP-027.5 — SponsorshipEventPublisher (Kafka); sponsorship.created, sponsorship.payment.completed; unit tests
 - 2026-03-14 COMP-027.4 — SponsorshipRepository (Postgres); migration sponsorships, impact_metrics; PostgresSponsorshipRepository, PostgresImpactMetricRepository; integration test
 - 2026-03-14 COMP-027.3 — ImpactMetricService, ImpactMetric, ImpactDataProvider port; unit tests

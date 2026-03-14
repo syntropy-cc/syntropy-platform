@@ -48,6 +48,8 @@ import { labsArticlesRoutes } from "./routes/labs-articles.js";
 import { labsExperimentsRoutes } from "./routes/labs-experiments.js";
 import { labsReviewsRoutes } from "./routes/labs-reviews.js";
 import { labsDoiRoutes } from "./routes/labs-doi.js";
+import { sponsorshipRoutes } from "./routes/sponsorships.js";
+import type { SponsorshipContext } from "./types/sponsorship-context.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -76,6 +78,7 @@ export interface CreateAppOptions {
   learn?: LearnContext | null;
   hub?: HubCollaborationContext | null;
   labs?: LabsScientificContext | null;
+  sponsorship?: SponsorshipContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -129,6 +132,9 @@ export async function createApp(options?: CreateAppOptions) {
     await app.register(labsExperimentsRoutes, { labs: options.labs });
     await app.register(labsReviewsRoutes, { labs: options.labs });
     await app.register(labsDoiRoutes, { labs: options.labs });
+  }
+  if (options?.sponsorship) {
+    await app.register(sponsorshipRoutes, { sponsorship: options.sponsorship });
   }
   await app.register(internalEventSchemasPlugin);
 

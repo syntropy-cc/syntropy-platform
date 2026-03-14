@@ -26,6 +26,7 @@
     "@syntropy/labs-package": "workspace:*",
     "@syntropy/learn-package": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
+    "@syntropy/sponsorship": "workspace:*",
     "@syntropy/types": "workspace:*",
     "@supabase/supabase-js": "^2.47.0",
     "fastify": "^5.1.0",

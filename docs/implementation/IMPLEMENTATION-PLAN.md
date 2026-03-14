@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S44: COMP-028.7 done)
+> **Last Updated**: 2026-03-14 (S45: COMP-029.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S45 — Planning Core (M4)
-CURRENT ITEM  : COMP-029.1 — Task aggregate
+CURRENT STAGE : S46 — Planning API + IDE Core (M4)
+CURRENT ITEM  : COMP-029.6 — Planning REST API + integration tests
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 0 / 5 items done (S45)
-OVERALL       : 209 / 262 items done (80%)
+STAGE PROGRESS: 0 / 4 items done (S46)
+OVERALL       : 214 / 262 items done (82%)
 ```
 
 **Next 5 items**:
-1. `COMP-029.1` — Task aggregate ← **START HERE**
+1. `COMP-029.6` — Planning REST API + integration tests ← **START HERE**
 2. (see Section 6 for full order)
 
 **Component record**: [`COMP-029`](./components/COMP-029-planning.md)
 
-**Next item (COMP-029.1) acceptance criteria**: `packages/planning` workspace; `Task` aggregate with `taskId`, `userId`, `title`, `status`; `TaskStatus` enum; `start()`, `complete()`, `cancel()` transitions; unit tests.
+**Next item (COMP-029.6) acceptance criteria**: `POST /api/v1/planning/tasks`, `GET /api/v1/planning/goals`, `POST /api/v1/planning/study-plans/generate`, `POST /api/v1/planning/mentor-sessions`; integration tests.
 
-**Suggested steps**: (1) Scaffold `packages/planning` (2) Write `Task` aggregate (3) Write transition tests
+**Suggested steps**: (1) Write API routes (2) Wire study plan generation (3) Write integration tests
 
 ---
 
@@ -2774,7 +2774,7 @@ Status: ✅ Done | **Deps**: COMP-028.6
 
 #### [COMP-029.1] Task aggregate
 `S45` `High` `S` [Record→](./components/COMP-029-planning.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-002
+Status: ✅ Done | **Deps**: COMP-001, COMP-002
 **Criteria**: `packages/planning` workspace; `Task` aggregate with `taskId`, `userId`, `title`, `status`; `TaskStatus` enum; `start()`, `complete()`, `cancel()` transitions; unit tests.
 **Steps**: (1) Scaffold `packages/planning` (2) Write `Task` aggregate (3) Write transition tests
 
@@ -2782,7 +2782,7 @@ Status: ⬜ | **Deps**: COMP-001, COMP-002
 
 #### [COMP-029.2] Goal and Sprint entities
 `S45` `High` `S` [Record→](./components/COMP-029-planning.md)
-Status: ⬜ | **Deps**: COMP-029.1
+Status: ✅ Done | **Deps**: COMP-029.1
 **Criteria**: `Goal` entity with `goalId`, `userId`, `description`, `dueDate`, `progress`; `Sprint` entity with date range and `tasks[]`; `Sprint.addTask()` validates dates; unit tests.
 **Steps**: (1) Write `Goal` entity (2) Write `Sprint` entity (3) Write sprint date validation tests
 
@@ -2790,7 +2790,7 @@ Status: ⬜ | **Deps**: COMP-029.1
 
 #### [COMP-029.3] StudyPlan aggregate
 `S45` `High` `M` [Record→](./components/COMP-029-planning.md)
-Status: ⬜ | **Deps**: COMP-029.2, COMP-015
+Status: ✅ Done | **Deps**: COMP-029.2, COMP-015
 **Criteria**: `StudyPlan` aggregate with `userId`, `careerId`, `suggestedPath[]`; `StudyPlanService.generate(userId, careerId)` builds plan from learner progress + fog-of-war; unit tests.
 **Steps**: (1) Write `StudyPlan` aggregate (2) Write `StudyPlanService.generate` (3) Write plan generation tests
 
@@ -2798,7 +2798,7 @@ Status: ⬜ | **Deps**: COMP-029.2, COMP-015
 
 #### [COMP-029.4] MentorSession scheduling
 `S45` `High` `S` [Record→](./components/COMP-029-planning.md)
-Status: ⬜ | **Deps**: COMP-029.3, COMP-018
+Status: ✅ Done | **Deps**: COMP-029.3, COMP-018
 **Criteria**: `MentorSession` entity with `sessionId`, `mentorId`, `learnerId`, `scheduledAt`, `status`; `schedule()` checks mentor availability; `MentorSession.complete()` updates mentorship record; unit tests.
 **Steps**: (1) Write `MentorSession` entity (2) Add availability check (3) Write scheduling tests
 
@@ -2806,7 +2806,7 @@ Status: ⬜ | **Deps**: COMP-029.3, COMP-018
 
 #### [COMP-029.5] PlanningRepository (Postgres)
 `S45` `Medium` `S` [Record→](./components/COMP-029-planning.md)
-Status: ⬜ | **Deps**: COMP-029.4, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-029.4, COMP-039.4
 **Criteria**: Migrations for `tasks`, `goals`, `sprints`, `study_plans`, `mentor_sessions`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3198,15 +3198,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S44 COMP-028.7 done; next COMP-029.1
+> Last Updated: 2026-03-14 | S45 COMP-029.5 done; next COMP-029.6
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 209 / 262 items (80%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 214 / 262 items (82%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S45 — Planning Core | S56 | ⬜ |
+| **Current Stage** | S46 — Planning API + IDE Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3214,6 +3214,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-029.5 — PlanningRepository (Postgres); migration planning.tasks, goals, sprints, study_plans, mentor_sessions; Task/Goal/Sprint/StudyPlan/MentorSession repo ports and Postgres impls; planning-repository integration test
+- 2026-03-14 COMP-029.4 — MentorSession entity; MentorSessionSchedulingService + MentorAvailabilityPort; schedule/complete/cancel; unit tests
+- 2026-03-14 COMP-029.3 — StudyPlan aggregate; StudyPlanService.generate + LearnerProgressPort; unit tests
+- 2026-03-14 COMP-029.2 — Goal entity (goalId, userId, description, dueDate, progress, checkAchievement); Sprint entity (date range, addTask date validation); unit tests
+- 2026-03-14 COMP-029.1 — Task aggregate (taskId, userId, title, status); TaskStatus; start/complete/cancel; unit tests; planning package scaffold + vitest
 - 2026-03-14 COMP-028.7 — SSE stream for real-time notifications; GET /api/v1/notifications/stream (auth); polling every 2s; Last-Event-ID reconnection; heartbeat 30s; FindByUserIdOptions.since; integration test (event within 3s)
 - 2026-03-14 COMP-028.6 — Communication REST API; NotificationRepository extended (findByUserId, markAsRead); ThreadRepository and MessageRepository ports + InMemory impls; GET/PUT /api/v1/notifications, POST/GET /api/v1/messages/threads; CommunicationContext; API tests and unit tests
 - 2026-03-14 COMP-028.5 — User notification preferences; NotificationPreferences entity (muteUntil, channelPreferences); NotificationPreferencesRepository; InMemory + Postgres repos; PreferenceBackedNotificationPreferenceResolver; migration notification_preferences; worker wired to preference-backed resolver when DB present; unit tests

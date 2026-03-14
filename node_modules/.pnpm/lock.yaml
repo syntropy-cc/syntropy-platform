@@ -320,6 +320,9 @@ importers:
       '@syntropy/dip-contracts':
         specifier: workspace:*
         version: link:../dip-contracts
+      '@syntropy/dip-iacp':
+        specifier: workspace:*
+        version: link:../dip-iacp
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../event-bus
@@ -357,6 +360,10 @@ importers:
         version: 2.1.9(@types/node@22.19.15)(jsdom@25.0.1)
 
   packages/dip-iacp:
+    dependencies:
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
     devDependencies:
       '@types/node':
         specifier: ^22.10.0

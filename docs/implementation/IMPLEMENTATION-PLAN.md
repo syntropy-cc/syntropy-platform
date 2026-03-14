@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (COMP-005.2 complete)
+> **Last Updated**: 2026-03-13 (COMP-005.7 complete)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,24 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S17 — IACP Engine Core
-CURRENT ITEM  : COMP-005.3 — IACPStateMachine (draft→pending→active→terminated)
+CURRENT STAGE : S18 — IACP Completion + Governance Start
+CURRENT ITEM  : COMP-005.8 — IACP REST API endpoints + integration tests
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 0 / 5 items done (S17)
-OVERALL       : 80 / 262 items done (31%)
+STAGE PROGRESS: 0 / 4 items done (S18)
+OVERALL       : 85 / 262 items done (32%)
 ```
 
 **Next 5 items**:
-1. `COMP-005.3` — IACPStateMachine (draft→pending→active→terminated) ← **START HERE**
-2. `COMP-005.4` — SignatureCollector (n-of-m threshold logic)
-3. `COMP-005.5` — IACPEngine.evaluate() consensus check
-4. `COMP-005.6` — IACPRepository (Postgres)
-5. `COMP-005.7` — IACPEventPublisher (Kafka)
+1. `COMP-005.8` — IACP REST API endpoints + integration tests ← **START HERE**
+2. `COMP-007.1` — DIP Governance package setup + DigitalInstitution
+3. `COMP-007.2` — Proposal aggregate
+4. `COMP-007.3` — VotingService
 
 **Component record**: [`COMP-005`](./components/COMP-005-dip-iacp-engine.md)
 
-**Next item (COMP-005.3) acceptance criteria**: `IACPStateMachine` enforces valid transitions; `submit()` moves to `pending_signatures`; `activate()` requires signature threshold met; `terminate()` available from any state; invalid transitions throw `InvalidTransitionError`.
+**Next item (COMP-005.8) acceptance criteria**: `POST /api/v1/iacp`, `GET /api/v1/iacp/{id}`, `POST /api/v1/iacp/{id}/sign`, `POST /api/v1/iacp/{id}/activate`; full lifecycle integration test.
 
-**Suggested steps**: (1) Write state machine class (2) Implement transition guards (3) Write invalid transition test
+**Suggested steps**: (1) Write API routes (2) Wire to state machine (3) Write integration test
 
 ---
 
@@ -1745,7 +1744,7 @@ Status: ✅ Done | **Deps**: COMP-005.1
 
 #### [COMP-005.3] IACPStateMachine (draft→pending→active→terminated)
 `S17` `Critical` `M` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.2
+Status: ✅ Done | **Deps**: COMP-005.2
 **Criteria**: `IACPStateMachine` enforces valid transitions; `submit()` moves to `pending_signatures`; `activate()` requires signature threshold met; `terminate()` available from any state; invalid transitions throw `InvalidTransitionError`.
 **Steps**: (1) Write state machine class (2) Implement transition guards (3) Write invalid transition test
 
@@ -1753,7 +1752,7 @@ Status: ⬜ | **Deps**: COMP-005.2
 
 #### [COMP-005.4] SignatureCollector (n-of-m threshold logic)
 `S17` `Critical` `M` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.3
+Status: ✅ Done | **Deps**: COMP-005.3
 **Criteria**: `SignatureCollector.addSignature(party, signature)` validates signature; `isThresholdMet()` returns true when n signatures collected; duplicate signatures rejected; unit tests.
 **Steps**: (1) Write `SignatureCollector` (2) Add signature validation (3) Write threshold tests
 
@@ -1761,7 +1760,7 @@ Status: ⬜ | **Deps**: COMP-005.3
 
 #### [COMP-005.5] IACPEngine.evaluate() consensus check
 `S17` `Critical` `M` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.4
+Status: ✅ Done | **Deps**: COMP-005.4
 **Criteria**: `IACPEngine.evaluate(record)` checks consensus rules from `GovernanceContract`; returns `EvaluationResult`; evaluates quorum and participation threshold; unit tests with various consensus scenarios.
 **Steps**: (1) Write `IACPEngine.evaluate` (2) Wire to `SmartContractEvaluator` (3) Write consensus scenarios
 
@@ -1769,7 +1768,7 @@ Status: ⬜ | **Deps**: COMP-005.4
 
 #### [COMP-005.6] IACPRepository (Postgres)
 `S17` `High` `S` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.5, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-005.5, COMP-039.4
 **Criteria**: Migration creates `iacp_records` + `iacp_parties` tables; repository `save`, `findById`, `findByInstitution`; integration test.
 **Steps**: (1) Write migrations (2) Write repository (3) Write integration test
 
@@ -1777,7 +1776,7 @@ Status: ⬜ | **Deps**: COMP-005.5, COMP-039.4
 
 #### [COMP-005.7] IACPEventPublisher (Kafka)
 `S17` `High` `S` [Record→](./components/COMP-005-dip-iacp-engine.md)
-Status: ⬜ | **Deps**: COMP-005.5, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-005.5, COMP-009.1
 **Criteria**: Publishes `dip.iacp.created`, `dip.iacp.activated`, `dip.iacp.terminated`; unit tests.
 **Steps**: (1) Write `IACPEventPublisher` (2) Map events to Kafka messages (3) Write publish tests
 
@@ -3201,15 +3200,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-005.2 complete
+> Last Updated: 2026-03-13 | COMP-005.7 complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 80 / 262 items (31%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 85 / 262 items (32%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S17 — IACP Engine Core | S56 | ⬜ |
+| **Current Stage** | S18 — IACP Completion + Governance Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3216,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-005.7 — IACPEventPublisher (Kafka), port, events, unit tests
+- 2026-03-13 COMP-005.6 — IACPRepository (Postgres), migration, integration test
+- 2026-03-13 COMP-005.5 — IACPEngine.evaluate() + ConsensusEvaluatorPort, unit tests
+- 2026-03-13 COMP-005.4 — SignatureCollector (n-of-m threshold), unit tests
+- 2026-03-13 COMP-005.3 — IACPStateMachine (submit/activate/terminate), InvalidTransitionError, unit tests
 - 2026-03-14 COMP-005.2 — IACPParty, SignatureThreshold, IACPRecord.addParty() + unit tests
 - 2026-03-14 COMP-005.1 — IACP Engine package (dip-iacp), IACPRecord aggregate, IACPStatus + unit tests
 - 2026-03-14 COMP-013.5 — Agent Registry integration tests (real DB, can-invoke 403, tool validate 400)
@@ -3307,7 +3311,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **77** | **29%** | ⬜ |
+| **Total** | **262** | **85** | **32%** | ⬜ |
 
 ### Component Coverage
 
@@ -3317,7 +3321,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-002 Identity | 7 | 7 | ✅ Complete |
 | COMP-003 DIP Artifact Registry | 8 | 6 | 🔵 In Progress |
 | COMP-004 DIP Smart Contract Engine | 6 | 6 | ✅ Complete |
-| COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
+| COMP-005 DIP IACP Engine | 8 | 7 | 🔵 In Progress |
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
 | COMP-007 DIP Institutional Governance | 9 | 0 | ⬜ Not Started |
 | COMP-008 DIP Value Distribution & Treasury | 8 | 0 | ⬜ Not Started |
@@ -3353,7 +3357,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-038 Observability | 6 | 1 | 🔵 In Progress |
 | COMP-039 Data Integrity | 5 | 4 | 🔵 In Progress |
 | COMP-040 Resilience | 5 | 5 | ✅ Complete |
-| **Total** | **262** | **50** | |
+| **Total** | **262** | **85** | |
 
 ### Layer Coverage
 

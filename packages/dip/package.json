@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@syntropy/dip-iacp": "workspace:*",
     "@syntropy/dip-contracts": "workspace:*",
     "@syntropy/event-bus": "workspace:*",
     "pg": "^8.13.0"

@@ -51,14 +51,14 @@ The IACP Engine implements the **Institutional Artifact Consumption Protocol** �
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 2 |
+| ✅ Done | 7 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **8** |
 
-**Component Coverage**: 25%
+**Component Coverage**: 88%
 
-**Implementation Plan items (Section 7) completed**: COMP-005.1 (dip-iacp package, IACPRecord, IACPStatus), COMP-005.2 (IACPParty, SignatureThreshold, IACPRecord.addParty()). Package: `packages/dip-iacp`. IACPRecord is immutable; addParty() returns a new instance and rejects duplicate actorId.
+**Implementation Plan items (Section 7) completed**: COMP-005.1, 005.2 (see above). COMP-005.3 IACPStateMachine (submit/activate/terminate, InvalidTransitionError). COMP-005.4 SignatureCollector (n-of-m, DuplicateSignatureError). COMP-005.5 IACPEngine.evaluate() + ConsensusEvaluatorPort + EvaluationResult. COMP-005.6 IACPRepository interface (dip-iacp), migration `20260313270000_dip_iacp.sql`, PostgresIACPRepository (dip), integration test. COMP-005.7 IACPEventPublisher port, events, Kafka impl (dip-iacp), unit tests.
 
 ### Item List
 

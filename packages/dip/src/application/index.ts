@@ -11,6 +11,7 @@ export {
   ArtifactLifecycleService,
   ArtifactNotFoundError,
 } from "./artifact-lifecycle-service.js";
+export { CreateProjectUseCase } from "./create-project-use-case.js";
 export {
   NostrAnchorService,
   AnchoringContentRequiredError,

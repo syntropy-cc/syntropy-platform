@@ -46,12 +46,12 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 5 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 1 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **6** |
 
-**Component Coverage**: 83% (S14 complete; COMP-006.6 in S15)
+**Component Coverage**: 100% (COMP-006.6 complete)
 
 ### Item List
 
@@ -182,27 +182,36 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 ---
 
-#### [COMP-006.6] Internal API endpoints
+#### [COMP-006.6] Project REST API endpoints + integration tests
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | DIP ARCHITECTURE.md |
-| **Dependencies** | COMP-006.5 |
-| **Size** | XS |
+| **Origin** | IMPLEMENTATION-PLAN Section 7 |
+| **Dependencies** | COMP-006.5, COMP-033.2 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Implement internal REST API for project and dependency graph access.
+**Description**: Implement public REST API for project create, get, and DAG read; integration tests.
 
-**Acceptance Criteria**:
-- [ ] `GET /internal/dip/projects/{id}` → project metadata
-- [ ] `GET /internal/dip/projects/{id}/dependency-graph` → full adjacency list
-- [ ] `POST /internal/dip/projects/{id}/artifacts` → add dependency edge
-- [ ] `GET /internal/dip/projects/{id}/manifesto` → ArtifactManifesto
+**Acceptance Criteria** (per Implementation Plan):
+- [x] `POST /api/v1/projects` — create project (body: institutionId, title, description?)
+- [x] `GET /api/v1/projects/{id}` — get project by id
+- [x] `GET /api/v1/projects/{id}/dag` — returns nodes + edges (CONV-017 envelope)
+- [x] Integration tests (create, get, get dag, 401 without auth)
 
 **Files Created/Modified**:
-- `packages/dip/src/api/routes/projects.ts`
+- `packages/dip/src/domain/project-manifest-dag/repositories/project-repository.ts` — added `ProjectDagEdge`, `getDagEdges(projectId)`
+- `packages/dip/src/infrastructure/repositories/postgres-project-repository.ts` — implemented `getDagEdges`
+- `packages/dip/src/application/create-project-use-case.ts` — new use case (create + save + publish)
+- `packages/dip/src/application/index.ts`, `packages/dip/src/index.ts` — exports
+- `apps/api/src/types/dip-context.ts` — added `projectRepository`, `createProjectUseCase`
+- `apps/api/src/routes/projects.ts` — new project routes
+- `apps/api/src/server.ts` — register projectRoutes when dip present
+- `apps/api/src/integration/project-api.integration.test.ts` — integration tests
+- `packages/dip/tests/integration/project-repository.test.ts` — added getDagEdges test
 
 ---
 
@@ -239,8 +248,9 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 - **COMP-006.3**: Added `CyclicDependencyError`, `DAGService` (addEdge with DFS cycle check, getTopologicalOrder, findRoots). Unit tests: `dag-service.test.ts`.
 - **COMP-006.4**: Added `ProjectRepository` interface, `ProjectDbClient`, `PostgresProjectRepository`, `PgProjectDbClient`, migration `supabase/migrations/20260313260000_dip_digital_projects.sql` (`dip.digital_projects`, `dip.project_dag_edges`). Integration test: `tests/integration/project-repository.test.ts` (mock client).
 - **COMP-006.5**: Added `ProjectEventPublisherPort`, `ProjectEventPublisher` (Kafka; topic `dip.project.events`, eventTypes `dip.project.created`, `dip.project.manifest_updated`). Unit tests: `tests/unit/project-event-publisher.test.ts`.
+- **COMP-006.6**: Added `getDagEdges(projectId)` to `ProjectRepository` and `PostgresProjectRepository`; added `CreateProjectUseCase` (create + save + publish); extended `DipContext` with `projectRepository` and `createProjectUseCase`; added `apps/api/src/routes/projects.ts` (POST/GET /api/v1/projects, GET /api/v1/projects/:id/dag); registered project routes in server; added `apps/api/src/integration/project-api.integration.test.ts`. Updated contract, artifact, and artifact-lifecycle tests to supply project context.
 
-**Decisions**: DigitalProject holds minimal manifest snapshot (title, description) in 006.1; full `ProjectManifest` value object in 006.2. DAGService uses string node IDs. Repository persists aggregate only; DAG edges table exists for COMP-006.6.
+**Decisions**: DigitalProject holds minimal manifest snapshot (title, description) in 006.1; full `ProjectManifest` value object in 006.2. DAGService uses string node IDs. Repository persists aggregate only; DAG edges table read via `getDagEdges`. Plan authority: public `/api/v1/projects` (not internal); DAG endpoint returns `{ nodes, edges }`.
 
 ### Related Components
 

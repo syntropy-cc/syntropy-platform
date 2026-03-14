@@ -57,6 +57,7 @@ export type {
   ProjectManifestUpdatedEvent,
   ProjectDomainEvent,
   ProjectManifestJSON,
+  ProjectDagEdge,
   ProjectRepository,
   ProjectEventPublisherPort,
 } from "./project-manifest-dag/index.js";

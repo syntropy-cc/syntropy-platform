@@ -17,10 +17,12 @@ import {
   Artifact,
   ArtifactLifecycleService,
   ArtifactStatus,
+  CreateProjectUseCase,
   createArtifactId,
   createAuthorId,
-  type ArtifactRepository,
   type ArtifactLifecycleEventPublisher,
+  type ArtifactRepository,
+  type ProjectRepository,
 } from "@syntropy/dip";
 import { ContractDSLParser, SmartContractEvaluator } from "@syntropy/dip-contracts";
 
@@ -109,6 +111,21 @@ describe("artifact routes", () => {
         eventPublisher,
         () => ARTIFACT_ID
       );
+      const mockProjectRepository: ProjectRepository = {
+        save: async () => {},
+        findById: async () => null,
+        findByInstitution: async () => [],
+        getDagEdges: async () => [],
+      };
+      const noopProjectPublisher = {
+        async publishProjectCreated() {},
+        async publishProjectManifestUpdated() {},
+      };
+      const createProjectUseCase = new CreateProjectUseCase(
+        mockProjectRepository,
+        noopProjectPublisher,
+      );
+
       app = await createApp({
         auth: createMockAuth(VALID_JWT),
         supabaseClient: null,
@@ -122,6 +139,8 @@ describe("artifact routes", () => {
           },
           smartContractEvaluator: new SmartContractEvaluator(),
           contractDSLParser: new ContractDSLParser(),
+          projectRepository: mockProjectRepository,
+          createProjectUseCase,
         },
       });
     });

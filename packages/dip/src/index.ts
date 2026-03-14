@@ -57,6 +57,7 @@ export {
   ArtifactLifecycleService,
   ArtifactNotFoundError,
   ArtifactQueryService,
+  CreateProjectUseCase,
   NostrAnchorService,
   AnchoringContentRequiredError,
 } from "./application/index.js";

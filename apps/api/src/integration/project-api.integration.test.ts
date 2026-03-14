@@ -1,9 +1,8 @@
 /**
- * Integration tests for Smart Contract API (COMP-004.6).
+ * Integration tests for Project REST API (COMP-006.6).
  *
- * Uses Testcontainers Postgres, real DIP contract stack (repository, evaluator, parser),
- * and artifact stack for full DipContext. Drives full lifecycle via REST API and
- * asserts create, get, evaluate, and DSL validation.
+ * Uses Testcontainers Postgres, real DIP project stack (repository + event publisher noop).
+ * Asserts POST create, GET by id, GET dag (nodes+edges), and auth required.
  *
  * Requires Docker for Testcontainers.
  */
@@ -11,8 +10,8 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
 import { Pool } from "pg";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
@@ -24,7 +23,6 @@ import {
   type AuthProvider,
 } from "@syntropy/identity";
 import {
-  ArtifactLifecycleService,
   CreateProjectUseCase,
   PgArtifactDbClient,
   PgContractDbClient,
@@ -32,6 +30,7 @@ import {
   PostgresArtifactRepository,
   PostgresContractRepository,
   PostgresProjectRepository,
+  ArtifactLifecycleService,
   type ArtifactLifecycleEventPublisher,
 } from "@syntropy/dip";
 import { ContractDSLParser, SmartContractEvaluator } from "@syntropy/dip-contracts";
@@ -83,10 +82,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
   }
 }
 
-describe(
-  "contract lifecycle integration (COMP-004.6)",
-  { timeout: 30_000, hookTimeout: 60_000 },
-  () => {
+describe("project API integration (COMP-006.6)", () => {
     let container: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
     let pool: Pool;
     let app: Awaited<ReturnType<typeof createApp>>;
@@ -140,101 +136,115 @@ describe(
       if (container) await container.stop();
     });
 
-    it("full lifecycle create then get then evaluate returns correct results", async () => {
-      const contractId = randomUUID();
-      const institutionId = "inst-" + randomUUID().slice(0, 8);
-      const validDsl = JSON.stringify({
-        id: contractId,
-        institutionId,
-        clauses: [],
-      });
-
+    it("POST /api/v1/projects with valid body returns 201 and project DTO", async () => {
+      const institutionId = randomUUID();
       const createRes = await app.inject({
         method: "POST",
-        url: "/api/v1/contracts",
+        url: "/api/v1/projects",
         headers: { authorization: `Bearer ${VALID_JWT}` },
-        payload: { dsl: validDsl },
+        payload: {
+          institutionId,
+          title: "Test Project",
+          description: "A test description",
+        },
       });
       expect(createRes.statusCode).toBe(201);
-      const createBody = createRes.json() as {
-        data: { id: string; institutionId: string; clauses: unknown[] };
+      const body = createRes.json() as {
+        data: {
+          id: string;
+          institutionId: string;
+          manifestId: string;
+          title: string;
+          description: string;
+          createdAt: string;
+          updatedAt: string;
+        };
       };
-      expect(createBody.data.id).toBe(contractId);
-      expect(createBody.data.institutionId).toBe(institutionId);
-      expect(Array.isArray(createBody.data.clauses)).toBe(true);
+      expect(body.data).toBeDefined();
+      expect(body.data.institutionId).toBe(institutionId);
+      expect(body.data.title).toBe("Test Project");
+      expect(body.data.description).toBe("A test description");
+      expect(body.data.id).toBeDefined();
+      expect(body.data.manifestId).toBeDefined();
+      expect(body.data.createdAt).toBeDefined();
+      expect(body.data.updatedAt).toBeDefined();
+    });
+
+    it("GET /api/v1/projects/:id returns 200 and same project after create", async () => {
+      const institutionId = randomUUID();
+      const createRes = await app.inject({
+        method: "POST",
+        url: "/api/v1/projects",
+        headers: { authorization: `Bearer ${VALID_JWT}` },
+        payload: { institutionId, title: "Get Test Project" },
+      });
+      expect(createRes.statusCode).toBe(201);
+      const createBody = createRes.json() as { data: { id: string } };
+      const projectId = createBody.data.id;
 
       const getRes = await app.inject({
         method: "GET",
-        url: `/api/v1/contracts/${contractId}`,
+        url: `/api/v1/projects/${projectId}`,
         headers: { authorization: `Bearer ${VALID_JWT}` },
       });
       expect(getRes.statusCode).toBe(200);
-      const getBody = getRes.json() as { data: { id: string; institutionId: string } };
-      expect(getBody.data.id).toBe(contractId);
+      const getBody = getRes.json() as { data: { id: string; title: string; institutionId: string } };
+      expect(getBody.data.id).toBe(projectId);
+      expect(getBody.data.title).toBe("Get Test Project");
       expect(getBody.data.institutionId).toBe(institutionId);
-
-      const evaluateRes = await app.inject({
-        method: "POST",
-        url: `/api/v1/contracts/${contractId}/evaluate`,
-        headers: { authorization: `Bearer ${VALID_JWT}` },
-        payload: { institutionId },
-      });
-      expect(evaluateRes.statusCode).toBe(200);
-      const evaluateBody = evaluateRes.json() as { data: { permitted: boolean } };
-      expect(evaluateBody.data.permitted).toBe(true);
     });
 
-    it("POST /api/v1/contracts returns 400 when dsl is invalid", async () => {
-      const response = await app.inject({
-        method: "POST",
-        url: "/api/v1/contracts",
+    it("GET /api/v1/projects/:id for nonexistent id returns 404", async () => {
+      const nonexistentId = randomUUID();
+      const getRes = await app.inject({
+        method: "GET",
+        url: `/api/v1/projects/${nonexistentId}`,
         headers: { authorization: `Bearer ${VALID_JWT}` },
-        payload: { dsl: "not json" },
       });
-      expect(response.statusCode).toBe(400);
-      const body = response.json() as { error?: { code: string } };
-      expect(body.error?.code).toBe("BAD_REQUEST");
+      expect(getRes.statusCode).toBe(404);
+      const body = getRes.json() as { error?: { code: string } };
+      expect(body.error?.code).toBe("NOT_FOUND");
     });
 
-    it("POST /api/v1/contracts returns 400 when dsl is empty object", async () => {
-      const response = await app.inject({
-        method: "POST",
-        url: "/api/v1/contracts",
-        headers: { authorization: `Bearer ${VALID_JWT}` },
-        payload: { dsl: "{}" },
-      });
-      expect(response.statusCode).toBe(400);
-      const body = response.json() as { error?: { code: string } };
-      expect(body.error?.code).toBe("BAD_REQUEST");
-    });
-
-    it("evaluate returns permitted false when institutionId does not match", async () => {
-      const contractId = randomUUID();
-      const institutionId = "inst-" + randomUUID().slice(0, 8);
-      const validDsl = JSON.stringify({
-        id: contractId,
-        institutionId,
-        clauses: [],
-      });
-
+    it("GET /api/v1/projects/:id/dag returns 200 with nodes and edges", async () => {
+      const institutionId = randomUUID();
       const createRes = await app.inject({
         method: "POST",
-        url: "/api/v1/contracts",
+        url: "/api/v1/projects",
         headers: { authorization: `Bearer ${VALID_JWT}` },
-        payload: { dsl: validDsl },
+        payload: { institutionId, title: "DAG Test Project" },
       });
       expect(createRes.statusCode).toBe(201);
+      const createBody = createRes.json() as { data: { id: string } };
+      const projectId = createBody.data.id;
 
-      const evaluateRes = await app.inject({
-        method: "POST",
-        url: `/api/v1/contracts/${contractId}/evaluate`,
+      const dagRes = await app.inject({
+        method: "GET",
+        url: `/api/v1/projects/${projectId}/dag`,
         headers: { authorization: `Bearer ${VALID_JWT}` },
-        payload: { institutionId: "other-institution" },
       });
-      expect(evaluateRes.statusCode).toBe(200);
-      const evaluateBody = evaluateRes.json() as { data: { permitted: boolean; details?: string } };
-      expect(evaluateBody.data.permitted).toBe(false);
-      expect(typeof evaluateBody.data.details).toBe("string");
+      expect(dagRes.statusCode).toBe(200);
+      const dagBody = dagRes.json() as { data: { nodes: string[]; edges: Array<{ from: string; to: string }> } };
+      expect(Array.isArray(dagBody.data.nodes)).toBe(true);
+      expect(Array.isArray(dagBody.data.edges)).toBe(true);
+      expect(dagBody.data.nodes).toHaveLength(0);
+      expect(dagBody.data.edges).toHaveLength(0);
     });
-  },
-);
+
+    it("POST /api/v1/projects without auth returns 401", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/api/v1/projects",
+        payload: { institutionId: randomUUID(), title: "No Auth" },
+      });
+      expect(response.statusCode).toBe(401);
+    });
+
+    it("GET /api/v1/projects/:id without auth returns 401", async () => {
+      const response = await app.inject({
+        method: "GET",
+        url: `/api/v1/projects/${randomUUID()}`,
+      });
+      expect(response.statusCode).toBe(401);
+    });
+});

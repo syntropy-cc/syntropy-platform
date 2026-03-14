@@ -9,7 +9,10 @@ export { ProjectManifest } from "./project-manifest.js";
 export { DAGService } from "./services/dag-service.js";
 export type { CreateProjectManifestSnapshot, CreateProjectResult } from "./digital-project.js";
 export type { ProjectManifestJSON } from "./project-manifest.js";
-export type { ProjectRepository } from "./repositories/project-repository.js";
+export type {
+  ProjectRepository,
+  ProjectDagEdge,
+} from "./repositories/project-repository.js";
 export type { ProjectEventPublisherPort } from "./ports/project-event-publisher-port.js";
 export type {
   ProjectCreatedEvent,

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S14 complete)
+> **Last Updated**: 2026-03-14 (COMP-006.6 complete)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S15 — Project Manifest Completion + Agent Registry Core
-CURRENT ITEM  : COMP-006.6 — Project REST API endpoints + integration tests
+CURRENT ITEM  : COMP-013.2 — ToolDefinition entity + schema validation
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 5 / 5 items done (S14)
-OVERALL       : 73 / 262 items done (28%)
+STAGE PROGRESS: 1 / 4 items done (S15)
+OVERALL       : 74 / 262 items done (28%)
 ```
 
 **Next 5 items**:
-1. `COMP-006.6` — Project REST API endpoints + integration tests ← **START HERE**
-2. `COMP-013.2` — ToolDefinition entity + schema validation
-3. `COMP-013.3` — ToolPermissionEvaluator
-4. `COMP-013.4` — Agent Registry REST API (register, list, get)
-5. `COMP-013.5` — Agent Registry integration tests
+1. `COMP-013.2` — ToolDefinition entity + schema validation ← **START HERE**
+2. `COMP-013.3` — ToolPermissionEvaluator
+3. `COMP-013.4` — Agent Registry REST API (register, list, get)
+4. `COMP-013.5` — Agent Registry integration tests
+5. `COMP-005.1` — IACP Engine package setup + IACPRecord aggregate
 
-**Component record**: [`COMP-006`](./components/COMP-006-dip-project-manifest-dag.md)
+**Component record**: [`COMP-013`](./components/COMP-013-ai-agents-registry.md)
 
-**Next item (COMP-006.6) acceptance criteria**: `POST /api/v1/projects`, `GET /api/v1/projects/{id}`, `GET /api/v1/projects/{id}/dag`; DAG endpoint returns nodes+edges; integration tests.
+**Next item (COMP-013.2) acceptance criteria**: `ToolDefinition` entity with `toolId`, `name`, `description`, `inputSchema` (Zod), `requiredRole`; `validateInput(params)` validates against schema; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Write DAG endpoint (3) Write integration tests
+**Suggested steps**: (1) Write `ToolDefinition` entity (2) Add Zod schema validation (3) Write validation tests
 
 ---
 
@@ -1689,7 +1689,7 @@ Status: Done | **Deps**: COMP-006.1, COMP-009.1
 
 #### [COMP-006.6] Project REST API endpoints + integration tests
 `S15` `High` `M` [Record→](./components/COMP-006-dip-project-manifest-dag.md)
-Status: ⬜ | **Deps**: COMP-006.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-006.5, COMP-033.2
 **Criteria**: `POST /api/v1/projects`, `GET /api/v1/projects/{id}`, `GET /api/v1/projects/{id}/dag`; DAG endpoint returns nodes+edges; integration tests.
 **Steps**: (1) Write API routes (2) Write DAG endpoint (3) Write integration tests
 
@@ -3201,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S14 complete
+> Last Updated: 2026-03-14 | COMP-006.6 complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 73 / 262 items (28%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 74 / 262 items (28%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S15 — Project Manifest Completion + Agent Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-006.6 — Project REST API endpoints + integration tests
 - 2026-03-14 COMP-006.5 — Project event publisher
 - 2026-03-14 COMP-006.4 — ProjectRepository (Postgres)
 - 2026-03-14 COMP-006.3 — DAGService (acyclicity enforcement)

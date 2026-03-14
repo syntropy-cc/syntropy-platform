@@ -120,6 +120,19 @@ describe("PostgresProjectRepository", () => {
     expect(forB[0].title).toBe("Project B1");
   });
 
+  it("getDagEdges returns empty array when no edges", async () => {
+    const institutionId = createInstitutionId(
+      "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+    );
+    const { project } = DigitalProject.create(institutionId, {
+      title: "Project",
+    });
+    await repo.save(project);
+
+    const edges = await repo.getDagEdges(project.projectId);
+    expect(edges).toEqual([]);
+  });
+
   it("save updates existing project when same id", async () => {
     const institutionId = createInstitutionId(
       "a1b2c3d4-e5f6-4789-a012-3456789abcde",

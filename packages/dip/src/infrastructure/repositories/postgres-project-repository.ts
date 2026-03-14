@@ -3,7 +3,10 @@
  */
 
 import { DigitalProject } from "../../domain/project-manifest-dag/digital-project.js";
-import type { ProjectRepository } from "../../domain/project-manifest-dag/repositories/project-repository.js";
+import type {
+  ProjectRepository,
+  ProjectDagEdge,
+} from "../../domain/project-manifest-dag/repositories/project-repository.js";
 import { createInstitutionId } from "../../domain/project-manifest-dag/value-objects/institution-id.js";
 import { createManifestId } from "../../domain/project-manifest-dag/value-objects/manifest-id.js";
 import { createProjectId } from "../../domain/project-manifest-dag/value-objects/project-id.js";
@@ -12,6 +15,9 @@ import type { ProjectId } from "../../domain/project-manifest-dag/value-objects/
 import type { ProjectDbClient } from "../project-db-client.js";
 
 const TABLE = "dip.digital_projects";
+const EDGES_TABLE = "dip.project_dag_edges";
+
+const SELECT_EDGES_BY_PROJECT = `SELECT from_node_id, to_node_id FROM ${EDGES_TABLE} WHERE project_id = $1`;
 
 const UPSERT_SQL = `
   INSERT INTO ${TABLE} (id, institution_id, manifest_id, title, description, created_at, updated_at)
@@ -82,5 +88,16 @@ export class PostgresProjectRepository implements ProjectRepository {
       [institutionId],
     );
     return rows.map(rowToProject);
+  }
+
+  async getDagEdges(projectId: ProjectId): Promise<ProjectDagEdge[]> {
+    const rows = await this.client.query<Record<string, unknown>>(
+      SELECT_EDGES_BY_PROJECT,
+      [projectId],
+    );
+    return rows.map((row) => ({
+      fromNodeId: String(row.from_node_id),
+      toNodeId: String(row.to_node_id),
+    }));
   }
 }

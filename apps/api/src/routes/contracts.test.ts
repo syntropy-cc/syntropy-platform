@@ -15,8 +15,10 @@ import {
 } from "@syntropy/identity";
 import {
   ArtifactLifecycleService,
-  type ArtifactRepository,
+  CreateProjectUseCase,
   type ArtifactLifecycleEventPublisher,
+  type ArtifactRepository,
+  type ProjectRepository,
 } from "@syntropy/dip";
 import {
   ContractDSLParser,
@@ -126,6 +128,21 @@ describe("contract routes", () => {
         createMockEventPublisher(),
         () => CONTRACT_ID
       );
+      const mockProjectRepository: ProjectRepository = {
+        save: async () => {},
+        findById: async () => null,
+        findByInstitution: async () => [],
+        getDagEdges: async () => [],
+      };
+      const noopProjectPublisher = {
+        async publishProjectCreated() {},
+        async publishProjectManifestUpdated() {},
+      };
+      const createProjectUseCase = new CreateProjectUseCase(
+        mockProjectRepository,
+        noopProjectPublisher,
+      );
+
       app = await createApp({
         auth: createMockAuth(VALID_JWT),
         supabaseClient: null,
@@ -135,6 +152,8 @@ describe("contract routes", () => {
           contractRepository,
           smartContractEvaluator: new SmartContractEvaluator(),
           contractDSLParser: new ContractDSLParser(),
+          projectRepository: mockProjectRepository,
+          createProjectUseCase,
         },
       });
     });

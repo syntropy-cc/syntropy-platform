@@ -24,10 +24,13 @@ import {
 } from "@syntropy/identity";
 import {
   ArtifactLifecycleService,
-  PostgresArtifactRepository,
+  CreateProjectUseCase,
   PgArtifactDbClient,
   PgContractDbClient,
+  PgProjectDbClient,
+  PostgresArtifactRepository,
   PostgresContractRepository,
+  PostgresProjectRepository,
   createArtifactId,
   createNostrEventId,
   type ArtifactLifecycleEvent,
@@ -90,6 +93,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
     "20260313220000_dip_artifacts.sql",
     "20260313230000_dip_artifacts_type_and_tags.sql",
     "20260313240000_dip_governance_contracts.sql",
+    "20260313260000_dip_digital_projects.sql",
   ];
   for (const file of files) {
     const sql = readFileSync(join(migrationsDir, file), "utf8");
@@ -125,6 +129,17 @@ describe(
         capturingPublisher,
       );
 
+      const projectDbClient = new PgProjectDbClient(pool);
+      const projectRepository = new PostgresProjectRepository(projectDbClient);
+      const noopProjectPublisher = {
+        async publishProjectCreated() {},
+        async publishProjectManifestUpdated() {},
+      };
+      const createProjectUseCase = new CreateProjectUseCase(
+        projectRepository,
+        noopProjectPublisher,
+      );
+
       app = await createApp({
         auth: createMockAuth(VALID_JWT),
         supabaseClient: null,
@@ -134,6 +149,8 @@ describe(
           contractRepository,
           smartContractEvaluator: new SmartContractEvaluator(),
           contractDSLParser: new ContractDSLParser(),
+          projectRepository,
+          createProjectUseCase,
         },
       });
     });

@@ -1,5 +1,5 @@
 /**
- * DIP context passed into the API for artifact and contract routes (COMP-003.7, COMP-004.6).
+ * DIP context passed into the API for artifact, contract, and project routes (COMP-003.7, COMP-004.6, COMP-006.6).
  * Kept in types to avoid circular dependency between server and routes.
  */
 
@@ -7,6 +7,8 @@ import type {
   ArtifactLifecycleService,
   ArtifactRepository,
   ContractRepository,
+  CreateProjectUseCase,
+  ProjectRepository,
 } from "@syntropy/dip";
 import type {
   ContractDSLParser,
@@ -19,4 +21,6 @@ export interface DipContext {
   contractRepository: ContractRepository;
   smartContractEvaluator: SmartContractEvaluator;
   contractDSLParser: ContractDSLParser;
+  projectRepository: ProjectRepository;
+  createProjectUseCase: CreateProjectUseCase;
 }

@@ -23,6 +23,7 @@
     "@syntropy/communication": "workspace:*",
     "@syntropy/event-bus": "workspace:*",
     "@syntropy/hub-package": "workspace:*",
+    "@syntropy/ide": "workspace:*",
     "@syntropy/identity": "workspace:*",
     "@syntropy/labs-package": "workspace:*",
     "@syntropy/learn-package": "workspace:*",

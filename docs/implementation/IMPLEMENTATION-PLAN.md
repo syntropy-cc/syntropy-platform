@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S46: COMP-029.6, COMP-030.1–030.3 done)
+> **Last Updated**: 2026-03-14 (S47: COMP-030.4–030.8 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,22 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S47 — IDE Domain Core (M4)
-CURRENT ITEM  : COMP-030.4 — WorkspaceSnapshot entity
+CURRENT STAGE : S48 — Sandbox + AI Pillar Tools (M4)
+CURRENT ITEM  : COMP-019.6 — ContributionSandboxOrchestrator
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 0 / 5 items done (S47)
-OVERALL       : 218 / 262 items done (83%)
+STAGE PROGRESS: 0 / 4 items done (S48)
+OVERALL       : 223 / 262 items done (85%)
 ```
 
 **Next 5 items**:
-1. `COMP-030.4` — WorkspaceSnapshot entity ← **START HERE**
+1. `COMP-019.6` — ContributionSandboxOrchestrator ← **START HERE**
 2. (see Section 6 for full order)
 
-**Component record**: [`COMP-030`](./components/COMP-030-ide-domain.md)
+**Component record**: [`COMP-019`](./components/COMP-019-hub-collaboration-layer.md)
 
-**Next item (COMP-030.4) acceptance criteria**: `WorkspaceSnapshot` entity stores file system state; `save(sessionId, files)` creates snapshot; `restore(sessionId)` retrieves; snapshots versioned; unit tests.
+**Next item (COMP-019.6) acceptance criteria**: `ContributionSandboxOrchestrator.provision(sandbox)` wires `ContributionSandbox` aggregate to real `ContainerOrchestrator`; provisions container on contribution start; terminates on merge/close; unit tests.
 
-**Suggested steps**: (1) Write `WorkspaceSnapshot` entity (2) Add save/restore methods (3) Write snapshot tests
+**Suggested steps**: (1) Write `ContributionSandboxOrchestrator` (2) Wire to IDE `ContainerOrchestrator` (3) Write orchestration tests
 
 ---
 
@@ -2846,7 +2846,7 @@ Status: ✅ Done | **Deps**: COMP-030.2, COMP-037.1
 
 #### [COMP-030.4] WorkspaceSnapshot entity
 `S47` `High` `S` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.3
+Status: ✅ Done | **Deps**: COMP-030.3
 **Criteria**: `WorkspaceSnapshot` entity stores file system state; `save(sessionId, files)` creates snapshot; `restore(sessionId)` retrieves; snapshots versioned; unit tests.
 **Steps**: (1) Write `WorkspaceSnapshot` entity (2) Add save/restore methods (3) Write snapshot tests
 
@@ -2854,7 +2854,7 @@ Status: ⬜ | **Deps**: COMP-030.3
 
 #### [COMP-030.5] ArtifactPublishBridge
 `S47` `High` `S` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.4, COMP-003.2
+Status: ✅ Done | **Deps**: COMP-030.4, COMP-003.2
 **Criteria**: `IDEArtifactBridge.publish(session, files)` creates DIP artifact from IDE output files; called when user triggers publish from IDE; ACL translation; unit tests.
 **Steps**: (1) Write `IDEArtifactBridge` (2) Map files to DIP artifact (3) Write bridge tests
 
@@ -2862,7 +2862,7 @@ Status: ⬜ | **Deps**: COMP-030.4, COMP-003.2
 
 #### [COMP-030.6] IDE session provisioning service
 `S47` `Critical` `M` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.5
+Status: ✅ Done | **Deps**: COMP-030.5
 **Criteria**: `IDESessionProvisioningService.start(sessionId)` calls `ContainerOrchestrator.provision()`, updates session status, emits `ContainerProvisioned` event; `suspend()` stops container, saves snapshot; unit tests.
 **Steps**: (1) Write `IDESessionProvisioningService` (2) Wire to orchestrator (3) Write provision + suspend tests
 
@@ -2870,7 +2870,7 @@ Status: ⬜ | **Deps**: COMP-030.5
 
 #### [COMP-030.7] IDERepository (Postgres)
 `S47` `High` `S` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.6, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-030.6, COMP-039.4
 **Criteria**: Migrations for `ide_sessions`, `workspace_snapshots`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2878,7 +2878,7 @@ Status: ⬜ | **Deps**: COMP-030.6, COMP-039.4
 
 #### [COMP-030.8] IDE Domain REST API
 `S47` `High` `M` [Record→](./components/COMP-030-ide-domain.md)
-Status: ⬜ | **Deps**: COMP-030.7, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-030.7, COMP-033.2
 **Criteria**: `POST /api/v1/ide/sessions`, `GET /api/v1/ide/sessions/{id}`, `POST /api/v1/ide/sessions/{id}/start`, `POST /api/v1/ide/sessions/{id}/suspend`; quota enforced; API tests.
 **Steps**: (1) Write API routes (2) Add quota enforcement (3) Write API tests
 
@@ -3198,15 +3198,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S46 COMP-029.6, COMP-030.1–030.3 done; next COMP-030.4
+> Last Updated: 2026-03-14 | S47 COMP-030.4–030.8 done; next COMP-019.6
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 218 / 262 items (83%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 223 / 262 items (85%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S47 — IDE Domain Core | S56 | ⬜ |
+| **Current Stage** | S48 — Sandbox + AI Pillar Tools | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3214,6 +3214,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-030.8 — IDE Domain REST API; POST/GET /api/v1/ide/sessions, start, suspend; quota enforced; ide.test.ts
+- 2026-03-14 COMP-030.7 — IDERepository (Postgres); migration ide.ide_sessions, workspace_snapshots; PostgresIDESessionRepository, PostgresWorkspaceSnapshotRepository; ide-repositories integration test
+- 2026-03-14 COMP-030.6 — IDESessionProvisioningService; start/suspend; ContainerProvisioned event; repository and event ports; unit tests
+- 2026-03-14 COMP-030.5 — IDEArtifactBridge + DIPArtifactPort; publish(session, files); SessionNotActiveError; unit tests
+- 2026-03-14 COMP-030.4 — WorkspaceSnapshot entity; create/fromPersistence; versioned; unit tests
 - 2026-03-14 COMP-030.3 — ResourceQuotaEnforcer; UsagePort, RolePort; QuotaConfigByRole; QuotaExceededError; unit tests
 - 2026-03-14 COMP-030.2 — Container value object; ContainerOrchestrator interface; unit tests
 - 2026-03-14 COMP-030.1 — packages/ide scaffold; IDESession aggregate; IDESessionStatus; create/start/suspend/terminate; unit tests

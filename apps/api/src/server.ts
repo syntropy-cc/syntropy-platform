@@ -51,9 +51,11 @@ import { labsDoiRoutes } from "./routes/labs-doi.js";
 import { sponsorshipRoutes } from "./routes/sponsorships.js";
 import { communicationRoutes } from "./routes/communication.js";
 import { planningRoutes } from "./routes/planning.js";
+import { ideRoutes } from "./routes/ide.js";
 import type { SponsorshipContext } from "./types/sponsorship-context.js";
 import type { CommunicationContext } from "./types/communication-context.js";
 import type { PlanningContext } from "./types/planning-context.js";
+import type { IDEContext } from "./types/ide-context.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -85,6 +87,7 @@ export interface CreateAppOptions {
   sponsorship?: SponsorshipContext | null;
   communication?: CommunicationContext | null;
   planning?: PlanningContext | null;
+  ide?: IDEContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -149,6 +152,9 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.planning) {
     await app.register(planningRoutes, { planning: options.planning });
+  }
+  if (options?.ide) {
+    await app.register(ideRoutes, { ide: options.ide });
   }
   await app.register(internalEventSchemasPlugin);
 

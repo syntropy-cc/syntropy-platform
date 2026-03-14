@@ -109,6 +109,32 @@ export class IDESession {
   }
 
   /**
+   * Assigns a provisioned container and transitions to active (COMP-030.6).
+   * Valid when status is Pending or Provisioning.
+   */
+  withContainerStarted(containerId: string): IDESession {
+    if (
+      this.status !== IDESessionStatus.Pending &&
+      this.status !== IDESessionStatus.Provisioning
+    ) {
+      throw new Error(
+        `Cannot assign container in status ${this.status}; expected pending or provisioning`
+      );
+    }
+    if (!containerId?.trim()) {
+      throw new Error("containerId cannot be empty");
+    }
+    const now = new Date();
+    return new IDESession({
+      ...this.toParams(),
+      containerId: containerId.trim(),
+      status: IDESessionStatus.Active,
+      startedAt: this.startedAt ?? now,
+      lastActiveAt: now,
+    });
+  }
+
+  /**
    * Transitions from active to suspended.
    */
   suspend(): IDESession {

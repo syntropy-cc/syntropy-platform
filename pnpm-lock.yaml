@@ -59,6 +59,9 @@ importers:
       '@syntropy/hub-package':
         specifier: workspace:*
         version: link:../../packages/hub
+      '@syntropy/ide':
+        specifier: workspace:*
+        version: link:../../packages/ide
       '@syntropy/identity':
         specifier: workspace:*
         version: link:../../packages/identity
@@ -527,10 +530,20 @@ importers:
         version: 2.1.9(@types/node@22.19.15)(jsdom@25.0.1)
 
   packages/ide:
+    dependencies:
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
     devDependencies:
+      '@testcontainers/postgresql':
+        specifier: ^10.14.0
+        version: 10.28.0
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.15
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.18.0
       typescript:
         specifier: ~5.6.0
         version: 5.6.3

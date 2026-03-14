@@ -9,7 +9,9 @@ export {
   DEFAULT_SKILL_LEVEL,
   createAIAgentDefinition,
   createToolDefinition,
+  validateToolInput,
   InMemoryAgentRegistry,
+  ToolPermissionEvaluator,
   type ActiveGoal,
   type RecentActivityItem,
   type SkillLevel,
@@ -18,6 +20,9 @@ export {
   type AIAgentDefinition,
   type AgentRegistry,
   type ToolDefinition,
+  type ToolResolver,
+  type RoleResolver,
+  type PermissionCache,
 } from "./domain/index.js";
 export {
   AgentOrchestrator,

@@ -1,14 +1,21 @@
 /**
- * Agent Registry REST routes (COMP-013.4).
+ * Agent Registry REST routes (COMP-013.4, COMP-013.5).
  *
  * POST /api/v1/agents — register agent (admin only).
  * GET /api/v1/agents — list agents (public read).
  * GET /api/v1/agents/:id — get agent by id (public read).
  * GET /api/v1/agents/:id/tools — get tools for agent (public read).
+ * GET /api/v1/agents/tools/:toolId/can-invoke — check tool permission (auth required); 403 if insufficient role.
+ * POST /api/v1/agents/tools/validate — validate tool params against schema; 400 if invalid.
  */
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import { createAIAgentDefinition, createToolDefinition } from "@syntropy/ai-agents";
+import {
+  createAIAgentDefinition,
+  createToolDefinition,
+  ToolPermissionEvaluator,
+  validateToolInput,
+} from "@syntropy/ai-agents";
 import { z } from "zod";
 import { successEnvelope, errorEnvelope } from "../types/api-envelope.js";
 import type { AiAgentsContext } from "../types/ai-agents-context.js";
@@ -164,6 +171,85 @@ export async function agentsRoutes(
       successEnvelope(agents.map(agentToDto), getRequestId(request))
     );
   });
+
+  /** Tool permission check (COMP-013.5): 403 when user lacks required role. Register before :id so /agents/tools/... matches. */
+  fastify.get<{ Params: { toolId: string } }>(
+    "/api/v1/agents/tools/:toolId/can-invoke",
+    { preHandler: [requireAuth] },
+    async (request, reply) => {
+      const userId = request.user!.userId;
+      const { toolId } = request.params;
+      const toolResolver = (id: string) => toolStore.get(id);
+      const roleResolver = async () => request.user?.roles ?? [];
+      const cache = new Map<string, boolean>();
+      const evaluator = new ToolPermissionEvaluator(
+        toolResolver,
+        roleResolver,
+        { get: (k) => cache.get(k), set: (k, v) => cache.set(k, v) }
+      );
+      const allowed = await evaluator.canInvoke(userId, toolId);
+      if (!allowed) {
+        return reply.status(403).send(
+          errorEnvelope(
+            "FORBIDDEN",
+            "Insufficient role to invoke this tool.",
+            getRequestId(request)
+          )
+        );
+      }
+      return reply.send(
+        successEnvelope({ canInvoke: true }, getRequestId(request))
+      );
+    }
+  );
+
+  /** Tool param validation (COMP-013.5): 400 when params fail schema. */
+  fastify.post<{ Body: unknown }>(
+    "/api/v1/agents/tools/validate",
+    async (request, reply) => {
+      const body = request.body;
+      if (body === null || typeof body !== "object" || !("toolId" in body) || !("params" in body)) {
+        return reply.status(400).send(
+          errorEnvelope(
+            "BAD_REQUEST",
+            "Body must be { toolId: string, params: unknown }.",
+            getRequestId(request)
+          )
+        );
+      }
+      const { toolId, params } = body as { toolId: unknown; params: unknown };
+      if (typeof toolId !== "string") {
+        return reply.status(400).send(
+          errorEnvelope("BAD_REQUEST", "toolId must be a string.", getRequestId(request))
+        );
+      }
+      const tool = toolStore.get(toolId);
+      if (!tool) {
+        return reply.status(404).send(
+          errorEnvelope("NOT_FOUND", `Tool ${toolId} not found.`, getRequestId(request))
+        );
+      }
+      try {
+        validateToolInput(tool, params);
+      } catch (err: unknown) {
+        const zodErr = err as { name?: string; errors?: unknown[] };
+        if (zodErr?.name === "ZodError" || (zodErr && Array.isArray(zodErr.errors))) {
+          return reply.status(400).send(
+            errorEnvelope(
+              "VALIDATION_ERROR",
+              "Tool params failed schema validation.",
+              getRequestId(request),
+              { details: zodErr.errors ?? [] }
+            )
+          );
+        }
+        throw err;
+      }
+      return reply.send(
+        successEnvelope({ valid: true }, getRequestId(request))
+      );
+    }
+  );
 
   fastify.get<{ Params: { id: string } }>(
     "/api/v1/agents/:id",

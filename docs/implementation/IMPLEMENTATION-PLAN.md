@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (COMP-013.4 complete)
+> **Last Updated**: 2026-03-14 (COMP-013.5 complete)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S16 — Agent Registry Completion + IACP Start
-CURRENT ITEM  : COMP-013.5 — Agent Registry integration tests
+CURRENT ITEM  : COMP-005.1 — IACP Engine package setup + IACPRecord aggregate
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 0 / 3 items done (S16)
-OVERALL       : 77 / 262 items done (29%)
+STAGE PROGRESS: 1 / 3 items done (S16)
+OVERALL       : 78 / 262 items done (30%)
 ```
 
 **Next 5 items**:
-1. `COMP-013.5` — Agent Registry integration tests ← **START HERE**
-2. `COMP-005.1` — IACP Engine package setup + IACPRecord aggregate
-3. `COMP-005.2` — IACPParty value object + multi-party signing setup
-4. `COMP-005.3` — IACPStateMachine (draft→pending→active→terminated)
-5. `COMP-005.4` — SignatureCollector (n-of-m threshold logic)
+1. `COMP-005.1` — IACP Engine package setup + IACPRecord aggregate ← **START HERE**
+2. `COMP-005.2` — IACPParty value object + multi-party signing setup
+3. `COMP-005.3` — IACPStateMachine (draft→pending→active→terminated)
+4. `COMP-005.4` — SignatureCollector (n-of-m threshold logic)
+5. `COMP-005.5` — IACPEngine.evaluate() consensus check
 
-**Component record**: [`COMP-013`](./components/COMP-013-ai-agents-registry.md)
+**Component record**: [`COMP-005`](./components/COMP-005-dip-iacp-engine.md)
 
-**Next item (COMP-013.5) acceptance criteria**: Register agent, list agents, invoke tool with insufficient role → 403; tool schema validation rejects invalid params; tests use real DB.
+**Next item (COMP-005.1) acceptance criteria**: `packages/dip-iacp` workspace; `IACPRecord` aggregate with `id`, `type`, `parties[]`, `status`; `IACPStatus` enum (`draft/pending_signatures/active/terminated`); unit tests.
 
-**Suggested steps**: (1) Write registration test (2) Write permission rejection test (3) Write schema validation test
+**Suggested steps**: (1) Scaffold `packages/dip-iacp` (2) Write `IACPRecord` aggregate (3) Write status tests
 
 ---
 
@@ -1721,7 +1721,7 @@ Status: ✅ Done | **Deps**: COMP-013.3, COMP-033.2
 
 #### [COMP-013.5] Agent Registry integration tests
 `S16` `High` `S` [Record→](./components/COMP-013-ai-agents-registry.md)
-Status: ⬜ | **Deps**: COMP-013.4
+Status: ✅ Done | **Deps**: COMP-013.4
 **Criteria**: Register agent, list agents, invoke tool with insufficient role → 403; tool schema validation rejects invalid params; tests use real DB.
 **Steps**: (1) Write registration test (2) Write permission rejection test (3) Write schema validation test
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 77 / 262 items (29%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 78 / 262 items (30%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S15 — Project Manifest Completion + Agent Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-013.5 — Agent Registry integration tests (real DB, can-invoke 403, tool validate 400)
 - 2026-03-14 COMP-013.4 — Agent Registry REST API (register, list, get)
 - 2026-03-14 COMP-013.3 — ToolPermissionEvaluator
 - 2026-03-14 COMP-013.2 — ToolDefinition entity + schema validation

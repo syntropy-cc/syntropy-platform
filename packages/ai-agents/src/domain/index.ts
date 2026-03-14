@@ -16,8 +16,13 @@ export {
 export {
   createAIAgentDefinition,
   createToolDefinition,
+  validateToolInput,
   InMemoryAgentRegistry,
+  ToolPermissionEvaluator,
   type AIAgentDefinition,
   type AgentRegistry,
   type ToolDefinition,
+  type ToolResolver,
+  type RoleResolver,
+  type PermissionCache,
 } from "./registry/index.js";

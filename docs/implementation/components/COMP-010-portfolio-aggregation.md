@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/platform-core/subdomains/portfolio-aggregation.md](../../architecture/domains/platform-core/subdomains/portfolio-aggregation.md)
 > **Stage Assignment**: S4 — Platform Core Aggregation
-> **Status**: 🔵 In Progress (S22 done: 010.1–010.3)
+> **Status**: 🔵 In Progress (S23 done: 010.4–010.7)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -292,6 +292,31 @@ Portfolio Aggregation builds and maintains each user's verifiable dynamic portfo
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — S23 (COMP-010.4–010.7)
+
+**COMP-010.4** — SkillProfile computation (per IMPLEMENTATION-PLAN Section 7)
+- `skill-taxonomy.ts`: levelFromSignalCount, normalizeSkillName, SIGNAL_COUNT_TO_LEVEL.
+- `skill-profile.ts`: SkillProfile, createSkillProfile.
+- `services/skill-profile-service.ts`: compute(userId, events), SkillProfileService; extracts tags/skills from learn.fragment.artifact_published and hub.contribution.integrated.
+- Unit tests: skill-profile-service.test.ts.
+
+**COMP-010.5** — ReputationScore calculation
+- `reputation-signals.ts`: ReputationSignals, REPUTATION_WEIGHTS, DECAY_AFTER_DAYS.
+- `services/reputation-service.ts`: calculate(signals), time decay after 180 days.
+- Unit tests: reputation-service.test.ts.
+
+**COMP-010.6** — PortfolioEventConsumer (Kafka)
+- `portfolio-update.ts`: applyEvent(portfolio, event) — XP, achievements, skills merge, reputation.
+- `infrastructure/consumers/portfolio-event-consumer.ts`: subscribes to learn/hub/labs/dip.events, parses eventType/payload, applies event and saves.
+- Unit tests: portfolio-update.test.ts.
+
+**COMP-010.7** — PortfolioRepository (Postgres)
+- Migration: supabase/migrations/20260314220000_platform_core_portfolio_aggregation.sql (portfolios, achievements, skill_records).
+- `ports/portfolio-repository.ts`: PortfolioRepository interface.
+- `infrastructure/repositories/postgres-portfolio-repository.ts`: PostgresPortfolioRepository, optimistic locking (version).
+- Portfolio.create(params), Portfolio.version for persistence.
+- Integration test: postgres-portfolio-repository.test.ts (mock client).
 
 ### 2026-03-14 — S22 (COMP-010.1–010.3)
 

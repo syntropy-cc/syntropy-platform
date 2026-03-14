@@ -22,6 +22,8 @@ export interface PortfolioParams {
   reputationScore: ReputationScore;
   achievements: Achievement[];
   skills: SkillRecord[];
+  /** Set when loading from persistence; used for optimistic locking. */
+  version?: number;
 }
 
 export class Portfolio {
@@ -30,6 +32,7 @@ export class Portfolio {
   private readonly _reputationScore: ReputationScore;
   private _achievements: Achievement[];
   private readonly _skills: SkillRecord[];
+  readonly version: number;
 
   private constructor(params: PortfolioParams) {
     this.userId = params.userId;
@@ -37,6 +40,14 @@ export class Portfolio {
     this._reputationScore = params.reputationScore;
     this._achievements = [...params.achievements];
     this._skills = [...params.skills];
+    this.version = params.version ?? 0;
+  }
+
+  /**
+   * Create a portfolio from known state (e.g. loaded from persistence).
+   */
+  static create(params: PortfolioParams): Portfolio {
+    return new Portfolio(params);
   }
 
   get xp(): number {

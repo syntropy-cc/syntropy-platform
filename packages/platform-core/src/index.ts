@@ -122,3 +122,35 @@ export {
   type AchievementUnlockedPayload,
   type AchievementUnlockedEvent,
 } from "./domain/portfolio-aggregation/events/achievement-unlocked.js";
+export {
+  type SkillProfile,
+  createSkillProfile,
+} from "./domain/portfolio-aggregation/skill-profile.js";
+export {
+  compute as computeSkillProfile,
+  SkillProfileService,
+} from "./domain/portfolio-aggregation/services/skill-profile-service.js";
+export {
+  KNOWN_SKILL_AREAS,
+  SIGNAL_COUNT_TO_LEVEL,
+  levelFromSignalCount,
+  normalizeSkillName,
+} from "./domain/portfolio-aggregation/skill-taxonomy.js";
+export {
+  type ReputationSignals,
+  REPUTATION_WEIGHTS,
+  DECAY_AFTER_DAYS,
+} from "./domain/portfolio-aggregation/reputation-signals.js";
+export {
+  calculate as calculateReputation,
+  ReputationService,
+} from "./domain/portfolio-aggregation/services/reputation-service.js";
+export type { PortfolioRepository } from "./domain/portfolio-aggregation/ports/portfolio-repository.js";
+export { PostgresPortfolioRepository } from "./infrastructure/repositories/postgres-portfolio-repository.js";
+export { applyEvent } from "./domain/portfolio-aggregation/portfolio-update.js";
+export {
+  PortfolioEventConsumer,
+  PORTFOLIO_TOPICS,
+  PORTFOLIO_CONSUMER_GROUP_ID,
+  type PortfolioEventConsumerOptions,
+} from "./infrastructure/consumers/portfolio-event-consumer.js";

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S22: COMP-008.8, COMP-010.1–010.3 done)
+> **Last Updated**: 2026-03-14 (S23: COMP-010.4–010.7 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S23 — Portfolio Aggregation Core
-CURRENT ITEM  : COMP-010.4 — SkillProfile computation
+CURRENT STAGE : S24 — Portfolio API + Search Core
+CURRENT ITEM  : COMP-010.8 — Portfolio REST API endpoints + integration tests
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 0 / 4 items done (S22 complete)
-OVERALL       : 106 / 262 items done (40%)
+STAGE PROGRESS: 4 / 4 items done (S23 complete)
+OVERALL       : 110 / 262 items done (42%)
 ```
 
 **Next 5 items**:
-1. `COMP-010.4` — SkillProfile computation ← **START HERE**
-2. `COMP-010.5` — ReputationScore calculation
-3. `COMP-010.6` — PortfolioEventConsumer (Kafka)
-4. `COMP-010.7` — PortfolioRepository (Postgres)
+1. `COMP-010.8` — Portfolio REST API endpoints + integration tests ← **START HERE**
+2. `COMP-011.1` — Search package setup + SearchIndex entity
+3. `COMP-011.2` — Full-text search implementation (tsvector)
+4. `COMP-011.3` — …
 5. …
 
 **Component record**: [`COMP-010`](./components/COMP-010-portfolio-aggregation.md)
 
-**Next item (COMP-010.4) acceptance criteria**: `SkillProfileService.compute(userId)` extracts skill evidence from events (tags on completed fragments, contributions); returns `SkillProfile` with proficiency levels; unit tests.
+**Next item (COMP-010.8) acceptance criteria**: `GET /api/v1/portfolios/{userId}` returns full portfolio; `GET /api/v1/portfolios/{userId}/achievements`; integration test covering event-to-portfolio flow.
 
-**Suggested steps**: (1) Define skill taxonomy (2) Write `SkillProfileService` (3) Write skill extraction tests
+**Suggested steps**: (1) Write API routes (2) Wire to query service (3) Write integration test
 
 ---
 
@@ -1953,7 +1953,7 @@ Status: ✅ Done | **Deps**: COMP-010.2
 
 #### [COMP-010.4] SkillProfile computation
 `S23` `High` `M` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.3
+Status: Done | **Deps**: COMP-010.3
 **Criteria**: `SkillProfileService.compute(userId)` extracts skill evidence from events (tags on completed fragments, contributions); returns `SkillProfile` with proficiency levels; unit tests.
 **Steps**: (1) Define skill taxonomy (2) Write `SkillProfileService` (3) Write skill extraction tests
 
@@ -1961,7 +1961,7 @@ Status: ⬜ | **Deps**: COMP-010.3
 
 #### [COMP-010.5] ReputationScore calculation
 `S23` `High` `M` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.4
+Status: Done | **Deps**: COMP-010.4
 **Criteria**: `ReputationService.calculate(portfolio)` computes weighted score from contributions, reviews, mentorship, XP; time-decayed; returns `ReputationScore`; unit tests.
 **Steps**: (1) Define reputation formula (2) Write `ReputationService` (3) Write decay tests
 
@@ -1969,7 +1969,7 @@ Status: ⬜ | **Deps**: COMP-010.4
 
 #### [COMP-010.6] PortfolioEventConsumer (Kafka)
 `S23` `High` `S` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.5, COMP-009.1
+Status: Done | **Deps**: COMP-010.5, COMP-009.1
 **Criteria**: `PortfolioEventConsumer` subscribes to `dip.artifact.*`, `hub.contribution.*`, `learn.fragment.*`; on each event, updates portfolio; registered in `WorkerRegistry`; integration test.
 **Steps**: (1) Write consumer (2) Wire to portfolio update services (3) Write integration test
 
@@ -1977,7 +1977,7 @@ Status: ⬜ | **Deps**: COMP-010.5, COMP-009.1
 
 #### [COMP-010.7] PortfolioRepository (Postgres)
 `S23` `High` `S` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.5, COMP-039.4
+Status: Done | **Deps**: COMP-010.5, COMP-039.4
 **Criteria**: Migration creates `portfolios`, `achievements`, `skill_profiles` tables; repositories with `findByUserId`; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S22 complete (COMP-008.8, COMP-010.1–010.3 done)
+> Last Updated: 2026-03-14 | S23 complete (COMP-010.4–010.7 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 106 / 262 items (40%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 110 / 262 items (42%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S23 — Portfolio Aggregation Core | S56 | ⬜ |
+| **Current Stage** | S24 — Portfolio API + Search Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-010.7 — PortfolioRepository (Postgres), migration, port, integration test
+- 2026-03-14 COMP-010.6 — PortfolioEventConsumer (Kafka), applyEvent, portfolio-update tests
+- 2026-03-14 COMP-010.5 — ReputationService, ReputationSignals, time decay, unit tests
+- 2026-03-14 COMP-010.4 — SkillProfileService, skill taxonomy, SkillProfile, unit tests
 - 2026-03-14 COMP-010.3 — AchievementService, achievement definitions, AchievementUnlocked event, unit tests
 - 2026-03-14 COMP-010.2 — XPCalculator, XP weights, level thresholds, unit tests
 - 2026-03-14 COMP-010.1 — Portfolio aggregate, fromEvents, value objects, unit tests

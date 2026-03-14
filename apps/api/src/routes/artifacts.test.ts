@@ -22,6 +22,7 @@ import {
   type ArtifactRepository,
   type ArtifactLifecycleEventPublisher,
 } from "@syntropy/dip";
+import { ContractDSLParser, SmartContractEvaluator } from "@syntropy/dip-contracts";
 
 const TEST_USER_ID = "a1b2c3d4-e5f6-4789-a012-345678901234";
 const TEST_ACTOR_ID = createActorId(TEST_USER_ID);
@@ -111,7 +112,17 @@ describe("artifact routes", () => {
       app = await createApp({
         auth: createMockAuth(VALID_JWT),
         supabaseClient: null,
-        dip: { lifecycleService, artifactRepository },
+        dip: {
+          lifecycleService,
+          artifactRepository,
+          contractRepository: {
+            findById: async () => null,
+            save: async () => {},
+            findByInstitution: async () => [],
+          },
+          smartContractEvaluator: new SmartContractEvaluator(),
+          contractDSLParser: new ContractDSLParser(),
+        },
       });
     });
 

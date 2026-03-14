@@ -35,6 +35,9 @@ importers:
       '@syntropy/dip':
         specifier: workspace:*
         version: link:../../packages/dip
+      '@syntropy/dip-contracts':
+        specifier: workspace:*
+        version: link:../../packages/dip-contracts
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus

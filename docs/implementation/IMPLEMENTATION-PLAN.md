@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,28 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S11 — DIP Smart Contract Engine
-CURRENT ITEM  : COMP-004.6 — Smart Contract API + integration tests
+CURRENT STAGE : S12 — AI Agents Orchestration Core
+CURRENT ITEM  : COMP-012.2 — AgentSession aggregate
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S10) | 5 / 6 items done (S11)
-OVERALL       : 59 / 262 items done (23%)
+STAGE PROGRESS: 6 / 6 items done (S11) | 0 / 5 items done (S12)
+OVERALL       : 60 / 262 items done (23%)
 ```
 
 **Next 5 items**:
-1. `COMP-003.8` — Integration tests for Artifact Registry ✅
-2. `COMP-012.1` — AI agents package setup + UserContextModel aggregate ✅
-3. `COMP-004.1` — Smart Contract Engine package setup ✅
-4. `COMP-004.2` — GovernanceContract aggregate + clause value objects ✅
-5. `COMP-004.3` — SmartContractEvaluator ✅
-6. `COMP-004.4` — Contract DSL parser ✅
-7. `COMP-004.5` — ContractRepository (Postgres) ✅
-8. `COMP-004.6` — Smart Contract API + integration tests ← **START HERE**
+1. `COMP-012.2` — AgentSession aggregate ← **START HERE**
+2. `COMP-012.3` — LLMAdapter (OpenAI)
+3. `COMP-012.4` — ToolRouter
+4. `COMP-012.5` — ContextModelUpdater
+5. `COMP-012.6` — AgentOrchestrator
 
-**Component record**: [`COMP-004`](./components/COMP-004-dip-smart-contract-engine.md)
+**Component record**: [`COMP-012`](./components/COMP-012-ai-agents-orchestration.md)
 
-**Next item (COMP-004.6) acceptance criteria**: `POST /api/v1/contracts`, `GET /api/v1/contracts/{id}`, `POST /api/v1/contracts/{id}/evaluate`; full lifecycle integration test; DSL validation on create.
+**Next item (COMP-012.2) acceptance criteria**: `AgentSession` aggregate with `sessionId`, `userId`, `agentId`, `status`, `history[]`; `create()` factory; `addMessage(message)` appends to history; `close()` terminates; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire to evaluator (3) Write integration test
+**Suggested steps**: (1) Write `AgentSession` aggregate (2) Add message history methods (3) Write session lifecycle tests
 
 ---
 
@@ -1580,7 +1577,7 @@ Status: ✅ Done | **Deps**: COMP-004.2, COMP-039.4
 
 #### [COMP-004.6] Smart Contract API + integration tests
 `S11` `High` `S` [Record→](./components/COMP-004-dip-smart-contract-engine.md)
-Status: ⬜ | **Deps**: COMP-004.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-004.5, COMP-033.2
 **Criteria**: `POST /api/v1/contracts`, `GET /api/v1/contracts/{id}`, `POST /api/v1/contracts/{id}/evaluate`; full lifecycle integration test; DSL validation on create.
 **Steps**: (1) Write API routes (2) Wire to evaluator (3) Write integration test
 
@@ -3210,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 59 / 262 items (23%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 60 / 262 items (23%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S11 — DIP Smart Contract Engine | S56 | ⬜ |
+| **Current Stage** | S12 — AI Agents Orchestration Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3220,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-004.6 — Smart Contract API + integration tests
 - 2026-03-13 COMP-004.5 — ContractRepository (Postgres)
 - 2026-03-13 COMP-004.4 — Contract DSL parser
 - 2026-03-13 COMP-004.3 — SmartContractEvaluator
@@ -3285,7 +3283,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
 | M1 Foundation + Walking Skeleton | 45 | 43 | 96% | 🔵 In Progress |
-| M2 Core: DIP + Platform Core + AI | 73 | 0 | 0% | ⬜ Not Started |
+| M2 Core: DIP + Platform Core + AI | 73 | 17 | 23% | 🔵 In Progress |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
@@ -3298,7 +3296,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
 | COMP-002 Identity | 7 | 7 | ✅ Complete |
 | COMP-003 DIP Artifact Registry | 8 | 6 | 🔵 In Progress |
-| COMP-004 DIP Smart Contract Engine | 6 | 1 | 🔵 In Progress |
+| COMP-004 DIP Smart Contract Engine | 6 | 6 | ✅ Complete |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
 | COMP-007 DIP Institutional Governance | 9 | 0 | ⬜ Not Started |

@@ -26,11 +26,14 @@ import {
   ArtifactLifecycleService,
   PostgresArtifactRepository,
   PgArtifactDbClient,
+  PgContractDbClient,
+  PostgresContractRepository,
   createArtifactId,
   createNostrEventId,
   type ArtifactLifecycleEvent,
   type ArtifactLifecycleEventPublisher,
 } from "@syntropy/dip";
+import { ContractDSLParser, SmartContractEvaluator } from "@syntropy/dip-contracts";
 
 const TEST_USER_ID = "a1b2c3d4-e5f6-4789-a012-345678901234";
 const TEST_ACTOR_ID = createActorId(TEST_USER_ID);
@@ -86,6 +89,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
   const files = [
     "20260313220000_dip_artifacts.sql",
     "20260313230000_dip_artifacts_type_and_tags.sql",
+    "20260313240000_dip_governance_contracts.sql",
   ];
   for (const file of files) {
     const sql = readFileSync(join(migrationsDir, file), "utf8");
@@ -113,6 +117,8 @@ describe(
 
       const dbClient = new PgArtifactDbClient(pool);
       artifactRepository = new PostgresArtifactRepository(dbClient);
+      const contractDbClient = new PgContractDbClient(pool);
+      const contractRepository = new PostgresContractRepository(contractDbClient);
       capturingPublisher = createCapturingEventPublisher();
       const lifecycleService = new ArtifactLifecycleService(
         artifactRepository,
@@ -122,7 +128,13 @@ describe(
       app = await createApp({
         auth: createMockAuth(VALID_JWT),
         supabaseClient: null,
-        dip: { lifecycleService, artifactRepository },
+        dip: {
+          lifecycleService,
+          artifactRepository,
+          contractRepository,
+          smartContractEvaluator: new SmartContractEvaluator(),
+          contractDSLParser: new ContractDSLParser(),
+        },
       });
     });
 

@@ -19,6 +19,7 @@ import { healthRoutes } from "./routes/health.js";
 import { authRoutes } from "./routes/auth.js";
 import { usersRoutes } from "./routes/users.js";
 import { artifactRoutes } from "./routes/artifacts.js";
+import { contractRoutes } from "./routes/contracts.js";
 import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
 import type { DipContext } from "./types/dip-context.js";
 
@@ -59,6 +60,7 @@ export async function createApp(options?: CreateAppOptions) {
   await app.register(usersRoutes);
   if (options?.dip) {
     await app.register(artifactRoutes, { dip: options.dip });
+    await app.register(contractRoutes, { dip: options.dip });
   }
   await app.register(internalEventSchemasPlugin);
 

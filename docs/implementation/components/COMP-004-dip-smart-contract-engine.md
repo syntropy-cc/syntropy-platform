@@ -4,10 +4,10 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/smart-contract-engine.md](../../architecture/domains/digital-institutions-protocol/subdomains/smart-contract-engine.md)
 > **Stage Assignment**: S11 — DIP Smart Contract Engine (M2)
-> **Status**: 🔵 In Progress
+> **Status**: ✅ Complete
 > **Package**: `packages/dip-contracts`
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -50,12 +50,12 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 5 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 1 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **6** |
 
-**Component Coverage**: 83%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -203,7 +203,7 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | IMPLEMENTATION-PLAN.md Section 7, DIP ARCHITECTURE.md |
 | **Dependencies** | COMP-004.5, COMP-033.2 |
@@ -213,10 +213,20 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 **Description**: Public API for contracts and evaluation; full lifecycle integration test; DSL validation on create.
 
 **Acceptance Criteria** (per Implementation Plan):
-- [ ] `POST /api/v1/contracts`, `GET /api/v1/contracts/{id}`, `POST /api/v1/contracts/{id}/evaluate`
-- [ ] Full lifecycle integration test; DSL validation on create
+- [x] `POST /api/v1/contracts`, `GET /api/v1/contracts/{id}`, `POST /api/v1/contracts/{id}/evaluate`
+- [x] Full lifecycle integration test; DSL validation on create
 
 **Steps**: (1) Write API routes (2) Wire to evaluator (3) Write integration test
+
+**Files Created/Modified**:
+- `apps/api/src/types/dip-context.ts` — extended with contractRepository, smartContractEvaluator, contractDSLParser
+- `apps/api/src/routes/contracts.ts` — POST/GET /api/v1/contracts, POST /api/v1/contracts/:id/evaluate
+- `apps/api/src/routes/contracts.test.ts` — route unit tests (14 tests)
+- `apps/api/src/integration/contract-lifecycle.integration.test.ts` — full lifecycle integration test (requires Docker)
+- `apps/api/src/server.ts` — register contractRoutes when dip is set
+- `apps/api/package.json` — added @syntropy/dip-contracts dependency
+- `apps/api/src/routes/artifacts.test.ts` — extended dip mock with contract deps
+- `apps/api/src/integration/artifact-lifecycle.integration.test.ts` — extended dip with contract repo, evaluator, parser; run governance_contracts migration
 
 ---
 

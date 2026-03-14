@@ -3,8 +3,9 @@
 > **Component ID**: COMP-004
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/smart-contract-engine.md](../../architecture/domains/digital-institutions-protocol/subdomains/smart-contract-engine.md)
-> **Stage Assignment**: S2 — DIP Foundation
-> **Status**: ⬜ Not Started
+> **Stage Assignment**: S11 — DIP Smart Contract Engine (M2)
+> **Status**: 🔵 In Progress
+> **Package**: `packages/dip-contracts`
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -49,20 +50,20 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 5 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 17%
 
 ### Item List
 
-#### [COMP-004.1] GovernanceContract aggregate
+#### [COMP-004.1] Smart Contract Engine package setup (Done)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | smart-contract-engine.md |
 | **Dependencies** | COMP-003.1 |
@@ -78,10 +79,12 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 - [ ] Invariant: contract only evaluates for its own institution (cross-institution call throws)
 - [ ] Unit tests: invariants enforced
 
-**Files Created/Modified**:
-- `packages/dip/src/domain/smart-contract-engine/governance-contract.ts`
-- `packages/dip/src/domain/smart-contract-engine/contract-evaluation-record.ts`
-- `packages/dip/tests/unit/smart-contract-engine/governance-contract.test.ts`
+**Files Created/Modified** (per IMPLEMENTATION-PLAN.md Section 7, COMP-004.1 = package setup):
+- `packages/dip-contracts/package.json`, `tsconfig.json`, `vitest.config.ts`
+- `packages/dip-contracts/src/domain/types.ts` — `ContractClause`, `EvaluationResult`
+- `packages/dip-contracts/src/domain/governance-contract.ts` — empty `GovernanceContract` scaffold
+- `packages/dip-contracts/src/domain/index.ts`, `src/index.ts`
+- `packages/dip-contracts/tests/unit/governance-contract.test.ts`
 
 ---
 

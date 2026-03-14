@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S11 — DIP Smart Contract Engine
-CURRENT ITEM  : COMP-004.1 — Smart Contract Engine package setup
+CURRENT ITEM  : COMP-004.2 — GovernanceContract aggregate + clause value objects
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S10) | 0 / 6 items done (S11)
-OVERALL       : 54 / 262 items done (21%)
+STAGE PROGRESS: 4 / 4 items done (S10) | 1 / 6 items done (S11)
+OVERALL       : 55 / 262 items done (21%)
 ```
 
 **Next 5 items**:
 1. `COMP-003.8` — Integration tests for Artifact Registry ✅
 2. `COMP-012.1` — AI agents package setup + UserContextModel aggregate ✅
-3. `COMP-004.1` — Smart Contract Engine package setup ← **START HERE**
-4. `COMP-004.2` — GovernanceContract aggregate + clause value objects
+3. `COMP-004.1` — Smart Contract Engine package setup ✅
+4. `COMP-004.2` — GovernanceContract aggregate + clause value objects ← **START HERE**
 5. `COMP-004.3` — SmartContractEvaluator
 
 **Component record**: [`COMP-004`](./components/COMP-004-dip-smart-contract-engine.md)
 
-**Next item (COMP-004.1) acceptance criteria**: `packages/dip-contracts` workspace; package initialized with TypeScript; base types: `ContractClause`, `EvaluationResult`; empty `GovernanceContract` scaffold; tests pass.
+**Next item (COMP-004.2) acceptance criteria**: `GovernanceContract` aggregate with `clauses: ContractClause[]`; clause types: `TransparencyClause`, `ParticipationThreshold`, `VetoRight`, `AmendmentProcedure`; each is immutable value object; unit tests.
 
-**Suggested steps**: (1) Scaffold `packages/dip-contracts` (2) Write base types (3) Write empty tests scaffold
+**Suggested steps**: (1) Write `GovernanceContract` aggregate (2) Write 4 clause value objects (3) Write aggregate unit tests
 
 ---
 
@@ -1537,7 +1537,7 @@ Status: ✅ Done | **Deps**: COMP-001, COMP-002
 
 #### [COMP-004.1] Smart Contract Engine package setup
 `S11` `Critical` `S` [Record→](./components/COMP-004-dip-smart-contract-engine.md)
-Status: ⬜ | **Deps**: COMP-003
+Status: ✅ Done | **Deps**: COMP-003
 **Criteria**: `packages/dip-contracts` workspace; package initialized with TypeScript; base types: `ContractClause`, `EvaluationResult`; empty `GovernanceContract` scaffold; tests pass.
 **Steps**: (1) Scaffold `packages/dip-contracts` (2) Write base types (3) Write empty tests scaffold
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 54 / 262 items (21%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 55 / 262 items (21%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S11 — DIP Smart Contract Engine | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-004.1 — Smart Contract Engine package setup
 - 2026-03-13 COMP-012.1 — AI agents package setup + UserContextModel aggregate
 - 2026-03-13 COMP-003.8 — Integration tests for Artifact Registry
 - 2026-03-13 COMP-003.7 — Artifact REST API endpoints
@@ -3290,7 +3291,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-001 Monorepo Infrastructure | 5 | 5 | ✅ Complete |
 | COMP-002 Identity | 7 | 7 | ✅ Complete |
 | COMP-003 DIP Artifact Registry | 8 | 6 | 🔵 In Progress |
-| COMP-004 DIP Smart Contract Engine | 6 | 0 | ⬜ Not Started |
+| COMP-004 DIP Smart Contract Engine | 6 | 1 | 🔵 In Progress |
 | COMP-005 DIP IACP Engine | 8 | 0 | ⬜ Not Started |
 | COMP-006 DIP Project Manifest & DAG | 6 | 0 | ⬜ Not Started |
 | COMP-007 DIP Institutional Governance | 9 | 0 | ⬜ Not Started |

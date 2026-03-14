@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S24: COMP-011.1, 011.2, 011.3 done)
+> **Last Updated**: 2026-03-14 (S25: COMP-011.4, 011.5, 011.6, 011.7 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S25 — Search & Recommendation Completion
-CURRENT ITEM  : COMP-011.4 — Semantic search (pgvector embeddings)
+CURRENT STAGE : S26 — Learn Content Hierarchy
+CURRENT ITEM  : COMP-015.1 — Learn package setup + Career aggregate
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 0 / 4 items done (S25)
-OVERALL       : 114 / 262 items done (44%)
+STAGE PROGRESS: 4 / 4 items done (S25 complete)
+OVERALL       : 118 / 262 items done (45%)
 ```
 
 **Next 5 items**:
-1. `COMP-011.4` — Semantic search (pgvector embeddings) ← **START HERE**
-2. `COMP-011.5` — RecommendationSet computation
-3. `COMP-011.6` — SearchRepository (Postgres)
-4. `COMP-011.7` — Search & Recommendation REST API
+1. `COMP-015.1` — Learn package setup + Career aggregate ← **START HERE**
+2. `COMP-015.2` — Track and Course entities
+3. `COMP-015.3` — FogOfWarNavigationService
+4. `COMP-015.4` — PrerequisiteEvaluator
 5. …
 
-**Component record**: [`COMP-011`](./components/COMP-011-search-recommendation.md)
+**Component record**: [`COMP-015`](./components/COMP-015-learn-content-hierarchy.md)
 
-**Next item (COMP-011.4) acceptance criteria**: `EmbeddingService.embed(text)` calls OpenAI embeddings API; stores in `vector(1536)` column; `SemanticSearchService.search(query)` finds nearest neighbors via `<=>` operator; hybrid score combines FTS + semantic; integration test.
+**Next item (COMP-015.1) acceptance criteria**: `packages/learn` workspace; `Career` aggregate with `careerId`, `title`, `tracks[]`; `Track` entity; `Course` entity; hierarchical relationship enforced; unit tests.
 
-**Suggested steps**: (1) Add pgvector extension (2) Write `EmbeddingService` (3) Write hybrid search combining FTS + vector
+**Suggested steps**: (1) Scaffold `packages/learn` (2) Write `Career`, `Track`, `Course` entities (3) Write hierarchy tests
 
 ---
 
@@ -2017,7 +2017,7 @@ Status: ✅ Done | **Deps**: COMP-011.1, COMP-009.1
 
 #### [COMP-011.4] Semantic search (pgvector embeddings)
 `S25` `High` `L` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-011.2
+Status: ✅ Done | **Deps**: COMP-011.2
 **Criteria**: `EmbeddingService.embed(text)` calls OpenAI embeddings API; stores in `vector(1536)` column; `SemanticSearchService.search(query)` finds nearest neighbors via `<=>` operator; hybrid score combines FTS + semantic; integration test.
 **Steps**: (1) Add pgvector extension (2) Write `EmbeddingService` (3) Write hybrid search combining FTS + vector
 
@@ -2025,7 +2025,7 @@ Status: ⬜ | **Deps**: COMP-011.2
 
 #### [COMP-011.5] RecommendationSet computation
 `S25` `High` `M` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-011.4, COMP-010
+Status: ✅ Done | **Deps**: COMP-011.4, COMP-010
 **Criteria**: `RecommendationService.compute(userId)` builds `RecommendationSet` from portfolio + search similarity; refreshed on `portfolio.updated` event; stores top-20 recommendations per user; unit tests.
 **Steps**: (1) Write recommendation algorithm (2) Wire to portfolio data (3) Write recommendation tests
 
@@ -2033,7 +2033,7 @@ Status: ⬜ | **Deps**: COMP-011.4, COMP-010
 
 #### [COMP-011.6] SearchRepository (Postgres)
 `S25` `High` `S` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-011.4, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-011.4, COMP-039.4
 **Criteria**: `SearchRepository` with `save`, `findById`, `deleteByEntity`; `RecommendationRepository` with `saveForUser`, `findByUserId`; migrations; integration tests.
 **Steps**: (1) Write repositories (2) Write migrations (3) Write integration tests
 
@@ -2041,7 +2041,7 @@ Status: ⬜ | **Deps**: COMP-011.4, COMP-039.4
 
 #### [COMP-011.7] Search & Recommendation REST API
 `S25` `High` `M` [Record→](./components/COMP-011-search-recommendation.md)
-Status: ⬜ | **Deps**: COMP-011.6, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-011.6, COMP-033.2
 **Criteria**: `GET /api/v1/search?q=...&type=...` returns paginated results; `GET /api/v1/recommendations/{userId}` returns recommendation list; response time p99 < 200ms.
 **Steps**: (1) Write search API route (2) Write recommendations API route (3) Write API performance test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S25 next (S24 complete: COMP-011.1, 011.2, 011.3 done)
+> Last Updated: 2026-03-14 | S26 next (S25 complete: COMP-011.4, 011.5, 011.6, 011.7 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 114 / 262 items (44%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 118 / 262 items (45%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S25 — Search & Recommendation Completion | S56 | ⬜ |
+| **Current Stage** | S26 — Learn Content Hierarchy | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-011.7 — Search & Recommendation REST API (GET /search, GET /recommendations/:userId), SearchContext, integration test
+- 2026-03-14 COMP-011.6 — SearchRepository findById/deleteByEntity, RecommendationRepository, recommendation_sets migration, integration tests
+- 2026-03-14 COMP-011.5 — RecommendationService.compute(), RecommendationSet from portfolio + search, unit tests
+- 2026-03-14 COMP-011.4 — Semantic search (EmbeddingPort, OpenAI adapter, SemanticSearchService, hybridSearch RRF, pgvector migration), unit + integration tests
 - 2026-03-14 COMP-011.3 — EventIndexingConsumer (Kafka), search-index worker in WorkerRegistry, unit tests
 - 2026-03-14 COMP-011.2 — SearchService, PostgresSearchRepository (FTS ts_rank, entityType filter), integration test
 - 2026-03-14 COMP-011.1 — SearchIndex entity, platform_core.search_index migration, unit tests

@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/platform-core/subdomains/search-recommendation.md](../../architecture/domains/platform-core/subdomains/search-recommendation.md)
 > **Stage Assignment**: S4 — Platform Core Aggregation
-> **Status**: 🔵 In Progress
+> **Status**: ✅ Complete
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -47,12 +47,12 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 3 |
+| ✅ Done | 7 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 4 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **7** |
 
-**Component Coverage**: 43% (3/7)
+**Component Coverage**: 100% (7/7)
 
 ### Item List
 
@@ -241,6 +241,13 @@ Search & Recommendation provides cross-pillar discovery: full-text and semantic 
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — S25 (COMP-011.4, 011.5, 011.6, 011.7)
+
+- **COMP-011.4**: Migration `20260315000000_platform_core_search_index_embedding.sql` (embedding vector(1536), HNSW index). `EmbeddingPort`, `OpenAIEmbeddingAdapter` (fetch to OpenAI embeddings API). `SearchRepository.searchByVector`, `updateEmbedding`; `PostgresSearchRepository` extended. `SemanticSearchService`; `SearchService.hybridSearch` with RRF. Unit + integration tests.
+- **COMP-011.5**: `Recommendation`, `RecommendationSet` entities. `RecommendationService.compute(userId)` using `PortfolioRepository` + `SearchRepository.search`; top-20, FTS-driven. Unit tests with mocks.
+- **COMP-011.6**: `SearchRepository.findById`, `deleteByEntity`. `RecommendationRepository` port; `PostgresRecommendationRepository`; migration `20260315010000_platform_core_recommendations.sql` (recommendation_sets, recommendations). Integration tests with mock client.
+- **COMP-011.7**: `SearchContext`; routes `GET /api/v1/search`, `GET /api/v1/recommendations/:userId` in apps/api; `searchRoutes`, `recommendationRoutes`; registered when `options.search` provided. Integration test (search-api.integration.test.ts) with pgvector container.
 
 ### 2026-03-14 — S24 (COMP-011.1, 011.2, 011.3)
 

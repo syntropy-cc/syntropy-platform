@@ -31,8 +31,11 @@ import type { AiAgentsContext } from "./types/ai-agents-context.js";
 import type { DipContext } from "./types/dip-context.js";
 import type { GovernanceContext } from "./types/governance-context.js";
 import type { PortfolioContext } from "./types/portfolio-context.js";
+import type { SearchContext } from "./types/search-context.js";
 import type { TreasuryContext } from "./types/treasury-context.js";
 import { portfolioRoutes } from "./routes/portfolios.js";
+import { searchRoutes } from "./routes/search.js";
+import { recommendationRoutes } from "./routes/recommendations.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -55,6 +58,7 @@ export interface CreateAppOptions {
   dip?: DipContext | null;
   governance?: GovernanceContext | null;
   portfolio?: PortfolioContext | null;
+  search?: SearchContext | null;
   treasury?: TreasuryContext | null;
   aiAgents?: AiAgentsContext | null;
 }
@@ -84,6 +88,10 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.portfolio) {
     await app.register(portfolioRoutes, { portfolio: options.portfolio });
+  }
+  if (options?.search) {
+    await app.register(searchRoutes, { search: options.search });
+    await app.register(recommendationRoutes, { search: options.search });
   }
   if (options?.treasury) {
     await app.register(treasuryRoutes, { treasury: options.treasury });

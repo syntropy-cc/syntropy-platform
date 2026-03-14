@@ -160,9 +160,31 @@ export {
   SearchIndex,
   type SearchIndexParams,
 } from "./domain/search-recommendation/search-index.js";
-export type { SearchRepository, SearchFilters } from "./domain/search-recommendation/ports/search-repository.js";
+export type {
+  SearchRepository,
+  SearchFilters,
+  SearchByVectorOptions,
+} from "./domain/search-recommendation/ports/search-repository.js";
+export type { EmbeddingPort } from "./domain/search-recommendation/ports/embedding-port.js";
 export { SearchService } from "./domain/search-recommendation/services/search-service.js";
+export { SemanticSearchService } from "./domain/search-recommendation/services/semantic-search-service.js";
+export { RecommendationService } from "./domain/search-recommendation/services/recommendation-service.js";
+export {
+  OpenAIEmbeddingAdapter,
+  type OpenAIEmbeddingAdapterConfig,
+} from "./infrastructure/embedding/openai-embedding-adapter.js";
 export { PostgresSearchRepository } from "./infrastructure/repositories/postgres-search-repository.js";
+export {
+  Recommendation,
+  type RecommendationParams,
+  type OpportunityType,
+} from "./domain/search-recommendation/recommendation.js";
+export {
+  RecommendationSet,
+  type RecommendationSetParams,
+} from "./domain/search-recommendation/recommendation-set.js";
+export type { RecommendationRepository } from "./domain/search-recommendation/ports/recommendation-repository.js";
+export { PostgresRecommendationRepository } from "./infrastructure/repositories/postgres-recommendation-repository.js";
 export {
   EventIndexingConsumer,
   SEARCH_INDEX_TOPICS,

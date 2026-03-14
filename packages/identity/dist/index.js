@@ -4,7 +4,7 @@
  * Architecture: COMP-002
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthProviderError = exports.InvalidTokenError = exports.IdentityEventPublisher = exports.SupabaseAuthAdapter = exports.createUserUpdated = exports.createUserCreated = exports.IdentityToken = exports.Permission = exports.isActorId = exports.createActorId = exports.Session = exports.Role = exports.RBACRole = exports.User = void 0;
+exports.DEFAULT_ROLE_PERMISSIONS = exports.getPermissionsForRole = exports.RequireRole = exports.InMemoryPermissionCache = exports.createPermissionChecker = exports.PermissionChecker = exports.requirePermission = exports.hasPermission = exports.ForbiddenError = exports.AuthProviderError = exports.InvalidTokenError = exports.IdentityEventPublisher = exports.SupabaseAuthAdapter = exports.createUserUpdated = exports.createUserCreated = exports.IdentityToken = exports.Permission = exports.isActorId = exports.createActorId = exports.Session = exports.Role = exports.RBACRole = exports.User = void 0;
 var index_js_1 = require("./domain/index.js");
 Object.defineProperty(exports, "User", { enumerable: true, get: function () { return index_js_1.User; } });
 Object.defineProperty(exports, "RBACRole", { enumerable: true, get: function () { return index_js_1.RBACRole; } });
@@ -23,3 +23,13 @@ Object.defineProperty(exports, "IdentityEventPublisher", { enumerable: true, get
 var errors_js_1 = require("./infrastructure/errors.js");
 Object.defineProperty(exports, "InvalidTokenError", { enumerable: true, get: function () { return errors_js_1.InvalidTokenError; } });
 Object.defineProperty(exports, "AuthProviderError", { enumerable: true, get: function () { return errors_js_1.AuthProviderError; } });
+Object.defineProperty(exports, "ForbiddenError", { enumerable: true, get: function () { return errors_js_1.ForbiddenError; } });
+var index_js_2 = require("./rbac/index.js");
+Object.defineProperty(exports, "hasPermission", { enumerable: true, get: function () { return index_js_2.hasPermission; } });
+Object.defineProperty(exports, "requirePermission", { enumerable: true, get: function () { return index_js_2.requirePermission; } });
+Object.defineProperty(exports, "PermissionChecker", { enumerable: true, get: function () { return index_js_2.PermissionChecker; } });
+Object.defineProperty(exports, "createPermissionChecker", { enumerable: true, get: function () { return index_js_2.createPermissionChecker; } });
+Object.defineProperty(exports, "InMemoryPermissionCache", { enumerable: true, get: function () { return index_js_2.InMemoryPermissionCache; } });
+Object.defineProperty(exports, "RequireRole", { enumerable: true, get: function () { return index_js_2.RequireRole; } });
+Object.defineProperty(exports, "getPermissionsForRole", { enumerable: true, get: function () { return index_js_2.getPermissionsForRole; } });
+Object.defineProperty(exports, "DEFAULT_ROLE_PERMISSIONS", { enumerable: true, get: function () { return index_js_2.DEFAULT_ROLE_PERMISSIONS; } });

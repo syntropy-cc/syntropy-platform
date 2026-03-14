@@ -2,3 +2,6 @@
 > @syntropy/identity@0.1.0 build /home/jescott/syntropy-cc/syntropy-platform/packages/identity
 > tsc
 
+src/rbac/permission-checker.test.ts(12,3): error TS6133: 'createPermissionChecker' is declared but its value is never read.
+src/rbac/permission-checker.test.ts(27,9): error TS6133: 'resolveCreator' is declared but its value is never read.
+ ELIFECYCLE  Command failed with exit code 2.

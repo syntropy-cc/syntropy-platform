@@ -121,3 +121,36 @@ export function createMentorReviewId(value: string): MentorReviewId {
 export function isMentorReviewId(value: string): value is MentorReviewId {
   return isUuidBrand(value);
 }
+
+/** Branded type for ArticleId. UUID-based; immutable. (COMP-022) */
+export type ArticleId = string & { readonly __brand: "ArticleId" };
+
+export function createArticleId(value: string): ArticleId {
+  return createUuidBrand(value, "ArticleId", "ArticleId");
+}
+
+export function isArticleId(value: string): value is ArticleId {
+  return isUuidBrand(value);
+}
+
+/** Branded type for ExperimentId. UUID-based; immutable. (COMP-022) */
+export type ExperimentId = string & { readonly __brand: "ExperimentId" };
+
+export function createExperimentId(value: string): ExperimentId {
+  return createUuidBrand(value, "ExperimentId", "ExperimentId");
+}
+
+export function isExperimentId(value: string): value is ExperimentId {
+  return isUuidBrand(value);
+}
+
+/** Branded type for ReviewId (Labs peer review). UUID-based; immutable. (COMP-022) */
+export type ReviewId = string & { readonly __brand: "ReviewId" };
+
+export function createReviewId(value: string): ReviewId {
+  return createUuidBrand(value, "ReviewId", "ReviewId");
+}
+
+export function isReviewId(value: string): value is ReviewId {
+  return isUuidBrand(value);
+}

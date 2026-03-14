@@ -2,5 +2,3 @@
 > @syntropy/platform-core@0.1.0 build /home/jescott/syntropy-cc/syntropy-platform/packages/platform-core
 > tsc
 
-src/domain/search-recommendation/services/semantic-search-service.ts(10,3): error TS6196: 'SearchByVectorOptions' is declared but never used.
- ELIFECYCLE  Command failed with exit code 2.

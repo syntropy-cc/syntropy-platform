@@ -35,6 +35,7 @@ import type { SearchContext } from "./types/search-context.js";
 import type { TreasuryContext } from "./types/treasury-context.js";
 import type { LearnContext } from "./types/learn-context.js";
 import type { HubCollaborationContext } from "./types/hub-context.js";
+import type { LabsScientificContext } from "./types/labs-context.js";
 import { portfolioRoutes } from "./routes/portfolios.js";
 import { searchRoutes } from "./routes/search.js";
 import { recommendationRoutes } from "./routes/recommendations.js";
@@ -42,6 +43,7 @@ import { learnRoutes } from "./routes/learn.js";
 import { hubRoutes } from "./routes/hub.js";
 import { hubInstitutionsRoutes } from "./routes/hub-institutions.js";
 import { hubDiscoverRoutes } from "./routes/hub-discover.js";
+import { labsScientificContextRoutes } from "./routes/labs-scientific-context.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -69,6 +71,7 @@ export interface CreateAppOptions {
   aiAgents?: AiAgentsContext | null;
   learn?: LearnContext | null;
   hub?: HubCollaborationContext | null;
+  labs?: LabsScientificContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -115,6 +118,9 @@ export async function createApp(options?: CreateAppOptions) {
     await app.register(hubRoutes, { hub: options.hub });
     await app.register(hubInstitutionsRoutes, { hub: options.hub });
     await app.register(hubDiscoverRoutes, { hub: options.hub });
+  }
+  if (options?.labs) {
+    await app.register(labsScientificContextRoutes, { labs: options.labs });
   }
   await app.register(internalEventSchemasPlugin);
 

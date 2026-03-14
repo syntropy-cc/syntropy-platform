@@ -2,10 +2,24 @@
   "name": "@syntropy/labs-package",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@syntropy/types": "workspace:*"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "echo 'lint placeholder'",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'test placeholder'"
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^10.14.0",
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.0",
+    "pg": "^8.13.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.0"
   }
 }

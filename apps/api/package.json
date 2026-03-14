@@ -23,6 +23,7 @@
     "@syntropy/event-bus": "workspace:*",
     "@syntropy/hub-package": "workspace:*",
     "@syntropy/identity": "workspace:*",
+    "@syntropy/labs-package": "workspace:*",
     "@syntropy/learn-package": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
     "@syntropy/types": "workspace:*",

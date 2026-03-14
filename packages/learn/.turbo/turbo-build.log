@@ -2,5 +2,3 @@
 > @syntropy/learn-package@0.1.0 build /home/jescott/syntropy-cc/syntropy-platform/packages/learn
 > tsc
 
-src/domain/creator-tools/creator-workflow.ts(11,3): error TS6133: 'CREATOR_WORKFLOW_PHASES' is declared but its value is never read.
- ELIFECYCLE  Command failed with exit code 2.

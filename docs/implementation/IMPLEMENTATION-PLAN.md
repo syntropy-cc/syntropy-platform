@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S34: COMP-021.2–021.5, COMP-032.4 done)
+> **Last Updated**: 2026-03-14 (S35: COMP-022.1–022.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S35 — Labs Scientific Context (M3)
-CURRENT ITEM  : COMP-022.1 — Labs package setup + SubjectArea taxonomy
+CURRENT STAGE : S36 — Labs Article Editor Core (M3)
+CURRENT ITEM  : COMP-023.1 — ScientificArticle aggregate with MyST Markdown
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done (S35)
-OVERALL       : 163 / 262 items done (62%)
+STAGE PROGRESS: 0 / 5 items done (S36)
+OVERALL       : 168 / 262 items done (64%)
 ```
 
 **Next 5 items**:
-1. `COMP-022.1` — Labs package setup + SubjectArea taxonomy ← **START HERE**
-2. `COMP-022.2` — ResearchMethodology entity
-3. `COMP-022.3` — HypothesisRecord aggregate
-4. `COMP-022.4` — ScientificContextRepository (Postgres)
-5. `COMP-022.5` — Scientific Context REST API
+1. `COMP-023.1` — ScientificArticle aggregate with MyST Markdown ← **START HERE**
+2. `COMP-023.2` — ArticleVersion snapshot
+3. `COMP-023.3` — MyST-to-HTML renderer
+4. `COMP-023.4` — Article DIP publication
+5. `COMP-023.5` — Article REST API
 
-**Component record**: [`COMP-022`](./components/COMP-022-labs-scientific-context.md)
+**Component record**: [`COMP-023`](./components/COMP-023-labs-article-editor.md)
 
-**Next item (COMP-022.1) acceptance criteria**: `packages/labs` workspace; `SubjectArea` taxonomy (hierarchical: domain → field → subfield); `SubjectArea` entity with parent reference; seeded from standard taxonomy (e.g., ACM CCS); unit tests.
+**Next item (COMP-023.1) acceptance criteria**: `ScientificArticle` aggregate with `articleId`, `title`, `content` (MyST Markdown string), `subjectAreaId`, `authorId`, `status`; `ArticleStatus` lifecycle; unit tests.
 
-**Suggested steps**: (1) Scaffold `packages/labs` (2) Write `SubjectArea` entity (3) Seed taxonomy data
+**Suggested steps**: (1) Write `ScientificArticle` aggregate (2) Define `ArticleStatus` enum (3) Write unit tests
 
 ---
 
@@ -2409,7 +2409,7 @@ Status: ✅ Done | **Deps**: COMP-032.2, COMP-019, COMP-020, COMP-021
 
 #### [COMP-022.1] Labs package setup + SubjectArea taxonomy
 `S35` `Critical` `S` [Record→](./components/COMP-022-labs-scientific-context.md)
-Status: ⬜ | **Deps**: COMP-003
+Status: Done | **Deps**: COMP-003
 **Criteria**: `packages/labs` workspace; `SubjectArea` taxonomy (hierarchical: domain → field → subfield); `SubjectArea` entity with parent reference; seeded from standard taxonomy (e.g., ACM CCS); unit tests.
 **Steps**: (1) Scaffold `packages/labs` (2) Write `SubjectArea` entity (3) Seed taxonomy data
 
@@ -2417,7 +2417,7 @@ Status: ⬜ | **Deps**: COMP-003
 
 #### [COMP-022.2] ResearchMethodology entity
 `S35` `High` `S` [Record→](./components/COMP-022-labs-scientific-context.md)
-Status: ⬜ | **Deps**: COMP-022.1
+Status: Done | **Deps**: COMP-022.1
 **Criteria**: `ResearchMethodology` entity: `name`, `type` (quantitative/qualitative/mixed), `description`; standard methodologies seeded; unit tests.
 **Steps**: (1) Write `ResearchMethodology` entity (2) Seed standard methodologies (3) Write tests
 
@@ -2425,7 +2425,7 @@ Status: ⬜ | **Deps**: COMP-022.1
 
 #### [COMP-022.3] HypothesisRecord aggregate
 `S35` `High` `S` [Record→](./components/COMP-022-labs-scientific-context.md)
-Status: ⬜ | **Deps**: COMP-022.2
+Status: Done | **Deps**: COMP-022.2
 **Criteria**: `HypothesisRecord` aggregate with `hypothesisId`, `statement`, `status` (proposed/confirmed/refuted); `HypothesisStatus` lifecycle; linked to experiment; unit tests.
 **Steps**: (1) Write `HypothesisRecord` aggregate (2) Add status transitions (3) Write tests
 
@@ -2433,7 +2433,7 @@ Status: ⬜ | **Deps**: COMP-022.2
 
 #### [COMP-022.4] ScientificContextRepository (Postgres)
 `S35` `High` `S` [Record→](./components/COMP-022-labs-scientific-context.md)
-Status: ⬜ | **Deps**: COMP-022.3, COMP-039.4
+Status: Done | **Deps**: COMP-022.3, COMP-039.4
 **Criteria**: Migrations for `subject_areas`, `research_methodologies`, `hypothesis_records`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2441,7 +2441,7 @@ Status: ⬜ | **Deps**: COMP-022.3, COMP-039.4
 
 #### [COMP-022.5] Scientific Context REST API
 `S35` `High` `S` [Record→](./components/COMP-022-labs-scientific-context.md)
-Status: ⬜ | **Deps**: COMP-022.4, COMP-033.2
+Status: Done | **Deps**: COMP-022.4, COMP-033.2
 **Criteria**: `GET /api/v1/labs/subject-areas` (tree), `GET /api/v1/labs/methodologies`, `POST /api/v1/labs/hypotheses`, `GET /api/v1/labs/hypotheses/{id}`; API tests.
 **Steps**: (1) Write API routes (2) Wire to repositories (3) Write API tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S34 complete; next COMP-022.1
+> Last Updated: 2026-03-14 | S35 complete; next COMP-023.1
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 163 / 262 items (62%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 168 / 262 items (64%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S35 — Labs Scientific Context | S56 | ⬜ |
+| **Current Stage** | S36 — Labs Article Editor Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-022.5 — Scientific Context REST API (GET /api/v1/labs/subject-areas, methodologies, POST/GET hypotheses); labs-scientific-context API tests
+- 2026-03-14 COMP-022.4 — Migrations labs.subject_areas, research_methodologies, hypothesis_records; Postgres repositories; scientific-context-repository integration test
+- 2026-03-14 COMP-022.3 — HypothesisRecord aggregate (proposed/confirmed/refuted); linkExperiment, confirm, refute; unit tests
+- 2026-03-14 COMP-022.2 — ResearchMethodology entity (quantitative/qualitative/mixed); METHODOLOGY_SEED; unit tests
+- 2026-03-14 COMP-022.1 — Labs package scaffold; SubjectArea taxonomy (ACM CCS–inspired seed); ArticleId, ExperimentId, ReviewId in types; unit tests
 - 2026-03-14 COMP-032.4 — Hub pillar Next.js pages (/hub discover, /hub/institutions/[id], /hub/issues, /hub/contribute/[id]); prominence ranking visible
 - 2026-03-14 COMP-021.5 — Public Square REST API (GET /api/v1/hub/discover, search, public); hub-discover-api integration test
 - 2026-03-14 COMP-021.4 — Migration hub.discovery_documents; PostgresDiscoveryRepository (findTop, findById, upsert); discovery-repository integration test
@@ -3417,7 +3422,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-019 Hub Collaboration Layer | 8 | 0 | ⬜ Not Started |
 | COMP-020 Hub Institution Orchestration | 6 | 0 | ⬜ Not Started |
 | COMP-021 Hub Public Square | 5 | 0 | ⬜ Not Started |
-| COMP-022 Labs Scientific Context | 5 | 0 | ⬜ Not Started |
+| COMP-022 Labs Scientific Context | 5 | 5 | Done |
 | COMP-023 Labs Article Editor | 8 | 0 | ⬜ Not Started |
 | COMP-024 Labs Experiment Design | 6 | 0 | ⬜ Not Started |
 | COMP-025 Labs Open Peer Review | 7 | 0 | ⬜ Not Started |

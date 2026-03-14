@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/labs/subdomains/scientific-context-extension.md](../../architecture/domains/labs/subdomains/scientific-context-extension.md)
 > **Stage Assignment**: S9 — Labs Domain
-> **Status**: ⬜ Not Started
+> **Status**: Done (S35 complete)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -45,12 +45,14 @@ Scientific Context Extension provides the foundational research metadata layer f
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **5** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 100%
+
+**Implementation note (2026-03-14)**: Stage S35 implemented per IMPLEMENTATION-PLAN Section 7. Delivered: `packages/labs` scaffold; SubjectArea + ACM CCS–inspired seed; ResearchMethodology (quantitative/qualitative/mixed); HypothesisRecord aggregate; migrations `labs.subject_areas`, `research_methodologies`, `hypothesis_records`; Postgres repositories; GET/POST labs REST API; API and integration tests.
 
 ### Item List
 

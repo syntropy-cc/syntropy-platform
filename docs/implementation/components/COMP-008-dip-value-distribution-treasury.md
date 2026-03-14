@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/value-distribution-treasury.md](../../architecture/domains/digital-institutions-protocol/subdomains/value-distribution-treasury.md)
 > **Stage Assignment**: S20–S21 (per IMPLEMENTATION-PLAN.md)
-> **Status**: 🔵 In Progress (S20 done: 008.1–008.3)
+> **Status**: 🔵 In Progress (S21 done: 008.1–008.7)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-13
 
@@ -291,7 +291,23 @@ Value Distribution & Treasury owns the `Treasury` aggregate and manages AVU (Abs
 - In-memory implementations: `InMemoryTreasuryAccountRepository`, `InMemoryAVUJournal`.
 - Unit tests: 5 tests in `tests/unit/avu-accounting-service.test.ts` (balance update, journal append, debit guard, missing account, failing journal).
 
-**Files created**: `src/domain/treasury-account.ts`, `src/domain/avu-transaction.ts`, `src/domain/ports/usage-registry-port.ts`, `src/domain/ports/treasury-account-repository-port.ts`, `src/domain/ports/avu-transaction-journal-port.ts`, `src/domain/services/avu-accounting-service.ts`, `src/infrastructure/in-memory-usage-registry.ts`, `src/infrastructure/in-memory-treasury-account-repository.ts`, `src/infrastructure/in-memory-avu-journal.ts`, `src/infrastructure/usage-registered-consumer.ts`, `src/index.ts`, plus config and 3 test files.
+**COMP-008.4** — ValueDistributionService.compute()
+- `ContributorScoreQueryPort`, `DistributionResult`, `ValueDistributionService.compute(institutionId, period)`; proportional split by contributor scores (floor to integer AVU); `findByInstitutionId` on repository.
+- Unit tests: 8 tests in `tests/unit/value-distribution-service.test.ts`.
+
+**COMP-008.5** — Liquidation oracle integration
+- `LiquidationOraclePort` (getRate(currency)); `OracleLiquidationAdapter` (HTTP GET {baseUrl}/rates/{currency}, circuit breaker + timeout via @syntropy/platform-core).
+- Unit tests: 5 tests in `tests/unit/oracle-adapter.test.ts` (valid rate, invalid response, circuit open after failures).
+
+**COMP-008.6** — TreasuryTransfer aggregate
+- `TreasuryTransfer.record()`, immutable; `toTransferRecordedEvent()` for `dip.treasury.transfer_recorded`; `treasury-transfer-events.ts`.
+- Unit tests: 9 tests in `tests/unit/treasury-transfer.test.ts`.
+
+**COMP-008.7** — TreasuryRepository (Postgres)
+- Migration `supabase/migrations/20260314210000_dip_treasury.sql` (dip.treasury_accounts, avu_transactions, treasury_transfers); `TreasuryDbClient`, `PgTreasuryDbClient`; `PostgresTreasuryAccountRepository`, `PostgresAVUJournal`, `PostgresTreasuryTransferRepository`; `TreasuryTransferRepositoryPort`.
+- Integration test: `tests/integration/treasury-repository.test.ts` (mock client).
+
+**Files created (S20+S21)**: `src/domain/treasury-account.ts`, `src/domain/avu-transaction.ts`, `src/domain/treasury-transfer.ts`, `src/domain/distribution-result.ts`, `src/domain/ports/*`, `src/domain/services/value-distribution-service.ts`, `src/domain/events/treasury-transfer-events.ts`, `src/infrastructure/oracle-adapter.ts`, `src/infrastructure/treasury-db-client.ts`, `src/infrastructure/pg-treasury-db-client.ts`, `src/infrastructure/repositories/postgres-*.ts`, in-memory impls, consumer, index; migrations; unit and integration tests.
 
 ---
 

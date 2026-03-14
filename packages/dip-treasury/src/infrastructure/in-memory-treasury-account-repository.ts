@@ -12,6 +12,15 @@ export class InMemoryTreasuryAccountRepository implements TreasuryAccountReposit
     return this.accounts.get(accountId) ?? null;
   }
 
+  async findByInstitutionId(institutionId: string): Promise<TreasuryAccount | null> {
+    for (const account of this.accounts.values()) {
+      if (account.institutionId === institutionId) {
+        return account;
+      }
+    }
+    return null;
+  }
+
   async save(account: TreasuryAccount): Promise<void> {
     this.accounts.set(account.accountId, account);
   }

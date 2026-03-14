@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-13 (S20: COMP-008.1–008.3 done)
+> **Last Updated**: 2026-03-13 (S21: COMP-008.4–008.7 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S21 — Value Distribution & Treasury Core
-CURRENT ITEM  : COMP-008.4 — ValueDistributionService.compute()
+CURRENT STAGE : S22 — Treasury API + Portfolio Start
+CURRENT ITEM  : COMP-008.8 — Treasury REST API endpoints + integration tests
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 0 / 4 items done (S21)
-OVERALL       : 98 / 262 items done (37%)
+STAGE PROGRESS: 4 / 4 items done (S21 complete)
+OVERALL       : 102 / 262 items done (39%)
 ```
 
 **Next 5 items**:
-1. `COMP-008.4` — ValueDistributionService.compute() ← **START HERE**
-2. `COMP-008.5` — Liquidation oracle integration
-3. `COMP-008.6` — TreasuryTransfer aggregate
-4. `COMP-008.7` — TreasuryRepository (Postgres)
+1. `COMP-008.8` — Treasury REST API endpoints + integration tests ← **START HERE**
+2. `COMP-010.1` — Platform-core package setup + Portfolio aggregate
+3. …
+4. …
 5. …
 
 **Component record**: [`COMP-008`](./components/COMP-008-dip-value-distribution-treasury.md)
 
-**Next item (COMP-008.4) acceptance criteria**: `ValueDistributionService.compute(institutionId, period)` distributes treasury balance proportionally to contributor scores; returns `DistributionResult`; unit tests with various contribution ratios.
+**Next item (COMP-008.8) acceptance criteria**: `GET /api/v1/treasury/{institutionId}` returns balance + history; `POST /api/v1/treasury/{institutionId}/distribute` triggers distribution; integration test.
 
-**Suggested steps**: (1) Write distribution computation (2) Implement proportional split (3) Write distribution tests
+**Suggested steps**: (1) Write API routes (2) Wire to distribution service (3) Write integration test
 
 ---
 
@@ -1889,7 +1889,7 @@ Status: ✅ Done | **Deps**: COMP-008.2
 
 #### [COMP-008.4] ValueDistributionService.compute()
 `S21` `Critical` `M` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.3
+Status: ✅ Done | **Deps**: COMP-008.3
 **Criteria**: `ValueDistributionService.compute(institutionId, period)` distributes treasury balance proportionally to contributor scores; returns `DistributionResult`; unit tests with various contribution ratios.
 **Steps**: (1) Write distribution computation (2) Implement proportional split (3) Write distribution tests
 
@@ -1897,7 +1897,7 @@ Status: ⬜ | **Deps**: COMP-008.3
 
 #### [COMP-008.5] Liquidation oracle integration
 `S21` `High` `M` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.3
+Status: ✅ Done | **Deps**: COMP-008.3
 **Criteria**: `LiquidationOracle.getRate(currency)` calls external price feed; `OracleAdapter` wraps external API; circuit breaker applied; mock oracle in tests.
 **Steps**: (1) Write `LiquidationOracle` interface (2) Write `MockOracleAdapter` (3) Apply circuit breaker
 
@@ -1905,7 +1905,7 @@ Status: ⬜ | **Deps**: COMP-008.3
 
 #### [COMP-008.6] TreasuryTransfer aggregate
 `S21` `High` `S` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.4
+Status: ✅ Done | **Deps**: COMP-008.4
 **Criteria**: `TreasuryTransfer` aggregate records debit/credit between accounts; immutable once created; publishes `dip.treasury.transfer_recorded`; unit tests.
 **Steps**: (1) Write `TreasuryTransfer` aggregate (2) Add immutability guard (3) Write transfer tests
 
@@ -1913,7 +1913,7 @@ Status: ⬜ | **Deps**: COMP-008.4
 
 #### [COMP-008.7] TreasuryRepository (Postgres)
 `S21` `High` `S` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.6, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-008.6, COMP-039.4
 **Criteria**: Migrations for `treasury_accounts`, `avu_transactions`, `treasury_transfers`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-13 | S20 complete (COMP-008.1–008.3 done)
+> Last Updated: 2026-03-13 | S21 complete (COMP-008.4–008.7 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 98 / 262 items (37%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 102 / 262 items (39%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S21 — Value Distribution & Treasury Core | S56 | ⬜ |
+| **Current Stage** | S22 — Treasury API + Portfolio Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-008.7 — TreasuryRepository (Postgres), migrations treasury_accounts/avu_transactions/treasury_transfers, integration test
+- 2026-03-13 COMP-008.6 — TreasuryTransfer aggregate, dip.treasury.transfer_recorded event, unit tests
+- 2026-03-13 COMP-008.5 — Liquidation oracle (LiquidationOraclePort, OracleLiquidationAdapter, circuit breaker), unit tests
+- 2026-03-13 COMP-008.4 — ValueDistributionService.compute(), ContributorScoreQueryPort, DistributionResult, unit tests
 - 2026-03-13 COMP-008.3 — AVU accounting (AVUAccountingService, journal, TreasuryAccount update), unit tests
 - 2026-03-13 COMP-008.2 — UsageRegisteredConsumer (dip.artifact.published), UsageRegistry, unit tests
 - 2026-03-13 COMP-008.1 — Value Distribution package (dip-treasury), TreasuryAccount aggregate, unit tests

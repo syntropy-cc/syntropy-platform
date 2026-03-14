@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/project-manifest-dag.md](../../architecture/domains/digital-institutions-protocol/subdomains/project-manifest-dag.md)
 > **Stage Assignment**: S3 — DIP Protocol
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -46,20 +46,20 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 83% (S14 complete; COMP-006.6 in S15)
 
 ### Item List
 
-#### [COMP-006.1] DigitalProject aggregate and dependency entities
+#### [COMP-006.1] DIP Project package setup + DigitalProject aggregate (Implementation Plan S14)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | project-manifest-dag.md |
 | **Dependencies** | COMP-003.1 |
@@ -85,11 +85,11 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 ---
 
-#### [COMP-006.2] DAGAcyclicityEnforcer domain service
+#### [COMP-006.2] ProjectManifest value object (Implementation Plan S14)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | project-manifest-dag.md |
 | **Dependencies** | COMP-006.1 |
@@ -111,11 +111,11 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 ---
 
-#### [COMP-006.3] ArtifactManifestoBuilder domain service
+#### [COMP-006.3] DAGService (acyclicity enforcement) (Implementation Plan S14)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | project-manifest-dag.md |
 | **Dependencies** | COMP-006.1 |
@@ -134,11 +134,11 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 ---
 
-#### [COMP-006.4] Repository and PostgreSQL implementation
+#### [COMP-006.4] ProjectRepository (Postgres) (Implementation Plan S14)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | project-manifest-dag.md, ADR-004 |
 | **Dependencies** | COMP-006.1 |
@@ -160,11 +160,11 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 
 ---
 
-#### [COMP-006.5] Add-dependency use case
+#### [COMP-006.5] Project event publisher (Implementation Plan S14)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | project-manifest-dag.md |
 | **Dependencies** | COMP-006.2, COMP-006.4 |
@@ -229,6 +229,18 @@ The Project Manifest & DAG subdomain owns the `DigitalProject` aggregate and man
 ### Architecture Documents
 
 - [DIP Project Manifest & DAG Subdomain](../../architecture/domains/digital-institutions-protocol/subdomains/project-manifest-dag.md)
+
+### Implementation Log
+
+**2026-03-14 — S14 implementation (Implementation Plan Section 7 authority)**
+
+- **COMP-006.1**: Added `packages/dip/src/domain/project-manifest-dag/` with value objects (`project-id`, `institution-id`, `manifest-id`), `DigitalProject` aggregate, `ProjectCreatedEvent` / `ProjectManifestUpdatedEvent`, `create(institutionId, manifest)` factory. Unit tests: `tests/unit/project-manifest-dag/digital-project.test.ts`.
+- **COMP-006.2**: Added `ProjectManifest` value object (`title`, `description`, `goals[]`, `dependencies[]`, `equals()`, `toJSON()`). Unit tests: `project-manifest.test.ts`.
+- **COMP-006.3**: Added `CyclicDependencyError`, `DAGService` (addEdge with DFS cycle check, getTopologicalOrder, findRoots). Unit tests: `dag-service.test.ts`.
+- **COMP-006.4**: Added `ProjectRepository` interface, `ProjectDbClient`, `PostgresProjectRepository`, `PgProjectDbClient`, migration `supabase/migrations/20260313260000_dip_digital_projects.sql` (`dip.digital_projects`, `dip.project_dag_edges`). Integration test: `tests/integration/project-repository.test.ts` (mock client).
+- **COMP-006.5**: Added `ProjectEventPublisherPort`, `ProjectEventPublisher` (Kafka; topic `dip.project.events`, eventTypes `dip.project.created`, `dip.project.manifest_updated`). Unit tests: `tests/unit/project-event-publisher.test.ts`.
+
+**Decisions**: DigitalProject holds minimal manifest snapshot (title, description) in 006.1; full `ProjectManifest` value object in 006.2. DAGService uses string node IDs. Repository persists aggregate only; DAG edges table exists for COMP-006.6.
 
 ### Related Components
 

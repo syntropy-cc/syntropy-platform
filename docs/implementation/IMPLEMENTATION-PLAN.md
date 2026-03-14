@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14
+> **Last Updated**: 2026-03-14 (S14 complete)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S14 — DIP Project Manifest & DAG
-CURRENT ITEM  : COMP-006.1 — DIP Project package setup + DigitalProject aggregate
+CURRENT STAGE : S15 — Project Manifest Completion + Agent Registry Core
+CURRENT ITEM  : COMP-006.6 — Project REST API endpoints + integration tests
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 6 / 6 items done (S11) | 5 / 5 items done (S12) | 3 / 3 items done (S13)
-OVERALL       : 68 / 262 items done (26%)
+STAGE PROGRESS: 5 / 5 items done (S14)
+OVERALL       : 73 / 262 items done (28%)
 ```
 
 **Next 5 items**:
-1. `COMP-006.1` — DIP Project package setup + DigitalProject aggregate ← **START HERE**
-2. `COMP-006.2` — ProjectManifest value object
-3. `COMP-006.3` — DAGService (acyclicity enforcement)
-4. `COMP-006.4` — ProjectRepository (Postgres)
-5. `COMP-006.5` — Project event publisher
+1. `COMP-006.6` — Project REST API endpoints + integration tests ← **START HERE**
+2. `COMP-013.2` — ToolDefinition entity + schema validation
+3. `COMP-013.3` — ToolPermissionEvaluator
+4. `COMP-013.4` — Agent Registry REST API (register, list, get)
+5. `COMP-013.5` — Agent Registry integration tests
 
 **Component record**: [`COMP-006`](./components/COMP-006-dip-project-manifest-dag.md)
 
-**Next item (COMP-006.1) acceptance criteria**: `DigitalProject` aggregate with `projectId`, `institutionId`, `manifestId`; `create(institution, manifest)` factory; domain events: `ProjectCreated`, `ProjectManifestUpdated`; unit tests.
+**Next item (COMP-006.6) acceptance criteria**: `POST /api/v1/projects`, `GET /api/v1/projects/{id}`, `GET /api/v1/projects/{id}/dag`; DAG endpoint returns nodes+edges; integration tests.
 
-**Suggested steps**: (1) Write `DigitalProject` aggregate (2) Write `ProjectCreated` event (3) Write unit tests
+**Suggested steps**: (1) Write API routes (2) Write DAG endpoint (3) Write integration tests
 
 ---
 
@@ -1649,7 +1649,7 @@ Status: ✅ Done | **Deps**: COMP-012.1
 
 #### [COMP-006.1] DIP Project package setup + DigitalProject aggregate
 `S14` `Critical` `S` [Record→](./components/COMP-006-dip-project-manifest-dag.md)
-Status: ⬜ | **Deps**: COMP-003, COMP-007
+Status: Done | **Deps**: COMP-003, COMP-007
 **Criteria**: `DigitalProject` aggregate with `projectId`, `institutionId`, `manifestId`; `create(institution, manifest)` factory; domain events: `ProjectCreated`, `ProjectManifestUpdated`; unit tests.
 **Steps**: (1) Write `DigitalProject` aggregate (2) Write `ProjectCreated` event (3) Write unit tests
 
@@ -1657,7 +1657,7 @@ Status: ⬜ | **Deps**: COMP-003, COMP-007
 
 #### [COMP-006.2] ProjectManifest value object
 `S14` `Critical` `S` [Record→](./components/COMP-006-dip-project-manifest-dag.md)
-Status: ⬜ | **Deps**: COMP-006.1
+Status: Done | **Deps**: COMP-006.1
 **Criteria**: `ProjectManifest` immutable value object with `title`, `description`, `goals[]`, `dependencies[]`; `equals()` comparison; `toJSON()` serialization; unit tests.
 **Steps**: (1) Write `ProjectManifest` value object (2) Add equals + serialization (3) Write tests
 
@@ -1665,7 +1665,7 @@ Status: ⬜ | **Deps**: COMP-006.1
 
 #### [COMP-006.3] DAGService (acyclicity enforcement)
 `S14` `Critical` `M` [Record→](./components/COMP-006-dip-project-manifest-dag.md)
-Status: ⬜ | **Deps**: COMP-006.2
+Status: Done | **Deps**: COMP-006.2
 **Criteria**: `DAGService.addEdge(from, to)` throws `CyclicDependencyError` for cycles; `getTopologicalOrder()` returns valid topological sort; `findRoots()` returns nodes with no incoming edges; tests with cyclic graphs.
 **Steps**: (1) Write `DAGService` with DFS cycle detection (2) Write topological sort (3) Write cyclic graph test
 
@@ -1673,7 +1673,7 @@ Status: ⬜ | **Deps**: COMP-006.2
 
 #### [COMP-006.4] ProjectRepository (Postgres)
 `S14` `High` `S` [Record→](./components/COMP-006-dip-project-manifest-dag.md)
-Status: ⬜ | **Deps**: COMP-006.1, COMP-039.4
+Status: Done | **Deps**: COMP-006.1, COMP-039.4
 **Criteria**: `ProjectRepository` with `save`, `findById`, `findByInstitution`; migration creates `digital_projects` + `project_dag_edges` tables; integration test.
 **Steps**: (1) Write migrations (2) Write repository (3) Write integration test
 
@@ -1681,7 +1681,7 @@ Status: ⬜ | **Deps**: COMP-006.1, COMP-039.4
 
 #### [COMP-006.5] Project event publisher
 `S14` `High` `S` [Record→](./components/COMP-006-dip-project-manifest-dag.md)
-Status: ⬜ | **Deps**: COMP-006.1, COMP-009.1
+Status: Done | **Deps**: COMP-006.1, COMP-009.1
 **Criteria**: Publishes `dip.project.created`, `dip.project.manifest_updated` to Kafka; unit tests with mock Kafka.
 **Steps**: (1) Write `ProjectEventPublisher` (2) Map domain events to Kafka (3) Write tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-13 | Initialized at project start
+> Last Updated: 2026-03-14 | S14 complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 68 / 262 items (26%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 73 / 262 items (28%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S14 — DIP Project Manifest & DAG | S56 | ⬜ |
+| **Current Stage** | S15 — Project Manifest Completion + Agent Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-006.5 — Project event publisher
+- 2026-03-14 COMP-006.4 — ProjectRepository (Postgres)
+- 2026-03-14 COMP-006.3 — DAGService (acyclicity enforcement)
+- 2026-03-14 COMP-006.2 — ProjectManifest value object
+- 2026-03-14 COMP-006.1 — DIP Project package setup + DigitalProject aggregate
 - 2026-03-14 COMP-013.1 — Agent Registry package setup + AIAgentDefinition
 - 2026-03-14 COMP-012.8 — AI Agents REST API endpoints
 - 2026-03-14 COMP-012.7 — AgentRepository + AgentEventPublisher

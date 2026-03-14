@@ -35,3 +35,28 @@ export type {
   ArtifactPublishedEvent,
   ArtifactArchivedEvent,
 } from "./artifact-registry/index.js";
+export {
+  CyclicDependencyError,
+  DAGService,
+  DigitalProject,
+  createInstitutionId,
+  createManifestId,
+  createProjectId,
+  isInstitutionId,
+  isManifestId,
+  isProjectId,
+  ProjectManifest,
+} from "./project-manifest-dag/index.js";
+export type {
+  CreateProjectManifestSnapshot,
+  CreateProjectResult,
+  InstitutionId,
+  ManifestId,
+  ProjectId,
+  ProjectCreatedEvent,
+  ProjectManifestUpdatedEvent,
+  ProjectDomainEvent,
+  ProjectManifestJSON,
+  ProjectRepository,
+  ProjectEventPublisherPort,
+} from "./project-manifest-dag/index.js";

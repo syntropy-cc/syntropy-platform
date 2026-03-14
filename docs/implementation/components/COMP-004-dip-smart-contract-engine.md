@@ -50,12 +50,12 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 2 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 4 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **6** |
 
-**Component Coverage**: 33%
+**Component Coverage**: 50%
 
 ### Item List
 
@@ -114,28 +114,29 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 ---
 
-#### [COMP-004.3] ContractVersionManager domain service
+#### [COMP-004.3] SmartContractEvaluator (Done)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | High |
-| **Origin** | smart-contract-engine.md |
-| **Dependencies** | COMP-004.1 |
-| **Size** | S |
+| **Status** | ✅ Done |
+| **Priority** | Critical |
+| **Origin** | IMPLEMENTATION-PLAN.md Section 7 |
+| **Dependencies** | COMP-004.2 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement `ContractVersionManager` for upgrading contract rules after governance proposal approval. Previous version rules are preserved in evaluation history; the new version becomes active.
+**Description**: Domain service that evaluates a `GovernanceContract` against an `EvaluationContext`; returns aggregate `EvaluationResult` (permitted only if all clauses pass). Enforces cross-institution invariant. Clause evaluators: TransparencyClause (public record + requiredDisclosures), ParticipationThreshold (quorum + minParticipants), VetoRight, AmendmentProcedure.
 
-**Acceptance Criteria**:
-- [ ] `ContractVersionManager.enactNewVersion(contractId, newRules, proposalId)` increments version, preserves previous version data, publishes `dip.contract.version_enacted`
-- [ ] Previous version's evaluation history remains queryable
-- [ ] New version cannot reduce security permissions (validation rule)
-- [ ] Unit tests: version progression, history preservation
+**Acceptance Criteria** (per Implementation Plan):
+- [x] `SmartContractEvaluator.evaluate(contract, context)` returns `EvaluationResult` per clause
+- [x] ParticipationThreshold evaluated against quorum; TransparencyClause checks public record
+- [x] Unit tests with varied contexts (cross-institution, empty clauses, each clause type, combined)
 
 **Files Created/Modified**:
-- `packages/dip/src/domain/smart-contract-engine/services/contract-version-manager.ts`
-- `packages/dip/tests/unit/smart-contract-engine/contract-version-manager.test.ts`
+- `packages/dip-contracts/src/domain/types.ts` — added `EvaluationContext`
+- `packages/dip-contracts/src/domain/smart-contract-evaluator.ts` — `SmartContractEvaluator` class
+- `packages/dip-contracts/src/domain/index.ts`, `src/index.ts` — exports
+- `packages/dip-contracts/tests/unit/smart-contract-evaluator.test.ts` — 22 unit tests
 
 ---
 

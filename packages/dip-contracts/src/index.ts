@@ -5,6 +5,8 @@
 
 export {
   GovernanceContract,
+  SmartContractEvaluator,
   type ContractClause,
+  type EvaluationContext,
   type EvaluationResult,
 } from "./domain/index.js";

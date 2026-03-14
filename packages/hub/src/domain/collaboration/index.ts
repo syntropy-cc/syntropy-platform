@@ -40,8 +40,10 @@ export type {
 export type {
   ContainerOrchestratorPort,
   ProvisionResult,
+  ProvisionOptions,
 } from "./ports/container-orchestrator-port.js";
 export { StubContainerOrchestrator } from "./ports/container-orchestrator-port.js";
+export type { IDESessionProvisioningPort } from "./ports/ide-session-provisioning-port.js";
 export type { ArtifactPublisherPort } from "./ports/artifact-publisher-port.js";
 export type { ContributionRepositoryPort } from "./ports/contribution-repository-port.js";
 export type { IssueRepositoryPort } from "./ports/issue-repository-port.js";

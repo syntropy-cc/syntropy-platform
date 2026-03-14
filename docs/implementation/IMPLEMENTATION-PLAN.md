@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S47: COMP-030.4–030.8 done)
+> **Last Updated**: 2026-03-14 (S48: COMP-019.6, COMP-014.1–014.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,22 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S48 — Sandbox + AI Pillar Tools (M4)
-CURRENT ITEM  : COMP-019.6 — ContributionSandboxOrchestrator
+CURRENT STAGE : S49 — AI Pillar Tools Completion (M4)
+CURRENT ITEM  : COMP-014.4 — Cross-pillar AI tool handlers
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 0 / 4 items done (S48)
-OVERALL       : 223 / 262 items done (85%)
+STAGE PROGRESS: 4 / 4 items done (S48)
+OVERALL       : 227 / 262 items done (87%)
 ```
 
 **Next 5 items**:
-1. `COMP-019.6` — ContributionSandboxOrchestrator ← **START HERE**
-2. (see Section 6 for full order)
+1. `COMP-014.4` — Cross-pillar AI tool handlers ← **START HERE**
+2. `COMP-014.5` — AI agent system prompts
+3. `COMP-014.6` — IDE tool handler
+4. `COMP-031.1` — Gov/Mod package setup + ModerationFlag aggregate
+5. (see Section 6 for full order)
 
-**Component record**: [`COMP-019`](./components/COMP-019-hub-collaboration-layer.md)
+**Component record**: [`COMP-014`](./components/COMP-014-ai-agents-pillar.md)
 
-**Next item (COMP-019.6) acceptance criteria**: `ContributionSandboxOrchestrator.provision(sandbox)` wires `ContributionSandbox` aggregate to real `ContainerOrchestrator`; provisions container on contribution start; terminates on merge/close; unit tests.
+**Next item (COMP-014.4) acceptance criteria**: Cross-pillar tools: `search_all(query)`, `get_portfolio(userId)`, `get_recommendations(userId)`; synthesize results from Search + Portfolio domains; unit tests.
 
-**Suggested steps**: (1) Write `ContributionSandboxOrchestrator` (2) Wire to IDE `ContainerOrchestrator` (3) Write orchestration tests
+**Suggested steps**: (1) Write 3 cross-pillar handlers (2) Wire to Search + Portfolio (3) Write synthesis tests
 
 ---
 
@@ -2886,7 +2889,7 @@ Status: ✅ Done | **Deps**: COMP-030.7, COMP-033.2
 
 #### [COMP-019.6] ContributionSandboxOrchestrator
 `S48` `High` `M` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.3, COMP-030
+Status: ✅ Done | **Deps**: COMP-019.3, COMP-030
 **Criteria**: `ContributionSandboxOrchestrator.provision(sandbox)` wires `ContributionSandbox` aggregate to real `ContainerOrchestrator`; provisions container on contribution start; terminates on merge/close; unit tests.
 **Steps**: (1) Write `ContributionSandboxOrchestrator` (2) Wire to IDE `ContainerOrchestrator` (3) Write orchestration tests
 
@@ -2894,7 +2897,7 @@ Status: ⬜ | **Deps**: COMP-019.3, COMP-030
 
 #### [COMP-014.1] Learn AI tool handlers
 `S48` `High` `M` [Record→](./components/COMP-014-ai-agents-pillar.md)
-Status: ⬜ | **Deps**: COMP-012, COMP-013, COMP-015, COMP-016
+Status: ✅ Done | **Deps**: COMP-012, COMP-013, COMP-015, COMP-016
 **Criteria**: Tool handlers: `search_fragments(query)`, `get_fragment(id)`, `get_learner_progress(userId)`, `suggest_next_content(userId)`; registered in agent registry; unit tests with mock domain data.
 **Steps**: (1) Write 4 Learn tool handlers (2) Register in agent registry (3) Write handler tests
 
@@ -2902,7 +2905,7 @@ Status: ⬜ | **Deps**: COMP-012, COMP-013, COMP-015, COMP-016
 
 #### [COMP-014.2] Hub AI tool handlers
 `S48` `High` `M` [Record→](./components/COMP-014-ai-agents-pillar.md)
-Status: ⬜ | **Deps**: COMP-012, COMP-013, COMP-019, COMP-020
+Status: ✅ Done | **Deps**: COMP-012, COMP-013, COMP-019, COMP-020
 **Criteria**: Tool handlers: `get_issues(projectId)`, `get_contribution(id)`, `analyze_contribution(id)`, `get_institution_summary(id)`; registered in agent registry; unit tests.
 **Steps**: (1) Write 4 Hub tool handlers (2) Register in agent registry (3) Write handler tests
 
@@ -2910,7 +2913,7 @@ Status: ⬜ | **Deps**: COMP-012, COMP-013, COMP-019, COMP-020
 
 #### [COMP-014.3] Labs AI tool handlers
 `S48` `High` `M` [Record→](./components/COMP-014-ai-agents-pillar.md)
-Status: ⬜ | **Deps**: COMP-012, COMP-013, COMP-022, COMP-023
+Status: ✅ Done | **Deps**: COMP-012, COMP-013, COMP-022, COMP-023
 **Criteria**: Tool handlers: `get_article(id)`, `search_articles(query)`, `get_experiment(id)`, `suggest_methodology(subjectArea)`; registered in agent registry; unit tests.
 **Steps**: (1) Write 4 Labs tool handlers (2) Register in agent registry (3) Write handler tests
 
@@ -3198,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S47 COMP-030.4–030.8 done; next COMP-019.6
+> Last Updated: 2026-03-14 | S48 COMP-019.6, COMP-014.1–014.3 done; next COMP-014.4
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 223 / 262 items (85%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 227 / 262 items (87%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
-| **Current Stage** | S48 — Sandbox + AI Pillar Tools | S56 | ⬜ |
+| **Current Stage** | S49 — AI Pillar Tools Completion | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3214,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-014.3 — Labs AI tool handlers (get_article, search_articles, get_experiment, suggest_methodology); createLabsToolDefinitions; LabsToolPort; unit tests
+- 2026-03-14 COMP-014.2 — Hub AI tool handlers (get_issues, get_contribution, analyze_contribution, get_institution_summary); createHubToolDefinitions; HubToolPort; unit tests
+- 2026-03-14 COMP-014.1 — Learn AI tool handlers (search_fragments, get_fragment, get_learner_progress, suggest_next_content); createLearnToolDefinitions; LearnToolPort; unit tests
+- 2026-03-14 COMP-019.6 — ContributionSandboxOrchestrator; IDESessionAdapter; IDESessionProvisioningPort; provision/terminate; unit tests
 - 2026-03-14 COMP-030.8 — IDE Domain REST API; POST/GET /api/v1/ide/sessions, start, suspend; quota enforced; ide.test.ts
 - 2026-03-14 COMP-030.7 — IDERepository (Postgres); migration ide.ide_sessions, workspace_snapshots; PostgresIDESessionRepository, PostgresWorkspaceSnapshotRepository; ide-repositories integration test
 - 2026-03-14 COMP-030.6 — IDESessionProvisioningService; start/suspend; ContainerProvisioned event; repository and event ports; unit tests

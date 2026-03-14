@@ -13,3 +13,17 @@ export {
   type UserContextUpdateEvent,
   type UserId,
 } from "./domain/index.js";
+export {
+  AgentOrchestrator,
+  type AgentSessionStore,
+  type ContextSnapshotProvider,
+  type AgentOrchestratorDeps,
+} from "./domain/orchestration/agent-orchestrator.js";
+export { AgentSession } from "./domain/orchestration/agent-session.js";
+export type { AgentSessionRepository } from "./domain/orchestration/repositories/agent-session-repository.js";
+export { AgentEventPublisher } from "./infrastructure/agent-event-publisher.js";
+export {
+  PostgresAgentSessionRepository,
+  PgAgentSessionDbClient,
+} from "./infrastructure/index.js";
+export type { AgentSessionDbClient } from "./infrastructure/agent-session-db-client.js";

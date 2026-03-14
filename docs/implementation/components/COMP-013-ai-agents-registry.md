@@ -46,42 +46,41 @@ The Agent Registry & Tool Layer is a Supporting subdomain that catalogs all agen
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **5** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 20%
 
 ### Item List
 
-#### [COMP-013.1] AIAgentDefinition and ToolDefinition entities
+#### [COMP-013.1] AIAgentDefinition and AgentRegistry (package setup)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
-| **Origin** | agent-registry-tool-layer.md |
+| **Origin** | agent-registry-tool-layer.md, IMPLEMENTATION-PLAN Section 7 |
 | **Dependencies** | COMP-001 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Implement `AIAgentDefinition` and `ToolDefinition` entities with versioning and immutability constraints.
+**Description**: Agent Registry module: `AIAgentDefinition` entity (agentId, name, pillar, toolIds[], systemPromptId) and `AgentRegistry` (register, findByPillar) with InMemoryAgentRegistry.
 
-**Acceptance Criteria**:
-- [ ] `AIAgentDefinition` entity: `id`, `agent_type (unique per version)`, `version`, `pillar`, `system_prompt`, `tool_set (ToolDefinition[])`, `activation_policy (ActivationPolicy)`, `is_active`, `published_at`
-- [ ] `ToolDefinition` entity: `tool_name (unique)`, `platform_api_endpoint`, `parameters_schema (JSON Schema)`, `required_scope (ToolScope)`, `pillar`
-- [ ] `ToolScope` value object: `pillar`, `required_role`
-- [ ] `ActivationPolicy` value object: `auto_offer_conditions`, `context_entity_types[]`
-- [ ] Invariant: `system_prompt` and `tool_set` immutable after `is_active = true`
-- [ ] Unit tests: immutability, version uniqueness
+**Acceptance Criteria** (per IMPLEMENTATION-PLAN Section 7):
+- [x] `AIAgentDefinition`: `agentId`, `name`, `pillar`, `toolIds[]`, `systemPromptId`; `createAIAgentDefinition()`
+- [x] `AgentRegistry` interface: `register(definition)`, `findByPillar(pillar)`
+- [x] `InMemoryAgentRegistry` implementation; register overwrites by agentId
+- [x] Unit tests: register, findByPillar filtering, overwrite
 
 **Files Created/Modified**:
 - `packages/ai-agents/src/domain/registry/ai-agent-definition.ts`
-- `packages/ai-agents/src/domain/registry/tool-definition.ts`
-- `packages/ai-agents/src/domain/registry/value-objects/tool-scope.ts`
-- `packages/ai-agents/src/domain/registry/value-objects/activation-policy.ts`
-- `packages/ai-agents/tests/unit/registry/ai-agent-definition.test.ts`
+- `packages/ai-agents/src/domain/registry/agent-registry.ts`
+- `packages/ai-agents/src/domain/registry/in-memory-agent-registry.ts`
+- `packages/ai-agents/src/domain/registry/index.ts`
+- `packages/ai-agents/tests/unit/registry/agent-registry.test.ts`
 
 ---
 

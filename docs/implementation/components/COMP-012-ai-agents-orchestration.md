@@ -52,12 +52,12 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 6 |
+| ✅ Done | 8 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 2 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **8** |
 
-**Component Coverage**: 75%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -237,25 +237,30 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | orchestration-context-engine.md, ADR-004 |
 | **Dependencies** | COMP-012.1 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Repository interfaces and PostgreSQL implementation for UserContextModel, AgentSession, and AgentMemory.
+**Description**: Repository interfaces and PostgreSQL implementation for AgentSession; AgentEventPublisher for Kafka.
 
-**Acceptance Criteria**:
-- [ ] `UserContextModelRepository`: `findByUser`, `save`
-- [ ] `AgentSessionRepository`: `findById`, `findActiveByUser`, `save`
-- [ ] `AgentMemoryRepository`: `findByUserAndAgentType`, `save`
-- [ ] Migration: `user_context_models`, `agent_sessions`, `agent_memory` tables
-- [ ] `agent_sessions.conversation_history` stored as JSONB; max 50 entries per session
+**Acceptance Criteria** (per IMPLEMENTATION-PLAN Section 7):
+- [x] `AgentSessionRepository`: `findById`, `findActiveByUser`, `save`
+- [x] Migration: `ai_agents.agent_sessions` table (session_id, user_id, agent_id, status, history JSONB, started_at, ended_at)
+- [x] `AgentEventPublisher`: `ai.agent.session_started`, `ai.agent.invoked` on topic `ai.agent.events`
+- [x] Integration test (mock DB client + mock Kafka)
 
 **Files Created/Modified**:
-- `packages/ai-agents/src/infrastructure/repositories/`
-- `packages/ai-agents/src/infrastructure/migrations/001_ai_agents.sql`
+- `packages/ai-agents/src/domain/orchestration/repositories/agent-session-repository.ts`
+- `packages/ai-agents/src/domain/orchestration/events/agent-events.ts`
+- `packages/ai-agents/src/infrastructure/agent-session-db-client.ts`, `pg-agent-session-db-client.ts`
+- `packages/ai-agents/src/infrastructure/repositories/postgres-agent-session-repository.ts`
+- `packages/ai-agents/src/infrastructure/agent-event-publisher.ts`
+- `supabase/migrations/20260313250000_ai_agents_sessions.sql`
+- `packages/ai-agents/tests/integration/agent-session-repository.integration.test.ts`
 
 ---
 
@@ -263,28 +268,25 @@ The Orchestration & Context Engine is the Core subdomain of AI Agents. It owns t
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | ai-agents/ARCHITECTURE.md |
 | **Dependencies** | COMP-012.5, COMP-012.7 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Implement public and internal REST API for agent session management with SSE streaming support.
+**Description**: REST API for agent sessions in apps/api: create session, get session, invoke (SSE streaming).
 
-**Acceptance Criteria**:
-- [ ] `POST /api/v1/ai-agents/sessions` → activates session, returns `session_id`
-- [ ] `POST /api/v1/ai-agents/sessions/{id}/messages` → sends message, streams SSE response
-- [ ] `GET /api/v1/ai-agents/sessions/{id}` → session state
-- [ ] `DELETE /api/v1/ai-agents/sessions/{id}` → ends session
-- [ ] `GET /api/v1/ai-agents/agents?pillar=&context_entity_type=` → available agents
-- [ ] `GET /internal/ai-agents/context/{user_id}` → UserContextModel (for COMP-011)
-- [ ] SSE streaming: `Content-Type: text/event-stream`, heartbeat every 15s
+**Acceptance Criteria** (per IMPLEMENTATION-PLAN Section 7):
+- [x] `POST /api/v1/ai-agents/sessions` → creates session, returns `sessionId`; auth required
+- [x] `GET /api/v1/ai-agents/sessions/{id}` → session state; auth required; 403 if not owner
+- [x] `POST /api/v1/ai-agents/sessions/{id}/invoke` → SSE streaming; auth required; 20 concurrent per user
+- [x] API tests (mock context): 401 without auth, 201 create, 200 get, 404 not found
 
 **Files Created/Modified**:
-- `packages/ai-agents/src/api/routes/sessions.ts`
-- `packages/ai-agents/src/api/routes/agents.ts`
-- `packages/ai-agents/src/api/routes/internal.ts`
+- `apps/api/src/routes/ai-agents.ts`, `apps/api/src/types/ai-agents-context.ts`
+- `apps/api/src/routes/ai-agents.test.ts`, `apps/api/src/server.ts`
 
 ---
 

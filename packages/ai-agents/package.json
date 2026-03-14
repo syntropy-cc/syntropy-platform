@@ -12,10 +12,13 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@syntropy/event-bus": "workspace:*",
+    "pg": "^8.13.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.0"
   }

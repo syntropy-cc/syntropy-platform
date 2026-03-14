@@ -32,6 +32,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.47.0
         version: 2.99.1
+      '@syntropy/ai-agents':
+        specifier: workspace:*
+        version: link:../../packages/ai-agents
       '@syntropy/dip':
         specifier: workspace:*
         version: link:../../packages/dip
@@ -284,6 +287,12 @@ importers:
 
   packages/ai-agents:
     dependencies:
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
       zod:
         specifier: ^3.23.0
         version: 3.25.76
@@ -291,6 +300,9 @@ importers:
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.15
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.18.0
       typescript:
         specifier: ~5.6.0
         version: 5.6.3

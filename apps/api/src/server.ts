@@ -18,9 +18,11 @@ import { rateLimitPluginFp } from "./plugins/rate-limit.js";
 import { healthRoutes } from "./routes/health.js";
 import { authRoutes } from "./routes/auth.js";
 import { usersRoutes } from "./routes/users.js";
+import { aiAgentsRoutes } from "./routes/ai-agents.js";
 import { artifactRoutes } from "./routes/artifacts.js";
 import { contractRoutes } from "./routes/contracts.js";
 import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
+import type { AiAgentsContext } from "./types/ai-agents-context.js";
 import type { DipContext } from "./types/dip-context.js";
 
 const DEFAULT_ORIGINS = [
@@ -42,6 +44,7 @@ export interface CreateAppOptions {
   auth?: AuthProvider | null;
   supabaseClient?: SupabaseClient | null;
   dip?: DipContext | null;
+  aiAgents?: AiAgentsContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -61,6 +64,9 @@ export async function createApp(options?: CreateAppOptions) {
   if (options?.dip) {
     await app.register(artifactRoutes, { dip: options.dip });
     await app.register(contractRoutes, { dip: options.dip });
+  }
+  if (options?.aiAgents) {
+    await app.register(aiAgentsRoutes, { aiAgents: options.aiAgents });
   }
   await app.register(internalEventSchemasPlugin);
 

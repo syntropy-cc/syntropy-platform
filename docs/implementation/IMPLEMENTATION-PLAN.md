@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S13 — Agent Registry + Repository + API
-CURRENT ITEM  : COMP-012.7 — AgentRepository + AgentEventPublisher
+CURRENT STAGE : S14 — DIP Project Manifest & DAG
+CURRENT ITEM  : COMP-006.1 — DIP Project package setup + DigitalProject aggregate
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 6 / 6 items done (S11) | 5 / 5 items done (S12) | 0 / 3 items done (S13)
-OVERALL       : 65 / 262 items done (25%)
+STAGE PROGRESS: 6 / 6 items done (S11) | 5 / 5 items done (S12) | 3 / 3 items done (S13)
+OVERALL       : 68 / 262 items done (26%)
 ```
 
 **Next 5 items**:
-1. `COMP-012.7` — AgentRepository + AgentEventPublisher ← **START HERE**
-2. `COMP-012.8` — AI Agents REST API endpoints
-3. `COMP-013.1` — Agent Registry package setup + AIAgentDefinition
-4. `COMP-006.1` — DIP Project package setup + DigitalProject aggregate
-5. `COMP-006.2` — ProjectManifest value object
+1. `COMP-006.1` — DIP Project package setup + DigitalProject aggregate ← **START HERE**
+2. `COMP-006.2` — ProjectManifest value object
+3. `COMP-006.3` — DAGService (acyclicity enforcement)
+4. `COMP-006.4` — ProjectRepository (Postgres)
+5. `COMP-006.5` — Project event publisher
 
-**Component record**: [`COMP-012`](./components/COMP-012-ai-agents-orchestration.md)
+**Component record**: [`COMP-006`](./components/COMP-006-dip-project-manifest-dag.md)
 
-**Next item (COMP-012.7) acceptance criteria**: `AgentSessionRepository` saves/loads sessions; migration creates `agent_sessions` table; `AgentEventPublisher` publishes `ai.agent.session_started`, `ai.agent.invoked`; integration test.
+**Next item (COMP-006.1) acceptance criteria**: `DigitalProject` aggregate with `projectId`, `institutionId`, `manifestId`; `create(institution, manifest)` factory; domain events: `ProjectCreated`, `ProjectManifestUpdated`; unit tests.
 
-**Suggested steps**: (1) Write repository + migration (2) Write event publisher (3) Write integration test
+**Suggested steps**: (1) Write `DigitalProject` aggregate (2) Write `ProjectCreated` event (3) Write unit tests
 
 ---
 
@@ -1625,7 +1625,7 @@ Status: ✅ Done | **Deps**: COMP-012.2, COMP-012.3, COMP-012.4, COMP-012.5
 
 #### [COMP-012.7] AgentRepository + AgentEventPublisher
 `S13` `High` `S` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.6
+Status: ✅ Done | **Deps**: COMP-012.6
 **Criteria**: `AgentSessionRepository` saves/loads sessions; migration creates `agent_sessions` table; `AgentEventPublisher` publishes `ai.agent.session_started`, `ai.agent.invoked`; integration test.
 **Steps**: (1) Write repository + migration (2) Write event publisher (3) Write integration test
 
@@ -1633,7 +1633,7 @@ Status: ⬜ | **Deps**: COMP-012.6
 
 #### [COMP-012.8] AI Agents REST API endpoints
 `S13` `High` `M` [Record→](./components/COMP-012-ai-agents-orchestration.md)
-Status: ⬜ | **Deps**: COMP-012.7, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-012.7, COMP-033.2
 **Criteria**: `POST /api/v1/ai-agents/sessions`, `GET /api/v1/ai-agents/sessions/{id}`, `POST /api/v1/ai-agents/sessions/{id}/invoke` (SSE streaming); auth required; rate limited (20 concurrent per user).
 **Steps**: (1) Write session creation endpoint (2) Write SSE streaming invoke endpoint (3) Write API tests
 
@@ -1641,7 +1641,7 @@ Status: ⬜ | **Deps**: COMP-012.7, COMP-033.2
 
 #### [COMP-013.1] Agent Registry package setup + AIAgentDefinition
 `S13` `Critical` `S` [Record→](./components/COMP-013-ai-agents-registry.md)
-Status: ⬜ | **Deps**: COMP-012.1
+Status: ✅ Done | **Deps**: COMP-012.1
 **Criteria**: `AIAgentDefinition` entity with `agentId`, `name`, `pillar`, `toolIds[]`, `systemPromptId`; `AgentRegistry.register(definition)` stores; `findByPillar(pillar)` queries; unit tests.
 **Steps**: (1) Write `AIAgentDefinition` entity (2) Write `AgentRegistry` class (3) Write registry unit tests
 
@@ -3207,9 +3207,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 65 / 262 items (25%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 68 / 262 items (26%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
-| **Current Stage** | S13 — Agent Registry + Repository + API | S56 | ⬜ |
+| **Current Stage** | S14 — DIP Project Manifest & DAG | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-013.1 — Agent Registry package setup + AIAgentDefinition
+- 2026-03-14 COMP-012.8 — AI Agents REST API endpoints
+- 2026-03-14 COMP-012.7 — AgentRepository + AgentEventPublisher
 - 2026-03-13 COMP-012.6 — AgentOrchestrator
 - 2026-03-13 COMP-012.5 — ContextModelUpdater
 - 2026-03-13 COMP-012.4 — ToolRouter
@@ -3309,8 +3312,8 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-009 Event Bus & Audit | 8 | 8 | ✅ Complete |
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
 | COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
-| COMP-012 AI Agents Orchestration | 8 | 6 | 🔵 In Progress |
-| COMP-013 AI Agents Registry | 5 | 0 | ⬜ Not Started |
+| COMP-012 AI Agents Orchestration | 8 | 8 | ✅ Complete |
+| COMP-013 AI Agents Registry | 5 | 1 | 🔵 In Progress |
 | COMP-014 AI Agents Pillar Tools | 6 | 0 | ⬜ Not Started |
 | COMP-015 Learn Content Hierarchy | 6 | 0 | ⬜ Not Started |
 | COMP-016 Learn Fragment & Artifact Engine | 8 | 0 | ⬜ Not Started |

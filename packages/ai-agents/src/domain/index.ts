@@ -1,6 +1,6 @@
 /**
- * AI Agents domain layer — aggregates and value objects.
- * Architecture: COMP-012
+ * AI Agents domain layer — aggregates, value objects, registry.
+ * Architecture: COMP-012, COMP-013
  */
 
 export {
@@ -13,3 +13,9 @@ export {
   type UserContextUpdateEvent,
   type UserId,
 } from "./orchestration/index.js";
+export {
+  createAIAgentDefinition,
+  InMemoryAgentRegistry,
+  type AIAgentDefinition,
+  type AgentRegistry,
+} from "./registry/index.js";

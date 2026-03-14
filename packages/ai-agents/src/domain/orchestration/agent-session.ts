@@ -12,6 +12,17 @@ export interface SessionMessage {
   readonly content: string;
 }
 
+/** Parameters for constructing an AgentSession (create or from persistence). */
+export interface AgentSessionParams {
+  sessionId: string;
+  userId: string;
+  agentId: string;
+  status: AgentSessionStatus;
+  history: readonly SessionMessage[];
+  startedAt: Date;
+  endedAt?: Date;
+}
+
 /**
  * Aggregate root for an AI agent session.
  * Tracks session identity, status, and conversation history.
@@ -26,15 +37,7 @@ export class AgentSession {
   readonly startedAt: Date;
   readonly endedAt: Date | undefined;
 
-  private constructor(params: {
-    sessionId: string;
-    userId: string;
-    agentId: string;
-    status: AgentSessionStatus;
-    history: readonly SessionMessage[];
-    startedAt: Date;
-    endedAt?: Date;
-  }) {
+  private constructor(params: AgentSessionParams) {
     this.sessionId = params.sessionId;
     this.userId = params.userId;
     this.agentId = params.agentId;
@@ -68,6 +71,14 @@ export class AgentSession {
       startedAt: new Date(),
       endedAt: undefined,
     });
+  }
+
+  /**
+   * Reconstructs an AgentSession from persistence.
+   * Used by repositories when loading from the database.
+   */
+  static fromPersistence(params: AgentSessionParams): AgentSession {
+    return new AgentSession(params);
   }
 
   /**

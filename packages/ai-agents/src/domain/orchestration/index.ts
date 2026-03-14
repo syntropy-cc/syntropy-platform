@@ -5,7 +5,16 @@
 
 export type { AgentResponse, ToolCallResult } from "./agent-response.js";
 export { AgentSession } from "./agent-session.js";
-export type { AgentSessionStatus, SessionMessage } from "./agent-session.js";
+export type {
+  AgentSessionParams,
+  AgentSessionStatus,
+  SessionMessage,
+} from "./agent-session.js";
+export type {
+  InvokedPayload,
+  SessionStartedPayload,
+} from "./events/agent-events.js";
+export type { AgentSessionRepository } from "./repositories/agent-session-repository.js";
 export {
   AgentOrchestrator,
   type AgentOrchestratorDeps,

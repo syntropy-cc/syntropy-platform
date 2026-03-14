@@ -13,6 +13,7 @@
   "dependencies": {
     "@fastify/cors": "^10.0.0",
     "@fastify/rate-limit": "^10.0.0",
+    "@syntropy/ai-agents": "workspace:*",
     "@syntropy/dip": "workspace:*",
     "@syntropy/dip-contracts": "workspace:*",
     "@syntropy/event-bus": "workspace:*",

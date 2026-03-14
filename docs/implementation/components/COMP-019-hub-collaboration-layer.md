@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/hub/subdomains/collaboration-layer.md](../../architecture/domains/hub/subdomains/collaboration-layer.md)
 > **Stage Assignment**: S8 — Hub Domain
-> **Status**: 🔵 In Progress (S32: 019.7 done)
+> **Status**: 🔵 In Progress (S32: 019.8 done)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -48,12 +48,12 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 6 |
+| ✅ Done | 7 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 2 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **8** |
 
-**Component Coverage**: 75% (S32: 019.7 done)
+**Component Coverage**: 87.5% (S32: 019.8 done)
 
 ### Item List
 
@@ -242,35 +242,42 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 ---
 
-#### [COMP-019.8] Internal API endpoints
+#### [COMP-019.8] Collaboration REST API endpoints
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | hub/ARCHITECTURE.md |
+| **Origin** | IMP Section 7, hub/ARCHITECTURE.md |
 | **Dependencies** | COMP-019.7 |
-| **Size** | S |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Internal REST API for Hub collaboration operations.
+**Description**: Public REST API for Hub collaboration (COMP-019.8). POST/GET /api/v1/hub/issues, POST /api/v1/hub/contributions, POST /api/v1/hub/contributions/:id/merge; auth required; integration tests.
 
 **Acceptance Criteria**:
-- [ ] `POST /internal/hub/issues`, `GET /internal/hub/issues/{id}`, `PATCH /internal/hub/issues/{id}/status` → Issue CRUD
-- [ ] `POST /internal/hub/contributions`, `GET /internal/hub/contributions/{id}` → Contribution CRUD
-- [ ] `POST /internal/hub/contributions/{id}/review` (accept/reject) → review decision
-- [ ] `POST /internal/hub/contributions/{id}/integrate` → triggers integration
-- [ ] `POST /internal/hub/sandboxes` → creates sandbox
-- [ ] `POST /internal/hub/sandboxes/{id}/activate`, `/complete` → sandbox lifecycle
+- [x] `POST /api/v1/hub/issues`, `GET /api/v1/hub/issues` (optional ?projectId=)
+- [x] `POST /api/v1/hub/contributions`, `POST /api/v1/hub/contributions/:id/merge`
+- [x] Auth required (requireAuth); CONV-017 envelopes
+- [x] HubCollaborationContext; IssueRepositoryPort.list(); integration tests (HUB_INTEGRATION=true)
 
 **Files Created/Modified**:
-- `packages/hub/src/api/routes/issues.ts`
-- `packages/hub/src/api/routes/contributions.ts`
-- `packages/hub/src/api/routes/sandboxes.ts`
+- `apps/api/src/types/hub-context.ts`
+- `apps/api/src/routes/hub.ts`
+- `apps/api/src/server.ts` (register hub routes)
+- `apps/api/src/integration/hub-collaboration-api.integration.test.ts`
+- `packages/hub`: IssueRepositoryPort.list(), PostgresIssueRepository.list()
 
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — S32 Hub Collaboration REST API (COMP-019.8)
+
+- **API**: `apps/api/src/routes/hub.ts` — POST/GET /api/v1/hub/issues, POST /api/v1/hub/contributions, POST .../merge; all with requireAuth; success/error envelopes.
+- **Context**: `HubCollaborationContext` (issueRepository, contributionRepository, contributionIntegrationService); `createApp({ hub })` registers hub routes.
+- **Hub package**: `IssueRepositoryPort.list(filters?)`, `PostgresIssueRepository.list()` for GET issues.
+- **Tests**: `hub-collaboration-api.integration.test.ts` — 401 without auth; POST issue → GET issues; POST contribution; 409 on merge when not accepted; merge success when contribution accepted (repo used to transition to Accepted in test). Run with HUB_INTEGRATION=true.
 
 ### 2026-03-14 — S32 Hub Collaboration Persistence (COMP-019.7)
 

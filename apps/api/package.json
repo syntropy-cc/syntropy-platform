@@ -21,6 +21,7 @@
     "@syntropy/dip-treasury": "workspace:*",
     "@syntropy/dip-contracts": "workspace:*",
     "@syntropy/event-bus": "workspace:*",
+    "@syntropy/hub-package": "workspace:*",
     "@syntropy/identity": "workspace:*",
     "@syntropy/learn-package": "workspace:*",
     "@syntropy/platform-core": "workspace:*",

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S32: COMP-019.7 done)
+> **Last Updated**: 2026-03-14 (S32: COMP-019.8, COMP-020.1, COMP-020.2, COMP-020.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S32 — Hub Collaboration Persistence & API
-CURRENT ITEM  : COMP-019.8 — Collaboration REST API endpoints
+CURRENT STAGE : S33 — Hub Institution Orchestration Completion (M3)
+CURRENT ITEM  : COMP-020.4 — InstitutionOrchestrationService
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 1 / 5 items done (S32)
-OVERALL       : 150 / 262 items done (57%)
+STAGE PROGRESS: 0 / 4 items done (S33)
+OVERALL       : 154 / 262 items done (59%)
 ```
 
 **Next 5 items**:
-1. `COMP-019.8` — Collaboration REST API endpoints ← **START HERE**
-2. `COMP-020.1` — ContractTemplate entity
-3. `COMP-020.2` — InstitutionCreationWorkflow aggregate
-4. `COMP-020.3` — InstitutionProfile read model
-5. `COMP-020.4` — InstitutionOrchestrationService
+1. `COMP-020.4` — InstitutionOrchestrationService ← **START HERE**
+2. `COMP-020.5` — InstitutionRepository (Postgres)
+3. `COMP-020.6` — Institution Orchestration REST API
+4. `COMP-021.1` — DiscoveryDocument read model
+5. `COMP-021.2` — ProminenceScorer
 
-**Component record**: [`COMP-019`](./components/COMP-019-hub-collaboration-layer.md)
+**Component record**: [`COMP-020`](./components/COMP-020-hub-institution-orchestration.md)
 
-**Next item (COMP-019.8) acceptance criteria**: `POST /api/v1/hub/issues`, `GET /api/v1/hub/issues`, `POST /api/v1/hub/contributions`, `POST /api/v1/hub/contributions/{id}/merge`; auth required; integration tests.
+**Next item (COMP-020.4) acceptance criteria**: `InstitutionOrchestrationService.createInstitution(workflow)` completes workflow: template → governance contract → DIP institution creation; each step atomic; saga pattern on failure; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire to services (3) Write integration tests
+**Suggested steps**: (1) Write orchestration service (2) Implement saga rollback (3) Write saga failure test
 
 ---
 
@@ -2305,7 +2305,7 @@ Status: ✅ Done | **Deps**: COMP-019.5, COMP-039.4
 
 #### [COMP-019.8] Collaboration REST API endpoints
 `S32` `High` `M` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.7, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-019.7, COMP-033.2
 **Criteria**: `POST /api/v1/hub/issues`, `GET /api/v1/hub/issues`, `POST /api/v1/hub/contributions`, `POST /api/v1/hub/contributions/{id}/merge`; auth required; integration tests.
 **Steps**: (1) Write API routes (2) Wire to services (3) Write integration tests
 
@@ -2313,7 +2313,7 @@ Status: ⬜ | **Deps**: COMP-019.7, COMP-033.2
 
 #### [COMP-020.1] ContractTemplate entity
 `S32` `High` `S` [Record→](./components/COMP-020-hub-institution-orchestration.md)
-Status: ⬜ | **Deps**: COMP-007, COMP-004
+Status: ✅ Done | **Deps**: COMP-007, COMP-004
 **Criteria**: `ContractTemplate` entity with `templateId`, `name`, `dsl`, `type`; pre-defined templates for common institution types; `ContractTemplateRepository` stores templates; unit tests.
 **Steps**: (1) Write `ContractTemplate` entity (2) Create 3 pre-defined templates (3) Write template tests
 
@@ -2321,7 +2321,7 @@ Status: ⬜ | **Deps**: COMP-007, COMP-004
 
 #### [COMP-020.2] InstitutionCreationWorkflow aggregate
 `S32` `Critical` `M` [Record→](./components/COMP-020-hub-institution-orchestration.md)
-Status: ⬜ | **Deps**: COMP-020.1, COMP-007
+Status: ✅ Done | **Deps**: COMP-020.1, COMP-007
 **Criteria**: `InstitutionCreationWorkflow` aggregate guides institution setup; phases: `template_selected`, `founders_confirmed`, `contract_deployed`, `institution_created`; `proceed()` advances phases; unit tests.
 **Steps**: (1) Write `InstitutionCreationWorkflow` aggregate (2) Implement phase transitions (3) Write flow tests
 
@@ -2329,7 +2329,7 @@ Status: ⬜ | **Deps**: COMP-020.1, COMP-007
 
 #### [COMP-020.3] InstitutionProfile read model
 `S32` `High` `S` [Record→](./components/COMP-020-hub-institution-orchestration.md)
-Status: ⬜ | **Deps**: COMP-020.2, COMP-009
+Status: ✅ Done | **Deps**: COMP-020.2, COMP-009
 **Criteria**: `InstitutionProfile` read model aggregates public institution data; updated on governance events; `getProfile(institutionId)` returns display-ready data; unit tests.
 **Steps**: (1) Write `InstitutionProfile` read model (2) Subscribe to governance events (3) Write read model tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-019.7 done; next COMP-019.8
+> Last Updated: 2026-03-14 | S32 complete; next COMP-020.4
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 150 / 262 items (57%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 154 / 262 items (59%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S32 — Hub Collaboration Persistence & API | S56 | ⬜ |
+| **Current Stage** | S33 — Hub Institution Orchestration Completion | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-020.3 — InstitutionProfile read model; InstitutionProfileProjector.getProfile(); InstitutionProfileReaderPort; unit tests
+- 2026-03-14 COMP-020.2 — InstitutionCreationWorkflow aggregate (phases template_selected → founders_confirmed → contract_deployed → institution_created); proceed(); unit tests
+- 2026-03-14 COMP-020.1 — ContractTemplate entity (templateId, name, dsl, type); InMemoryContractTemplateRepository with 3 pre-defined templates; unit tests
+- 2026-03-14 COMP-019.8 — Hub collaboration REST API (POST/GET /api/v1/hub/issues, POST /api/v1/hub/contributions, POST .../merge); HubCollaborationContext; auth required; hub-collaboration-api integration test (HUB_INTEGRATION=true)
 - 2026-03-14 COMP-019.7 — Hub collaboration migrations (hub.issues, contributions, contribution_issue_links, contribution_sandboxes); PostgresIssueRepository, PostgresContributionRepository, PostgresContributionSandboxRepository; ContributionSandboxRepositoryPort; integration tests (HUB_INTEGRATION=true)
 - 2026-03-14 COMP-019.5 — ContributionIntegrationService.merge(); orchestration (publish DIP, merge contribution, close issues); unit tests with mocks
 - 2026-03-14 COMP-019.4 — DIPContributionAdapter (ACL); DipArtifactPublishClient; unit tests with mock DIP

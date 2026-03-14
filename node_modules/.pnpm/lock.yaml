@@ -53,6 +53,9 @@ importers:
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus
+      '@syntropy/hub-package':
+        specifier: workspace:*
+        version: link:../../packages/hub
       '@syntropy/identity':
         specifier: workspace:*
         version: link:../../packages/identity

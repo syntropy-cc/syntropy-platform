@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/hub/subdomains/institution-orchestration.md](../../architecture/domains/hub/subdomains/institution-orchestration.md)
 > **Stage Assignment**: S8 — Hub Domain
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress (S32: 020.1–020.3 done)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -47,12 +47,12 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 3 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 50%
 
 ### Item List
 
@@ -60,25 +60,25 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | institution-orchestration.md |
+| **Origin** | institution-orchestration.md, IMP Section 7 |
 | **Dependencies** | COMP-019.1 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement `ContractTemplate` entity and seed initial templates for common institution types.
+**Description**: Implement `ContractTemplate` entity and pre-defined templates (IMP: templateId, name, dsl, type).
 
 **Acceptance Criteria**:
-- [ ] `ContractTemplate` entity: `id`, `name`, `institution_type`, `description`, `governance_parameters (JSONB)`, `parameter_validation_rules (JSONB)`, `is_audited`, `created_at`
-- [ ] Invariant: only `is_audited = true` templates can be used in production institution creation
-- [ ] Initial seed: OpenSourceProject template, ResearchLaboratory template, EducationalInstitution template
-- [ ] Unit tests: non-audited template use in production throws
+- [x] `ContractTemplate` entity: `templateId`, `name`, `dsl`, `type` (ContractTemplateType)
+- [x] ContractTemplateRepositoryPort; InMemoryContractTemplateRepository with 3 pre-defined templates (Open Source Project, Research Laboratory, Educational Institution)
+- [x] Unit tests: create, validation, repository list/getById
 
 **Files Created/Modified**:
 - `packages/hub/src/domain/institution-orchestration/contract-template.ts`
-- `packages/hub/src/infrastructure/migrations/002_institution_orchestration.sql`
-- `packages/hub/src/infrastructure/seeds/contract-templates.ts`
+- `packages/hub/src/domain/institution-orchestration/ports/contract-template-repository-port.ts`
+- `packages/hub/src/infrastructure/institution-orchestration/contract-template-repository-in-memory.ts`
+- `packages/hub/tests/unit/institution-orchestration/contract-template.test.ts`
 
 ---
 
@@ -86,22 +86,23 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | High |
-| **Origin** | institution-orchestration.md |
+| **Status** | ✅ Done |
+| **Priority** | Critical |
+| **Origin** | institution-orchestration.md, IMP Section 7 |
 | **Dependencies** | COMP-020.1 |
-| **Size** | S |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement `InstitutionCreationWorkflow` entity tracking the multi-step creation process.
+**Description**: Implement `InstitutionCreationWorkflow` aggregate with phases and proceed().
 
 **Acceptance Criteria**:
-- [ ] `InstitutionCreationWorkflow` entity: `id`, `admin_id`, `template_id`, `configuration (JSONB)`, `status (draft|submitting|completed|failed)`, `dip_institution_id (nullable)`, `started_at`, `completed_at`
-- [ ] `InstitutionCreationWorkflow.complete(dipInstitutionId)` sets `dip_institution_id` and status
-- [ ] `hub.institution.created` event published on completion
+- [x] Phases: `template_selected`, `founders_confirmed`, `contract_deployed`, `institution_created`
+- [x] `proceed(context?)` advances phases with validation (founderIds, contractDeployed, dipInstitutionId as required)
+- [x] InvalidWorkflowTransitionError; unit tests for full flow and invalid transitions
 
 **Files Created/Modified**:
 - `packages/hub/src/domain/institution-orchestration/institution-creation-workflow.ts`
+- `packages/hub/tests/unit/institution-orchestration/institution-creation-workflow.test.ts`
 
 ---
 
@@ -109,25 +110,25 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | institution-orchestration.md |
+| **Origin** | institution-orchestration.md, IMP Section 7 |
 | **Dependencies** | COMP-020.2, COMP-007 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement `InstitutionProfile` read model and `InstitutionProfileProjector` that queries DIP to build real-time display data.
+**Description**: Implement `InstitutionProfile` read model and `InstitutionProfileProjector.getProfile()`.
 
 **Acceptance Criteria**:
-- [ ] `InstitutionProfile` read model: `dip_institution_id`, `name`, `institution_type`, `member_count`, `active_proposals_count`, `legitimacy_chain_length`, `governance_contract_summary`, `treasury_balance_avu`, `open_issue_count`
-- [ ] `InstitutionProfileProjector.project(institutionId)` calls DIP, Platform Core, and Hub APIs to build composite view
-- [ ] Cached with 2-minute TTL; invalidated on `hub.institution.created` or DIP governance events
-- [ ] `DIPInstitutionAdapter` (ACL) wraps DIP institution API calls
+- [x] `InstitutionProfile` interface: institutionId, name, institutionType, memberCount, activeProposalsCount, legitimacyChainLength, governanceContractSummary, treasuryBalanceAvu, openIssueCount
+- [x] `InstitutionProfileReaderPort`; `InstitutionProfileProjector.getProfile(institutionId)` delegates to reader (stub in unit tests)
+- [x] Unit tests: profile shape, getProfile returns reader data, null for empty id
 
 **Files Created/Modified**:
 - `packages/hub/src/domain/institution-orchestration/institution-profile.ts`
+- `packages/hub/src/domain/institution-orchestration/ports/institution-profile-reader-port.ts`
 - `packages/hub/src/application/institution-profile-projector.ts`
-- `packages/hub/src/infrastructure/dip-institution-adapter.ts`
+- `packages/hub/tests/unit/institution-orchestration/institution-profile.test.ts`
 
 ---
 
@@ -196,6 +197,16 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 **Files Created/Modified**:
 - `packages/hub/src/api/routes/institutions.ts`
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S32 Institution Orchestration start (COMP-020.1, 020.2, 020.3)
+
+- **COMP-020.1**: ContractTemplate entity (templateId, name, dsl, type); ContractTemplateType enum; ContractTemplateRepositoryPort; InMemoryContractTemplateRepository with 3 pre-defined templates; unit tests.
+- **COMP-020.2**: InstitutionCreationWorkflow aggregate; phases template_selected → founders_confirmed → contract_deployed → institution_created; proceed(context) with validation; InvalidWorkflowTransitionError; unit tests.
+- **COMP-020.3**: InstitutionProfile interface (read model); InstitutionProfileReaderPort; InstitutionProfileProjector.getProfile(); unit tests with stub reader. DIPInstitutionAdapter and caching left for COMP-020.4+.
 
 ---
 

@@ -10,6 +10,9 @@ import type { HubCollaborationDbClient } from "../hub-collaboration-db-client.js
 
 const TABLE = "hub.issues";
 
+const SELECT_ALL = `SELECT id, project_id, title, type, status, assignee_id FROM ${TABLE} ORDER BY created_at DESC`;
+const SELECT_BY_PROJECT = `SELECT id, project_id, title, type, status, assignee_id FROM ${TABLE} WHERE project_id = $1 ORDER BY created_at DESC`;
+
 const UPSERT_SQL = `
   INSERT INTO ${TABLE} (id, project_id, title, type, status, assignee_id, created_at, updated_at)
   VALUES ($1, $2, $3, $4, $5, $6, now(), now())
@@ -57,6 +60,17 @@ export class PostgresIssueRepository implements IssueRepositoryPort {
   async getByIds(ids: string[]): Promise<Issue[]> {
     if (ids.length === 0) return [];
     const rows = await this.client.query<IssueRow>(SELECT_BY_IDS, [ids]);
+    return rows.map(rowToIssue);
+  }
+
+  async list(filters?: { projectId?: string }): Promise<Issue[]> {
+    if (filters?.projectId) {
+      const rows = await this.client.query<IssueRow>(SELECT_BY_PROJECT, [
+        filters.projectId,
+      ]);
+      return rows.map(rowToIssue);
+    }
+    const rows = await this.client.query<IssueRow>(SELECT_ALL, []);
     return rows.map(rowToIssue);
   }
 

@@ -6,8 +6,13 @@
 import type { Issue } from "../issue.js";
 import type { IssueId } from "../value-objects/issue-id.js";
 
+export interface ListIssuesFilters {
+  projectId?: string;
+}
+
 export interface IssueRepositoryPort {
   getById(id: IssueId): Promise<Issue | null>;
   getByIds(ids: string[]): Promise<Issue[]>;
+  list(filters?: ListIssuesFilters): Promise<Issue[]>;
   save(issue: Issue): Promise<void>;
 }

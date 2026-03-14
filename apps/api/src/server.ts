@@ -34,10 +34,12 @@ import type { PortfolioContext } from "./types/portfolio-context.js";
 import type { SearchContext } from "./types/search-context.js";
 import type { TreasuryContext } from "./types/treasury-context.js";
 import type { LearnContext } from "./types/learn-context.js";
+import type { HubCollaborationContext } from "./types/hub-context.js";
 import { portfolioRoutes } from "./routes/portfolios.js";
 import { searchRoutes } from "./routes/search.js";
 import { recommendationRoutes } from "./routes/recommendations.js";
 import { learnRoutes } from "./routes/learn.js";
+import { hubRoutes } from "./routes/hub.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -64,6 +66,7 @@ export interface CreateAppOptions {
   treasury?: TreasuryContext | null;
   aiAgents?: AiAgentsContext | null;
   learn?: LearnContext | null;
+  hub?: HubCollaborationContext | null;
 }
 
 export async function createApp(options?: CreateAppOptions) {
@@ -105,6 +108,9 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.learn) {
     await app.register(learnRoutes, { learn: options.learn });
+  }
+  if (options?.hub) {
+    await app.register(hubRoutes, { hub: options.hub });
   }
   await app.register(internalEventSchemasPlugin);
 

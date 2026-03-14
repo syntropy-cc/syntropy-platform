@@ -19,6 +19,7 @@ import { healthRoutes } from "./routes/health.js";
 import { authRoutes } from "./routes/auth.js";
 import { usersRoutes } from "./routes/users.js";
 import { aiAgentsRoutes } from "./routes/ai-agents.js";
+import { agentsRoutes } from "./routes/agents.js";
 import { artifactRoutes } from "./routes/artifacts.js";
 import { contractRoutes } from "./routes/contracts.js";
 import { projectRoutes } from "./routes/projects.js";
@@ -69,6 +70,7 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.aiAgents) {
     await app.register(aiAgentsRoutes, { aiAgents: options.aiAgents });
+    await app.register(agentsRoutes, { aiAgents: options.aiAgents });
   }
   await app.register(internalEventSchemasPlugin);
 

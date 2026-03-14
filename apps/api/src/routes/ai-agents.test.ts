@@ -14,11 +14,13 @@ import {
 import {
   AgentSession,
   AgentOrchestrator,
+  InMemoryAgentRegistry,
   type AgentSessionStore,
   type AgentEventPublisher,
   type ContextSnapshotProvider,
   type LLMAdapter,
 } from "@syntropy/ai-agents";
+import { InMemoryToolDefinitionStore } from "../lib/tool-definition-store.js";
 
 const TEST_USER_ID = "a1b2c3d4-e5f6-4789-a012-345678901234";
 const TEST_ACTOR_ID = createActorId(TEST_USER_ID);
@@ -122,6 +124,8 @@ describe("ai-agents routes", () => {
           sessionStore,
           eventPublisher: createMockEventPublisher(),
           orchestrator,
+          agentRegistry: new InMemoryAgentRegistry(),
+          toolStore: new InMemoryToolDefinitionStore(),
         },
       });
     });

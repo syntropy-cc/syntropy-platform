@@ -15,7 +15,9 @@ export {
 } from "./orchestration/index.js";
 export {
   createAIAgentDefinition,
+  createToolDefinition,
   InMemoryAgentRegistry,
   type AIAgentDefinition,
   type AgentRegistry,
+  type ToolDefinition,
 } from "./registry/index.js";

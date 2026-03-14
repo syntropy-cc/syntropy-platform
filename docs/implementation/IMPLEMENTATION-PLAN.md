@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (COMP-006.6 complete)
+> **Last Updated**: 2026-03-14 (COMP-013.4 complete)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S15 — Project Manifest Completion + Agent Registry Core
-CURRENT ITEM  : COMP-013.2 — ToolDefinition entity + schema validation
+CURRENT STAGE : S16 — Agent Registry Completion + IACP Start
+CURRENT ITEM  : COMP-013.5 — Agent Registry integration tests
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 1 / 4 items done (S15)
-OVERALL       : 74 / 262 items done (28%)
+STAGE PROGRESS: 0 / 3 items done (S16)
+OVERALL       : 77 / 262 items done (29%)
 ```
 
 **Next 5 items**:
-1. `COMP-013.2` — ToolDefinition entity + schema validation ← **START HERE**
-2. `COMP-013.3` — ToolPermissionEvaluator
-3. `COMP-013.4` — Agent Registry REST API (register, list, get)
-4. `COMP-013.5` — Agent Registry integration tests
-5. `COMP-005.1` — IACP Engine package setup + IACPRecord aggregate
+1. `COMP-013.5` — Agent Registry integration tests ← **START HERE**
+2. `COMP-005.1` — IACP Engine package setup + IACPRecord aggregate
+3. `COMP-005.2` — IACPParty value object + multi-party signing setup
+4. `COMP-005.3` — IACPStateMachine (draft→pending→active→terminated)
+5. `COMP-005.4` — SignatureCollector (n-of-m threshold logic)
 
 **Component record**: [`COMP-013`](./components/COMP-013-ai-agents-registry.md)
 
-**Next item (COMP-013.2) acceptance criteria**: `ToolDefinition` entity with `toolId`, `name`, `description`, `inputSchema` (Zod), `requiredRole`; `validateInput(params)` validates against schema; unit tests.
+**Next item (COMP-013.5) acceptance criteria**: Register agent, list agents, invoke tool with insufficient role → 403; tool schema validation rejects invalid params; tests use real DB.
 
-**Suggested steps**: (1) Write `ToolDefinition` entity (2) Add Zod schema validation (3) Write validation tests
+**Suggested steps**: (1) Write registration test (2) Write permission rejection test (3) Write schema validation test
 
 ---
 
@@ -1697,7 +1697,7 @@ Status: ✅ Done | **Deps**: COMP-006.5, COMP-033.2
 
 #### [COMP-013.2] ToolDefinition entity + schema validation
 `S15` `Critical` `S` [Record→](./components/COMP-013-ai-agents-registry.md)
-Status: ⬜ | **Deps**: COMP-013.1
+Status: ✅ Done | **Deps**: COMP-013.1
 **Criteria**: `ToolDefinition` entity with `toolId`, `name`, `description`, `inputSchema` (Zod), `requiredRole`; `validateInput(params)` validates against schema; unit tests.
 **Steps**: (1) Write `ToolDefinition` entity (2) Add Zod schema validation (3) Write validation tests
 
@@ -1705,7 +1705,7 @@ Status: ⬜ | **Deps**: COMP-013.1
 
 #### [COMP-013.3] ToolPermissionEvaluator
 `S15` `Critical` `S` [Record→](./components/COMP-013-ai-agents-registry.md)
-Status: ⬜ | **Deps**: COMP-013.2, COMP-037.1
+Status: ✅ Done | **Deps**: COMP-013.2, COMP-037.1
 **Criteria**: `ToolPermissionEvaluator.canInvoke(actorId, toolId)` checks `requiredRole` against actor's roles; returns boolean; caches decision per session; unit tests.
 **Steps**: (1) Write `ToolPermissionEvaluator` (2) Integrate with RBAC (3) Write permission tests
 
@@ -1713,7 +1713,7 @@ Status: ⬜ | **Deps**: COMP-013.2, COMP-037.1
 
 #### [COMP-013.4] Agent Registry REST API (register, list, get)
 `S15` `High` `S` [Record→](./components/COMP-013-ai-agents-registry.md)
-Status: ⬜ | **Deps**: COMP-013.3, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-013.3, COMP-033.2
 **Criteria**: `POST /api/v1/agents` (admin), `GET /api/v1/agents`, `GET /api/v1/agents/{id}`, `GET /api/v1/agents/{id}/tools`; admin-only for registration; public read.
 **Steps**: (1) Write API routes (2) Add admin role guard (3) Write API tests
 
@@ -3201,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-006.6 complete
+> Last Updated: 2026-03-14 | COMP-013.4 complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 74 / 262 items (28%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 77 / 262 items (29%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S15 — Project Manifest Completion + Agent Registry Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,9 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-013.4 — Agent Registry REST API (register, list, get)
+- 2026-03-14 COMP-013.3 — ToolPermissionEvaluator
+- 2026-03-14 COMP-013.2 — ToolDefinition entity + schema validation
 - 2026-03-14 COMP-006.6 — Project REST API endpoints + integration tests
 - 2026-03-14 COMP-006.5 — Project event publisher
 - 2026-03-14 COMP-006.4 — ProjectRepository (Postgres)
@@ -3297,11 +3300,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | Milestone | Items | Done | % | Status |
 |-----------|-------|------|---|--------|
 | M1 Foundation + Walking Skeleton | 45 | 43 | 96% | 🔵 In Progress |
-| M2 Core: DIP + Platform Core + AI | 73 | 17 | 23% | 🔵 In Progress |
+| M2 Core: DIP + Platform Core + AI | 73 | 20 | 27% | 🔵 In Progress |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | ⬜ Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | ⬜ Not Started |
 | M5 Delivery | 26 | 0 | 0% | ⬜ Not Started |
-| **Total** | **262** | **65** | **25%** | ⬜ |
+| **Total** | **262** | **77** | **29%** | ⬜ |
 
 ### Component Coverage
 
@@ -3319,7 +3322,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-010 Portfolio Aggregation | 8 | 0 | ⬜ Not Started |
 | COMP-011 Search & Recommendation | 7 | 0 | ⬜ Not Started |
 | COMP-012 AI Agents Orchestration | 8 | 8 | ✅ Complete |
-| COMP-013 AI Agents Registry | 5 | 1 | 🔵 In Progress |
+| COMP-013 AI Agents Registry | 5 | 4 | 🔵 In Progress |
 | COMP-014 AI Agents Pillar Tools | 6 | 0 | ⬜ Not Started |
 | COMP-015 Learn Content Hierarchy | 6 | 0 | ⬜ Not Started |
 | COMP-016 Learn Fragment & Artifact Engine | 8 | 0 | ⬜ Not Started |

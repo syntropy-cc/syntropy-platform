@@ -33,4 +33,8 @@ export class InMemoryAgentRegistry implements AgentRegistry {
     const list = this.byPillar.get(pillar) ?? [];
     return [...list];
   }
+
+  async findAll(): Promise<AIAgentDefinition[]> {
+    return Array.from(this.byId.values());
+  }
 }

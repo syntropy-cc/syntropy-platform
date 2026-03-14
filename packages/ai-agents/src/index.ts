@@ -7,11 +7,17 @@ export {
   UserContextModel,
   UserContextSnapshot,
   DEFAULT_SKILL_LEVEL,
+  createAIAgentDefinition,
+  createToolDefinition,
+  InMemoryAgentRegistry,
   type ActiveGoal,
   type RecentActivityItem,
   type SkillLevel,
   type UserContextUpdateEvent,
   type UserId,
+  type AIAgentDefinition,
+  type AgentRegistry,
+  type ToolDefinition,
 } from "./domain/index.js";
 export {
   AgentOrchestrator,

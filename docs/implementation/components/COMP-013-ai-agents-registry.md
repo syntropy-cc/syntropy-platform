@@ -51,7 +51,7 @@ The Agent Registry & Tool Layer is a Supporting subdomain that catalogs all agen
 | ⬜ Ready/Backlog | 4 |
 | **Total** | **5** |
 
-**Component Coverage**: 20%
+**Component Coverage**: 80% (per IMPLEMENTATION-PLAN: 013.2, 013.3, 013.4 done this session)
 
 ### Item List
 
@@ -201,6 +201,18 @@ The Agent Registry & Tool Layer is a Supporting subdomain that catalogs all agen
 |-----------|--------------|-------------------|
 | COMP-012 AI Agents Orchestration | InvocationRouter queries registry | Blocks agent routing |
 | COMP-014 Pillar Agents | Agent definitions seeded here | Blocks pillar agent implementations |
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S15 Agent Registry Core (IMPLEMENTATION-PLAN)
+
+Implemented per IMPLEMENTATION-PLAN Section 7:
+
+- **COMP-013.2** ToolDefinition entity + schema validation: `packages/ai-agents/src/domain/registry/tool-definition.ts`, `validateToolInput()`, unit tests in `tests/unit/registry/tool-definition.test.ts`.
+- **COMP-013.3** ToolPermissionEvaluator: `packages/ai-agents/src/domain/registry/tool-permission-evaluator.ts` with `ToolResolver`, `RoleResolver`, `PermissionCache`; `canInvoke(actorId, toolId, sessionId?)`; unit tests in `tests/unit/registry/tool-permission-evaluator.test.ts`.
+- **COMP-013.4** Agent Registry REST API: `apps/api/src/routes/agents.ts` — POST /api/v1/agents (admin), GET /api/v1/agents, GET /api/v1/agents/:id, GET /api/v1/agents/:id/tools; `AiAgentsContext` extended with `agentRegistry`, `toolStore`; `AgentRegistry.findAll()` added; `apps/api/src/lib/tool-definition-store.ts`; route tests in `apps/api/src/routes/agents.test.ts`.
 
 ---
 

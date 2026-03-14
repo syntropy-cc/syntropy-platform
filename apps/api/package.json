@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^10.0.0",
+    "zod": "^3.23.0",
     "@fastify/rate-limit": "^10.0.0",
     "@syntropy/ai-agents": "workspace:*",
     "@syntropy/dip": "workspace:*",

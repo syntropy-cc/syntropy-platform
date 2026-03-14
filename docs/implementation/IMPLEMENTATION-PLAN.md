@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S38: COMP-024.2–024.6 done)
+> **Last Updated**: 2026-03-14 (S39: COMP-025.1–025.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S39 — Peer Review Core (M3)
-CURRENT ITEM  : COMP-025.1 — Review aggregate
+CURRENT STAGE : S40 — Peer Review API + DOI (M3)
+CURRENT ITEM  : COMP-025.6 — Review publication scheduler
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done (S39)
-OVERALL       : 182 / 262 items done (69%)
+STAGE PROGRESS: 0 / 4 items done (S40)
+OVERALL       : 187 / 262 items done (71%)
 ```
 
 **Next 5 items**:
-1. `COMP-025.1` — Review aggregate ← **START HERE**
-2. `COMP-025.2` — ReviewPassageLink value object
-3. `COMP-025.3` — AuthorResponse entity
-4. `COMP-025.4` — ReviewVisibilityEvaluator
-5. `COMP-025.5` — ReviewRepository (Postgres)
+1. `COMP-025.6` — Review publication scheduler ← **START HERE**
+2. `COMP-025.7` — Peer Review REST API
+3. `COMP-026.1` — DOIRecord entity
+4. `COMP-026.2` — DataCiteAdapter
+5. (see Section 6 for full order)
 
 **Component record**: [`COMP-025`](./components/COMP-025-labs-open-peer-review.md)
 
-**Next item (COMP-025.1) acceptance criteria**: `Review` aggregate with `reviewId`, `articleId`, `reviewerId`, `status`, `content`; `ReviewStatus` lifecycle; `submit()`, `revise()`, `publish()` transitions; unit tests.
+**Next item (COMP-025.6) acceptance criteria**: `ReviewPublicationScheduler` cron job (every 15min) publishes embargoed reviews when embargo period expires; updates `ReviewStatus` to `published`; registered in `CronScheduler`; unit tests.
 
-**Suggested steps**: (1) Write `Review` aggregate (2) Implement lifecycle transitions (3) Write status tests
+**Suggested steps**: (1) Write `ReviewPublicationScheduler` job (2) Register in cron (3) Write embargo expiry test
 
 ---
 
@@ -2561,7 +2561,7 @@ Status: Done | **Deps**: COMP-024.5
 
 #### [COMP-025.1] Review aggregate
 `S39` `Critical` `M` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-023, COMP-002
+Status: Done | **Deps**: COMP-023, COMP-002
 **Criteria**: `Review` aggregate with `reviewId`, `articleId`, `reviewerId`, `status`, `content`; `ReviewStatus` lifecycle; `submit()`, `revise()`, `publish()` transitions; unit tests.
 **Steps**: (1) Write `Review` aggregate (2) Implement lifecycle transitions (3) Write status tests
 
@@ -2569,7 +2569,7 @@ Status: ⬜ | **Deps**: COMP-023, COMP-002
 
 #### [COMP-025.2] ReviewPassageLink value object
 `S39` `High` `S` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-025.1
+Status: Done | **Deps**: COMP-025.1
 **Criteria**: `ReviewPassageLink` value object links review comment to specific passage in article (by offset/anchor); `getLinkedText(article, link)` returns passage text; unit tests.
 **Steps**: (1) Write `ReviewPassageLink` value object (2) Add offset/anchor fields (3) Write passage retrieval tests
 
@@ -2577,7 +2577,7 @@ Status: ⬜ | **Deps**: COMP-025.1
 
 #### [COMP-025.3] AuthorResponse entity
 `S39` `High` `S` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-025.2
+Status: Done | **Deps**: COMP-025.2
 **Criteria**: `AuthorResponse` entity links author reply to specific review comment; `responderId` must be article author; unit tests.
 **Steps**: (1) Write `AuthorResponse` entity (2) Add author ownership check (3) Write response tests
 
@@ -2585,7 +2585,7 @@ Status: ⬜ | **Deps**: COMP-025.2
 
 #### [COMP-025.4] ReviewVisibilityEvaluator
 `S39` `Critical` `M` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-025.3, COMP-037.1
+Status: Done | **Deps**: COMP-025.3, COMP-037.1
 **Criteria**: `ReviewVisibilityEvaluator.isVisible(review, requestingActorId)` enforces blind review rules; reviewer identity hidden until publication; `open` review: reviewer identity visible after publication; unit tests.
 **Steps**: (1) Define visibility rules (2) Write `ReviewVisibilityEvaluator` (3) Write blind review enforcement tests
 
@@ -2593,7 +2593,7 @@ Status: ⬜ | **Deps**: COMP-025.3, COMP-037.1
 
 #### [COMP-025.5] ReviewRepository (Postgres)
 `S39` `High` `S` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-025.4, COMP-039.4
+Status: Done | **Deps**: COMP-025.4, COMP-039.4
 **Criteria**: Migrations for `reviews`, `review_passage_links`, `author_responses`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S38 complete; next COMP-025.1
+> Last Updated: 2026-03-14 | S39 complete; next COMP-025.6
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 182 / 262 items (69%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 187 / 262 items (71%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S39 — Peer Review Core | S56 | ⬜ |
+| **Current Stage** | S40 — Peer Review API + DOI | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-025.5 — ReviewRepository (Postgres); migrations reviews, review_passage_links, author_responses; integration test
+- 2026-03-14 COMP-025.4 — ReviewVisibilityEvaluator (isReviewerIdentityVisible, isReviewContentVisible); unit tests
+- 2026-03-14 COMP-025.3 — AuthorResponse entity; create() author ownership; unit tests
+- 2026-03-14 COMP-025.2 — ReviewPassageLink value object; getLinkedText(article, link); unit tests
+- 2026-03-14 COMP-025.1 — Review aggregate; ReviewStatus; submit(), revise(), publish(); unit tests
 - 2026-03-14 COMP-024.6 — Experiment integration tests (PII redaction, hypothesis link); real DB
 - 2026-03-14 COMP-024.5 — Experiment Design REST API (POST/GET experiments, POST results); anonymization applied; API tests
 - 2026-03-14 COMP-024.4 — ExperimentRepository (migrations experiment_designs, experiment_results); Postgres repos; integration test
@@ -3439,7 +3444,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-022 Labs Scientific Context | 5 | 5 | Done |
 | COMP-023 Labs Article Editor | 8 | 5 | 🔵 In Progress |
 | COMP-024 Labs Experiment Design | 6 | 0 | ⬜ Not Started |
-| COMP-025 Labs Open Peer Review | 7 | 0 | ⬜ Not Started |
+| COMP-025 Labs Open Peer Review | 7 | 5 | 🔵 In Progress |
 | COMP-026 Labs DOI & Publication | 5 | 0 | ⬜ Not Started |
 | COMP-027 Sponsorship | 7 | 0 | ⬜ Not Started |
 | COMP-028 Communication | 7 | 0 | ⬜ Not Started |

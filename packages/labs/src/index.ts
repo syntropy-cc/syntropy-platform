@@ -48,6 +48,9 @@ export type { ScientificArticleRepositoryPort } from "./domain/article-editor/po
 export type { ArticleVersionRepositoryPort } from "./domain/article-editor/ports/article-version-repository-port.js";
 export type { ExperimentDesignRepositoryPort } from "./domain/experiment-design/ports/experiment-design-repository-port.js";
 export type { ExperimentResultRepositoryPort } from "./domain/experiment-design/ports/experiment-result-repository-port.js";
+export type { ReviewRepositoryPort } from "./domain/open-peer-review/ports/review-repository-port.js";
+export type { ReviewPassageLinkRepositoryPort } from "./domain/open-peer-review/ports/review-passage-link-repository-port.js";
+export type { AuthorResponseRepositoryPort } from "./domain/open-peer-review/ports/author-response-repository-port.js";
 export type { LabsDbClient } from "./infrastructure/labs-db-client.js";
 export { MystRenderer } from "./infrastructure/myst-renderer.js";
 export {
@@ -75,6 +78,19 @@ export {
   type ExperimentResultParams,
   type PersonalDataField,
 } from "./domain/experiment-design/index.js";
+export {
+  Review,
+  ReviewStatus,
+  isReviewStatus,
+  ReviewPassageLink,
+  getLinkedText,
+  AuthorResponse,
+  ReviewVisibilityEvaluator,
+  type ReviewParams,
+  type ReviewPassageLinkParams,
+  type ArticleContent,
+  type AuthorResponseParams,
+} from "./domain/open-peer-review/index.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";
@@ -82,3 +98,6 @@ export { PostgresScientificArticleRepository } from "./infrastructure/repositori
 export { PostgresArticleVersionRepository } from "./infrastructure/repositories/postgres-article-version-repository.js";
 export { PostgresExperimentDesignRepository } from "./infrastructure/repositories/postgres-experiment-design-repository.js";
 export { PostgresExperimentResultRepository } from "./infrastructure/repositories/postgres-experiment-result-repository.js";
+export { PostgresReviewRepository } from "./infrastructure/repositories/postgres-review-repository.js";
+export { PostgresReviewPassageLinkRepository } from "./infrastructure/repositories/postgres-review-passage-link-repository.js";
+export { PostgresAuthorResponseRepository } from "./infrastructure/repositories/postgres-author-response-repository.js";

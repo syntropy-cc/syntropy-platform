@@ -9,6 +9,7 @@ export { MystRenderer } from "./infrastructure/myst-renderer.js";
 export { LabsArtifactBridge, } from "./infrastructure/labs-artifact-bridge.js";
 export { ArticleSubmissionService, } from "./application/article-submission-service.js";
 export { AnonymizationPolicyEnforcer, ExperimentDesign, ExperimentResult, isExperimentStatus, PERSONAL_DATA_FIELDS, } from "./domain/experiment-design/index.js";
+export { Review, isReviewStatus, ReviewPassageLink, getLinkedText, AuthorResponse, ReviewVisibilityEvaluator, } from "./domain/open-peer-review/index.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";
@@ -16,3 +17,6 @@ export { PostgresScientificArticleRepository } from "./infrastructure/repositori
 export { PostgresArticleVersionRepository } from "./infrastructure/repositories/postgres-article-version-repository.js";
 export { PostgresExperimentDesignRepository } from "./infrastructure/repositories/postgres-experiment-design-repository.js";
 export { PostgresExperimentResultRepository } from "./infrastructure/repositories/postgres-experiment-result-repository.js";
+export { PostgresReviewRepository } from "./infrastructure/repositories/postgres-review-repository.js";
+export { PostgresReviewPassageLinkRepository } from "./infrastructure/repositories/postgres-review-passage-link-repository.js";
+export { PostgresAuthorResponseRepository } from "./infrastructure/repositories/postgres-author-response-repository.js";

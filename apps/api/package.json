@@ -18,6 +18,7 @@
     "@syntropy/dip": "workspace:*",
     "@syntropy/dip-governance": "workspace:*",
     "@syntropy/dip-iacp": "workspace:*",
+    "@syntropy/dip-treasury": "workspace:*",
     "@syntropy/dip-contracts": "workspace:*",
     "@syntropy/event-bus": "workspace:*",
     "@syntropy/identity": "workspace:*",

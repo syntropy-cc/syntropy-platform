@@ -47,6 +47,9 @@ importers:
       '@syntropy/dip-iacp':
         specifier: workspace:*
         version: link:../../packages/dip-iacp
+      '@syntropy/dip-treasury':
+        specifier: workspace:*
+        version: link:../../packages/dip-treasury
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus

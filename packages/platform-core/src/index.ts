@@ -84,3 +84,41 @@ export {
   type DateRange,
   type AuditLogConsumerOptions,
 } from "./event-log/index.js";
+
+export {
+  Portfolio,
+  type PortfolioEvent,
+  type PortfolioParams,
+} from "./domain/portfolio-aggregation/portfolio.js";
+export { XPTotal, ReputationScore, type SkillLevel } from "./domain/portfolio-aggregation/value-objects.js";
+export type { Achievement } from "./domain/portfolio-aggregation/achievement.js";
+export { createAchievement } from "./domain/portfolio-aggregation/achievement.js";
+export type { SkillRecord } from "./domain/portfolio-aggregation/skill-record.js";
+export { createSkillRecord } from "./domain/portfolio-aggregation/skill-record.js";
+export {
+  calculate as calculateXp,
+  XPCalculator,
+  type XPCalculatorEvent,
+  type XPCalculatorResult,
+} from "./domain/portfolio-aggregation/xp-calculator.js";
+export {
+  DEFAULT_XP_WEIGHTS,
+  LEVEL_THRESHOLDS,
+  levelFromXp,
+} from "./domain/portfolio-aggregation/xp-weights.js";
+export {
+  evaluate as evaluateAchievements,
+  AchievementService,
+  type AchievementEvaluationEvent,
+  type AchievementUnlockResult,
+} from "./domain/portfolio-aggregation/achievement-service.js";
+export {
+  DEFAULT_ACHIEVEMENT_DEFINITIONS,
+  type AchievementDefinition,
+} from "./domain/portfolio-aggregation/achievement-definitions.js";
+export {
+  ACHIEVEMENT_UNLOCKED,
+  createAchievementUnlockedEvent,
+  type AchievementUnlockedPayload,
+  type AchievementUnlockedEvent,
+} from "./domain/portfolio-aggregation/events/achievement-unlocked.js";

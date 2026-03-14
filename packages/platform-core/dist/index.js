@@ -4,7 +4,7 @@
  * Architecture: COMP-001, COMP-038, COMP-040, COMP-037
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CausalChainTracer = exports.PostgresAppendOnlyLogRepository = exports.BulkheadRejectedError = exports.Bulkhead = exports.isRetryableError = exports.RetryPolicy = exports.DEFAULT_JOB_TIMEOUT_MS = exports.DEFAULT_DB_TIMEOUT_MS = exports.DEFAULT_HTTP_TIMEOUT_MS = exports.withTimeout = exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = exports.appendToLog = exports.getAuditColumnsMigrationSnippet = exports.AuditColumnsMixin = exports.SoftDeletableMixin = exports.getEncryptionKey = exports.decryptField = exports.encryptField = exports.validateEnv = void 0;
+exports.createSkillRecord = exports.createAchievement = exports.ReputationScore = exports.XPTotal = exports.Portfolio = exports.AppendOnlyLogAdapter = exports.AUDIT_LOG_CONSUMER_GROUP = exports.AUDIT_LOG_TOPICS = exports.AuditLogConsumer = exports.CausalChainTracer = exports.PostgresAppendOnlyLogRepository = exports.BulkheadRejectedError = exports.Bulkhead = exports.isRetryableError = exports.RetryPolicy = exports.DEFAULT_JOB_TIMEOUT_MS = exports.DEFAULT_DB_TIMEOUT_MS = exports.DEFAULT_HTTP_TIMEOUT_MS = exports.withTimeout = exports.TimeoutError = exports.CircuitOpenError = exports.CircuitBreaker = exports.withCorrelationId = exports.createLogger = exports.MockAppendOnlyLog = exports.appendToLog = exports.getAuditColumnsMigrationSnippet = exports.AuditColumnsMixin = exports.SoftDeletableMixin = exports.getEncryptionKey = exports.decryptField = exports.encryptField = exports.validateEnv = void 0;
 var env_validator_js_1 = require("./config/env-validator.js");
 Object.defineProperty(exports, "validateEnv", { enumerable: true, get: function () { return env_validator_js_1.validateEnv; } });
 var encrypted_field_js_1 = require("./security/encrypted-field.js");
@@ -18,6 +18,8 @@ Object.defineProperty(exports, "AuditColumnsMixin", { enumerable: true, get: fun
 Object.defineProperty(exports, "getAuditColumnsMigrationSnippet", { enumerable: true, get: function () { return audit_columns_js_1.getAuditColumnsMigrationSnippet; } });
 var append_only_log_js_1 = require("./data-integrity/append-only-log.js");
 Object.defineProperty(exports, "appendToLog", { enumerable: true, get: function () { return append_only_log_js_1.appendToLog; } });
+var MockAppendOnlyLog_js_1 = require("./data-integrity/MockAppendOnlyLog.js");
+Object.defineProperty(exports, "MockAppendOnlyLog", { enumerable: true, get: function () { return MockAppendOnlyLog_js_1.MockAppendOnlyLog; } });
 var logger_js_1 = require("./observability/logger.js");
 Object.defineProperty(exports, "createLogger", { enumerable: true, get: function () { return logger_js_1.createLogger; } });
 Object.defineProperty(exports, "withCorrelationId", { enumerable: true, get: function () { return logger_js_1.withCorrelationId; } });
@@ -40,3 +42,16 @@ Object.defineProperty(exports, "BulkheadRejectedError", { enumerable: true, get:
 var index_js_1 = require("./event-log/index.js");
 Object.defineProperty(exports, "PostgresAppendOnlyLogRepository", { enumerable: true, get: function () { return index_js_1.PostgresAppendOnlyLogRepository; } });
 Object.defineProperty(exports, "CausalChainTracer", { enumerable: true, get: function () { return index_js_1.CausalChainTracer; } });
+Object.defineProperty(exports, "AuditLogConsumer", { enumerable: true, get: function () { return index_js_1.AuditLogConsumer; } });
+Object.defineProperty(exports, "AUDIT_LOG_TOPICS", { enumerable: true, get: function () { return index_js_1.AUDIT_LOG_TOPICS; } });
+Object.defineProperty(exports, "AUDIT_LOG_CONSUMER_GROUP", { enumerable: true, get: function () { return index_js_1.AUDIT_LOG_CONSUMER_GROUP; } });
+Object.defineProperty(exports, "AppendOnlyLogAdapter", { enumerable: true, get: function () { return index_js_1.AppendOnlyLogAdapter; } });
+var portfolio_js_1 = require("./domain/portfolio-aggregation/portfolio.js");
+Object.defineProperty(exports, "Portfolio", { enumerable: true, get: function () { return portfolio_js_1.Portfolio; } });
+var value_objects_js_1 = require("./domain/portfolio-aggregation/value-objects.js");
+Object.defineProperty(exports, "XPTotal", { enumerable: true, get: function () { return value_objects_js_1.XPTotal; } });
+Object.defineProperty(exports, "ReputationScore", { enumerable: true, get: function () { return value_objects_js_1.ReputationScore; } });
+var achievement_js_1 = require("./domain/portfolio-aggregation/achievement.js");
+Object.defineProperty(exports, "createAchievement", { enumerable: true, get: function () { return achievement_js_1.createAchievement; } });
+var skill_record_js_1 = require("./domain/portfolio-aggregation/skill-record.js");
+Object.defineProperty(exports, "createSkillRecord", { enumerable: true, get: function () { return skill_record_js_1.createSkillRecord; } });

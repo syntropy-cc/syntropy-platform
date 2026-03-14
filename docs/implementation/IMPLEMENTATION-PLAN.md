@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-13 (S21: COMP-008.4–008.7 done)
+> **Last Updated**: 2026-03-14 (S22: COMP-008.8, COMP-010.1–010.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S22 — Treasury API + Portfolio Start
-CURRENT ITEM  : COMP-008.8 — Treasury REST API endpoints + integration tests
+CURRENT STAGE : S23 — Portfolio Aggregation Core
+CURRENT ITEM  : COMP-010.4 — SkillProfile computation
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 4 / 4 items done (S21 complete)
-OVERALL       : 102 / 262 items done (39%)
+STAGE PROGRESS: 0 / 4 items done (S22 complete)
+OVERALL       : 106 / 262 items done (40%)
 ```
 
 **Next 5 items**:
-1. `COMP-008.8` — Treasury REST API endpoints + integration tests ← **START HERE**
-2. `COMP-010.1` — Platform-core package setup + Portfolio aggregate
-3. …
-4. …
+1. `COMP-010.4` — SkillProfile computation ← **START HERE**
+2. `COMP-010.5` — ReputationScore calculation
+3. `COMP-010.6` — PortfolioEventConsumer (Kafka)
+4. `COMP-010.7` — PortfolioRepository (Postgres)
 5. …
 
-**Component record**: [`COMP-008`](./components/COMP-008-dip-value-distribution-treasury.md)
+**Component record**: [`COMP-010`](./components/COMP-010-portfolio-aggregation.md)
 
-**Next item (COMP-008.8) acceptance criteria**: `GET /api/v1/treasury/{institutionId}` returns balance + history; `POST /api/v1/treasury/{institutionId}/distribute` triggers distribution; integration test.
+**Next item (COMP-010.4) acceptance criteria**: `SkillProfileService.compute(userId)` extracts skill evidence from events (tags on completed fragments, contributions); returns `SkillProfile` with proficiency levels; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire to distribution service (3) Write integration test
+**Suggested steps**: (1) Define skill taxonomy (2) Write `SkillProfileService` (3) Write skill extraction tests
 
 ---
 
@@ -1921,7 +1921,7 @@ Status: ✅ Done | **Deps**: COMP-008.6, COMP-039.4
 
 #### [COMP-008.8] Treasury REST API endpoints + integration tests
 `S22` `High` `M` [Record→](./components/COMP-008-dip-value-distribution-treasury.md)
-Status: ⬜ | **Deps**: COMP-008.7, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-008.7, COMP-033.2
 **Criteria**: `GET /api/v1/treasury/{institutionId}` returns balance + history; `POST /api/v1/treasury/{institutionId}/distribute` triggers distribution; integration test.
 **Steps**: (1) Write API routes (2) Wire to distribution service (3) Write integration test
 
@@ -1929,7 +1929,7 @@ Status: ⬜ | **Deps**: COMP-008.7, COMP-033.2
 
 #### [COMP-010.1] Platform-core package setup + Portfolio aggregate
 `S22` `Critical` `S` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-003, COMP-009
+Status: ✅ Done | **Deps**: COMP-003, COMP-009
 **Criteria**: `packages/platform-core` workspace (if not already from COMP-038.1); `Portfolio` aggregate with `userId`, `xp`, `achievements[]`, `skills[]`; `Portfolio.fromEvents(events)` factory; unit tests.
 **Steps**: (1) Scaffold `packages/platform-core` (or extend) (2) Write `Portfolio` aggregate (3) Write event sourcing test
 
@@ -1937,7 +1937,7 @@ Status: ⬜ | **Deps**: COMP-003, COMP-009
 
 #### [COMP-010.2] XP calculation engine
 `S22` `Critical` `M` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.1
+Status: ✅ Done | **Deps**: COMP-010.1
 **Criteria**: `XPCalculator.calculate(events)` returns total XP; event types have XP weights (`artifact_published: 50`, `contribution_merged: 30`, etc.); level thresholds defined; unit tests.
 **Steps**: (1) Define XP weight table (2) Write `XPCalculator` (3) Write XP accumulation tests
 
@@ -1945,7 +1945,7 @@ Status: ⬜ | **Deps**: COMP-010.1
 
 #### [COMP-010.3] AchievementService
 `S22` `High` `M` [Record→](./components/COMP-010-portfolio-aggregation.md)
-Status: ⬜ | **Deps**: COMP-010.2
+Status: ✅ Done | **Deps**: COMP-010.2
 **Criteria**: `AchievementService.evaluate(portfolio, event)` unlocks achievements when milestones hit; achievement definitions stored in config; `AchievementUnlocked` domain event; unit tests.
 **Steps**: (1) Write achievement definitions config (2) Write `AchievementService` (3) Write milestone tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-13 | S21 complete (COMP-008.4–008.7 done)
+> Last Updated: 2026-03-14 | S22 complete (COMP-008.8, COMP-010.1–010.3 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 102 / 262 items (39%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 106 / 262 items (40%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
-| **Current Stage** | S22 — Treasury API + Portfolio Start | S56 | ⬜ |
+| **Current Stage** | S23 — Portfolio Aggregation Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-010.3 — AchievementService, achievement definitions, AchievementUnlocked event, unit tests
+- 2026-03-14 COMP-010.2 — XPCalculator, XP weights, level thresholds, unit tests
+- 2026-03-14 COMP-010.1 — Portfolio aggregate, fromEvents, value objects, unit tests
+- 2026-03-14 COMP-008.8 — Treasury REST API (GET/POST), TreasuryContext, distribution executor, integration test
 - 2026-03-13 COMP-008.7 — TreasuryRepository (Postgres), migrations treasury_accounts/avu_transactions/treasury_transfers, integration test
 - 2026-03-13 COMP-008.6 — TreasuryTransfer aggregate, dip.treasury.transfer_recorded event, unit tests
 - 2026-03-13 COMP-008.5 — Liquidation oracle (LiquidationOraclePort, OracleLiquidationAdapter, circuit breaker), unit tests

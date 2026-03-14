@@ -14,6 +14,12 @@ export { AVUTransaction } from "./domain/avu-transaction.js";
 export type { AVUTransactionType, AVUTransactionParams } from "./domain/avu-transaction.js";
 export type { TreasuryAccountRepositoryPort } from "./domain/ports/treasury-account-repository-port.js";
 export type { AVUTransactionJournalPort } from "./domain/ports/avu-transaction-journal-port.js";
+export type { AVUTransactionQueryPort } from "./domain/ports/avu-transaction-query-port.js";
+export { PostgresAVUTransactionQuery } from "./infrastructure/repositories/postgres-avu-transaction-query.js";
+export {
+  TreasuryDistributionExecutor,
+  TreasuryDistributionExecutorError,
+} from "./domain/services/treasury-distribution-executor.js";
 export { AVUAccountingService } from "./domain/services/avu-accounting-service.js";
 export type { RecordTransactionParams } from "./domain/services/avu-accounting-service.js";
 export { InMemoryTreasuryAccountRepository } from "./infrastructure/in-memory-treasury-account-repository.js";

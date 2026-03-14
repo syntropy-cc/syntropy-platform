@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/platform-core/subdomains/portfolio-aggregation.md](../../architecture/domains/platform-core/subdomains/portfolio-aggregation.md)
 > **Stage Assignment**: S4 — Platform Core Aggregation
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress (S22 done: 010.1–010.3)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -288,6 +288,21 @@ Portfolio Aggregation builds and maintains each user's verifiable dynamic portfo
 | COMP-011 Search & Recommendation | Reads reputation for ranking | Impacts recommendation quality |
 | COMP-012 AI Agents Orchestration | Portfolio in UserContextModel | Blocks AI personalization |
 | COMP-025 Labs Open Peer Review | Reputation for review visibility | Blocks review filtering |
+
+---
+
+## Implementation Log
+
+### 2026-03-14 — S22 (COMP-010.1–010.3)
+
+**COMP-010.1** — Portfolio aggregate and value objects
+- `packages/platform-core/src/domain/portfolio-aggregation/`: Portfolio, XPTotal, ReputationScore, SkillLevel, Achievement, SkillRecord. `Portfolio.fromEvents(userId, events, xpWeightByEventType)` and `Portfolio.empty(userId)`. `unlockAchievement(type)` throws if already unlocked; `addXp(delta)`. Unit tests in `portfolio.test.ts`.
+
+**COMP-010.2** — XP calculation engine
+- `xp-weights.ts`: DEFAULT_XP_WEIGHTS (artifact_published 50, contribution_merged 30, learn.*, hub.*, labs.*), LEVEL_THRESHOLDS, levelFromXp(). `xp-calculator.ts`: calculate(events, weights), XPCalculator class. Unit tests in `xp-calculator.test.ts`.
+
+**COMP-010.3** — AchievementService
+- `achievement-definitions.ts`: DEFAULT_ACHIEVEMENT_DEFINITIONS (first_fragment, first_contribution, ten_contributions, first_article, mentor). `achievement-service.ts`: evaluate(portfolio, event, definitions), AchievementService class; EVENT_TO_CONDITION maps event types to condition types; contributions_count uses payload.contributionCount. `events/achievement-unlocked.ts`: ACHIEVEMENT_UNLOCKED, createAchievementUnlockedEvent. Unit tests in `achievement-service.test.ts`.
 
 ---
 

@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/digital-institutions-protocol/subdomains/value-distribution-treasury.md](../../architecture/domains/digital-institutions-protocol/subdomains/value-distribution-treasury.md)
 > **Stage Assignment**: S20–S21 (per IMPLEMENTATION-PLAN.md)
-> **Status**: 🔵 In Progress (S21 done: 008.1–008.7)
+> **Status**: 🔵 In Progress (S22 done: 008.1–008.8)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -308,6 +308,13 @@ Value Distribution & Treasury owns the `Treasury` aggregate and manages AVU (Abs
 - Integration test: `tests/integration/treasury-repository.test.ts` (mock client).
 
 **Files created (S20+S21)**: `src/domain/treasury-account.ts`, `src/domain/avu-transaction.ts`, `src/domain/treasury-transfer.ts`, `src/domain/distribution-result.ts`, `src/domain/ports/*`, `src/domain/services/value-distribution-service.ts`, `src/domain/events/treasury-transfer-events.ts`, `src/infrastructure/oracle-adapter.ts`, `src/infrastructure/treasury-db-client.ts`, `src/infrastructure/pg-treasury-db-client.ts`, `src/infrastructure/repositories/postgres-*.ts`, in-memory impls, consumer, index; migrations; unit and integration tests.
+
+### 2026-03-14 — S22 (COMP-008.8)
+
+**COMP-008.8** — Treasury REST API endpoints + integration tests
+- Added `AVUTransactionQueryPort` and `PostgresAVUTransactionQuery` for transaction history by account.
+- Added `TreasuryDistributionExecutor`: runs `ValueDistributionService.compute()`, then debits institution account and credits each contributor (contributorId = institution id of recipient account). All contributor accounts must exist.
+- apps/api: `TreasuryContext`, `treasuryRoutes` (GET /api/v1/treasury/:institutionId, POST .../distribute), registered when `options.treasury` provided. Integration test in `apps/api/src/integration/treasury-api.integration.test.ts` (Testcontainers Postgres, GET balance+history, POST distribute result shape).
 
 ---
 

@@ -25,10 +25,12 @@ import { contractRoutes } from "./routes/contracts.js";
 import { projectRoutes } from "./routes/projects.js";
 import { iacpRoutes } from "./routes/iacp.js";
 import { governanceRoutes } from "./routes/governance.js";
+import { treasuryRoutes } from "./routes/treasury.js";
 import { internalEventSchemasPlugin } from "./routes/internal-event-schemas.js";
 import type { AiAgentsContext } from "./types/ai-agents-context.js";
 import type { DipContext } from "./types/dip-context.js";
 import type { GovernanceContext } from "./types/governance-context.js";
+import type { TreasuryContext } from "./types/treasury-context.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -50,6 +52,7 @@ export interface CreateAppOptions {
   supabaseClient?: SupabaseClient | null;
   dip?: DipContext | null;
   governance?: GovernanceContext | null;
+  treasury?: TreasuryContext | null;
   aiAgents?: AiAgentsContext | null;
 }
 
@@ -75,6 +78,9 @@ export async function createApp(options?: CreateAppOptions) {
   }
   if (options?.governance) {
     await app.register(governanceRoutes, { governance: options.governance });
+  }
+  if (options?.treasury) {
+    await app.register(treasuryRoutes, { treasury: options.treasury });
   }
   if (options?.aiAgents) {
     await app.register(aiAgentsRoutes, { aiAgents: options.aiAgents });

@@ -26,13 +26,34 @@ export {
   type HypothesisRecordParams,
   type HypothesisStatus,
 } from "./domain/scientific-context/index.js";
+export {
+  ScientificArticle,
+  ArticleStatus,
+  isArticleStatus,
+  ArticleVersion,
+  type ScientificArticleParams,
+  type ArticleVersionParams,
+} from "./domain/article-editor/index.js";
 export type {
   SubjectAreaRepositoryPort,
   SubjectAreaTreeNode,
 } from "./domain/scientific-context/ports/subject-area-repository-port.js";
 export type { ResearchMethodologyRepositoryPort } from "./domain/scientific-context/ports/research-methodology-repository-port.js";
 export type { HypothesisRecordRepositoryPort } from "./domain/scientific-context/ports/hypothesis-record-repository-port.js";
+export type { ScientificArticleRepositoryPort } from "./domain/article-editor/ports/scientific-article-repository-port.js";
+export type { ArticleVersionRepositoryPort } from "./domain/article-editor/ports/article-version-repository-port.js";
 export type { LabsDbClient } from "./infrastructure/labs-db-client.js";
+export { MystRenderer } from "./infrastructure/myst-renderer.js";
+export {
+  LabsArtifactBridge,
+  type DipArtifactCreator,
+} from "./infrastructure/labs-artifact-bridge.js";
+export type {
+  ArticlePublisherPort,
+  PublishArticleResult,
+} from "./domain/article-editor/ports/article-publisher-port.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";
+export { PostgresScientificArticleRepository } from "./infrastructure/repositories/postgres-scientific-article-repository.js";
+export { PostgresArticleVersionRepository } from "./infrastructure/repositories/postgres-article-version-repository.js";

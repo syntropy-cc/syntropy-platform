@@ -2,10 +2,15 @@
   "name": "@syntropy/labs-package",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@syntropy/types": "workspace:*"
+    "@syntropy/types": "workspace:*",
+    "myst-parser": "^1.7.0",
+    "myst-to-html": "^1.7.0",
+    "rehype-stringify": "^9.0.3",
+    "unified": "^10.1.1"
   },
   "scripts": {
     "build": "tsc",

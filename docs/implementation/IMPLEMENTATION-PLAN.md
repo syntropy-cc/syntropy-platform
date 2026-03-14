@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S35: COMP-022.1–022.5 done)
+> **Last Updated**: 2026-03-14 (S36: COMP-023.1–023.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S36 — Labs Article Editor Core (M3)
-CURRENT ITEM  : COMP-023.1 — ScientificArticle aggregate with MyST Markdown
+CURRENT STAGE : S37 — Article Completion + Experiment Start (M3)
+CURRENT ITEM  : COMP-023.6 — Article submission workflow
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 5 items done (S36)
-OVERALL       : 168 / 262 items done (64%)
+STAGE PROGRESS: 0 / 4 items done (S37)
+OVERALL       : 173 / 262 items done (66%)
 ```
 
 **Next 5 items**:
-1. `COMP-023.1` — ScientificArticle aggregate with MyST Markdown ← **START HERE**
-2. `COMP-023.2` — ArticleVersion snapshot
-3. `COMP-023.3` — MyST-to-HTML renderer
-4. `COMP-023.4` — Article DIP publication
-5. `COMP-023.5` — Article REST API
+1. `COMP-023.6` — Article submission workflow ← **START HERE**
+2. `COMP-023.7` — Article REST API endpoints
+3. `COMP-023.8` — Article integration tests
+4. `COMP-024.1` — ExperimentDesign aggregate
+5. `COMP-024.2` — ExperimentResult entity
 
 **Component record**: [`COMP-023`](./components/COMP-023-labs-article-editor.md)
 
-**Next item (COMP-023.1) acceptance criteria**: `ScientificArticle` aggregate with `articleId`, `title`, `content` (MyST Markdown string), `subjectAreaId`, `authorId`, `status`; `ArticleStatus` lifecycle; unit tests.
+**Next item (COMP-023.6) acceptance criteria**: `ArticleSubmissionService.submit(articleId)` transitions to `submitted`; notifies reviewers; `retract()` moves back to `draft`; `accept()` triggers DIP publication; unit tests.
 
-**Suggested steps**: (1) Write `ScientificArticle` aggregate (2) Define `ArticleStatus` enum (3) Write unit tests
+**Suggested steps**: (1) Write submission service (2) Add reviewer notification (3) Write submission flow test
 
 ---
 
@@ -2449,7 +2449,7 @@ Status: Done | **Deps**: COMP-022.4, COMP-033.2
 
 #### [COMP-023.1] ScientificArticle aggregate with MyST Markdown
 `S36` `Critical` `M` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-022, COMP-003
+Status: Done | **Deps**: COMP-022, COMP-003
 **Criteria**: `ScientificArticle` aggregate with `articleId`, `title`, `content` (MyST Markdown string), `subjectAreaId`, `authorId`, `status`; `ArticleStatus` lifecycle; unit tests.
 **Steps**: (1) Write `ScientificArticle` aggregate (2) Define `ArticleStatus` enum (3) Write unit tests
 
@@ -2457,7 +2457,7 @@ Status: ⬜ | **Deps**: COMP-022, COMP-003
 
 #### [COMP-023.2] ArticleVersion snapshot
 `S36` `Critical` `S` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.1
+Status: Done | **Deps**: COMP-023.1
 **Criteria**: `ArticleVersion` entity stores immutable content snapshot with version number and timestamp; created on each `save()`; `ArticleVersion.getLatest()` returns most recent; unit tests.
 **Steps**: (1) Write `ArticleVersion` entity (2) Add auto-increment versioning (3) Write version history tests
 
@@ -2465,7 +2465,7 @@ Status: ⬜ | **Deps**: COMP-023.1
 
 #### [COMP-023.3] MyST-to-HTML renderer
 `S36` `Critical` `M` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.2
+Status: Done | **Deps**: COMP-023.2
 **Criteria**: `MystRenderer.render(mystMarkdown)` returns HTML string; supports: headings, citations `[@key]`, figures, equations, admonitions; inline math `$x^2$` rendered via KaTeX; unit tests with sample MyST.
 **Steps**: (1) Add `myst-parser` library (2) Write `MystRenderer` wrapper (3) Write rendering tests
 
@@ -2473,7 +2473,7 @@ Status: ⬜ | **Deps**: COMP-023.2
 
 #### [COMP-023.4] Article DIP artifact publication
 `S36` `High` `S` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.3, COMP-003.2
+Status: Done | **Deps**: COMP-023.3, COMP-003.2
 **Criteria**: `LabsArtifactBridge.publish(article)` creates DIP artifact on article publication; attaches Nostr anchor; content hash of MyST source; unit tests.
 **Steps**: (1) Write `LabsArtifactBridge` (2) Map article to DIP artifact (3) Write bridge tests
 
@@ -2481,7 +2481,7 @@ Status: ⬜ | **Deps**: COMP-023.3, COMP-003.2
 
 #### [COMP-023.5] ArticleRepository (Postgres)
 `S36` `High` `S` [Record→](./components/COMP-023-labs-article-editor.md)
-Status: ⬜ | **Deps**: COMP-023.4, COMP-039.4
+Status: Done | **Deps**: COMP-023.4, COMP-039.4
 **Criteria**: Migrations for `scientific_articles`, `article_versions`; repositories with `save`, `findById`, `findByAuthor`; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S35 complete; next COMP-023.1
+> Last Updated: 2026-03-14 | S36 complete; next COMP-023.6
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 168 / 262 items (64%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 173 / 262 items (66%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S36 — Labs Article Editor Core | S56 | ⬜ |
+| **Current Stage** | S37 — Article Completion + Experiment Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,11 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-023.5 — ArticleRepository (Postgres); migrations scientific_articles, article_versions; PostgresScientificArticleRepository, PostgresArticleVersionRepository; article-editor-repository integration test
+- 2026-03-14 COMP-023.4 — LabsArtifactBridge (ArticlePublisherPort); content hash and Nostr anchor; unit tests with mocked DIP
+- 2026-03-14 COMP-023.3 — MystRenderer (myst-parser, myst-to-html); MyST to HTML; unit tests
+- 2026-03-14 COMP-023.2 — ArticleVersion entity; getLatest(versions); unit tests
+- 2026-03-14 COMP-023.1 — ScientificArticle aggregate, ArticleStatus; submitForReview, publish, updateDraft; unit tests
 - 2026-03-14 COMP-022.5 — Scientific Context REST API (GET /api/v1/labs/subject-areas, methodologies, POST/GET hypotheses); labs-scientific-context API tests
 - 2026-03-14 COMP-022.4 — Migrations labs.subject_areas, research_methodologies, hypothesis_records; Postgres repositories; scientific-context-repository integration test
 - 2026-03-14 COMP-022.3 — HypothesisRecord aggregate (proposed/confirmed/refuted); linkExperiment, confirm, refute; unit tests
@@ -3423,7 +3428,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 | COMP-020 Hub Institution Orchestration | 6 | 0 | ⬜ Not Started |
 | COMP-021 Hub Public Square | 5 | 0 | ⬜ Not Started |
 | COMP-022 Labs Scientific Context | 5 | 5 | Done |
-| COMP-023 Labs Article Editor | 8 | 0 | ⬜ Not Started |
+| COMP-023 Labs Article Editor | 8 | 5 | 🔵 In Progress |
 | COMP-024 Labs Experiment Design | 6 | 0 | ⬜ Not Started |
 | COMP-025 Labs Open Peer Review | 7 | 0 | ⬜ Not Started |
 | COMP-026 Labs DOI & Publication | 5 | 0 | ⬜ Not Started |

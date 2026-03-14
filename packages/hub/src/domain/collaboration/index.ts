@@ -45,3 +45,4 @@ export { StubContainerOrchestrator } from "./ports/container-orchestrator-port.j
 export type { ArtifactPublisherPort } from "./ports/artifact-publisher-port.js";
 export type { ContributionRepositoryPort } from "./ports/contribution-repository-port.js";
 export type { IssueRepositoryPort } from "./ports/issue-repository-port.js";
+export type { ContributionSandboxRepositoryPort } from "./ports/contribution-sandbox-repository-port.js";

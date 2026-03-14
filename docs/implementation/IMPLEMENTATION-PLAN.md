@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S31: COMP-019.1–019.5 done)
+> **Last Updated**: 2026-03-14 (S32: COMP-019.7 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S32 — Hub Collaboration Persistence & API
-CURRENT ITEM  : COMP-019.7 — CollaborationRepository (Postgres)
+CURRENT ITEM  : COMP-019.8 — Collaboration REST API endpoints
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 5 / 5 items done (S31 complete)
-OVERALL       : 149 / 262 items done (57%)
+STAGE PROGRESS: 1 / 5 items done (S32)
+OVERALL       : 150 / 262 items done (57%)
 ```
 
 **Next 5 items**:
-1. `COMP-019.7` — CollaborationRepository (Postgres) ← **START HERE**
-2. `COMP-019.8` — Collaboration REST API endpoints
-3. `COMP-020.1` — ContractTemplate entity
-4. `COMP-020.2` — InstitutionCreationWorkflow aggregate
-5. `COMP-020.3` — InstitutionProfile read model
+1. `COMP-019.8` — Collaboration REST API endpoints ← **START HERE**
+2. `COMP-020.1` — ContractTemplate entity
+3. `COMP-020.2` — InstitutionCreationWorkflow aggregate
+4. `COMP-020.3` — InstitutionProfile read model
+5. `COMP-020.4` — InstitutionOrchestrationService
 
 **Component record**: [`COMP-019`](./components/COMP-019-hub-collaboration-layer.md)
 
-**Next item (COMP-019.7) acceptance criteria**: Migrations for `issues`, `contributions`, `contribution_sandboxes`; repositories; integration test.
+**Next item (COMP-019.8) acceptance criteria**: `POST /api/v1/hub/issues`, `GET /api/v1/hub/issues`, `POST /api/v1/hub/contributions`, `POST /api/v1/hub/contributions/{id}/merge`; auth required; integration tests.
 
-**Suggested steps**: (1) Write migrations (2) Write repositories (3) Write integration test
+**Suggested steps**: (1) Write API routes (2) Wire to services (3) Write integration tests
 
 ---
 
@@ -2297,7 +2297,7 @@ Status: ✅ Done | **Deps**: COMP-019.4
 
 #### [COMP-019.7] CollaborationRepository (Postgres)
 `S32` `High` `S` [Record→](./components/COMP-019-hub-collaboration-layer.md)
-Status: ⬜ | **Deps**: COMP-019.5, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-019.5, COMP-039.4
 **Criteria**: Migrations for `issues`, `contributions`, `contribution_sandboxes`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -3201,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | COMP-019.5 done; S32 next (COMP-019.7)
+> Last Updated: 2026-03-14 | COMP-019.7 done; next COMP-019.8
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 149 / 262 items (57%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 150 / 262 items (57%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
 | **Current Stage** | S32 — Hub Collaboration Persistence & API | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-019.7 — Hub collaboration migrations (hub.issues, contributions, contribution_issue_links, contribution_sandboxes); PostgresIssueRepository, PostgresContributionRepository, PostgresContributionSandboxRepository; ContributionSandboxRepositoryPort; integration tests (HUB_INTEGRATION=true)
 - 2026-03-14 COMP-019.5 — ContributionIntegrationService.merge(); orchestration (publish DIP, merge contribution, close issues); unit tests with mocks
 - 2026-03-14 COMP-019.4 — DIPContributionAdapter (ACL); DipArtifactPublishClient; unit tests with mock DIP
 - 2026-03-14 COMP-019.3 — ContributionSandbox aggregate (config, resource limits, activate/complete); StubContainerOrchestrator; unit tests

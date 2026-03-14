@@ -12,7 +12,10 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@testcontainers/postgresql": "^10.14.0",
     "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.0",
+    "pg": "^8.13.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.0"
   }

@@ -18,10 +18,16 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DIPContributionAdapter = exports.ContributionNotReadyForMergeError = exports.ContributionIntegrationService = void 0;
+exports.PostgresContributionSandboxRepository = exports.PostgresContributionRepository = exports.PostgresIssueRepository = exports.DIPContributionAdapter = exports.ContributionNotReadyForMergeError = exports.ContributionIntegrationService = void 0;
 __exportStar(require("./domain/collaboration/index.js"), exports);
 var contribution_integration_service_js_1 = require("./application/contribution-integration-service.js");
 Object.defineProperty(exports, "ContributionIntegrationService", { enumerable: true, get: function () { return contribution_integration_service_js_1.ContributionIntegrationService; } });
 Object.defineProperty(exports, "ContributionNotReadyForMergeError", { enumerable: true, get: function () { return contribution_integration_service_js_1.ContributionNotReadyForMergeError; } });
 var dip_contribution_adapter_js_1 = require("./infrastructure/dip-contribution-adapter.js");
 Object.defineProperty(exports, "DIPContributionAdapter", { enumerable: true, get: function () { return dip_contribution_adapter_js_1.DIPContributionAdapter; } });
+var postgres_issue_repository_js_1 = require("./infrastructure/repositories/postgres-issue-repository.js");
+Object.defineProperty(exports, "PostgresIssueRepository", { enumerable: true, get: function () { return postgres_issue_repository_js_1.PostgresIssueRepository; } });
+var postgres_contribution_repository_js_1 = require("./infrastructure/repositories/postgres-contribution-repository.js");
+Object.defineProperty(exports, "PostgresContributionRepository", { enumerable: true, get: function () { return postgres_contribution_repository_js_1.PostgresContributionRepository; } });
+var postgres_contribution_sandbox_repository_js_1 = require("./infrastructure/repositories/postgres-contribution-sandbox-repository.js");
+Object.defineProperty(exports, "PostgresContributionSandboxRepository", { enumerable: true, get: function () { return postgres_contribution_sandbox_repository_js_1.PostgresContributionSandboxRepository; } });

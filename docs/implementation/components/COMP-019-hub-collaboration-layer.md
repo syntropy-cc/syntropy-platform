@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/hub/subdomains/collaboration-layer.md](../../architecture/domains/hub/subdomains/collaboration-layer.md)
 > **Stage Assignment**: S8 — Hub Domain
-> **Status**: 🔵 In Progress (S31 complete: 019.1–019.5)
+> **Status**: 🔵 In Progress (S32: 019.7 done)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -48,12 +48,12 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 5 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 3 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **8** |
 
-**Component Coverage**: 62% (S31 complete)
+**Component Coverage**: 75% (S32: 019.7 done)
 
 ### Item List
 
@@ -216,7 +216,7 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | collaboration-layer.md, ADR-004 |
 | **Dependencies** | COMP-019.1 |
@@ -226,14 +226,19 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 **Description**: Repository interfaces and PostgreSQL implementation for Hub collaboration entities.
 
 **Acceptance Criteria**:
-- [ ] `IssueRepository`, `ContributionRepository`, `ContributionSandboxRepository` interfaces
-- [ ] Migration: `issues`, `contributions`, `contribution_issue_links`, `contribution_sandboxes` tables
-- [ ] `contributions.dip_artifact_id` has immutability trigger (set once on integration)
-- [ ] Integration tests
+- [x] `IssueRepository`, `ContributionRepository`, `ContributionSandboxRepository` interfaces (ports); Postgres implementations
+- [x] Migration: `hub.issues`, `hub.contributions`, `hub.contribution_issue_links`, `hub.contribution_sandboxes` tables
+- [x] `contributions.dip_artifact_id` has immutability trigger (set once on integration)
+- [x] Integration tests (HUB_INTEGRATION=true, Testcontainers)
 
 **Files Created/Modified**:
-- `packages/hub/src/infrastructure/repositories/`
-- `packages/hub/src/infrastructure/migrations/001_collaboration_layer.sql`
+- `supabase/migrations/20260319000000_hub_collaboration.sql`
+- `packages/hub/src/domain/collaboration/ports/contribution-sandbox-repository-port.ts`
+- `packages/hub/src/infrastructure/hub-collaboration-db-client.ts`
+- `packages/hub/src/infrastructure/repositories/postgres-issue-repository.ts`
+- `packages/hub/src/infrastructure/repositories/postgres-contribution-repository.ts`
+- `packages/hub/src/infrastructure/repositories/postgres-contribution-sandbox-repository.ts`
+- `packages/hub/tests/integration/collaboration-repositories.integration.test.ts`
 
 ---
 
@@ -266,6 +271,13 @@ The Collaboration Layer is the Core subdomain of Hub. It owns `Issue`, `Contribu
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — S32 Hub Collaboration Persistence (COMP-019.7)
+
+- **Migrations**: `supabase/migrations/20260319000000_hub_collaboration.sql` — schema `hub`; tables `issues`, `contributions`, `contribution_issue_links`, `contribution_sandboxes`; trigger for `dip_artifact_id` immutability.
+- **Port**: `ContributionSandboxRepositoryPort` (getById, save).
+- **Infrastructure**: `HubCollaborationDbClient` interface; `PostgresIssueRepository`, `PostgresContributionRepository`, `PostgresContributionSandboxRepository`; link table for contribution–issue many-to-many.
+- **Tests**: Integration tests in `tests/integration/collaboration-repositories.integration.test.ts` (run with `HUB_INTEGRATION=true`, Testcontainers).
 
 ### 2026-03-14 — S31 Hub Collaboration Core (COMP-019.1–019.5)
 

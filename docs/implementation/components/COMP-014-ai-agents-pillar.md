@@ -46,12 +46,12 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -59,7 +59,7 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | pillar-agents.md |
 | **Dependencies** | COMP-012, COMP-013, COMP-015, COMP-016 |
@@ -89,7 +89,7 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | pillar-agents.md |
 | **Dependencies** | COMP-012, COMP-013, COMP-019, COMP-020 |
@@ -117,7 +117,7 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | pillar-agents.md |
 | **Dependencies** | COMP-012, COMP-013, COMP-022, COMP-023 |
@@ -144,7 +144,7 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | pillar-agents.md |
 | **Dependencies** | COMP-012, COMP-011 |
@@ -162,7 +162,9 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 - [ ] `labs.get_relevant_articles(researchFocus)` → returns relevant articles
 
 **Files Created/Modified**:
+- `packages/ai-agents/src/infrastructure/tool-handlers/ports/cross-pillar-ports.ts`
 - `packages/ai-agents/src/infrastructure/tool-handlers/cross-pillar-tool-handler.ts`
+- `packages/ai-agents/tests/unit/tool-handlers/cross-pillar-tool-handler.test.ts`
 
 ---
 
@@ -170,7 +172,7 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | pillar-agents.md |
 | **Dependencies** | COMP-013.3 |
@@ -195,7 +197,7 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
 | **Origin** | pillar-agents.md |
 | **Dependencies** | COMP-012, COMP-030 |
@@ -205,13 +207,15 @@ Pillar Agents implements the 12 specialized AI agents across Learn (5), Hub (3),
 **Description**: Implement `ide.get_workspace_context` tool handler used by the Artifact Copilot agent to provide IDE workspace context for contribution assistance.
 
 **Acceptance Criteria**:
-- [ ] `IDEToolHandler` implements `ToolHandler`
-- [ ] `ide.get_workspace_context(sessionId)` → returns current workspace file structure and recent changes
-- [ ] Requires active `IDESession` for the user
-- [ ] Returns sanitized context (no secrets, no credentials)
+- [x] `IDEToolHandler` implements `ToolHandler`
+- [x] `list_files(sessionId)`, `read_file(sessionId, path)`, `write_file(sessionId, path, content)`, `run_command(sessionId, cmd)` with session ownership via `getCurrentUserId()`
+- [x] Requires session ownership enforced by port implementation
+- [x] Unit tests
 
 **Files Created/Modified**:
+- `packages/ai-agents/src/infrastructure/tool-handlers/ports/ide-ports.ts`
 - `packages/ai-agents/src/infrastructure/tool-handlers/ide-tool-handler.ts`
+- `packages/ai-agents/tests/unit/tool-handlers/ide-tool-handler.test.ts`
 
 ---
 

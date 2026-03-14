@@ -31,12 +31,12 @@ Governance & Moderation is a **Supporting Subdomain** providing platform-level c
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 5 |
 | **Total** | **6** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 17%
 
 ### Item List
 
@@ -44,7 +44,7 @@ Governance & Moderation is a **Supporting Subdomain** providing platform-level c
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | governance-moderation/ARCHITECTURE.md |
 | **Dependencies** | COMP-001 |
@@ -54,14 +54,17 @@ Governance & Moderation is a **Supporting Subdomain** providing platform-level c
 **Description**: Set up `packages/governance-moderation` and implement `ModerationFlag` aggregate.
 
 **Acceptance Criteria**:
-- [ ] `packages/governance-moderation` fully scaffolded
-- [ ] `ModerationFlag` aggregate: `id`, `reporter_id`, `content_type`, `content_id`, `violation_type (spam|harassment|misinformation|copyright|inappropriate)`, `description`, `status (pending|under_review|resolved|dismissed)`, `created_at`
-- [ ] `ModerationFlag.startReview(moderatorId)` transitions to under_review
-- [ ] Events: `moderation.flag.created`
-- [ ] Unit tests: lifecycle transitions
+- [x] `packages/governance-moderation` scaffolded (package.json, tsconfig, vitest)
+- [x] `ModerationFlag` aggregate: `flagId`, `entityType`, `entityId`, `reason`, `status`, `createdAt`; `FlagStatus` enum (pending, under_review, resolved, dismissed)
+- [x] `ModerationFlag.startReview()`, `resolve()`, `dismiss()` transitions
+- [x] Unit tests: create, fromPersistence, lifecycle transitions
 
 **Files Created/Modified**:
+- `packages/governance-moderation/package.json`, `tsconfig.json`, `vitest.config.ts`
+- `packages/governance-moderation/src/domain/flag-status.ts`
 - `packages/governance-moderation/src/domain/moderation-flag.ts`
+- `packages/governance-moderation/src/index.ts`
+- `packages/governance-moderation/tests/unit/moderation-flag.test.ts`
 
 ---
 

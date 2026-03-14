@@ -19,6 +19,7 @@ export {
   type UserId,
   type AIAgentDefinition,
   type AgentRegistry,
+  type SystemPromptRepository,
   type ToolDefinition,
   type ToolResolver,
   type RoleResolver,
@@ -36,13 +37,20 @@ export {
   createLearnToolDefinitions,
   createHubToolDefinitions,
   createLabsToolDefinitions,
+  createCrossPillarToolDefinitions,
+  createIDEToolDefinitions,
   type LearnToolPort,
   type HubToolPort,
   type LabsToolPort,
+  type CrossPillarToolPort,
+  type IDEToolPort,
 } from "./infrastructure/tool-handlers/index.js";
 export { AgentEventPublisher } from "./infrastructure/agent-event-publisher.js";
 export {
   PostgresAgentSessionRepository,
   PgAgentSessionDbClient,
+  InMemorySystemPromptRepository,
+  createSystemPromptRepositoryFromMap,
+  loadSystemPromptsFromDirectory,
 } from "./infrastructure/index.js";
 export type { AgentSessionDbClient } from "./infrastructure/agent-session-db-client.js";

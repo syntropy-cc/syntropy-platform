@@ -141,5 +141,55 @@ describe("AgentOrchestrator", () => {
         /Session .* is not active/
       );
     });
+
+    it("prepends system prompt when agentRegistry and systemPromptRepository are provided", async () => {
+      const session = AgentSession.create({
+        userId: "u",
+        agentId: "my-agent",
+        sessionId: "s1",
+      });
+      const sessionStore = createMockSessionStore(session);
+      const { InMemoryAgentRegistry } = await import(
+        "../../../src/domain/registry/in-memory-agent-registry.js"
+      );
+      const { createAIAgentDefinition } = await import(
+        "../../../src/domain/registry/ai-agent-definition.js"
+      );
+      const { createSystemPromptRepositoryFromMap } = await import(
+        "../../../src/infrastructure/repositories/in-memory-system-prompt-repository.js"
+      );
+      const agentRegistry = new InMemoryAgentRegistry();
+      await agentRegistry.register(
+        createAIAgentDefinition({
+          agentId: "my-agent",
+          name: "Test Agent",
+          pillar: "learn",
+          toolIds: [],
+          systemPromptId: "learn-project-scoping",
+        })
+      );
+      const systemPromptRepository = createSystemPromptRepositoryFromMap({
+        "learn-project-scoping": "You are the Project Scoping Agent. Always be concise.",
+      });
+      let capturedPrompt = "";
+      const llm: LLMAdapter = {
+        async complete(prompt) {
+          capturedPrompt = prompt;
+          return { content: "OK" };
+        },
+      };
+      const orchestrator = new AgentOrchestrator({
+        sessionStore,
+        contextProvider: createMockContextProvider({}),
+        llm,
+        agentRegistry,
+        systemPromptRepository,
+      });
+
+      await orchestrator.invoke("s1", "Hi");
+
+      expect(capturedPrompt).toContain("system: You are the Project Scoping Agent. Always be concise.");
+      expect(capturedPrompt).toContain("user: Hi");
+    });
   });
 });

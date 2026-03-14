@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S48: COMP-019.6, COMP-014.1–014.3 done)
+> **Last Updated**: 2026-03-14 (S49: COMP-014.4–014.6, COMP-031.1 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S49 — AI Pillar Tools Completion (M4)
-CURRENT ITEM  : COMP-014.4 — Cross-pillar AI tool handlers
+CURRENT STAGE : S50 — Governance & Moderation (M4)
+CURRENT ITEM  : COMP-031.2 — ModerationAction entity
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 4 / 4 items done (S48)
-OVERALL       : 227 / 262 items done (87%)
+STAGE PROGRESS: 4 / 4 items done (S49)
+OVERALL       : 231 / 262 items done (88%)
 ```
 
 **Next 5 items**:
-1. `COMP-014.4` — Cross-pillar AI tool handlers ← **START HERE**
-2. `COMP-014.5` — AI agent system prompts
-3. `COMP-014.6` — IDE tool handler
-4. `COMP-031.1` — Gov/Mod package setup + ModerationFlag aggregate
+1. `COMP-031.2` — ModerationAction entity ← **START HERE**
+2. `COMP-031.3` — PlatformPolicy aggregate
+3. `COMP-031.4` — ContentPolicyEvaluator
+4. `COMP-031.5` — CommunityProposal aggregate
 5. (see Section 6 for full order)
 
-**Component record**: [`COMP-014`](./components/COMP-014-ai-agents-pillar.md)
+**Component record**: [`COMP-031`](./components/COMP-031-governance-moderation.md)
 
-**Next item (COMP-014.4) acceptance criteria**: Cross-pillar tools: `search_all(query)`, `get_portfolio(userId)`, `get_recommendations(userId)`; synthesize results from Search + Portfolio domains; unit tests.
+**Next item (COMP-031.2) acceptance criteria**: `ModerationAction` entity records moderator decision (`approve`, `remove`, `warn`, `ban`); links to `ModerationFlag`; moderator role required; audit trail; unit tests.
 
-**Suggested steps**: (1) Write 3 cross-pillar handlers (2) Wire to Search + Portfolio (3) Write synthesis tests
+**Suggested steps**: (1) Write `ModerationAction` entity (2) Add moderator role check (3) Write audit trail test
 
 ---
 
@@ -2921,7 +2921,7 @@ Status: ✅ Done | **Deps**: COMP-012, COMP-013, COMP-022, COMP-023
 
 #### [COMP-014.4] Cross-pillar AI tool handlers
 `S49` `High` `M` [Record→](./components/COMP-014-ai-agents-pillar.md)
-Status: ⬜ | **Deps**: COMP-012, COMP-011
+Status: ✅ Done | **Deps**: COMP-012, COMP-011
 **Criteria**: Cross-pillar tools: `search_all(query)`, `get_portfolio(userId)`, `get_recommendations(userId)`; synthesize results from Search + Portfolio domains; unit tests.
 **Steps**: (1) Write 3 cross-pillar handlers (2) Wire to Search + Portfolio (3) Write synthesis tests
 
@@ -2929,7 +2929,7 @@ Status: ⬜ | **Deps**: COMP-012, COMP-011
 
 #### [COMP-014.5] AI agent system prompts
 `S49` `High` `M` [Record→](./components/COMP-014-ai-agents-pillar.md)
-Status: ⬜ | **Deps**: COMP-013.3
+Status: ✅ Done | **Deps**: COMP-013.3
 **Criteria**: System prompts defined for all 12 agents (Learn tutor, Learn creator, Hub maintainer, Hub curator, Hub mentor, Labs editor, Labs reviewer, Labs advisor, Cross-pillar synthesizer, etc.); stored in `SystemPromptRepository`; version-controlled.
 **Steps**: (1) Write system prompts for all 12 agents (2) Store in `SystemPromptRepository` (3) Wire to `AIAgentDefinition`
 
@@ -2937,7 +2937,7 @@ Status: ⬜ | **Deps**: COMP-013.3
 
 #### [COMP-014.6] IDE tool handler
 `S49` `High` `M` [Record→](./components/COMP-014-ai-agents-pillar.md)
-Status: ⬜ | **Deps**: COMP-012, COMP-030
+Status: ✅ Done | **Deps**: COMP-012, COMP-030
 **Criteria**: IDE tool handlers: `list_files(sessionId)`, `read_file(sessionId, path)`, `write_file(sessionId, path, content)`, `run_command(sessionId, cmd)`; session ownership enforced; unit tests.
 **Steps**: (1) Write 4 IDE tool handlers (2) Add session ownership check (3) Write handler tests
 
@@ -2945,7 +2945,7 @@ Status: ⬜ | **Deps**: COMP-012, COMP-030
 
 #### [COMP-031.1] Gov/Mod package setup + ModerationFlag aggregate
 `S49` `Critical` `S` [Record→](./components/COMP-031-governance-moderation.md)
-Status: ⬜ | **Deps**: COMP-001, COMP-028
+Status: ✅ Done | **Deps**: COMP-001, COMP-028
 **Criteria**: `packages/governance-moderation` workspace; `ModerationFlag` aggregate with `flagId`, `entityType`, `entityId`, `reason`, `status`; `FlagStatus` enum; unit tests.
 **Steps**: (1) Scaffold `packages/governance-moderation` (2) Write `ModerationFlag` aggregate (3) Write flag tests
 
@@ -3201,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S48 COMP-019.6, COMP-014.1–014.3 done; next COMP-014.4
+> Last Updated: 2026-03-14 | S49 COMP-014.4–014.6, COMP-031.1 done; next COMP-031.2
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 227 / 262 items (87%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 231 / 262 items (88%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
 | **Current Stage** | S49 — AI Pillar Tools Completion | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-031.1 — packages/governance-moderation; ModerationFlag aggregate; FlagStatus enum; startReview/resolve/dismiss; unit tests
+- 2026-03-14 COMP-014.6 — IDE tool handler (list_files, read_file, write_file, run_command); IDEToolPort; session ownership via getCurrentUserId; unit tests
+- 2026-03-14 COMP-014.5 — System prompts for 12 agents; SystemPromptRepository; InMemorySystemPromptRepository; loadSystemPromptsFromDirectory; orchestrator system prompt wiring; unit tests
+- 2026-03-14 COMP-014.4 — Cross-pillar AI tool handlers (search_all, get_portfolio, get_recommendations); CrossPillarToolPort; unit tests
 - 2026-03-14 COMP-014.3 — Labs AI tool handlers (get_article, search_articles, get_experiment, suggest_methodology); createLabsToolDefinitions; LabsToolPort; unit tests
 - 2026-03-14 COMP-014.2 — Hub AI tool handlers (get_issues, get_contribution, analyze_contribution, get_institution_summary); createHubToolDefinitions; HubToolPort; unit tests
 - 2026-03-14 COMP-014.1 — Learn AI tool handlers (search_fragments, get_fragment, get_learner_progress, suggest_next_content); createLearnToolDefinitions; LearnToolPort; unit tests

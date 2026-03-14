@@ -37,4 +37,8 @@ export class InMemoryAgentRegistry implements AgentRegistry {
   async findAll(): Promise<AIAgentDefinition[]> {
     return Array.from(this.byId.values());
   }
+
+  async findById(agentId: string): Promise<AIAgentDefinition | null> {
+    return this.byId.get(agentId) ?? null;
+  }
 }

@@ -21,6 +21,7 @@ export {
   ToolPermissionEvaluator,
   type AIAgentDefinition,
   type AgentRegistry,
+  type SystemPromptRepository,
   type ToolDefinition,
   type ToolResolver,
   type RoleResolver,

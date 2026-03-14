@@ -10,4 +10,6 @@ export interface AgentRegistry {
   findByPillar(pillar: string): Promise<AIAgentDefinition[]>;
   /** Returns all registered agents (for list endpoint). */
   findAll(): Promise<AIAgentDefinition[]>;
+  /** Returns a single agent by id (for resolving system prompt). */
+  findById(agentId: string): Promise<AIAgentDefinition | null>;
 }

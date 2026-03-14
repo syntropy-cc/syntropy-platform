@@ -1,12 +1,14 @@
 /**
  * AgentOrchestrator — builds prompt from context, calls LLM, returns AgentResponse.
- * Architecture: COMP-012.6, orchestration-context-engine
+ * Architecture: COMP-012.6, orchestration-context-engine, COMP-014.5
  */
 
 import type { AgentSession } from "./agent-session.js";
 import type { AgentResponse } from "./agent-response.js";
 import type { LLMAdapter } from "./llm-adapter.js";
 import type { ToolRouter } from "./tool-router.js";
+import type { AgentRegistry } from "../registry/agent-registry.js";
+import type { SystemPromptRepository } from "../registry/system-prompt-repository.js";
 
 /** Session store for loading and persisting AgentSession. */
 export interface AgentSessionStore {
@@ -24,6 +26,10 @@ export interface AgentOrchestratorDeps {
   contextProvider: ContextSnapshotProvider;
   llm: LLMAdapter;
   toolRouter?: ToolRouter;
+  /** Optional: resolve agent definition for system prompt (COMP-014.5). */
+  agentRegistry?: AgentRegistry;
+  /** Optional: load system prompt text by prompt ID. */
+  systemPromptRepository?: SystemPromptRepository;
 }
 
 /**
@@ -55,7 +61,8 @@ export class AgentOrchestrator {
     const context = await this.deps.contextProvider.getContextForUser(
       withUserMessage.userId
     );
-    const prompt = this.buildPrompt(withUserMessage.history);
+    const systemPrompt = await this.resolveSystemPrompt(withUserMessage.agentId);
+    const prompt = this.buildPrompt(withUserMessage.history, systemPrompt);
     const llmResponse = await this.deps.llm.complete(prompt, context || undefined);
 
     const withAssistantMessage = withUserMessage.addMessage(
@@ -95,7 +102,8 @@ export class AgentOrchestrator {
     const context = await this.deps.contextProvider.getContextForUser(
       withUserMessage.userId
     );
-    const prompt = this.buildPrompt(withUserMessage.history);
+    const systemPrompt = await this.resolveSystemPrompt(withUserMessage.agentId);
+    const prompt = this.buildPrompt(withUserMessage.history, systemPrompt);
 
     const stream = this.deps.llm.completeStreaming?.(prompt, context || undefined);
     if (!stream) {
@@ -115,9 +123,25 @@ export class AgentOrchestrator {
     await this.deps.sessionStore.save(withAssistantMessage);
   }
 
-  private buildPrompt(history: readonly { role: string; content: string }[]): string {
-    return history
+  private async resolveSystemPrompt(agentId: string): Promise<string | null> {
+    if (!this.deps.agentRegistry || !this.deps.systemPromptRepository) {
+      return null;
+    }
+    const def = await this.deps.agentRegistry.findById(agentId);
+    if (!def) return null;
+    return this.deps.systemPromptRepository.getByPromptId(def.systemPromptId);
+  }
+
+  private buildPrompt(
+    history: readonly { role: string; content: string }[],
+    systemPrompt: string | null = null
+  ): string {
+    const conversation = history
       .map((m) => `${m.role}: ${m.content}`)
       .join("\n\n");
+    if (systemPrompt) {
+      return `system: ${systemPrompt}\n\n${conversation}`;
+    }
+    return conversation;
   }
 }

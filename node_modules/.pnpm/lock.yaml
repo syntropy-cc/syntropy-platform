@@ -295,6 +295,9 @@ importers:
 
   packages/dip:
     dependencies:
+      '@syntropy/dip-contracts':
+        specifier: workspace:*
+        version: link:../dip-contracts
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../event-bus

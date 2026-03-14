@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S11 — DIP Smart Contract Engine
-CURRENT ITEM  : COMP-004.5 — ContractRepository (Postgres)
+CURRENT ITEM  : COMP-004.6 — Smart Contract API + integration tests
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S10) | 4 / 6 items done (S11)
-OVERALL       : 58 / 262 items done (22%)
+STAGE PROGRESS: 4 / 4 items done (S10) | 5 / 6 items done (S11)
+OVERALL       : 59 / 262 items done (23%)
 ```
 
 **Next 5 items**:
@@ -23,13 +23,14 @@ OVERALL       : 58 / 262 items done (22%)
 4. `COMP-004.2` — GovernanceContract aggregate + clause value objects ✅
 5. `COMP-004.3` — SmartContractEvaluator ✅
 6. `COMP-004.4` — Contract DSL parser ✅
-7. `COMP-004.5` — ContractRepository (Postgres) ← **START HERE**
+7. `COMP-004.5` — ContractRepository (Postgres) ✅
+8. `COMP-004.6` — Smart Contract API + integration tests ← **START HERE**
 
 **Component record**: [`COMP-004`](./components/COMP-004-dip-smart-contract-engine.md)
 
-**Next item (COMP-004.5) acceptance criteria**: `ContractRepository` with `save`, `findById`, `findByInstitution`; migration creates `governance_contracts` table; stores DSL as JSONB; integration test.
+**Next item (COMP-004.6) acceptance criteria**: `POST /api/v1/contracts`, `GET /api/v1/contracts/{id}`, `POST /api/v1/contracts/{id}/evaluate`; full lifecycle integration test; DSL validation on create.
 
-**Suggested steps**: (1) Write migration (2) Write repository (3) Write integration test
+**Suggested steps**: (1) Write API routes (2) Wire to evaluator (3) Write integration test
 
 ---
 
@@ -1571,7 +1572,7 @@ Status: ✅ Done | **Deps**: COMP-004.2
 
 #### [COMP-004.5] ContractRepository (Postgres)
 `S11` `High` `S` [Record→](./components/COMP-004-dip-smart-contract-engine.md)
-Status: ⬜ | **Deps**: COMP-004.2, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-004.2, COMP-039.4
 **Criteria**: `ContractRepository` with `save`, `findById`, `findByInstitution`; migration creates `governance_contracts` table; stores DSL as JSONB; integration test.
 **Steps**: (1) Write migration (2) Write repository (3) Write integration test
 
@@ -3209,7 +3210,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 58 / 262 items (22%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 59 / 262 items (23%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S11 — DIP Smart Contract Engine | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3219,6 +3220,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-004.5 — ContractRepository (Postgres)
 - 2026-03-13 COMP-004.4 — Contract DSL parser
 - 2026-03-13 COMP-004.3 — SmartContractEvaluator
 - 2026-03-13 COMP-004.2 — GovernanceContract aggregate + clause value objects

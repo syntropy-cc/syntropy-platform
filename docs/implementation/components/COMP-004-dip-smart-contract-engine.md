@@ -50,12 +50,12 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 4 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 2 |
+| ⬜ Ready/Backlog | 1 |
 | **Total** | **6** |
 
-**Component Coverage**: 67%
+**Component Coverage**: 83%
 
 ### Item List
 
@@ -172,7 +172,7 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | IMPLEMENTATION-PLAN.md Section 7, smart-contract-engine.md |
 | **Dependencies** | COMP-004.2, COMP-039.4 |
@@ -182,13 +182,20 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 **Description**: `ContractRepository` with `save`, `findById`, `findByInstitution`; migration creates `governance_contracts` table; stores DSL as JSONB; integration test.
 
 **Acceptance Criteria** (per Implementation Plan):
-- [ ] `ContractRepository` with `save`, `findById`, `findByInstitution`
-- [ ] Migration creates `governance_contracts` table; stores DSL as JSONB
-- [ ] Integration test
+- [x] `ContractRepository` with `save`, `findById`, `findByInstitution`
+- [x] Migration creates `governance_contracts` table; stores DSL as JSONB
+- [x] Integration test
 
-**Files to create** (aligned with plan):
-- Migration in `packages/dip` or as specified by project convention
-- Repository interface and Postgres implementation
+**Files Created/Modified**:
+- `supabase/migrations/20260313240000_dip_governance_contracts.sql` — `dip.governance_contracts` table (id, institution_id, dsl JSONB, created_at, updated_at)
+- `packages/dip-contracts/src/domain/repositories/contract-repository.ts` — `ContractRepository` interface
+- `packages/dip-contracts/src/domain/index.ts`, `src/index.ts` — export `ContractRepository`
+- `packages/dip/package.json` — added `@syntropy/dip-contracts` dependency
+- `packages/dip/src/infrastructure/contract-db-client.ts` — `ContractDbClient` interface
+- `packages/dip/src/infrastructure/pg-contract-db-client.ts` — `PgContractDbClient`
+- `packages/dip/src/infrastructure/repositories/postgres-contract-repository.ts` — `PostgresContractRepository`
+- `packages/dip/src/index.ts` — exports for contract repository and client
+- `packages/dip/tests/integration/contract-repository.test.ts` — 4 integration tests (roundtrip, findById null, findByInstitution, upsert)
 
 ---
 

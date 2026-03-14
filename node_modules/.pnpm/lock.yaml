@@ -363,6 +363,10 @@ importers:
         version: 2.1.9(@types/node@22.19.15)(jsdom@25.0.1)
 
   packages/dip-governance:
+    dependencies:
+      '@syntropy/dip-contracts':
+        specifier: workspace:*
+        version: link:../dip-contracts
     devDependencies:
       '@types/node':
         specifier: ^22.10.0

@@ -14,3 +14,14 @@ export interface DigitalInstitutionCreatedEvent {
   readonly governanceContract: string;
   readonly timestamp: string;
 }
+
+/**
+ * Emitted when a governance proposal is executed (COMP-007.4).
+ */
+export interface ProposalExecutedEvent {
+  readonly eventType: "dip.governance.proposal_executed";
+  readonly institutionId: string;
+  readonly proposalId: string;
+  readonly proposalType: string;
+  readonly timestamp: string;
+}

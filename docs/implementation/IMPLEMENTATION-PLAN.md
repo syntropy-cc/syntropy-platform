@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S18 complete: COMP-005.8, COMP-007.1–007.3)
+> **Last Updated**: 2026-03-14 (S19 progress: COMP-007.4 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,23 +10,24 @@
 
 ```
 CURRENT STAGE : S19 — Governance Service + Legitimacy Chain
-CURRENT ITEM  : COMP-007.4 — GovernanceService.executeProposal()
+CURRENT ITEM  : COMP-007.5 — LegitimacyChain event chain
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 4 / 4 items done (S18)
-OVERALL       : 89 / 262 items done (34%)
+STAGE PROGRESS: 1 / 5 items done (S19)
+OVERALL       : 90 / 262 items done (34%)
 ```
 
 **Next 5 items**:
-1. `COMP-007.4` — GovernanceService.executeProposal() ← **START HERE**
-2. `COMP-007.5` — LegitimacyChain event chain
-3. `COMP-007.6` — Governance REST API + integration tests
-4. …
+1. `COMP-007.5` — LegitimacyChain event chain ← **START HERE**
+2. `COMP-007.6` — GovernanceRepository (Postgres)
+3. `COMP-007.7` — GovernanceEventPublisher (Kafka)
+4. `COMP-007.8` — Governance query service + read models
+5. …
 
 **Component record**: [`COMP-007`](./components/COMP-007-dip-institutional-governance.md)
 
-**Next item (COMP-007.4) acceptance criteria**: `GovernanceService.executeProposal(proposal)` evaluates governance contract first; rejects if quorum not met; applies proposal effects; publishes `governance.proposal.executed`; unit tests.
+**Next item (COMP-007.5) acceptance criteria**: `LegitimacyChain` append-only record of governance decisions; each entry references previous via hash; `append(event)` stores with causation chain; `verify()` checks chain integrity; unit tests.
 
-**Suggested steps**: (1) Write `GovernanceService` (2) Wire to `SmartContractEvaluator` (3) Write quorum enforcement test
+**Suggested steps**: (1) Write `LegitimacyChain` class (2) Implement hash-linked chain (3) Write integrity verification test
 
 ---
 
@@ -1816,7 +1817,7 @@ Status: ✅ Done | **Deps**: COMP-007.2, COMP-037.1
 
 #### [COMP-007.4] GovernanceService.executeProposal()
 `S19` `Critical` `M` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.3, COMP-004.3
+Status: ✅ Done | **Deps**: COMP-007.3, COMP-004.3
 **Criteria**: `GovernanceService.executeProposal(proposal)` evaluates governance contract first; rejects if quorum not met; applies proposal effects; publishes `governance.proposal.executed`; unit tests.
 **Steps**: (1) Write `GovernanceService` (2) Wire to `SmartContractEvaluator` (3) Write quorum enforcement test
 
@@ -3200,13 +3201,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S18 complete (COMP-005.8, COMP-007.1–007.3)
+> Last Updated: 2026-03-14 | S19 progress (COMP-007.4 done)
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 89 / 262 items (34%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 90 / 262 items (34%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
 | **Current Stage** | S19 — Governance Service + Legitimacy Chain | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3216,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-007.4 — GovernanceService.executeProposal() (contract eval, quorum, publish proposal_executed), unit tests
 - 2026-03-14 COMP-007.3 — VotingService (eligibility, double-vote, getVoteSummary), unit tests
 - 2026-03-14 COMP-007.2 — Proposal aggregate (open/close/execute), unit tests
 - 2026-03-14 COMP-007.1 — DIP Governance package + DigitalInstitution aggregate, unit tests

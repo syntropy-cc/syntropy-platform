@@ -50,14 +50,14 @@ Institutional Governance owns the `DigitalInstitution` aggregate and manages the
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 3 |
+| ✅ Done | 4 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 6 |
+| ⬜ Ready/Backlog | 5 |
 | **Total** | **9** |
 
-**Component Coverage**: 33%
+**Component Coverage**: 44%
 
-**Implementation Plan items (Section 7) completed**: COMP-007.1 `packages/dip-governance` workspace, DigitalInstitution aggregate (create, fromPersistence, status forming|active|dissolved), domain events. COMP-007.2 Proposal aggregate (proposalId, institutionId, type, status), ProposalStatus enum, open/close/execute transitions, unit tests. COMP-007.3 VotingService (castVote, getVoteSummary), ProposalRepositoryPort, VoteStorePort, InMemoryVoteStore, eligibility check, double-vote prevention, unit tests.
+**Implementation Plan items (Section 7) completed**: COMP-007.1 `packages/dip-governance` workspace, DigitalInstitution aggregate (create, fromPersistence, status forming|active|dissolved), domain events. COMP-007.2 Proposal aggregate (proposalId, institutionId, type, status), ProposalStatus enum, open/close/execute transitions, unit tests. COMP-007.3 VotingService (castVote, getVoteSummary), ProposalRepositoryPort, VoteStorePort, InMemoryVoteStore, eligibility check, double-vote prevention, unit tests. COMP-007.4 GovernanceService.executeProposal() with contract evaluation (SmartContractEvaluator), quorum enforcement, ProposalExecutionRejectedError, GovernanceContractResolverPort, ProposalExecutedPublisherPort, TotalEligibleResolverPort, ProposalExecutedEvent; unit tests (success, quorum rejected, not closed, not found, contract not found).
 
 ### Item List
 

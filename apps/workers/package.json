@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@syntropy/communication": "workspace:*",
     "@syntropy/event-bus": "workspace:*",
     "@syntropy/hub-package": "workspace:*",
     "@syntropy/labs-package": "workspace:*",

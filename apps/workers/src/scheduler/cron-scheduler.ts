@@ -37,8 +37,10 @@ function createLabsDbClient(pool: Pool): LabsDbClient {
   return {
     execute: (sql: string, params: unknown[]) =>
       pool.query(sql, params).then(() => {}),
-    query: (sql: string, params: unknown[]) =>
-      pool.query(sql, params).then((r) => r.rows as Record<string, unknown>[]),
+    query: async <T = Record<string, unknown>>(
+      sql: string,
+      params: unknown[]
+    ): Promise<T[]> => pool.query(sql, params).then((r) => r.rows as T[]),
   };
 }
 

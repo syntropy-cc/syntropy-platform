@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S43: COMP-027.6–027.7, COMP-028.1–028.2 done)
+> **Last Updated**: 2026-03-14 (S44: COMP-028.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,21 +10,21 @@
 
 ```
 CURRENT STAGE : S44 — Communication Core (M4)
-CURRENT ITEM  : COMP-028.3 — NotificationEventConsumer (Kafka)
+CURRENT ITEM  : COMP-028.4 — Notification delivery service
 MILESTONE     : M4 — Supporting Domains + AI Pillar Tools
-STAGE PROGRESS: 4 / 4 items done (S43)
-OVERALL       : 204 / 262 items done (78%)
+STAGE PROGRESS: 1 / 5 items done (S44)
+OVERALL       : 205 / 262 items done (78%)
 ```
 
 **Next 5 items**:
-1. `COMP-028.3` — NotificationEventConsumer (Kafka) ← **START HERE**
+1. `COMP-028.4` — Notification delivery service ← **START HERE**
 2. (see Section 6 for full order)
 
 **Component record**: [`COMP-028`](./components/COMP-028-communication.md)
 
-**Next item (COMP-028.3) acceptance criteria**: `NotificationEventConsumer` subscribes to all domain events that trigger notifications; creates `Notification` entities; maps events to notification templates; registered in `WorkerRegistry`; integration test.
+**Next item (COMP-028.4) acceptance criteria**: `NotificationDeliveryService.deliver(notification)` delivers via: in-app (DB), email (SendGrid adapter), push (FCM adapter); respects user preferences; retry on failure; unit tests.
 
-**Suggested steps**: (1) Write consumer (2) Map events to notifications (3) Write consumer integration test
+**Suggested steps**: (1) Write `NotificationDeliveryService` (2) Add channel adapters (3) Write delivery tests
 
 ---
 
@@ -2734,7 +2734,7 @@ Status: ✅ Done | **Deps**: COMP-028.1
 
 #### [COMP-028.3] NotificationEventConsumer (Kafka)
 `S44` `Critical` `M` [Record→](./components/COMP-028-communication.md)
-Status: ⬜ | **Deps**: COMP-028.2, COMP-009.1
+Status: ✅ Done | **Deps**: COMP-028.2, COMP-009.1
 **Criteria**: `NotificationEventConsumer` subscribes to all domain events that trigger notifications; creates `Notification` entities; maps events to notification templates; registered in `WorkerRegistry`; integration test.
 **Steps**: (1) Write consumer (2) Map events to notifications (3) Write consumer integration test
 
@@ -3198,13 +3198,13 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S43 complete; next COMP-028.3
+> Last Updated: 2026-03-14 | S44 COMP-028.3 done; next COMP-028.4
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 204 / 262 items (78%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 205 / 262 items (78%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M4 — Supporting Domains + AI Pillar Tools | M5 | ⬜ |
 | **Current Stage** | S44 — Communication Core | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3214,6 +3214,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-028.3 — NotificationEventConsumer (Kafka); Notification entity, NotificationRepository, event mapping; Postgres + InMemory repos; worker registered; integration test
 - 2026-03-14 COMP-028.2 — Message entity (messageId, threadId, authorId, content, sentAt); SoftDeletable; unit tests
 - 2026-03-14 COMP-028.1 — Communication package + Thread aggregate (threadId, participants, type); ThreadType; addParticipant; unit tests
 - 2026-03-14 COMP-027.7 — Sponsorship API integration tests (create → GET → payment-intent; real DB + MockPaymentGateway)

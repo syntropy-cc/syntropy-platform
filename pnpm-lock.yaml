@@ -277,6 +277,9 @@ importers:
 
   apps/workers:
     dependencies:
+      '@syntropy/communication':
+        specifier: workspace:*
+        version: link:../../packages/communication
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../../packages/event-bus
@@ -345,6 +348,9 @@ importers:
 
   packages/communication:
     dependencies:
+      '@syntropy/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
       '@syntropy/platform-core':
         specifier: workspace:*
         version: link:../platform-core

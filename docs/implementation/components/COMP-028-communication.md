@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/communication/ARCHITECTURE.md](../../architecture/domains/communication/ARCHITECTURE.md)
 > **Stage Assignment**: S11 — Supporting Domains
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -32,12 +32,14 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **7** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 43%
+
+*Note: Implementation Plan (Section 7) is the authority for work item IDs and titles. COMP-028.3 in the Plan = NotificationEventConsumer (Kafka).*
 
 ### Item List
 
@@ -93,28 +95,43 @@ Communication is a **Generic Subdomain** providing messaging, thread management,
 
 ---
 
-#### [COMP-028.3] NotificationService
+#### [COMP-028.3] NotificationEventConsumer (Kafka) — *per Implementation Plan*
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
-| **Priority** | High |
-| **Origin** | communication/ARCHITECTURE.md |
-| **Dependencies** | COMP-028.2 |
-| **Size** | S |
+| **Status** | ✅ Done |
+| **Priority** | Critical |
+| **Origin** | IMPLEMENTATION-PLAN.md Section 7 |
+| **Dependencies** | COMP-028.2, COMP-009.1 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
-**Description**: Implement `NotificationService` that creates and delivers notifications based on user preferences.
+**Description**: Kafka consumer that subscribes to domain events, creates `Notification` entities, maps events to notification types, and persists via NotificationRepository; registered in WorkerRegistry.
 
 **Acceptance Criteria**:
-- [ ] `NotificationService.notify(recipientId, type, anchor, content)` checks preferences, creates Notification records per enabled channel
-- [ ] Email delivery via `EmailAdapter` (ACL wrapping transactional email provider)
-- [ ] Platform notifications stored and served via SSE or polling
-- [ ] Respects quiet hours — queues during off-hours, delivers at window start
+- [x] `NotificationEventConsumer` subscribes to learn.events, hub.events, labs.events, dip.events
+- [x] Creates `Notification` entities; maps events to notification templates (eventType → notificationType, recipient from payload)
+- [x] Registered in WorkerRegistry as real "notifications" worker (replaces stub)
+- [x] Integration test (mock consumer + InMemoryNotificationRepository)
 
 **Files Created/Modified**:
-- `packages/communication/src/application/notification-service.ts`
-- `packages/communication/src/infrastructure/email-adapter.ts`
+- `packages/communication/src/domain/notification.ts`
+- `packages/communication/src/domain/ports/notification-repository.ts`
+- `packages/communication/src/infrastructure/repositories/in-memory-notification-repository.ts`
+- `packages/communication/src/infrastructure/repositories/postgres-notification-repository.ts`
+- `packages/communication/src/infrastructure/communication-db-client.ts`
+- `packages/communication/src/infrastructure/notification-event-mapping.ts`
+- `packages/communication/src/infrastructure/consumers/notification-event-consumer.ts`
+- `supabase/migrations/20260329000000_communication_notifications.sql`
+- `packages/communication/tests/unit/notification.test.ts`
+- `packages/communication/tests/unit/notification-event-mapping.test.ts`
+- `packages/communication/tests/integration/notification-event-consumer.test.ts`
+- `apps/workers/src/workers/notification-event-consumer-worker.ts`
+- `apps/workers/src/main.ts` (register worker)
+- `packages/communication/package.json` (add @syntropy/event-bus)
+- `packages/communication/src/index.ts` (exports)
+- `apps/workers/package.json` (add @syntropy/communication)
 
 ---
 

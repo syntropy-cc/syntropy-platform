@@ -55,6 +55,7 @@ export {
 export type { LegitimacyChainRepositoryPort } from "./domain/ports/legitimacy-chain-repository.js";
 export type { DigitalInstitutionRepositoryPort } from "./domain/ports/digital-institution-repository.js";
 export type { GovernanceDbClient } from "./infrastructure/governance-db-client.js";
+export { PgGovernanceDbClient } from "./infrastructure/pg-governance-db-client.js";
 export { PostgresLegitimacyChainRepository } from "./infrastructure/postgres-legitimacy-chain-repository.js";
 export { PostgresDigitalInstitutionRepository } from "./infrastructure/postgres-digital-institution-repository.js";
 export { PostgresProposalRepository } from "./infrastructure/postgres-proposal-repository.js";

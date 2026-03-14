@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S19 complete: COMP-007.5–007.8 done)
+> **Last Updated**: 2026-03-14 (S20: COMP-007.9 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S20 — Governance Completion + Treasury Start
-CURRENT ITEM  : COMP-007.9 — Governance REST API endpoints + integration tests
+CURRENT ITEM  : COMP-008.1 — Value Distribution package setup + TreasuryAccount
 MILESTONE     : M2 — Core: DIP + Platform Core + AI Foundation
-STAGE PROGRESS: 0 / 4 items done (S20)
-OVERALL       : 94 / 262 items done (36%)
+STAGE PROGRESS: 1 / 4 items done (S20)
+OVERALL       : 95 / 262 items done (36%)
 ```
 
 **Next 5 items**:
-1. `COMP-007.9` — Governance REST API endpoints + integration tests ← **START HERE**
-2. `COMP-008.1` — Value Distribution package setup + TreasuryAccount
-3. `COMP-008.2` — UsageRegistration event consumer
-4. `COMP-008.3` — AVU accounting (debit/credit)
+1. `COMP-008.1` — Value Distribution package setup + TreasuryAccount ← **START HERE**
+2. `COMP-008.2` — UsageRegistration event consumer
+3. `COMP-008.3` — AVU accounting (debit/credit)
+4. `COMP-008.4` — ValueDistributionService.compute()
 5. …
 
-**Component record**: [`COMP-007`](./components/COMP-007-dip-institutional-governance.md)
+**Component record**: [`COMP-008`](./components/COMP-008-dip-value-distribution-treasury.md)
 
-**Next item (COMP-007.9) acceptance criteria**: `POST /api/v1/institutions`, `GET /api/v1/institutions/{id}`, `POST /api/v1/institutions/{id}/proposals`, `POST /api/v1/proposals/{id}/vote`; full voting lifecycle integration test.
+**Next item (COMP-008.1) acceptance criteria**: `packages/dip-treasury` workspace; `TreasuryAccount` aggregate with `accountId`, `institutionId`, `avuBalance`; `credit()` and `debit()` methods enforce non-negative balance; unit tests.
 
-**Suggested steps**: (1) Write API routes (2) Wire to services (3) Write integration test
+**Suggested steps**: (1) Scaffold `packages/dip-treasury` (2) Write `TreasuryAccount` aggregate (3) Write balance tests
 
 ---
 
@@ -1857,7 +1857,7 @@ Status: ✅ Done | **Deps**: COMP-007.6
 
 #### [COMP-007.9] Governance REST API endpoints + integration tests
 `S20` `High` `M` [Record→](./components/COMP-007-dip-institutional-governance.md)
-Status: ⬜ | **Deps**: COMP-007.8, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-007.8, COMP-033.2
 **Criteria**: `POST /api/v1/institutions`, `GET /api/v1/institutions/{id}`, `POST /api/v1/institutions/{id}/proposals`, `POST /api/v1/proposals/{id}/vote`; full voting lifecycle integration test.
 **Steps**: (1) Write API routes (2) Wire to services (3) Write integration test
 
@@ -3207,7 +3207,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 94 / 262 items (36%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 95 / 262 items (36%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M2 — Core: DIP + Platform Core + AI Foundation | M5 | ⬜ |
 | **Current Stage** | S20 — Governance Completion + Treasury Start | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3217,6 +3217,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-007.9 — Governance REST API endpoints (POST/GET institutions, proposals, vote) + full voting lifecycle integration test
 - 2026-03-14 COMP-007.8 — Governance query service + read models (InstitutionSummary, ProposalHistory, pagination), unit tests
 - 2026-03-14 COMP-007.7 — GovernanceEventPublisher (Kafka), institution_created, proposal_executed, proposal_opened, unit tests
 - 2026-03-14 COMP-007.6 — GovernanceRepository (Postgres), migrations, Postgres* repos, integration test

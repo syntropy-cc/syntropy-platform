@@ -3,7 +3,6 @@
  */
 
 import { Proposal } from "../domain/proposal.js";
-import { ProposalStatus } from "../domain/proposal-status.js";
 import type { ProposalStatusValue } from "../domain/proposal-status.js";
 import type {
   ProposalRepositoryPort,

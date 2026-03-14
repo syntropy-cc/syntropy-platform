@@ -41,6 +41,9 @@ importers:
       '@syntropy/dip-contracts':
         specifier: workspace:*
         version: link:../../packages/dip-contracts
+      '@syntropy/dip-governance':
+        specifier: workspace:*
+        version: link:../../packages/dip-governance
       '@syntropy/dip-iacp':
         specifier: workspace:*
         version: link:../../packages/dip-iacp
@@ -370,10 +373,16 @@ importers:
       '@syntropy/event-bus':
         specifier: workspace:*
         version: link:../event-bus
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
     devDependencies:
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.15
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.18.0
       typescript:
         specifier: ~5.6.0
         version: 5.6.3

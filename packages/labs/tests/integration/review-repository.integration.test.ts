@@ -34,6 +34,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
     "20260323000000_labs_article_editor.sql",
     "20260324000000_labs_experiment_design.sql",
     "20260325000000_labs_open_peer_review.sql",
+    "20260326000000_labs_reviews_embargo_until.sql",
   ];
   for (const name of migrations) {
     const sql = readFileSync(join(migrationsDir, name), "utf8");

@@ -17,6 +17,7 @@ function createReview(overrides: Partial<{
   content: string;
   submittedAt: Date | null;
   publishedAt: Date | null;
+  embargoUntil: Date | null;
 }> = {}) {
   return new Review({
     reviewId: REVIEW_ID,
@@ -65,6 +66,17 @@ describe("Review", () => {
     expect(published.publishedAt).toBeInstanceOf(Date);
   });
 
+  it("embargo transitions from submitted to embargoed and sets embargoUntil", () => {
+    const until = new Date("2026-04-01T12:00:00Z");
+    const submitted = createReview({
+      status: "submitted",
+      submittedAt: new Date(),
+    });
+    const embargoed = submitted.embargo(until);
+    expect(embargoed.status).toBe("embargoed");
+    expect(embargoed.embargoUntil).toEqual(until);
+  });
+
   it("revise transitions from submitted back to in_progress and clears submittedAt", () => {
     const submitted = createReview({
       status: "submitted",
@@ -88,6 +100,11 @@ describe("Review", () => {
   it("revise throws when status is not submitted", () => {
     const review = createReview();
     expect(() => review.revise()).toThrow("Cannot revise");
+  });
+
+  it("embargo throws when status is not submitted", () => {
+    const review = createReview();
+    expect(() => review.embargo(new Date())).toThrow("Cannot embargo");
   });
 
   it("constructor throws when reviewerId is empty", () => {

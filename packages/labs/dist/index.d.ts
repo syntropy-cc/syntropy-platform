@@ -21,6 +21,7 @@ export { LabsArtifactBridge, type DipArtifactCreator, } from "./infrastructure/l
 export type { ArticlePublisherPort, PublishArticleResult, } from "./domain/article-editor/ports/article-publisher-port.js";
 export type { ArticleSubmissionNotifierPort } from "./domain/article-editor/ports/article-submission-notifier-port.js";
 export { ArticleSubmissionService, type ArticleSubmissionServiceDeps, } from "./application/article-submission-service.js";
+export { runReviewPublication } from "./application/review-publication-job.js";
 export { AnonymizationPolicyEnforcer, ExperimentDesign, ExperimentResult, ExperimentStatus, isExperimentStatus, PERSONAL_DATA_FIELDS, type AnonymizationPolicy, type ExperimentDesignParams, type ExperimentResultParams, type PersonalDataField, } from "./domain/experiment-design/index.js";
 export { Review, ReviewStatus, isReviewStatus, ReviewPassageLink, getLinkedText, AuthorResponse, ReviewVisibilityEvaluator, type ReviewParams, type ReviewPassageLinkParams, type ArticleContent, type AuthorResponseParams, } from "./domain/open-peer-review/index.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";

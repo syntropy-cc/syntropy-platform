@@ -9,4 +9,6 @@ export interface ReviewRepositoryPort {
   save(review: Review): Promise<void>;
   findById(id: ReviewId): Promise<Review | null>;
   findByArticleId(articleId: ArticleId): Promise<Review[]>;
+  /** Returns reviews with status embargoed and embargo_until <= asOf (due for publication). */
+  findEmbargoedDueForPublication(asOf: Date): Promise<Review[]>;
 }

@@ -46,6 +46,7 @@ import { hubDiscoverRoutes } from "./routes/hub-discover.js";
 import { labsScientificContextRoutes } from "./routes/labs-scientific-context.js";
 import { labsArticlesRoutes } from "./routes/labs-articles.js";
 import { labsExperimentsRoutes } from "./routes/labs-experiments.js";
+import { labsReviewsRoutes } from "./routes/labs-reviews.js";
 
 const DEFAULT_ORIGINS = [
   "http://localhost:3000",
@@ -125,6 +126,7 @@ export async function createApp(options?: CreateAppOptions) {
     await app.register(labsScientificContextRoutes, { labs: options.labs });
     await app.register(labsArticlesRoutes, { labs: options.labs });
     await app.register(labsExperimentsRoutes, { labs: options.labs });
+    await app.register(labsReviewsRoutes, { labs: options.labs });
   }
   await app.register(internalEventSchemasPlugin);
 

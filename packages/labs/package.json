@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@syntropy/platform-core": "workspace:*",
     "@syntropy/types": "workspace:*",
     "myst-parser": "^1.7.0",
     "myst-to-html": "^1.7.0",

@@ -8,6 +8,7 @@ export { ScientificArticle, isArticleStatus, ArticleVersion, } from "./domain/ar
 export { MystRenderer } from "./infrastructure/myst-renderer.js";
 export { LabsArtifactBridge, } from "./infrastructure/labs-artifact-bridge.js";
 export { ArticleSubmissionService, } from "./application/article-submission-service.js";
+export { runReviewPublication } from "./application/review-publication-job.js";
 export { AnonymizationPolicyEnforcer, ExperimentDesign, ExperimentResult, isExperimentStatus, PERSONAL_DATA_FIELDS, } from "./domain/experiment-design/index.js";
 export { Review, isReviewStatus, ReviewPassageLink, getLinkedText, AuthorResponse, ReviewVisibilityEvaluator, } from "./domain/open-peer-review/index.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";

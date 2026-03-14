@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S39: COMP-025.1–025.5 done)
+> **Last Updated**: 2026-03-14 (S40: COMP-025.6, 025.7, 026.1, 026.2 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S40 — Peer Review API + DOI (M3)
-CURRENT ITEM  : COMP-025.6 — Review publication scheduler
+CURRENT STAGE : S41 — DOI registration + Labs UI (M3)
+CURRENT ITEM  : COMP-026.3 — DOIRegistrationService
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 4 items done (S40)
-OVERALL       : 187 / 262 items done (71%)
+STAGE PROGRESS: 0 / 4 items done (S41)
+OVERALL       : 191 / 262 items done (73%)
 ```
 
 **Next 5 items**:
-1. `COMP-025.6` — Review publication scheduler ← **START HERE**
-2. `COMP-025.7` — Peer Review REST API
-3. `COMP-026.1` — DOIRecord entity
-4. `COMP-026.2` — DataCiteAdapter
+1. `COMP-026.3` — DOIRegistrationService ← **START HERE**
+2. `COMP-026.4` — ExternalIndexingNotifier
+3. `COMP-026.5` — DOI REST API + integration tests
+4. `COMP-032.5` — Labs pillar Next.js pages
 5. (see Section 6 for full order)
 
-**Component record**: [`COMP-025`](./components/COMP-025-labs-open-peer-review.md)
+**Component record**: [`COMP-026`](./components/COMP-026-labs-doi-publication.md)
 
-**Next item (COMP-025.6) acceptance criteria**: `ReviewPublicationScheduler` cron job (every 15min) publishes embargoed reviews when embargo period expires; updates `ReviewStatus` to `published`; registered in `CronScheduler`; unit tests.
+**Next item (COMP-026.3) acceptance criteria**: `DOIRegistrationService.register(articleId)` validates article state (must be accepted), calls `DataCiteAdapter`, stores `DOIRecord`; retries on transient failure; unit tests.
 
-**Suggested steps**: (1) Write `ReviewPublicationScheduler` job (2) Register in cron (3) Write embargo expiry test
+**Suggested steps**: (1) Write `DOIRegistrationService` (2) Add state validation (3) Write retry + failure tests
 
 ---
 
@@ -2601,7 +2601,7 @@ Status: Done | **Deps**: COMP-025.4, COMP-039.4
 
 #### [COMP-025.6] Review publication scheduler
 `S40` `High` `S` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-025.5
+Status: Done | **Deps**: COMP-025.5
 **Criteria**: `ReviewPublicationScheduler` cron job (every 15min) publishes embargoed reviews when embargo period expires; updates `ReviewStatus` to `published`; registered in `CronScheduler`; unit tests.
 **Steps**: (1) Write `ReviewPublicationScheduler` job (2) Register in cron (3) Write embargo expiry test
 
@@ -2609,7 +2609,7 @@ Status: ⬜ | **Deps**: COMP-025.5
 
 #### [COMP-025.7] Peer Review REST API
 `S40` `High` `M` [Record→](./components/COMP-025-labs-open-peer-review.md)
-Status: ⬜ | **Deps**: COMP-025.6, COMP-033.2
+Status: Done | **Deps**: COMP-025.6, COMP-033.2
 **Criteria**: `POST /api/v1/labs/articles/{id}/reviews`, `GET /api/v1/labs/articles/{id}/reviews` (visibility enforced), `POST /api/v1/labs/reviews/{id}/responses`; reviewer role for submission.
 **Steps**: (1) Write API routes (2) Apply visibility evaluator in GET (3) Write API tests
 
@@ -2617,7 +2617,7 @@ Status: ⬜ | **Deps**: COMP-025.6, COMP-033.2
 
 #### [COMP-026.1] DOIRecord entity
 `S40` `High` `S` [Record→](./components/COMP-026-labs-doi-publication.md)
-Status: ⬜ | **Deps**: COMP-023
+Status: Done | **Deps**: COMP-023
 **Criteria**: `DOIRecord` entity with `doiId`, `articleId`, `doi` (string), `registeredAt`, `status`; `DOIStatus` enum; immutable once registered; unit tests.
 **Steps**: (1) Write `DOIRecord` entity (2) Add immutability guard (3) Write tests
 
@@ -2625,7 +2625,7 @@ Status: ⬜ | **Deps**: COMP-023
 
 #### [COMP-026.2] DataCiteAdapter
 `S40` `High` `M` [Record→](./components/COMP-026-labs-doi-publication.md)
-Status: ⬜ | **Deps**: COMP-026.1
+Status: Done | **Deps**: COMP-026.1
 **Criteria**: `DataCiteAdapter` implements `DOIProvider` interface; `register(article)` calls DataCite API with metadata; `deactivate(doi)` marks as inactive; circuit breaker applied; mock adapter for tests.
 **Steps**: (1) Write `DOIProvider` interface (2) Write `DataCiteAdapter` (3) Write mock adapter + circuit breaker test
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S39 complete; next COMP-025.6
+> Last Updated: 2026-03-14 | S40 complete; next COMP-026.3
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 187 / 262 items (71%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 191 / 262 items (73%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S40 — Peer Review API + DOI | S56 | ⬜ |
+| **Current Stage** | S41 — DOI registration + Labs UI | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-026.2 — DataCiteAdapter; DOIProvider; MockDOIProvider; circuit breaker; unit tests
+- 2026-03-14 COMP-026.1 — DOIRecord entity; DOIStatus; immutability; unit tests
+- 2026-03-14 COMP-025.7 — Peer Review REST API (POST/GET reviews, POST responses); visibility enforced; API tests
+- 2026-03-14 COMP-025.6 — Review publication scheduler; embargo_until; runReviewPublication; cron every 15 min; unit tests
 - 2026-03-14 COMP-025.5 — ReviewRepository (Postgres); migrations reviews, review_passage_links, author_responses; integration test
 - 2026-03-14 COMP-025.4 — ReviewVisibilityEvaluator (isReviewerIdentityVisible, isReviewContentVisible); unit tests
 - 2026-03-14 COMP-025.3 — AuthorResponse entity; create() author ownership; unit tests

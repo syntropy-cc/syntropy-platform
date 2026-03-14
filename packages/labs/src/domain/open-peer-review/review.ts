@@ -14,6 +14,8 @@ export interface ReviewParams {
   content: string;
   submittedAt?: Date | null;
   publishedAt?: Date | null;
+  /** When the embargo period ends; set when status is embargoed. */
+  embargoUntil?: Date | null;
 }
 
 /**
@@ -28,6 +30,7 @@ export class Review {
   readonly content: string;
   readonly submittedAt: Date | null;
   readonly publishedAt: Date | null;
+  readonly embargoUntil: Date | null;
 
   constructor(params: ReviewParams) {
     if (!params.reviewerId?.trim()) {
@@ -48,6 +51,7 @@ export class Review {
     this.content = params.content;
     this.submittedAt = params.submittedAt ?? null;
     this.publishedAt = params.publishedAt ?? null;
+    this.embargoUntil = params.embargoUntil ?? null;
   }
 
   /** Transition to submitted (content locked from here). */
@@ -75,6 +79,20 @@ export class Review {
       ...this,
       status: "in_progress",
       submittedAt: null,
+    });
+  }
+
+  /** Transition to embargoed with an expiry date (visibility delayed until embargo_until). */
+  embargo(until: Date): Review {
+    if (this.status !== "submitted") {
+      throw new Error(
+        `Cannot embargo: current status is ${this.status}, expected submitted`
+      );
+    }
+    return new Review({
+      ...this,
+      status: "embargoed",
+      embargoUntil: until,
     });
   }
 

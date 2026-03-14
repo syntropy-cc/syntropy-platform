@@ -66,6 +66,7 @@ export {
   ArticleSubmissionService,
   type ArticleSubmissionServiceDeps,
 } from "./application/article-submission-service.js";
+export { runReviewPublication } from "./application/review-publication-job.js";
 export {
   AnonymizationPolicyEnforcer,
   ExperimentDesign,
@@ -91,6 +92,23 @@ export {
   type ArticleContent,
   type AuthorResponseParams,
 } from "./domain/open-peer-review/index.js";
+export {
+  DOIStatus,
+  isDOIStatus,
+  isRegisteredOrFindable,
+  DOIRecord,
+  createDoiRecordId,
+  isDoiRecordId,
+  type DOIRecordParams,
+  type DoiRecordId,
+} from "./domain/doi-publication/index.js";
+export type {
+  DOIProvider,
+  ArticleDOIMetadata,
+  RegisterDOIResult,
+} from "./domain/doi-publication/ports/doi-provider.js";
+export { DataCiteAdapter, CircuitOpenError } from "./infrastructure/datacite-adapter.js";
+export { MockDOIProvider } from "./infrastructure/mock-doi-provider.js";
 export { PostgresSubjectAreaRepository } from "./infrastructure/repositories/postgres-subject-area-repository.js";
 export { PostgresResearchMethodologyRepository } from "./infrastructure/repositories/postgres-research-methodology-repository.js";
 export { PostgresHypothesisRecordRepository } from "./infrastructure/repositories/postgres-hypothesis-record-repository.js";

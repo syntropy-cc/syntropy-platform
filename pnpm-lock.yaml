@@ -280,6 +280,9 @@ importers:
       '@syntropy/hub-package':
         specifier: workspace:*
         version: link:../../packages/hub
+      '@syntropy/labs-package':
+        specifier: workspace:*
+        version: link:../../packages/labs
       '@syntropy/platform-core':
         specifier: workspace:*
         version: link:../../packages/platform-core
@@ -514,6 +517,9 @@ importers:
 
   packages/labs:
     dependencies:
+      '@syntropy/platform-core':
+        specifier: workspace:*
+        version: link:../platform-core
       '@syntropy/types':
         specifier: workspace:*
         version: link:../types

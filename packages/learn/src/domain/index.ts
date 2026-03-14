@@ -40,11 +40,13 @@ export {
   type UnlockedCourse,
 } from "./content-hierarchy/index.js";
 export {
+  AIGeneratedDraft,
   CreatorWorkflow,
   CREATOR_WORKFLOW_PHASES,
   getNextPhase,
   isValidNextPhase,
   isCreatorWorkflowPhase,
+  type AIGeneratedDraftParams,
   type CreatorWorkflowParams,
   type CreatorWorkflowPhase,
   type CreatorWorkflowDomainEvent,

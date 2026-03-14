@@ -18,3 +18,7 @@ export type {
   CreatorWorkflowDomainEvent,
   CreatorWorkflowPhaseEntered,
 } from "./events.js";
+export {
+  AIGeneratedDraft,
+  type AIGeneratedDraftParams,
+} from "./ai-generated-draft.js";

@@ -214,6 +214,13 @@ Creator Tools & AI Copilot is a Supporting subdomain within Learn. It manages th
 
 ## Implementation Log
 
+### 2026-03-14 — COMP-017.2 complete (per IMPLEMENTATION-PLAN Section 7)
+
+- Implemented `AIGeneratedDraft` value object (domain): immutable, `workflowId`, `phase`, `content`, `agentSessionId`, `createdAt`, `ai_generated: true` always.
+- Added `LearnCopilotAgentPort` (application) and `CreatorCopilotService.generateDraft(workflow, prompt)` that calls the port and returns an `AIGeneratedDraft` linked to the workflow.
+- Added `StubLearnCopilotAdapter` (infrastructure) implementing the port for tests and placeholder use.
+- Unit tests: `ai-generated-draft.test.ts` (create, immutability, ai_generated always true, validation); `creator-copilot-service.test.ts` (generateDraft calls port, returns linked draft).
+
 ### 2026-03-14 — COMP-017.1 complete
 
 - Added `CreatorWorkflowId` to `@syntropy/types`.

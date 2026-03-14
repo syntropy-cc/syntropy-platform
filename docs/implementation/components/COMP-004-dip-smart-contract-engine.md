@@ -50,12 +50,12 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 3 |
+| ✅ Done | 4 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 3 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **6** |
 
-**Component Coverage**: 50%
+**Component Coverage**: 67%
 
 ### Item List
 
@@ -140,78 +140,76 @@ The Smart Contract Engine owns `GovernanceContract` and implements deterministic
 
 ---
 
-#### [COMP-004.4] Repository and PostgreSQL implementation
+#### [COMP-004.4] Contract DSL parser (Done)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | smart-contract-engine.md, ADR-004 |
-| **Dependencies** | COMP-004.1 |
-| **Size** | S |
+| **Origin** | IMPLEMENTATION-PLAN.md Section 7 |
+| **Dependencies** | COMP-004.2 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Define `GovernanceContractRepository` interface and implement with PostgreSQL. Create database migration.
+**Description**: Parse JSON and YAML contract DSL into `GovernanceContract`; reject malformed input with descriptive errors; round-trip serialize for tests.
 
-**Acceptance Criteria**:
-- [ ] `GovernanceContractRepository` interface: `findById`, `findByInstitution`, `save`
-- [ ] `ContractEvaluationRepository` interface: `append(record)`, `findByContract(contractId)`
-- [ ] Migration: `governance_contracts` table, `contract_evaluations` table (append-only, no delete trigger)
-- [ ] Integration tests: roundtrip save/query
+**Acceptance Criteria** (per Implementation Plan):
+- [x] `ContractDSLParser.parse(dsl: string)` returns `GovernanceContract`
+- [x] Rejects malformed DSL with descriptive `ContractDSLParseError`
+- [x] Supports JSON and YAML DSL formats
+- [x] Round-trip parse/serialize test
 
 **Files Created/Modified**:
-- `packages/dip/src/domain/smart-contract-engine/repositories/governance-contract-repository.ts`
-- `packages/dip/src/infrastructure/repositories/postgres-governance-contract-repository.ts`
-- `packages/dip/src/infrastructure/migrations/002_smart_contract_engine.sql`
+- `packages/dip-contracts/src/domain/contract-dsl-errors.ts` — `ContractDSLParseError`
+- `packages/dip-contracts/src/domain/contract-dsl-parser.ts` — `ContractDSLParser` (parse, serialize)
+- `packages/dip-contracts/src/domain/index.ts`, `src/index.ts` — exports
+- `packages/dip-contracts/package.json` — added `yaml` dependency
+- `packages/dip-contracts/tests/unit/contract-dsl-parser.test.ts` — 24 unit tests
 
 ---
 
-#### [COMP-004.5] Internal API endpoints
+#### [COMP-004.5] ContractRepository (Postgres)
 
 | Field | Value |
 |-------|-------|
 | **Status** | ⬜ Ready |
 | **Priority** | High |
-| **Origin** | DIP ARCHITECTURE.md |
-| **Dependencies** | COMP-004.2, COMP-004.4 |
+| **Origin** | IMPLEMENTATION-PLAN.md Section 7, smart-contract-engine.md |
+| **Dependencies** | COMP-004.2, COMP-039.4 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement internal REST API for contract evaluation and lookup. Called by IACP Engine (COMP-005) and Institutional Governance (COMP-007).
+**Description**: `ContractRepository` with `save`, `findById`, `findByInstitution`; migration creates `governance_contracts` table; stores DSL as JSONB; integration test.
 
-**Acceptance Criteria**:
-- [ ] `POST /internal/dip/contracts/{id}/evaluate` → returns `EvaluationResult`
-- [ ] `GET /internal/dip/contracts/{id}` → returns contract metadata and current state
-- [ ] `GET /internal/dip/contracts/{id}/evaluations` → returns evaluation history
-- [ ] `POST /internal/dip/contracts/{id}/enact-version` → upgrades contract version
-- [ ] Service-to-service auth required
+**Acceptance Criteria** (per Implementation Plan):
+- [ ] `ContractRepository` with `save`, `findById`, `findByInstitution`
+- [ ] Migration creates `governance_contracts` table; stores DSL as JSONB
+- [ ] Integration test
 
-**Files Created/Modified**:
-- `packages/dip/src/api/routes/contracts.ts`
+**Files to create** (aligned with plan):
+- Migration in `packages/dip` or as specified by project convention
+- Repository interface and Postgres implementation
 
 ---
 
-#### [COMP-004.6] Unit and integration test suite
+#### [COMP-004.6] Smart Contract API + integration tests
 
 | Field | Value |
 |-------|-------|
 | **Status** | ⬜ Ready |
 | **Priority** | High |
-| **Origin** | CON-010 |
-| **Dependencies** | COMP-004.5 |
+| **Origin** | IMPLEMENTATION-PLAN.md Section 7, DIP ARCHITECTURE.md |
+| **Dependencies** | COMP-004.5, COMP-033.2 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
 
-**Description**: Complete test suite achieving ≥90% branch coverage for smart contract engine domain logic.
+**Description**: Public API for contracts and evaluation; full lifecycle integration test; DSL validation on create.
 
-**Acceptance Criteria**:
-- [ ] ≥90% branch coverage on `ContractEvaluator` (critical domain logic)
-- [ ] All invariants have negative test cases (cross-institution call, evaluation record modification)
-- [ ] Integration test: full evaluation round-trip via API
+**Acceptance Criteria** (per Implementation Plan):
+- [ ] `POST /api/v1/contracts`, `GET /api/v1/contracts/{id}`, `POST /api/v1/contracts/{id}/evaluate`
+- [ ] Full lifecycle integration test; DSL validation on create
 
-**Files Created/Modified**:
-- `packages/dip/tests/unit/smart-contract-engine/*.test.ts`
-- `packages/dip/tests/integration/smart-contract-engine/*.test.ts`
+**Steps**: (1) Write API routes (2) Wire to evaluator (3) Write integration test
 
 ---
 

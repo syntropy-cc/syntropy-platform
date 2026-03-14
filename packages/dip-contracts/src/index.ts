@@ -4,6 +4,8 @@
  */
 
 export {
+  ContractDSLParseError,
+  ContractDSLParser,
   GovernanceContract,
   SmartContractEvaluator,
   type ContractClause,

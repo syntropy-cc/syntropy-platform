@@ -18,7 +18,8 @@ function contractWithClauses(clauses: ContractClause[], institutionId = "inst-1"
 }
 
 function context(overrides: Partial<EvaluationContext> & { institutionId: string }): EvaluationContext {
-  return { institutionId: overrides.institutionId, ...overrides };
+  const { institutionId, ...rest } = overrides;
+  return { institutionId, ...rest };
 }
 
 describe("SmartContractEvaluator", () => {

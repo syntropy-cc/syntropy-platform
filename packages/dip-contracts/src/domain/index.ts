@@ -2,6 +2,8 @@
  * DIP Smart Contract Engine domain layer.
  */
 
+export { ContractDSLParseError } from "./contract-dsl-errors.js";
+export { ContractDSLParser } from "./contract-dsl-parser.js";
 export { GovernanceContract } from "./governance-contract.js";
 export { SmartContractEvaluator } from "./smart-contract-evaluator.js";
 export type {

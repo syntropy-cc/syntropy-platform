@@ -60,7 +60,8 @@ export class SmartContractEvaluator {
       case "amendment_procedure":
         return this.evaluateAmendmentProcedure(clause, context);
       default: {
-        const _: never = clause;
+        const _exhaustive: never = clause;
+        void _exhaustive;
         return null;
       }
     }

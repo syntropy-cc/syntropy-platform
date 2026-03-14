@@ -10,10 +10,10 @@
 
 ```
 CURRENT STAGE : S11 — DIP Smart Contract Engine
-CURRENT ITEM  : COMP-004.4 — Contract DSL parser
+CURRENT ITEM  : COMP-004.5 — ContractRepository (Postgres)
 MILESTONE     : M1 — Foundation + Walking Skeleton (complete) → M2
-STAGE PROGRESS: 4 / 4 items done (S10) | 3 / 6 items done (S11)
-OVERALL       : 57 / 262 items done (22%)
+STAGE PROGRESS: 4 / 4 items done (S10) | 4 / 6 items done (S11)
+OVERALL       : 58 / 262 items done (22%)
 ```
 
 **Next 5 items**:
@@ -22,13 +22,14 @@ OVERALL       : 57 / 262 items done (22%)
 3. `COMP-004.1` — Smart Contract Engine package setup ✅
 4. `COMP-004.2` — GovernanceContract aggregate + clause value objects ✅
 5. `COMP-004.3` — SmartContractEvaluator ✅
-6. `COMP-004.4` — Contract DSL parser ← **START HERE**
+6. `COMP-004.4` — Contract DSL parser ✅
+7. `COMP-004.5` — ContractRepository (Postgres) ← **START HERE**
 
 **Component record**: [`COMP-004`](./components/COMP-004-dip-smart-contract-engine.md)
 
-**Next item (COMP-004.4) acceptance criteria**: `ContractDSLParser.parse(dsl: string)` returns `GovernanceContract`; rejects malformed DSL with descriptive error; supports JSON and YAML DSL formats; round-trip parse/serialize test.
+**Next item (COMP-004.5) acceptance criteria**: `ContractRepository` with `save`, `findById`, `findByInstitution`; migration creates `governance_contracts` table; stores DSL as JSONB; integration test.
 
-**Suggested steps**: (1) Write JSON DSL parser (2) Add YAML support (3) Write malformed input test
+**Suggested steps**: (1) Write migration (2) Write repository (3) Write integration test
 
 ---
 
@@ -1562,7 +1563,7 @@ Status: ✅ Done | **Deps**: COMP-004.2
 
 #### [COMP-004.4] Contract DSL parser
 `S11` `High` `M` [Record→](./components/COMP-004-dip-smart-contract-engine.md)
-Status: ⬜ | **Deps**: COMP-004.2
+Status: ✅ Done | **Deps**: COMP-004.2
 **Criteria**: `ContractDSLParser.parse(dsl: string)` returns `GovernanceContract`; rejects malformed DSL with descriptive error; supports JSON and YAML DSL formats; round-trip parse/serialize test.
 **Steps**: (1) Write JSON DSL parser (2) Add YAML support (3) Write malformed input test
 
@@ -3208,7 +3209,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 57 / 262 items (22%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 58 / 262 items (22%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M1 — Foundation + Walking Skeleton | M5 | ⬜ |
 | **Current Stage** | S11 — DIP Smart Contract Engine | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
@@ -3218,6 +3219,7 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-13 COMP-004.4 — Contract DSL parser
 - 2026-03-13 COMP-004.3 — SmartContractEvaluator
 - 2026-03-13 COMP-004.2 — GovernanceContract aggregate + clause value objects
 - 2026-03-13 COMP-004.1 — Smart Contract Engine package setup

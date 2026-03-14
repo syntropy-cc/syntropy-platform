@@ -4,7 +4,7 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/hub/subdomains/institution-orchestration.md](../../architecture/domains/hub/subdomains/institution-orchestration.md)
 > **Stage Assignment**: S8 — Hub Domain
-> **Status**: 🔵 In Progress (S32: 020.1–020.3 done)
+> **Status**: ✅ Complete (S33: 020.1–020.6 done)
 > **Created**: 2026-03-13
 > **Last Updated**: 2026-03-14
 
@@ -47,12 +47,12 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 3 |
+| ✅ Done | 6 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 3 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **6** |
 
-**Component Coverage**: 50%
+**Component Coverage**: 100%
 
 ### Item List
 
@@ -132,75 +132,94 @@ Institution Orchestration is a Supporting subdomain in Hub. It provides the UI-f
 
 ---
 
-#### [COMP-020.4] InstitutionCreationOrchestrator
+#### [COMP-020.4] InstitutionOrchestrationService
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | institution-orchestration.md |
+| **Origin** | institution-orchestration.md, IMP Section 7 |
 | **Dependencies** | COMP-020.2, COMP-020.3 |
-| **Size** | S |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement `InstitutionCreationOrchestrator` application service that validates template selection, builds DIP creation request, and submits.
+**Description**: Implement `InstitutionOrchestrationService` (IMP name) that completes workflow: template → governance contract → DIP institution creation; saga on failure.
 
 **Acceptance Criteria**:
-- [ ] `InstitutionCreationOrchestrator.create(adminId, templateId, configuration)` validates parameters against template rules, calls DIPInstitutionAdapter.createInstitution, records workflow completion
-- [ ] Validation: all required governance_parameters filled, template is audited
-- [ ] On DIP success: workflow completed, `hub.institution.created` published
+- [x] `InstitutionOrchestrationService.createInstitution(workflow)` completes workflow; each step atomic; saga pattern on failure
+- [x] DIPInstitutionAdapterPort, InstitutionWorkflowRepositoryPort, optional InstitutionEventPublisherPort
+- [x] Unit tests: success path, DIP failure, invalid phase, template not found
 
 **Files Created/Modified**:
-- `packages/hub/src/application/institution-creation-orchestrator.ts`
+- `packages/hub/src/domain/institution-orchestration/ports/dip-institution-adapter-port.ts`
+- `packages/hub/src/domain/institution-orchestration/ports/institution-workflow-repository-port.ts`
+- `packages/hub/src/domain/institution-orchestration/ports/institution-event-publisher-port.ts`
+- `packages/hub/src/application/institution-orchestration-service.ts`
+- `packages/hub/tests/unit/institution-orchestration/institution-orchestration-service.test.ts`
 
 ---
 
-#### [COMP-020.5] Repository and PostgreSQL implementation
+#### [COMP-020.5] InstitutionRepository (Postgres)
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | institution-orchestration.md, ADR-004 |
-| **Dependencies** | COMP-020.1 |
+| **Dependencies** | COMP-020.4, COMP-039.4 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
 
-**Description**: Repository interface and PostgreSQL for Hub institution orchestration entities.
+**Description**: Migrations and PostgreSQL repositories for contract_templates, institution_creation_workflows, institution_profiles.
 
 **Acceptance Criteria**:
-- [ ] `ContractTemplateRepository`, `InstitutionCreationWorkflowRepository` interfaces
-- [ ] Integration tests
+- [x] Migration `20260320000000_hub_institution_orchestration.sql`: hub.contract_templates, hub.institution_creation_workflows, hub.institution_profiles
+- [x] PostgresInstitutionWorkflowRepository, PostgresContractTemplateRepository
+- [x] Integration test (HUB_INTEGRATION=true)
 
 **Files Created/Modified**:
-- `packages/hub/src/infrastructure/repositories/postgres-institution-orchestration-repository.ts`
+- `supabase/migrations/20260320000000_hub_institution_orchestration.sql`
+- `packages/hub/src/infrastructure/repositories/postgres-institution-workflow-repository.ts`
+- `packages/hub/src/infrastructure/repositories/postgres-contract-template-repository.ts`
+- `packages/hub/tests/integration/institution-orchestration-repositories.integration.test.ts`
 
 ---
 
-#### [COMP-020.6] Internal API endpoints
+#### [COMP-020.6] Institution Orchestration REST API
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | hub/ARCHITECTURE.md |
-| **Dependencies** | COMP-020.4, COMP-020.5 |
-| **Size** | S |
+| **Origin** | IMP Section 7 |
+| **Dependencies** | COMP-020.5, COMP-033.2 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Internal REST API for institution orchestration.
+**Description**: REST API for hub institutions: create, get profile, list contract templates.
 
 **Acceptance Criteria**:
-- [ ] `GET /internal/hub/contract-templates` → list all audited templates
-- [ ] `POST /internal/hub/institutions` → starts creation workflow, calls DIP, returns institution profile
-- [ ] `GET /internal/hub/institutions/{id}/profile` → projected InstitutionProfile
+- [x] `POST /api/v1/hub/institutions/create` — start workflow, run orchestration, return institutionId
+- [x] `GET /api/v1/hub/institutions/:id` — InstitutionProfile via InstitutionProfileProjector
+- [x] `GET /api/v1/hub/contract-templates` — list templates
+- [x] DIP adapter and profile reader in apps/api; hub-institutions-api integration test
 
 **Files Created/Modified**:
-- `packages/hub/src/api/routes/institutions.ts`
+- `apps/api/src/routes/hub-institutions.ts`
+- `apps/api/src/adapters/dip-institution-adapter.ts`
+- `apps/api/src/adapters/institution-profile-reader-adapter.ts`
+- `apps/api/src/types/hub-context.ts` (extended)
+- `apps/api/src/integration/hub-institutions-api.integration.test.ts`
 
 ---
 
 ## Implementation Log
+
+### 2026-03-14 — S33 Institution Orchestration completion (COMP-020.4, 020.5, 020.6)
+
+- **COMP-020.4**: InstitutionOrchestrationService.createInstitution(workflow); DIPInstitutionAdapterPort, InstitutionWorkflowRepositoryPort, InstitutionEventPublisherPort; saga (no persist until DIP success); unit tests.
+- **COMP-020.5**: Migration hub.contract_templates, institution_creation_workflows, institution_profiles; PostgresInstitutionWorkflowRepository, PostgresContractTemplateRepository; institution-orchestration-repositories integration test.
+- **COMP-020.6**: hub-institutions routes (POST create, GET :id, GET contract-templates); createDIPInstitutionAdapter, createInstitutionProfileReader in apps/api; HubCollaborationContext extended; hub-institutions-api integration test.
 
 ### 2026-03-14 — S32 Institution Orchestration start (COMP-020.1, 020.2, 020.3)
 

@@ -18,7 +18,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PostgresContributionSandboxRepository = exports.PostgresContributionRepository = exports.PostgresIssueRepository = exports.DIPContributionAdapter = exports.ContributionNotReadyForMergeError = exports.ContributionIntegrationService = void 0;
+exports.InMemoryContractTemplateRepository = exports.PostgresContractTemplateRepository = exports.PostgresInstitutionWorkflowRepository = exports.ContractTemplateType = exports.ContractTemplate = exports.InvalidWorkflowTransitionError = exports.InstitutionCreationPhase = exports.InstitutionCreationWorkflow = exports.InstitutionProfileProjector = exports.InstitutionOrchestrationTemplateNotFoundError = exports.InstitutionOrchestrationInvalidPhaseError = exports.InstitutionOrchestrationService = exports.PostgresContributionSandboxRepository = exports.PostgresContributionRepository = exports.PostgresIssueRepository = exports.DIPContributionAdapter = exports.ContributionNotReadyForMergeError = exports.ContributionIntegrationService = void 0;
 __exportStar(require("./domain/collaboration/index.js"), exports);
 var contribution_integration_service_js_1 = require("./application/contribution-integration-service.js");
 Object.defineProperty(exports, "ContributionIntegrationService", { enumerable: true, get: function () { return contribution_integration_service_js_1.ContributionIntegrationService; } });
@@ -31,3 +31,23 @@ var postgres_contribution_repository_js_1 = require("./infrastructure/repositori
 Object.defineProperty(exports, "PostgresContributionRepository", { enumerable: true, get: function () { return postgres_contribution_repository_js_1.PostgresContributionRepository; } });
 var postgres_contribution_sandbox_repository_js_1 = require("./infrastructure/repositories/postgres-contribution-sandbox-repository.js");
 Object.defineProperty(exports, "PostgresContributionSandboxRepository", { enumerable: true, get: function () { return postgres_contribution_sandbox_repository_js_1.PostgresContributionSandboxRepository; } });
+// Institution orchestration (COMP-020)
+var institution_orchestration_service_js_1 = require("./application/institution-orchestration-service.js");
+Object.defineProperty(exports, "InstitutionOrchestrationService", { enumerable: true, get: function () { return institution_orchestration_service_js_1.InstitutionOrchestrationService; } });
+Object.defineProperty(exports, "InstitutionOrchestrationInvalidPhaseError", { enumerable: true, get: function () { return institution_orchestration_service_js_1.InstitutionOrchestrationInvalidPhaseError; } });
+Object.defineProperty(exports, "InstitutionOrchestrationTemplateNotFoundError", { enumerable: true, get: function () { return institution_orchestration_service_js_1.InstitutionOrchestrationTemplateNotFoundError; } });
+var institution_profile_projector_js_1 = require("./application/institution-profile-projector.js");
+Object.defineProperty(exports, "InstitutionProfileProjector", { enumerable: true, get: function () { return institution_profile_projector_js_1.InstitutionProfileProjector; } });
+var institution_creation_workflow_js_1 = require("./domain/institution-orchestration/institution-creation-workflow.js");
+Object.defineProperty(exports, "InstitutionCreationWorkflow", { enumerable: true, get: function () { return institution_creation_workflow_js_1.InstitutionCreationWorkflow; } });
+Object.defineProperty(exports, "InstitutionCreationPhase", { enumerable: true, get: function () { return institution_creation_workflow_js_1.InstitutionCreationPhase; } });
+Object.defineProperty(exports, "InvalidWorkflowTransitionError", { enumerable: true, get: function () { return institution_creation_workflow_js_1.InvalidWorkflowTransitionError; } });
+var contract_template_js_1 = require("./domain/institution-orchestration/contract-template.js");
+Object.defineProperty(exports, "ContractTemplate", { enumerable: true, get: function () { return contract_template_js_1.ContractTemplate; } });
+Object.defineProperty(exports, "ContractTemplateType", { enumerable: true, get: function () { return contract_template_js_1.ContractTemplateType; } });
+var postgres_institution_workflow_repository_js_1 = require("./infrastructure/repositories/postgres-institution-workflow-repository.js");
+Object.defineProperty(exports, "PostgresInstitutionWorkflowRepository", { enumerable: true, get: function () { return postgres_institution_workflow_repository_js_1.PostgresInstitutionWorkflowRepository; } });
+var postgres_contract_template_repository_js_1 = require("./infrastructure/repositories/postgres-contract-template-repository.js");
+Object.defineProperty(exports, "PostgresContractTemplateRepository", { enumerable: true, get: function () { return postgres_contract_template_repository_js_1.PostgresContractTemplateRepository; } });
+var contract_template_repository_in_memory_js_1 = require("./infrastructure/institution-orchestration/contract-template-repository-in-memory.js");
+Object.defineProperty(exports, "InMemoryContractTemplateRepository", { enumerable: true, get: function () { return contract_template_repository_in_memory_js_1.InMemoryContractTemplateRepository; } });

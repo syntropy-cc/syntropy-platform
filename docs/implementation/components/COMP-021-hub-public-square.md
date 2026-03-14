@@ -4,9 +4,9 @@
 > **Architecture Reference**: [ARCHITECTURE.md#domain-overview](../../architecture/ARCHITECTURE.md#domain-overview)
 > **Domain Architecture**: [domains/hub/subdomains/public-square.md](../../architecture/domains/hub/subdomains/public-square.md)
 > **Stage Assignment**: S8 — Hub Domain
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress (COMP-021.1 done)
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-14
 
 ## Component Overview
 
@@ -43,12 +43,12 @@ Public Square is a Supporting subdomain in Hub providing the **discovery layer**
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 1 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 5 |
+| ⬜ Ready/Backlog | 4 |
 | **Total** | **5** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 20%
 
 ### Item List
 
@@ -56,23 +56,24 @@ Public Square is a Supporting subdomain in Hub providing the **discovery layer**
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
-| **Origin** | public-square.md |
-| **Dependencies** | COMP-019.1 |
-| **Size** | S |
+| **Origin** | public-square.md, IMP Section 7 |
+| **Dependencies** | COMP-020.6, COMP-009 |
+| **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Implement `DiscoveryDocument` read model entity and its PostgreSQL persistence.
+**Description**: Implement `DiscoveryDocument` read model with update logic for dip.governance.* and hub.contribution.* events (persistence in COMP-021.4).
 
 **Acceptance Criteria**:
-- [ ] `DiscoveryDocument` entity: `id`, `entity_type (institution|project|artifact)`, `dip_entity_id`, `name`, `tags[]`, `institution_type`, `prominence_score (Decimal)`, `contributor_count`, `open_issue_count`, `artifact_count`, `last_activity_at`, `is_public`
-- [ ] Migration: `discovery_documents` table with indexes on `entity_type`, `prominence_score`, `tags`
-- [ ] Upsert on `dip_entity_id`: idempotent re-indexing
+- [x] `DiscoveryDocument` with institutionId, name, prominenceScore, projectCount, contributorCount, recentArtifacts[]
+- [x] Event payloads: DipGovernanceEventPayload, HubContributionEventPayload
+- [x] applyDiscoveryEvent(current, event); createEmptyDocument; withProminenceScore, withProjectCount
+- [x] Unit tests for event application and helpers
 
 **Files Created/Modified**:
 - `packages/hub/src/domain/public-square/discovery-document.ts`
-- `packages/hub/src/infrastructure/migrations/003_public_square.sql`
+- `packages/hub/tests/unit/public-square/discovery-document.test.ts`
 
 ---
 

@@ -1,7 +1,7 @@
 # Implementation Plan — Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S32: COMP-019.8, COMP-020.1, COMP-020.2, COMP-020.3 done)
+> **Last Updated**: 2026-03-14 (S33: COMP-020.4, COMP-020.5, COMP-020.6, COMP-021.1 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 — an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 — Current Focus
 
 ```
-CURRENT STAGE : S33 — Hub Institution Orchestration Completion (M3)
-CURRENT ITEM  : COMP-020.4 — InstitutionOrchestrationService
+CURRENT STAGE : S34 — Hub Public Square Completion (M3)
+CURRENT ITEM  : COMP-021.2 — ProminenceScorer
 MILESTONE     : M3 — Pillars: Learn, Hub, Labs
-STAGE PROGRESS: 0 / 4 items done (S33)
-OVERALL       : 154 / 262 items done (59%)
+STAGE PROGRESS: 0 / 5 items done (S34)
+OVERALL       : 158 / 262 items done (60%)
 ```
 
 **Next 5 items**:
-1. `COMP-020.4` — InstitutionOrchestrationService ← **START HERE**
-2. `COMP-020.5` — InstitutionRepository (Postgres)
-3. `COMP-020.6` — Institution Orchestration REST API
-4. `COMP-021.1` — DiscoveryDocument read model
-5. `COMP-021.2` — ProminenceScorer
+1. `COMP-021.2` — ProminenceScorer ← **START HERE**
+2. `COMP-021.3` — PublicSquareIndexer (Kafka consumer)
+3. `COMP-021.4` — DiscoveryRepository (Postgres)
+4. `COMP-021.5` — Public Square REST API
+5. `COMP-032.4` — Hub pillar Next.js pages
 
-**Component record**: [`COMP-020`](./components/COMP-020-hub-institution-orchestration.md)
+**Component record**: [`COMP-021`](./components/COMP-021-hub-public-square.md)
 
-**Next item (COMP-020.4) acceptance criteria**: `InstitutionOrchestrationService.createInstitution(workflow)` completes workflow: template → governance contract → DIP institution creation; each step atomic; saga pattern on failure; unit tests.
+**Next item (COMP-021.2) acceptance criteria**: `ProminenceScorer.score(institutionId)` computes weighted score from: artifact count (30%), contributor count (25%), governance activity (20%), recent contributions (15%), cross-links (10%); time-decayed; unit tests.
 
-**Suggested steps**: (1) Write orchestration service (2) Implement saga rollback (3) Write saga failure test
+**Suggested steps**: (1) Define scoring weights (2) Write `ProminenceScorer` (3) Write scoring scenarios
 
 ---
 
@@ -2337,7 +2337,7 @@ Status: ✅ Done | **Deps**: COMP-020.2, COMP-009
 
 #### [COMP-020.4] InstitutionOrchestrationService
 `S33` `Critical` `M` [Record→](./components/COMP-020-hub-institution-orchestration.md)
-Status: ⬜ | **Deps**: COMP-020.3, COMP-007
+Status: ✅ Done | **Deps**: COMP-020.3, COMP-007
 **Criteria**: `InstitutionOrchestrationService.createInstitution(workflow)` completes workflow: template → governance contract → DIP institution creation; each step atomic; saga pattern on failure; unit tests.
 **Steps**: (1) Write orchestration service (2) Implement saga rollback (3) Write saga failure test
 
@@ -2345,7 +2345,7 @@ Status: ⬜ | **Deps**: COMP-020.3, COMP-007
 
 #### [COMP-020.5] InstitutionRepository (Postgres)
 `S33` `High` `S` [Record→](./components/COMP-020-hub-institution-orchestration.md)
-Status: ⬜ | **Deps**: COMP-020.4, COMP-039.4
+Status: ✅ Done | **Deps**: COMP-020.4, COMP-039.4
 **Criteria**: Migrations for `contract_templates`, `institution_creation_workflows`, `institution_profiles`; repositories; integration test.
 **Steps**: (1) Write migrations (2) Write repositories (3) Write integration test
 
@@ -2353,7 +2353,7 @@ Status: ⬜ | **Deps**: COMP-020.4, COMP-039.4
 
 #### [COMP-020.6] Institution Orchestration REST API
 `S33` `High` `M` [Record→](./components/COMP-020-hub-institution-orchestration.md)
-Status: ⬜ | **Deps**: COMP-020.5, COMP-033.2
+Status: ✅ Done | **Deps**: COMP-020.5, COMP-033.2
 **Criteria**: `POST /api/v1/hub/institutions/create`, `GET /api/v1/hub/institutions/{id}`, `GET /api/v1/hub/contract-templates`; integration tests including full creation flow.
 **Steps**: (1) Write API routes (2) Wire to orchestration service (3) Write integration test
 
@@ -2361,7 +2361,7 @@ Status: ⬜ | **Deps**: COMP-020.5, COMP-033.2
 
 #### [COMP-021.1] DiscoveryDocument read model
 `S33` `High` `M` [Record→](./components/COMP-021-hub-public-square.md)
-Status: ⬜ | **Deps**: COMP-020.6, COMP-009
+Status: ✅ Done | **Deps**: COMP-020.6, COMP-009
 **Criteria**: `DiscoveryDocument` read model with `institutionId`, `name`, `prominenceScore`, `projectCount`, `contributorCount`, `recentArtifacts[]`; updated on `dip.governance.*` and `hub.contribution.*` events; unit tests.
 **Steps**: (1) Write `DiscoveryDocument` read model (2) Define update triggers (3) Write update tests
 
@@ -3201,15 +3201,15 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 — Progress Metrics
 
-> Last Updated: 2026-03-14 | S32 complete; next COMP-020.4
+> Last Updated: 2026-03-14 | S33 complete; next COMP-021.2
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 154 / 262 items (59%) | 262 / 262 | ⬜ |
+| **Overall Progress** | 158 / 262 items (60%) | 262 / 262 | ⬜ |
 | **Current Milestone** | M3 — Pillars: Learn, Hub, Labs | M5 | ⬜ |
-| **Current Stage** | S33 — Hub Institution Orchestration Completion | S56 | ⬜ |
+| **Current Stage** | S34 — Hub Public Square Completion | S56 | ⬜ |
 | **Test Coverage** | — | ≥ 80% | ⬜ |
 | **Items with Tests** | — | 100% | ⬜ |
 | **Items Blocked** | 0 | 0 | ⬜ |
@@ -3217,6 +3217,10 @@ Status: ⬜ | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-021.1 — DiscoveryDocument read model; applyDiscoveryEvent for dip.governance.* and hub.contribution.*; unit tests
+- 2026-03-14 COMP-020.6 — Hub institution REST API (POST /api/v1/hub/institutions/create, GET /api/v1/hub/institutions/:id, GET /api/v1/hub/contract-templates); DIP adapter; hub-institutions-api integration test
+- 2026-03-14 COMP-020.5 — Migrations hub.contract_templates, institution_creation_workflows, institution_profiles; PostgresInstitutionWorkflowRepository, PostgresContractTemplateRepository; integration test
+- 2026-03-14 COMP-020.4 — InstitutionOrchestrationService.createInstitution(workflow); DIPInstitutionAdapterPort, InstitutionWorkflowRepositoryPort; saga on failure; unit tests
 - 2026-03-14 COMP-020.3 — InstitutionProfile read model; InstitutionProfileProjector.getProfile(); InstitutionProfileReaderPort; unit tests
 - 2026-03-14 COMP-020.2 — InstitutionCreationWorkflow aggregate (phases template_selected → founders_confirmed → contract_deployed → institution_created); proceed(); unit tests
 - 2026-03-14 COMP-020.1 — ContractTemplate entity (templateId, name, dsl, type); InMemoryContractTemplateRepository with 3 pre-defined templates; unit tests

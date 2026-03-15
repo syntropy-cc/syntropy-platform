@@ -4,6 +4,8 @@
  */
 export * from "./domain/collaboration/index.js";
 export { ContributionIntegrationService, ContributionNotReadyForMergeError, type MergeResult, } from "./application/contribution-integration-service.js";
+export { ContributionSandboxOrchestrator, SandboxNotReadyForProvisionError, type ProvisionSandboxResult, } from "./application/contribution-sandbox-orchestrator.js";
+export { IDESessionAdapter } from "./infrastructure/ide-session-adapter.js";
 export type { DipArtifactPublishClient, } from "./infrastructure/dip-contribution-adapter.js";
 export { DIPContributionAdapter } from "./infrastructure/dip-contribution-adapter.js";
 export type { HubCollaborationDbClient } from "./infrastructure/hub-collaboration-db-client.js";

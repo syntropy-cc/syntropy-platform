@@ -20,4 +20,8 @@ export {
   IdeReconnectionIndicator,
   type IdeReconnectionIndicatorProps,
 } from "./components/ide-reconnection-indicator";
+export {
+  IdeWorkspaceRestoreIndicator,
+  type IdeWorkspaceRestoreIndicatorProps,
+} from "./components/ide-workspace-restore-indicator";
 export { cn } from "./lib/utils";

@@ -6,7 +6,7 @@
 > **Stage Assignment**: S12 — Platform Services
 > **Status**: ⬜ Not Started
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-15
 
 ## Component Overview
 
@@ -32,12 +32,12 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 4 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **4** |
 
-**Component Coverage**: 0%
+**Component Coverage**: 50%
 
 ### Item List
 
@@ -45,7 +45,7 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | institutional-site/ARCHITECTURE.md |
 | **Dependencies** | COMP-001, COMP-007, COMP-009 |
@@ -55,16 +55,15 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 **Description**: Set up Next.js ISR routing for institutional pages with DIP data fetching.
 
 **Acceptance Criteria**:
-- [ ] `/institutions/[slug]` → institution profile page with ISR (60s revalidation)
-- [ ] `/institutions/[slug]/projects` → projects list
-- [ ] `/institutions/[slug]/legitimacy-chain` → governance history
-- [ ] `generateStaticParams()` pre-renders top-100 institutions at build time
-- [ ] `revalidatePath` called via webhook on `dip.governance.proposal_executed` event
+- [x] `/institutions/[slug]` → institution profile page with ISR (60s revalidation)
+- [x] `/institutions/[slug]/projects` → projects list
+- [x] `/institutions/[slug]/legitimacy-chain` → governance history
+- [x] `generateStaticParams()` pre-renders top-100 institutions at build time (fetches from public API; empty until list API extended)
+- [x] `revalidatePath` called via webhook on POST /api/revalidate (secret in header/query/body)
 
 **Files Created/Modified**:
-- `apps/institutional-site/src/app/institutions/[slug]/page.tsx`
-- `apps/institutional-site/src/app/institutions/[slug]/projects/page.tsx`
-- `apps/institutional-site/src/app/api/revalidate/route.ts`
+- `apps/institutional-site/` scaffold (Next 14, port 4000); `src/app/institutions/[slug]/page.tsx`, projects, legitimacy-chain; `src/app/api/revalidate/route.ts`; `src/app/institutions/page.tsx`
+- `apps/api/src/routes/public-institutions.ts` (GET /api/v1/public/institutions, GET .../:slug); router registration
 
 ---
 
@@ -72,7 +71,7 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | institutional-site/ARCHITECTURE.md |
 | **Dependencies** | COMP-036.1 |
@@ -82,14 +81,15 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 **Description**: Build institution page components with rich display of DIP data.
 
 **Acceptance Criteria**:
-- [ ] `InstitutionHero` component: name, type, description, member count, creation date
-- [ ] `GovernanceSummary` component: active governance contract summary, proposal history count
-- [ ] `LegitimacyChainTimeline` component: visual timeline of governance decisions
-- [ ] `ProjectGrid` component: institution's DIP projects with artifact count
-- [ ] `ContributorHighlights` component: top contributors with portfolio links
+- [x] `InstitutionHero` component: name, type, description, member count, creation date
+- [x] `GovernanceSummary` component: active governance contract summary, proposal history count
+- [x] `LegitimacyChainTimeline` component: visual timeline of governance decisions
+- [x] `ProjectGrid` component: institution's DIP projects with artifact count
+- [x] `ContributorHighlights` component: top contributors with portfolio links
 
 **Files Created/Modified**:
-- `apps/institutional-site/src/components/`
+- `apps/institutional-site/src/components/institution-hero.tsx`, `governance-summary.tsx`, `legitimacy-chain-timeline.tsx`, `project-grid.tsx`, `contributor-highlights.tsx`
+- `apps/institutional-site/src/app/institutions/[slug]/page.tsx` (composes all five; data from getInstitution)
 
 ---
 
@@ -140,6 +140,15 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 
 **Files Created/Modified**:
 - `apps/institutional-site/next.config.ts` (optimization settings)
+
+---
+
+## Implementation Log
+
+### 2026-03-15 — S54 implementation (COMP-036.1, 036.2)
+
+- **036.1**: Scaffolded `apps/institutional-site` (Next 14, port 4000). ISR pages `/institutions/[slug]`, projects, legitimacy-chain with revalidate 60. generateStaticParams fetches from GET /api/v1/public/institutions (empty until repo has findAll). POST /api/revalidate with REVALIDATE_SECRET. Public API: GET /api/v1/public/institutions, GET /api/v1/public/institutions/:slug (no auth).
+- **036.2**: InstitutionHero, GovernanceSummary, LegitimacyChainTimeline, ProjectGrid, ContributorHighlights as server components; composed on institution [slug] page with data from public institution fetch. Timeline/Grid/Contributors show placeholder when no API data yet.
 
 ---
 

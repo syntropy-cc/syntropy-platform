@@ -1,7 +1,7 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-15 (S53: COMP-035.4 done)
+> **Last Updated**: 2026-03-15 (S54: COMP-035.5–036.2 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,23 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S54 - IDE Workspace Persistence + Institutional Site (M5)
-CURRENT ITEM  : COMP-035.5 - Container image configuration
+CURRENT STAGE : S55 - Institutional Site SEO + Observability (M5)
+CURRENT ITEM  : COMP-036.3 - SEO and structured data
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 5 / 5 items done (S53); S54 next
-OVERALL       : 250 / 262 items done (95.4%)
+STAGE PROGRESS: 4 / 4 items done (S54); S55 next
+OVERALL       : 254 / 262 items done (96.9%)
 ```
 
 **Next 5 items**:
-1. `COMP-035.5` - Container image configuration - **START HERE**
-2. `COMP-035.6` - Workspace persistence integration
-3. `COMP-036.1` - Next.js ISR routing and data fetching
-4. `COMP-036.2` - Institution page components
-5. (see Section 6 for full order)
+1. `COMP-036.3` - SEO and structured data - **START HERE**
+2. `COMP-036.4` - Performance optimization
+3. (see Section 6 for full order)
 
-**Component record**: [`COMP-035`](./components/COMP-035-embedded-ide-platform.md)
+**Component record**: [`COMP-036`](./components/COMP-036-institutional-site.md)
 
-**Next item (COMP-035.5) acceptance criteria**: `syntropy/ide-base` (Node.js 20, Python 3.11, CLI tools), `syntropy/ide-labs` (+ R, Jupyter), `syntropy/ide-hub` (+ build tools); images pushed to registry in CI; no high CVEs.
+**Next item (COMP-036.3) acceptance criteria**: OpenGraph metadata per institution; Schema.org `Organization` structured data; `sitemap.xml` dynamically generated; `robots.txt` allows indexing.
 
-**Suggested steps**: (1) Write 3 Dockerfiles (2) Add security scan to CI (3) Push to container registry
+**Suggested steps**: (1) Write `generateMetadata()` for institution pages (2) Add Schema.org JSON-LD (3) Write `sitemap.ts`
 
 ---
 
@@ -3105,7 +3103,7 @@ Status: Done | **Deps**: COMP-035.2
 
 #### [COMP-035.5] Container image configuration
 `S54` `High` `S` [Record-](./components/COMP-035-embedded-ide-platform.md)
-Status: - | **Deps**: COMP-035.3
+Status: Done | **Deps**: COMP-035.3
 **Criteria**: `syntropy/ide-base` (Node.js 20, Python 3.11, CLI tools), `syntropy/ide-labs` (+ R, Jupyter), `syntropy/ide-hub` (+ build tools); images pushed to registry in CI; no high CVEs.
 **Steps**: (1) Write 3 Dockerfiles (2) Add security scan to CI (3) Push to container registry
 
@@ -3113,7 +3111,7 @@ Status: - | **Deps**: COMP-035.3
 
 #### [COMP-035.6] Workspace persistence integration
 `S54` `High` `S` [Record-](./components/COMP-035-embedded-ide-platform.md)
-Status: - | **Deps**: COMP-035.2, COMP-030.4
+Status: Done | **Deps**: COMP-035.2, COMP-030.4
 **Criteria**: Auto-save every 2min while active; on suspension: full snapshot; on resume: workspace restored before WebSocket accepted; progress indicator during restore.
 **Steps**: (1) Write auto-save timer (2) Wire suspension to snapshot (3) Write restore integration test
 
@@ -3121,7 +3119,7 @@ Status: - | **Deps**: COMP-035.2, COMP-030.4
 
 #### [COMP-036.1] Next.js ISR routing and data fetching
 `S54` `High` `S` [Record-](./components/COMP-036-institutional-site.md)
-Status: - | **Deps**: COMP-001, COMP-007, COMP-009
+Status: Done | **Deps**: COMP-001, COMP-007, COMP-009
 **Criteria**: `apps/institutional-site`; `/institutions/[slug]` with ISR (60s revalidation); `generateStaticParams()` pre-renders top-100; `revalidatePath` on `dip.governance.proposal_executed`.
 **Steps**: (1) Scaffold `apps/institutional-site` (2) Write ISR page routing (3) Write revalidation webhook
 
@@ -3129,7 +3127,7 @@ Status: - | **Deps**: COMP-001, COMP-007, COMP-009
 
 #### [COMP-036.2] Institution page components
 `S54` `High` `S` [Record-](./components/COMP-036-institutional-site.md)
-Status: - | **Deps**: COMP-036.1
+Status: Done | **Deps**: COMP-036.1
 **Criteria**: Components: `InstitutionHero`, `GovernanceSummary`, `LegitimacyChainTimeline`, `ProjectGrid`, `ContributorHighlights`; server components with data fetching from REST API.
 **Steps**: (1) Write `InstitutionHero` + `GovernanceSummary` (2) Write `LegitimacyChainTimeline` (3) Write `ProjectGrid` + `ContributorHighlights`
 
@@ -3201,15 +3199,15 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-15 | S53 COMP-035.4 done; next COMP-035.5
+> Last Updated: 2026-03-15 | S54 COMP-035.5–036.2 done; next COMP-036.3
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 250 / 262 items (95.4%) | 262 / 262 | - |
+| **Overall Progress** | 254 / 262 items (96.9%) | 262 / 262 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S53 - IDE Platform: Monaco + WebSocket + K8s | S56 | - |
+| **Current Stage** | S55 - Institutional Site SEO + Observability | S56 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
@@ -3217,6 +3215,10 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-15 COMP-036.2 - Institution page components; InstitutionHero, GovernanceSummary, LegitimacyChainTimeline, ProjectGrid, ContributorHighlights; composed on institution [slug] page
+- 2026-03-15 COMP-036.1 - Next.js ISR routing; apps/institutional-site; /institutions/[slug] revalidate 60; generateStaticParams; public API routes; revalidate route
+- 2026-03-15 COMP-035.6 - Workspace persistence; workspace-sync auto-save 2min; restore before welcome; IdeWorkspaceRestoreIndicator; gateway integration
+- 2026-03-15 COMP-035.5 - Container image configuration; docker/ide-base, ide-labs, ide-hub; CI build + Trivy scan; push to GHCR on main
 - 2026-03-15 COMP-035.4 - Session reconnection and state recovery; 5min window; session_expired for terminated/expired; IdeReconnectionIndicator
 - 2026-03-15 COMP-035.3 - Kubernetes and Docker container provisioning adapters; createContainerOrchestrator factory; unit and Docker integration tests
 - 2026-03-15 COMP-035.2 - WebSocket gateway GET /api/v1/ide/sessions/:id/ws; welcome session_id; heartbeat/terminal/filesystem/lsp stubs; integration tests

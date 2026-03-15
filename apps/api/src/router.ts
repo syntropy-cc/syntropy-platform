@@ -42,6 +42,7 @@ import { ideRoutes } from "./routes/ide.js";
 import { ideWebSocketGateway } from "./websocket/ide-gateway.js";
 import { moderationRoutes } from "./routes/moderation.js";
 import { communityProposalsRoutes } from "./routes/community-proposals.js";
+import { publicInstitutionsRoutes } from "./routes/public-institutions.js";
 import type { CreateAppOptions } from "./types/create-app-options.js";
 
 /**
@@ -67,6 +68,9 @@ export async function registerApiRoutes(
   }
   if (options?.governance) {
     await app.register(governanceRoutes, { governance: options.governance });
+    await app.register(publicInstitutionsRoutes, {
+      governance: options.governance,
+    });
   }
   if (options?.portfolio) {
     await app.register(portfolioRoutes, { portfolio: options.portfolio });

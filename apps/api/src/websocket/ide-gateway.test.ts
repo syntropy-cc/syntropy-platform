@@ -12,7 +12,11 @@ import {
   InvalidTokenError,
   type AuthProvider,
 } from "@syntropy/identity";
-import type { IDESessionRepository } from "@syntropy/ide";
+import type {
+  IDESessionRepository,
+  WorkspaceSnapshotRepository,
+} from "@syntropy/ide";
+import { WorkspaceSnapshot } from "@syntropy/ide";
 import WebSocket from "ws";
 
 const TEST_USER_ID = "a1b2c3d4-e5f6-4789-a012-345678901230";
@@ -187,5 +191,83 @@ describe("IDE WebSocket gateway (COMP-035.2)", () => {
 
     expect(firstMessage.type).toBe("error");
     expect(firstMessage.code).toBe("session_expired");
+  });
+
+  it("sends workspace_restore_progress then welcome when resuming suspended session with snapshot (COMP-035.6)", async () => {
+    const sessionRepo = createInMemorySessionRepo();
+    const suspendedSession = IDESession.create({
+      sessionId: "sess-suspended",
+      userId: TEST_USER_ID,
+      projectId: null,
+    })
+      .withContainerStarted("c-suspended")
+      .suspend();
+    await sessionRepo.save(suspendedSession);
+
+    const snapshotRepo: WorkspaceSnapshotRepository = {
+      save: async () => {},
+      getLatestBySessionId: async (sessionId: string) => {
+        if (sessionId === "sess-suspended") {
+          return WorkspaceSnapshot.create("sess-suspended", [
+            { path: "index.ts", content: "// restored" },
+          ]);
+        }
+        return null;
+      },
+    };
+
+    const app = await createApp({
+      auth: createMockAuth(),
+      ide: {
+        sessionRepository: sessionRepo,
+        provisioningService: {} as IDEContext["provisioningService"],
+        quotaEnforcer: {} as IDEContext["quotaEnforcer"],
+        workspaceSnapshotRepository: snapshotRepo,
+      },
+    });
+
+    const listenAddr = await new Promise<string>((resolve, reject) => {
+      app.listen({ port: 0, host: "127.0.0.1" }, (err, addr) => {
+        if (err) reject(err);
+        else resolve((addr as string).replace("http://", "ws://"));
+      });
+    });
+
+    const url = `${listenAddr}/api/v1/ide/sessions/sess-suspended/ws`;
+    const messages: Record<string, unknown>[] = [];
+    const done = new Promise<void>((resolve, reject) => {
+      const ws = new WebSocket(url, {
+        headers: { Authorization: `Bearer ${VALID_JWT}` },
+      });
+      ws.on("message", (data: Buffer) => {
+        const msg = JSON.parse(data.toString()) as Record<string, unknown>;
+        messages.push(msg);
+        if (msg.type === "welcome") {
+          ws.close();
+          resolve();
+        }
+      });
+      ws.on("close", () => {
+        if (messages.some((m) => m.type === "welcome")) resolve();
+        else reject(new Error("Closed before welcome"));
+      });
+      ws.on("error", reject);
+    });
+
+    await done;
+    await app.close();
+
+    const progress = messages.find(
+      (m) => m.type === "workspace_restore_progress"
+    );
+    const welcome = messages.find((m) => m.type === "welcome");
+    expect(progress).toBeDefined();
+    expect(progress!.message).toContain("Restoring");
+    expect(progress!.fileCount).toBe(1);
+    expect(welcome).toBeDefined();
+    expect(welcome!.session_id).toBe("sess-suspended");
+    const progressIndex = messages.indexOf(progress!);
+    const welcomeIndex = messages.indexOf(welcome!);
+    expect(progressIndex).toBeLessThan(welcomeIndex);
   });
 });

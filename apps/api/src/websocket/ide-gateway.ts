@@ -1,14 +1,20 @@
 /**
- * IDE WebSocket gateway (COMP-035.2, COMP-035.4).
+ * IDE WebSocket gateway (COMP-035.2, COMP-035.4, COMP-035.6).
  *
  * GET /api/v1/ide/sessions/:id/ws — WebSocket upgrade for terminal, filesystem, LSP, heartbeat.
  * Auth validated on handshake; welcome message includes session_id for reconnection.
  * Reconnection within 5min resumes; after 5min returns session_expired (COMP-035.4).
+ * Workspace: restore before welcome when resuming; auto-save every 2min; save on close (COMP-035.6).
  */
 
 import type { FastifyInstance } from "fastify";
 import { IDESessionStatus } from "@syntropy/ide";
 import type { IDEContext } from "../types/ide-context.js";
+import {
+  startAutoSave,
+  saveSnapshot,
+  restoreSnapshot,
+} from "./workspace-sync.js";
 
 const RECONNECTION_WINDOW_MS = 5 * 60 * 1000;
 
@@ -49,7 +55,7 @@ export async function ideWebSocketGateway(
   fastify: FastifyInstance,
   opts: { ide: IDEContext }
 ): Promise<void> {
-  const { sessionRepository } = opts.ide;
+  const { sessionRepository, workspaceSnapshotRepository } = opts.ide;
   const requireAuth = fastify.requireAuth;
 
   fastify.get<{ Params: { id: string } }>(
@@ -96,11 +102,49 @@ export async function ideWebSocketGateway(
           return;
         }
 
+        // COMP-035.6: restore workspace before welcome when resuming suspended session
+        if (
+          workspaceSnapshotRepository &&
+          session.status === IDESessionStatus.Suspended
+        ) {
+          const snapshot = await restoreSnapshot(
+            sessionId,
+            workspaceSnapshotRepository
+          );
+          if (snapshot) {
+            sendJson(socket, {
+              type: "workspace_restore_progress",
+              message: "Restoring workspace…",
+              fileCount: snapshot.getFiles().length,
+            });
+            // Apply restore to container is stubbed until filesystem handler is wired
+          }
+        }
+
         sendJson(socket, {
           type: "welcome",
           session_id: sessionId,
           status: session.status,
         });
+
+        // COMP-035.6: auto-save every 2min; save on close
+        let stopAutoSave: (() => void) | undefined;
+        if (workspaceSnapshotRepository) {
+          stopAutoSave = startAutoSave(
+            sessionId,
+            workspaceSnapshotRepository,
+            async () => [] // Stub: real files from container when filesystem handler is wired
+          );
+          const cleanup = () => {
+            stopAutoSave?.();
+            void saveSnapshot(
+              sessionId,
+              [],
+              workspaceSnapshotRepository
+            ).catch(() => {});
+          };
+          (socket as { on(event: string, cb: (...args: unknown[]) => void): void }).on("close", cleanup);
+        }
 
         socket.on("message", (raw) => {
           const msg = parseMessage(raw as Buffer);

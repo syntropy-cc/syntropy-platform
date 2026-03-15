@@ -14,6 +14,7 @@
     "@syntropy/communication": "workspace:*",
     "@syntropy/event-bus": "workspace:*",
     "@syntropy/hub-package": "workspace:*",
+    "@syntropy/ide": "workspace:*",
     "@syntropy/labs-package": "workspace:*",
     "@syntropy/platform-core": "workspace:*",
     "ioredis": "^5.4.1",

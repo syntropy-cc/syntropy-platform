@@ -74,4 +74,19 @@ export class PostgresIDESessionRepository implements IDESessionRepository {
       ]
     );
   }
+
+  async findActiveSessionsInactiveSince(since: Date): Promise<IDESession[]> {
+    const result = await this.pool.query(
+      `SELECT session_id, user_id, project_id, status, container_id, workspace_id,
+              started_at, last_active_at, terminated_at
+       FROM ${TABLE}
+       WHERE status = 'active'
+         AND (
+           (last_active_at IS NULL AND started_at < $1)
+           OR (last_active_at < $1)
+         )`,
+      [since]
+    );
+    return result.rows.map((row) => rowToSession(row as SessionRow));
+  }
 }

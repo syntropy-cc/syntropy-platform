@@ -12,4 +12,10 @@ import type { IDESession } from "../ide-session.js";
 export interface IDESessionRepository {
   findById(sessionId: string): Promise<IDESession | null>;
   save(session: IDESession): Promise<void>;
+
+  /**
+   * Returns active sessions with last activity (or startedAt) before the given date.
+   * Used by IDE session inactivity supervisor (COMP-034.6).
+   */
+  findActiveSessionsInactiveSince(since: Date): Promise<IDESession[]>;
 }

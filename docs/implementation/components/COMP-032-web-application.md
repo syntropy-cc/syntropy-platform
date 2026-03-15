@@ -62,6 +62,15 @@ The Web Application platform service delivers the 4 pillar Next.js applications 
 **Implementation Log (Implementation Plan item COMP-032.2 — Auth Provider integration)**  
 2026-03-13: Implemented in `apps/platform`. Created minimal Next.js 14 App Router app with: `@supabase/ssr` and `@supabase/supabase-js`; browser/server/middleware Supabase clients; `AuthProvider` (client) and `useUser()` hook; `/login` page (email/password); `/logout` route (GET/POST signOut + redirect); middleware refreshing session and redirecting unauthenticated users from `/dashboard` to `/login`; protected `/dashboard` page. Unit tests for `useUser` and `AuthContext`. Build requires `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `.env.local.example`).
 
+**Implementation Log (COMP-032.6 — Admin dashboard pages)**  
+2026-03-14: Admin section in `apps/platform`: `admin/layout.tsx` with role gate (PlatformAdmin/PlatformModerator via `fetchApi("auth/me")`), redirect to `/forbidden` when unauthorized; `admin/moderation/page.tsx` fetches flags via `fetchApi("moderation/flags")` and renders table; `admin/users` and `admin/policies` placeholder pages; `forbidden/page.tsx` for 403; middleware protects `/admin`. Tests: moderation page (flags, error, empty).
+
+**Implementation Log (COMP-032.7 — API proxy)**  
+2026-03-14: `apps/platform/src/app/api/v1/[...path]/route.ts` proxies all methods to `API_URL`; reads session via `createClient()`, forwards `Authorization: Bearer`; error envelope preserved for 4xx/5xx; `getApiUrl()` for testability. `src/lib/api-client.ts` for server-side fetch with auth (calls API_URL directly). `.env.local.example` documents `API_URL`. Tests: route.test.ts (auth forward, 502 on throw, 403 body).
+
+**Implementation Log (COMP-032.8 — Error boundaries)**  
+2026-03-14: Root `error.tsx` (client) with message and digest/correlation ID; `not-found.tsx` (404); `forbidden/page.tsx` (403); `loading.tsx` skeleton. Tests: error.test.tsx, not-found.test.tsx.
+
 ### Item List
 
 #### [COMP-032.1] Auth Provider setup and protected route middleware

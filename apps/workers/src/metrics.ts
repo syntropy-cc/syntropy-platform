@@ -23,6 +23,20 @@ const errorsCounter = new Counter({
   registers: [register],
 });
 
+const ideSessionsActiveCounter = new Counter({
+  name: "ide_sessions_active_total",
+  help: "Total number of active IDE sessions scanned by supervisor",
+  labelNames: ["worker"],
+  registers: [register],
+});
+
+const ideSessionsSuspendedCounter = new Counter({
+  name: "ide_sessions_suspended_total",
+  help: "Total number of IDE sessions suspended by supervisor",
+  labelNames: ["worker"],
+  registers: [register],
+});
+
 export { register as metricsRegister };
 
 /**
@@ -39,6 +53,20 @@ export function getWorkerCounters(workerName: string): {
     },
     recordError(): void {
       errorsCounter.inc({ worker: workerName });
+    },
+  };
+}
+
+export function getIDESupervisorCounters(workerName: string): {
+  recordActiveScanned(count: number): void;
+  recordSuspended(count: number): void;
+} {
+  return {
+    recordActiveScanned(count: number): void {
+      ideSessionsActiveCounter.inc({ worker: workerName }, count);
+    },
+    recordSuspended(count: number): void {
+      ideSessionsSuspendedCounter.inc({ worker: workerName }, count);
     },
   };
 }

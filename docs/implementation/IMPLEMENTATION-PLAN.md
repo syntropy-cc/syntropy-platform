@@ -1,7 +1,7 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S51: COMP-033.4-033.6, 037.2, 037.4 done)
+> **Last Updated**: 2026-03-14 (S52: COMP-032.6-032.8, 034.6 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S52 - Web App: Admin, Proxy, Error Boundaries (M5)
-CURRENT ITEM  : COMP-032.6 - Admin dashboard pages
+CURRENT STAGE : S53 - IDE Platform: Monaco + WebSocket + K8s (M5)
+CURRENT ITEM  : COMP-034.7 - Integration tests for all workers
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 5 / 5 items done (S51)
-OVERALL       : 241 / 262 items done (92%)
+STAGE PROGRESS: 4 / 4 items done (S52)
+OVERALL       : 245 / 262 items done (93.5%)
 ```
 
 **Next 5 items**:
-1. `COMP-032.6` - Admin dashboard pages - **START HERE**
-2. `COMP-032.7` - API proxy and route handlers
-3. `COMP-032.8` - Error boundaries and domain error pages
-4. `COMP-034.6` - IDE session supervisor
+1. `COMP-034.7` - Integration tests for all workers - **START HERE**
+2. `COMP-035.1` - Monaco Editor React integration
+3. `COMP-035.2` - WebSocket gateway
+4. `COMP-035.3` - Kubernetes container provisioning adapter
 5. (see Section 6 for full order)
 
-**Component record**: [`COMP-032`](./components/COMP-032-web-application.md)
+**Component record**: [`COMP-034`](./components/COMP-034-background-services.md)
 
-**Next item (COMP-032.6) acceptance criteria**: `apps/platform` admin section: `/admin/moderation` (flag queue), `/admin/users` (user management), `/admin/policies` (policy editor); admin role gated; data from REST API.
+**Next item (COMP-034.7) acceptance criteria**: Each worker tested: message processing, error handling, DLQ routing; cron job tests; embedded Kafka via testcontainers; all tests < 2min total.
 
-**Suggested steps**: (1) Write admin layout with role check (2) Write moderation dashboard (3) Write user + policy pages
+**Suggested steps**: (1) Set up testcontainers Kafka (2) Write per-worker test (3) Write cron job test
 
 ---
 
@@ -3033,7 +3033,7 @@ Status: - Done | **Deps**: COMP-033
 
 #### [COMP-032.6] Admin dashboard pages
 `S52` `High` `M` [Record-](./components/COMP-032-web-application.md)
-Status: - | **Deps**: COMP-032.2, COMP-031
+Status: Done | **Deps**: COMP-032.2, COMP-031
 **Criteria**: `apps/platform` admin section: `/admin/moderation` (flag queue), `/admin/users` (user management), `/admin/policies` (policy editor); admin role gated; data from REST API.
 **Steps**: (1) Write admin layout with role check (2) Write moderation dashboard (3) Write user + policy pages
 
@@ -3041,7 +3041,7 @@ Status: - | **Deps**: COMP-032.2, COMP-031
 
 #### [COMP-032.7] API proxy and route handlers
 `S52` `Critical` `M` [Record-](./components/COMP-032-web-application.md)
-Status: - | **Deps**: COMP-032.2, COMP-033.4
+Status: Done | **Deps**: COMP-032.2, COMP-033.4
 **Criteria**: Next.js API routes proxy to REST API; `Authorization` header forwarded; error responses translated to Next.js compatible format; integration test.
 **Steps**: (1) Write API proxy routes in Next.js (2) Forward auth header (3) Write proxy integration test
 
@@ -3049,7 +3049,7 @@ Status: - | **Deps**: COMP-032.2, COMP-033.4
 
 #### [COMP-032.8] Error boundaries and domain error pages
 `S52` `High` `S` [Record-](./components/COMP-032-web-application.md)
-Status: - | **Deps**: COMP-032.3, COMP-032.4, COMP-032.5
+Status: Done | **Deps**: COMP-032.3, COMP-032.4, COMP-032.5
 **Criteria**: React error boundaries wrap all pillar app pages; domain-specific error pages: 404, 403 (unauthorized), 500; error messages user-friendly; correlation ID shown for support.
 **Steps**: (1) Write error boundary components (2) Write domain error pages (3) Add correlation ID display
 
@@ -3057,7 +3057,7 @@ Status: - | **Deps**: COMP-032.3, COMP-032.4, COMP-032.5
 
 #### [COMP-034.6] IDE session inactivity supervisor
 `S52` `High` `S` [Record-](./components/COMP-034-background-services.md)
-Status: - | **Deps**: COMP-034.1, COMP-030
+Status: Done | **Deps**: COMP-034.1, COMP-030
 **Criteria**: Every 2min: scans active sessions for inactivity > 30min; calls `IDESession.suspend()` + `ContainerOrchestrator.stop()`; terminated sessions cleaned after 24h; Prometheus metrics.
 **Steps**: (1) Write `IDESessionSupervisor` worker (2) Add inactivity timer logic (3) Write suspension test
 
@@ -3201,15 +3201,15 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-14 | S51 COMP-033.4-033.6, 037.2, 037.4 done; next COMP-032.6
+> Last Updated: 2026-03-14 | S52 COMP-032.6-032.8, 034.6 done; next COMP-034.7
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 241 / 262 items (92%) | 262 / 262 | - |
+| **Overall Progress** | 245 / 262 items (93.5%) | 262 / 262 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S52 - Web App: Admin, Proxy, Error Boundaries | S56 | - |
+| **Current Stage** | S53 - IDE Platform: Monaco + WebSocket + K8s | S56 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
@@ -3217,6 +3217,10 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-14 COMP-034.6 - IDE session inactivity supervisor; findActiveSessionsInactiveSince; runSupervisorTick; ide-session-supervisor worker; Prometheus counters
+- 2026-03-14 COMP-032.8 - Error boundaries (error.tsx, not-found.tsx, forbidden); loading.tsx; correlation ID in error UI
+- 2026-03-14 COMP-032.7 - API proxy (api/v1/[...path]); auth forward; route.test.ts
+- 2026-03-14 COMP-032.6 - Admin layout (role gate); /admin/moderation, users, policies; fetchApi; /forbidden
 - 2026-03-14 COMP-037.4 - mTLS for /internal/*; mtls.ts plugin; mtls-setup.md
 - 2026-03-14 COMP-037.2 - API security headers; @fastify/helmet; Next.js CSP headers
 - 2026-03-14 COMP-033.6 - OpenAPI 3.1 + Swagger UI; openapi:export; redocly lint

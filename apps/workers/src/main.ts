@@ -16,6 +16,7 @@ import { createPublicSquareIndexerWorker } from "./workers/public-square-indexer
 import { createNotificationEventConsumerWorker } from "./workers/notification-event-consumer-worker.js";
 import { createSessionInvalidationConsumer } from "./workers/session-invalidation-consumer.js";
 import { createDlqProcessor } from "./workers/dlq-processor.js";
+import { createIDESessionSupervisorWorker } from "./workers/ide-session-supervisor.js";
 import { createCronScheduler } from "./scheduler/cron-scheduler.js";
 import { WorkerRegistry } from "./worker-registry.js";
 import { createMetricsHealthServer } from "./http-server.js";
@@ -39,6 +40,7 @@ async function run(): Promise<void> {
   }
   registry.register(createSessionInvalidationConsumer());
   registry.register(createDlqProcessor());
+  registry.register(createIDESessionSupervisorWorker());
   registry.register(createCronScheduler());
 
   const httpServer = createMetricsHealthServer(registry);

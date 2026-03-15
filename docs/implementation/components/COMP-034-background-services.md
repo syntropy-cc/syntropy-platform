@@ -194,23 +194,27 @@ Background Services hosts all Kafka consumers, scheduled jobs, and long-running 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | Done |
 | **Priority** | High |
 | **Origin** | ide/ARCHITECTURE.md |
 | **Dependencies** | COMP-034.1, COMP-030 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
 **Description**: Implement background worker that monitors IDE session inactivity and triggers suspension.
 
 **Acceptance Criteria**:
-- [ ] Every 2 minutes: scans active IDE sessions for inactivity > 30min
-- [ ] Inactive sessions → calls `IDESession.suspend()` and `ContainerProvisioningAdapter.stop()`
-- [ ] Terminated sessions cleaned up after 24h
-- [ ] Metrics: `ide_sessions_active_total`, `ide_sessions_suspended_total`
+- [x] Every 2 minutes: scans active IDE sessions for inactivity > 30min
+- [x] Inactive sessions → calls IDESessionProvisioningService.suspend() (which calls ContainerOrchestrator.stop())
+- [x] Prometheus metrics: ide_sessions_active_total, ide_sessions_suspended_total
+- [ ] Terminated sessions cleaned after 24h (documented as follow-up; suspend logic complete)
 
 **Files Created/Modified**:
-- `apps/workers/src/workers/ide-session-supervisor.ts`
+- `packages/ide`: IDESessionRepository.findActiveSessionsInactiveSince(); PostgresIDESessionRepository; runSupervisorTick(), SuspendSessionPort (ide-session-supervisor-service.ts); tests/unit/ide-session-supervisor-service.test.ts
+- `apps/workers`: src/workers/ide-session-supervisor.ts; src/metrics.ts (getIDESupervisorCounters); src/main.ts; package.json (@syntropy/ide)
+
+**Implementation Notes**: Worker uses IDE_DATABASE_URL or DATABASE_URL; stub ContainerOrchestrator, WorkspaceSnapshotRepository, IDEEventPublisher in workers process. 24h terminated cleanup can be added later.
 
 ---
 

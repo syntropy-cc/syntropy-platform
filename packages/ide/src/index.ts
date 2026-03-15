@@ -56,3 +56,8 @@ export {
 } from "./application/ide-session-provisioning-service.js";
 export { PostgresIDESessionRepository } from "./infrastructure/repositories/postgres-ide-session-repository.js";
 export { PostgresWorkspaceSnapshotRepository } from "./infrastructure/repositories/postgres-workspace-snapshot-repository.js";
+export {
+  runSupervisorTick,
+  type SupervisorTickResult,
+  type SuspendSessionPort,
+} from "./application/ide-session-supervisor-service.js";

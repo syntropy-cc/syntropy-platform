@@ -83,10 +83,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
   }
 }
 
-describe(
-  "contract lifecycle integration (COMP-004.6)",
-  { timeout: 30_000, hookTimeout: 60_000 },
-  () => {
+describe("contract lifecycle integration (COMP-004.6)", () => {
     let container: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
     let pool: Pool;
     let app: Awaited<ReturnType<typeof createApp>>;
@@ -130,6 +127,7 @@ describe(
           contractDSLParser: new ContractDSLParser(),
           projectRepository,
           createProjectUseCase,
+          iacpRepository: {} as import("@syntropy/dip-iacp").IACPRepository,
         },
       });
     });

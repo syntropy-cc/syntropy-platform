@@ -10,13 +10,14 @@ import {
   DataRetentionService,
   DEFAULT_DATA_RETENTION_POLICY,
   type PurgeAuditSink,
+  type PurgeResult,
 } from "@syntropy/platform-core";
 
 const log = createLogger("workers:data-retention-purge");
 
 /** Audit sink that logs purge operations (production would append to immutable store). */
 const logAuditSink: PurgeAuditSink = {
-  async recordPurge(result) {
+  async recordPurge(result: PurgeResult) {
     log.info(
       {
         entityType: result.entityType,

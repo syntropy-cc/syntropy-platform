@@ -141,6 +141,7 @@ describe("artifact routes", () => {
           contractDSLParser: new ContractDSLParser(),
           projectRepository: mockProjectRepository,
           createProjectUseCase,
+          iacpRepository: {} as import("@syntropy/dip-iacp").IACPRepository,
         },
       });
     });

@@ -6,7 +6,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { createApp } from "../server.js";
 import type { LabsScientificContext } from "../types/labs-context.js";
-import { createArticleId } from "@syntropy/types";
+import { createArticleId, type ArticleId } from "@syntropy/types";
 import {
   createSubjectAreaId,
   ScientificArticle,
@@ -100,7 +100,7 @@ function createMockLabsContextWithArticles(): LabsScientificContext {
       listByArticleId: async (id) => versions.get(id as string) ?? [],
     },
     articleSubmissionService: {
-      submit: async (id, actorId) => {
+      submit: async (id: ArticleId, _actorId: string) => {
         const art = articles.get(id as string);
         if (!art) throw new Error("Article not found");
         const submitted = art.submitForReview();
@@ -108,7 +108,7 @@ function createMockLabsContextWithArticles(): LabsScientificContext {
       },
       retract: async () => {},
       accept: async () => {},
-    },
+    } as unknown as import("@syntropy/labs-package").ArticleSubmissionService,
   };
 }
 

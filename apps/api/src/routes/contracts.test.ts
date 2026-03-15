@@ -154,6 +154,7 @@ describe("contract routes", () => {
           contractDSLParser: new ContractDSLParser(),
           projectRepository: mockProjectRepository,
           createProjectUseCase,
+          iacpRepository: {} as import("@syntropy/dip-iacp").IACPRepository,
         },
       });
     });
@@ -216,7 +217,7 @@ describe("contract routes", () => {
           payload: { dsl: VALID_DSL },
         });
         expect(response.statusCode).toBe(201);
-        const body = response.json() as { data: { id: string; institutionId: string; clauses: unknown[] }; meta?: unknown };
+        const body = response.json() as { data: { id: string; institutionId: string; clauses: unknown[] }; meta?: { timestamp?: unknown } };
         expect(body.data.id).toBe(CONTRACT_ID);
         expect(body.data.institutionId).toBe("inst-1");
         expect(Array.isArray(body.data.clauses)).toBe(true);
@@ -258,7 +259,7 @@ describe("contract routes", () => {
           headers: { authorization: `Bearer ${VALID_JWT}` },
         });
         expect(response.statusCode).toBe(200);
-        const body = response.json() as { data: { id: string; institutionId: string }; meta?: unknown };
+        const body = response.json() as { data: { id: string; institutionId: string }; meta?: { timestamp?: unknown } };
         expect(body.data.id).toBe(CONTRACT_ID);
         expect(body.data.institutionId).toBe("inst-1");
         expect(body.meta?.timestamp).toBeDefined();
@@ -314,7 +315,7 @@ describe("contract routes", () => {
           payload: { institutionId: "inst-1" },
         });
         expect(response.statusCode).toBe(200);
-        const body = response.json() as { data: { permitted: boolean }; meta?: unknown };
+        const body = response.json() as { data: { permitted: boolean }; meta?: { timestamp?: unknown } };
         expect(body.data.permitted).toBe(true);
         expect(body.meta?.timestamp).toBeDefined();
       });

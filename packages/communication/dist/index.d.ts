@@ -1,6 +1,6 @@
 /**
  * Communication domain package (COMP-028).
- * Architecture: communication domain
+ * Architecture: COMP-028, communication domain
  */
 export { Thread, type ThreadParams } from "./domain/thread.js";
 export { isThreadType, type ThreadType } from "./domain/thread-type.js";

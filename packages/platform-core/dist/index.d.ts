@@ -9,6 +9,8 @@ export { AuditColumnsMixin, getAuditColumnsMigrationSnippet, type AuditColumns, 
 export { appendToLog, type AppendOnlyLogEntry, type AppendOnlyLogClient, } from "./data-integrity/append-only-log.js";
 export { type IAppendOnlyLog, type AppendOnlyLogQueryFilter, } from "./data-integrity/append-only-log-interface.js";
 export { MockAppendOnlyLog, type MockLogEntry, type LogEventWithMeta, } from "./data-integrity/MockAppendOnlyLog.js";
+export { DEFAULT_DATA_RETENTION_POLICY, type DataRetentionPolicy, type RetentionWindow, type RetentionEntityType, } from "./data-integrity/data-retention-policy.js";
+export { DataRetentionService, type PurgeResult, type PurgeAuditSink, type DataRetentionRepositories, type DataRetentionServiceOptions, } from "./data-integrity/data-retention-service.js";
 export { createLogger, withCorrelationId, type LoggerOptions, } from "./observability/logger.js";
 export type { Logger } from "pino";
 export { runWithCorrelationId, getCorrelationId, getCausationId, fetchWithCorrelationId, runWithMessageContext, setCorrelationContextForRequest, } from "./observability/correlation-context.js";

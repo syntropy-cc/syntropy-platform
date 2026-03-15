@@ -31,6 +31,7 @@ export {
   type ContextSnapshotProvider,
   type AgentOrchestratorDeps,
 } from "./domain/orchestration/agent-orchestrator.js";
+export type { LLMAdapter, LLMResponse } from "./domain/orchestration/llm-adapter.js";
 export { AgentSession } from "./domain/orchestration/agent-session.js";
 export type { AgentSessionRepository } from "./domain/orchestration/repositories/agent-session-repository.js";
 export {

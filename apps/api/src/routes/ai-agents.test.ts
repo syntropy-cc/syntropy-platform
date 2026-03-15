@@ -11,14 +11,13 @@ import {
   InvalidTokenError,
   type AuthProvider,
 } from "@syntropy/identity";
+import type { AgentEventPublisher, LLMAdapter } from "@syntropy/ai-agents";
 import {
   AgentSession,
   AgentOrchestrator,
   InMemoryAgentRegistry,
   type AgentSessionStore,
-  type AgentEventPublisher,
   type ContextSnapshotProvider,
-  type LLMAdapter,
 } from "@syntropy/ai-agents";
 import { InMemoryToolDefinitionStore } from "../lib/tool-definition-store.js";
 
@@ -62,7 +61,7 @@ function createMockEventPublisher(): AgentEventPublisher {
   return {
     async publishSessionStarted() {},
     async publishInvoked() {},
-  };
+  } as unknown as AgentEventPublisher;
 }
 
 function createMockOrchestrator(store: AgentSessionStore): AgentOrchestrator {

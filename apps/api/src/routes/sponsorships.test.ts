@@ -127,7 +127,7 @@ describe("sponsorship routes (COMP-027.6)", () => {
       },
     });
     expect(res.statusCode).toBe(201);
-    const body = res.json() as { data?: { id?: string; sponsorId?: string; amount?: number; status?: string } };
+    const body = res.json() as { data?: { id?: string; sponsorId?: string; sponsoredId?: string; amount?: number; status?: string } };
     expect(body.data?.id).toBeDefined();
     expect(body.data?.sponsorId).toBe(TEST_USER_ID);
     expect(body.data?.sponsoredId).toBe(SPONSORED_ID);

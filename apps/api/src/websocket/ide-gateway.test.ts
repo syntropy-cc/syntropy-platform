@@ -51,11 +51,15 @@ function createInMemorySessionRepo(): IDESessionRepository {
     async save(session: IDESession) {
       map.set(session.sessionId, session);
     },
+    async findActiveSessionsInactiveSince(_since: Date) {
+      return [];
+    },
   };
 }
 
 describe("IDE WebSocket gateway (COMP-035.2)", () => {
   let server: { close: () => Promise<void> } | undefined;
+  let app: Awaited<ReturnType<typeof createApp>>;
   let baseUrl: string;
 
   beforeAll(async () => {
@@ -82,7 +86,7 @@ describe("IDE WebSocket gateway (COMP-035.2)", () => {
       quotaEnforcer: {} as IDEContext["quotaEnforcer"],
     };
 
-    const app = await createApp({
+    app = await createApp({
       auth: createMockAuth(),
       ide: ideContext,
     });
@@ -97,7 +101,12 @@ describe("IDE WebSocket gateway (COMP-035.2)", () => {
         resolve();
       });
     });
-    server = app.server;
+    server = {
+      close: () =>
+        new Promise<void>((resolve, reject) => {
+          app.server.close((err) => (err ? reject(err) : resolve()));
+        }),
+    };
   });
 
   afterAll(async () => {

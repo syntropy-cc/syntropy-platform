@@ -6,7 +6,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { createApp } from "../server.js";
 import type { LabsScientificContext } from "../types/labs-context.js";
-import { createArticleId, createReviewId } from "@syntropy/types";
 import { Review, AuthorResponse, ReviewVisibilityEvaluator } from "@syntropy/labs-package";
 import {
   IdentityToken,

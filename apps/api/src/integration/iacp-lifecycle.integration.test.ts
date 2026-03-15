@@ -82,10 +82,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
   }
 }
 
-describe(
-  "IACP lifecycle integration (COMP-005.8)",
-  { timeout: 30_000, hookTimeout: 60_000 },
-  () => {
+describe("IACP lifecycle integration (COMP-005.8)", () => {
     let container: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
     let pool: Pool;
     let app: Awaited<ReturnType<typeof createApp>>;

@@ -61,7 +61,8 @@ function isCreateIacpBody(value: unknown): value is CreateIacpBody {
     if (!Array.isArray(o.partyActorIds)) return false;
     if (!o.partyActorIds.every((x: unknown) => typeof x === "string")) return false;
   } else {
-    (o as CreateIacpBody).partyActorIds = [];
+    const body = o as unknown as CreateIacpBody;
+    body.partyActorIds = [];
   }
   return true;
 }

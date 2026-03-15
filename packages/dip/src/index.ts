@@ -83,6 +83,7 @@ export { ProjectEventPublisher } from "./infrastructure/project-event-publisher.
 export type {
   ArtifactRepository,
   ArtifactLifecycleEventPublisher,
+  ArtifactLifecycleEvent,
 } from "./domain/index.js";
 export type { ContractRepository } from "@syntropy/dip-contracts";
 export { InvalidLifecycleTransitionError } from "./domain/index.js";

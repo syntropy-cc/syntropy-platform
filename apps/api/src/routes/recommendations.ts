@@ -4,7 +4,7 @@
  */
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import { successEnvelope, errorEnvelope } from "../types/api-envelope.js";
+import { successEnvelope } from "../types/api-envelope.js";
 import type { SearchContext } from "../types/search-context.js";
 
 function getRequestId(request: FastifyRequest): string | undefined {

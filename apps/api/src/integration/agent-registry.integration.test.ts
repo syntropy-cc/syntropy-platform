@@ -22,17 +22,15 @@ import {
   InvalidTokenError,
   type AuthProvider,
 } from "@syntropy/identity";
+import type { AgentEventPublisher, LLMAdapter } from "@syntropy/ai-agents";
 import {
   InMemoryAgentRegistry,
-  AgentSession,
   AgentOrchestrator,
   PostgresAgentSessionRepository,
   PgAgentSessionDbClient,
   createToolDefinition,
   type AgentSessionStore,
-  type AgentEventPublisher,
   type ContextSnapshotProvider,
-  type LLMAdapter,
   type ToolDefinition,
 } from "@syntropy/ai-agents";
 import { z } from "zod";
@@ -77,16 +75,11 @@ function createToolStore(): ToolDefinitionStore {
   };
 }
 
-function createMockSessionStore(): AgentSessionStore {
-  const sessions = new Map<string, AgentSession>();
+function createMockEventPublisher(): AgentEventPublisher {
   return {
-    async get(sessionId: string) {
-      return sessions.get(sessionId) ?? null;
-    },
-    async save(session: AgentSession) {
-      sessions.set(session.sessionId, session);
-    },
-  };
+    publishSessionStarted: async () => {},
+    publishInvoked: async () => {},
+  } as unknown as AgentEventPublisher;
 }
 
 function createMockOrchestrator(store: AgentSessionStore): AgentOrchestrator {
@@ -125,10 +118,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
   }
 }
 
-describe(
-  "agent registry integration (COMP-013.5)",
-  { timeout: 30_000, hookTimeout: 60_000 },
-  () => {
+describe("agent registry integration (COMP-013.5)", () => {
     let container: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
     let pool: Pool;
     let app: Awaited<ReturnType<typeof createApp>>;
@@ -153,10 +143,7 @@ describe(
         supabaseClient: null,
         aiAgents: {
           sessionStore,
-          eventPublisher: {
-            async publishSessionStarted() {},
-            async publishInvoked() {},
-          },
+          eventPublisher: createMockEventPublisher(),
           orchestrator: createMockOrchestrator(sessionStore),
           agentRegistry,
           toolStore,
@@ -176,7 +163,7 @@ describe(
         supabaseClient: null,
         aiAgents: {
           sessionStore: new PostgresAgentSessionRepository(new PgAgentSessionDbClient(pool)),
-          eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+          eventPublisher: createMockEventPublisher(),
           orchestrator: createMockOrchestrator(
             new PostgresAgentSessionRepository(new PgAgentSessionDbClient(pool))
           ),
@@ -249,7 +236,7 @@ describe(
         supabaseClient: null,
         aiAgents: {
           sessionStore: new PostgresAgentSessionRepository(new PgAgentSessionDbClient(pool)),
-          eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+          eventPublisher: createMockEventPublisher(),
           orchestrator: createMockOrchestrator(
             new PostgresAgentSessionRepository(new PgAgentSessionDbClient(pool))
           ),
@@ -283,7 +270,7 @@ describe(
         supabaseClient: null,
         aiAgents: {
           sessionStore: new PostgresAgentSessionRepository(new PgAgentSessionDbClient(pool)),
-          eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+          eventPublisher: createMockEventPublisher(),
           orchestrator: createMockOrchestrator(
             new PostgresAgentSessionRepository(new PgAgentSessionDbClient(pool))
           ),

@@ -91,10 +91,7 @@ async function runMigrations(pool: Pool, migrationsDir: string): Promise<void> {
   }
 }
 
-describe(
-  "governance lifecycle integration (COMP-007.9)",
-  { timeout: 30_000, hookTimeout: 60_000 },
-  () => {
+describe("governance lifecycle integration (COMP-007.9)", () => {
     let container: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
     let pool: Pool;
     let app: Awaited<ReturnType<typeof createApp>>;

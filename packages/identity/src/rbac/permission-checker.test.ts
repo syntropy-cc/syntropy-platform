@@ -9,7 +9,6 @@ import { RBACRole } from "../domain/entities/rbac-role.js";
 import {
   PermissionChecker,
   InMemoryPermissionCache,
-  createPermissionChecker,
   hasPermission,
   requirePermission,
   type RoleResolver,
@@ -24,8 +23,6 @@ describe("PermissionChecker", () => {
   const resolveLearner: RoleResolver = async (id) =>
     id === ACTOR_LEARNER ? [RBACRole.Learner] : [];
   const resolveAdmin: RoleResolver = async () => [RBACRole.Admin];
-  const resolveCreator: RoleResolver = async (id) =>
-    id === ACTOR_CREATOR ? [RBACRole.Creator] : [];
 
   it("hasPermission_returns_true_when_learner_has_learn_read", async () => {
     const checker = new PermissionChecker({ roleResolver: resolveLearner });

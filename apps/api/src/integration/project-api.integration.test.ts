@@ -126,6 +126,7 @@ describe("project API integration (COMP-006.6)", () => {
           contractDSLParser: new ContractDSLParser(),
           projectRepository,
           createProjectUseCase,
+          iacpRepository: {} as import("@syntropy/dip-iacp").IACPRepository,
         },
       });
     });

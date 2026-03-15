@@ -11,16 +11,20 @@ import {
   InvalidTokenError,
   type AuthProvider,
 } from "@syntropy/identity";
+import type { AgentEventPublisher, LLMAdapter } from "@syntropy/ai-agents";
 import {
   InMemoryAgentRegistry,
   AgentSession,
   AgentOrchestrator,
   type AgentSessionStore,
-  type AgentEventPublisher,
   type ContextSnapshotProvider,
-  type LLMAdapter,
   type ToolDefinition,
 } from "@syntropy/ai-agents";
+
+/** Mock event publisher for tests; satisfies AgentEventPublisher interface. */
+function createMockEventPublisher(): AgentEventPublisher {
+  return { publishSessionStarted: async () => {}, publishInvoked: async () => {} } as unknown as AgentEventPublisher;
+}
 import type { ToolDefinitionStore } from "../types/ai-agents-context.js";
 
 const TEST_USER_ID = "a1b2c3d4-e5f6-4789-a012-345678901234";
@@ -109,7 +113,7 @@ describe("agents routes", () => {
       auth: createMockAuth(VALID_JWT, ["learner"]),
       aiAgents: {
         sessionStore,
-        eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+        eventPublisher: createMockEventPublisher(),
         orchestrator: createMockOrchestrator(sessionStore),
         agentRegistry,
         toolStore,
@@ -153,7 +157,7 @@ describe("agents routes", () => {
       auth: createMockAuth(ADMIN_JWT, ["admin"]),
       aiAgents: {
         sessionStore,
-        eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+        eventPublisher: createMockEventPublisher(),
         orchestrator: createMockOrchestrator(sessionStore),
         agentRegistry,
         toolStore,
@@ -200,7 +204,7 @@ describe("agents routes", () => {
       auth: createMockAuth(ADMIN_JWT, ["admin"]),
       aiAgents: {
         sessionStore,
-        eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+        eventPublisher: createMockEventPublisher(),
         orchestrator: createMockOrchestrator(sessionStore),
         agentRegistry,
         toolStore,
@@ -242,7 +246,7 @@ describe("agents routes", () => {
       auth: createMockAuth(ADMIN_JWT, ["admin"]),
       aiAgents: {
         sessionStore,
-        eventPublisher: { async publishSessionStarted() {}, async publishInvoked() {} },
+        eventPublisher: createMockEventPublisher(),
         orchestrator: createMockOrchestrator(sessionStore),
         agentRegistry,
         toolStore,

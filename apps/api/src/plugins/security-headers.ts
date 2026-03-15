@@ -28,7 +28,7 @@ export async function securityHeadersPlugin(app: FastifyInstance): Promise<void>
         "frame-ancestors": ["'none'"],
       },
     },
-    xFrameOptions: "DENY",
+    xFrameOptions: { action: "deny" },
     noSniff: true,
   });
 }

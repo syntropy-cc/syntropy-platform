@@ -98,7 +98,7 @@ export class DataRetentionService {
    * Purge all data for a user (right-to-deletion). Cascades soft-delete then
    * hard-delete after retention period per policy. Audit log records the operation.
    */
-  async purgeUserData(userId: string): Promise<void> {
+  async purgeUserData(_userId: string): Promise<void> {
     // Placeholder: actual implementation would call identity/session/moderation
     // repos to soft-delete and then hard-delete after retention. Audit every step.
     await this.audit.recordPurge({

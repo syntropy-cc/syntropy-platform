@@ -54,6 +54,9 @@ function createInMemorySessionRepository(): IDESessionRepository {
     async save(session: IDESession) {
       map.set(session.sessionId, session);
     },
+    async findActiveSessionsInactiveSince(_since: Date) {
+      return [];
+    },
   };
 }
 

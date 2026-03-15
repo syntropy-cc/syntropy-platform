@@ -1,5 +1,6 @@
 /**
  * PostgreSQL implementation of NotificationRepository (COMP-028.3, COMP-028.6).
+ * Architecture: COMP-028.
  */
 
 import { Notification } from "../../domain/notification.js";

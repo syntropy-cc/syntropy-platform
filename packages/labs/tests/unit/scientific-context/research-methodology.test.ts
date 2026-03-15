@@ -108,7 +108,8 @@ describe("METHODOLOGY_SEED", () => {
   it("every entry can be instantiated as ResearchMethodology", () => {
     for (const params of METHODOLOGY_SEED) {
       const m = new ResearchMethodology(params);
-      expect(m.name).toBeTruthy();
+      expect(m.name).toBeDefined();
+      expect(m.name).not.toBe("");
       expect(m.type).toBe(params.type);
     }
   });

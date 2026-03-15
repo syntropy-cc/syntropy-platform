@@ -1,6 +1,6 @@
 /**
  * Default preference resolver — returns all channels for every user (COMP-028.4).
- * COMP-028.5 will replace with real NotificationPreferences-based implementation.
+ * Architecture: COMP-028. COMP-028.5 will replace with real NotificationPreferences-based implementation.
  */
 
 import type { NotificationPreferenceResolver } from "../domain/ports/notification-preference-resolver.js";

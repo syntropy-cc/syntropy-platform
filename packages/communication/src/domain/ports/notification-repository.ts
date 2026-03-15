@@ -1,6 +1,6 @@
 /**
  * Notification repository port (COMP-028.3, COMP-028.6).
- * Architecture: communication domain, PAT-004
+ * Architecture: COMP-028, communication domain, PAT-004
  */
 
 import type { Notification } from "../notification.js";

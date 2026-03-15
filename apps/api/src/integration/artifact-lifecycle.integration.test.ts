@@ -204,7 +204,9 @@ describe(
         data: { status: string; publishedAt: string | null };
       };
       expect(publishBody.data.status).toBe("published");
-      expect(publishBody.data.publishedAt).toBeTruthy();
+      expect(publishBody.data.publishedAt).toBeDefined();
+      expect(typeof publishBody.data.publishedAt).toBe("string");
+      expect(new Date(publishBody.data.publishedAt as string).getTime()).not.toBeNaN();
 
       const getPublishedRes = await app.inject({
         method: "GET",

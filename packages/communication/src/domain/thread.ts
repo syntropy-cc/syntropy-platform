@@ -1,6 +1,6 @@
 /**
  * Thread aggregate — conversation container with participants (COMP-028.1).
- * Architecture: communication domain, PAT-004
+ * Architecture: COMP-028, communication domain, PAT-004
  */
 
 import { isThreadType, type ThreadType } from "./thread-type.js";

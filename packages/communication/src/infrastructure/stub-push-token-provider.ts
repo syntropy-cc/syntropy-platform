@@ -1,6 +1,6 @@
 /**
  * Stub push token provider — returns no tokens (COMP-028.4).
- * Push delivery is no-op until real device token storage exists.
+ * Architecture: COMP-028. Push delivery is no-op until real device token storage exists.
  */
 
 import type { PushTokenProvider } from "../domain/ports/push-token-provider.js";

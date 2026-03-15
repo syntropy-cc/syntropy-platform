@@ -1,6 +1,6 @@
 /**
  * Central API route registration (COMP-033.4).
- *
+ * Architecture: COMP-033.
  * Imports all domain route plugins and registers them with the Fastify app.
  * Route prefixes (paths) are defined inside each route module; this module
  * is the single place that wires all domain routes to the server.

@@ -1,6 +1,6 @@
 /**
  * In-memory implementation of ThreadRepository (COMP-028.6).
- * Used in tests and when persistence is not required.
+ * Architecture: COMP-028. Used in tests and when persistence is not required.
  */
 
 import type { Thread } from "../../domain/thread.js";

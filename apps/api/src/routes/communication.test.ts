@@ -110,10 +110,15 @@ describe("communication routes (COMP-028.6)", () => {
       const timeout = setTimeout(() => ac.abort(), 5000);
 
       const receivedEvents: Array<{ id: string; data: unknown }> = [];
+      let resolveExpected: () => void;
+      const expectedEventPromise = new Promise<void>((r) => {
+        resolveExpected = r;
+      });
       const fetchPromise = fetch(streamUrl, {
         headers: { authorization: `Bearer ${VALID_JWT}` },
         signal: ac.signal,
       }).then(async (response) => {
+        expect(response.status).toBe(200);
         expect(response.ok).toBe(true);
         expect(response.headers.get("content-type")).toContain("text/event-stream");
         const reader = response.body!.getReader();
@@ -135,7 +140,15 @@ describe("communication routes (COMP-028.6)", () => {
             }
             if (id != null && data != null) {
               try {
-                receivedEvents.push({ id, data: JSON.parse(data) as unknown });
+                const parsed = JSON.parse(data) as unknown;
+                receivedEvents.push({ id, data: parsed });
+                if (
+                  typeof parsed === "object" &&
+                  parsed !== null &&
+                  (parsed as { id?: string }).id === newNotificationId
+                ) {
+                  resolveExpected();
+                }
               } catch {
                 // ignore non-JSON data (e.g. [DONE])
               }
@@ -156,24 +169,24 @@ describe("communication routes (COMP-028.6)", () => {
       });
       await mockContext.notificationRepository.save(newNotification);
 
-      const deadline = Date.now() + 4500;
-      while (Date.now() < deadline) {
-        const found = receivedEvents.some(
-          (e) => typeof e.data === "object" && e.data !== null && (e.data as { id?: string }).id === newNotificationId
-        );
-        if (found) break;
-        await new Promise((r) => setTimeout(r, 250));
-      }
+      const waitTimeoutMs = 5000;
+      await Promise.race([
+        expectedEventPromise,
+        new Promise<void>((_, reject) =>
+          setTimeout(() => reject(new Error("SSE expected event timeout")), waitTimeoutMs)
+        ),
+      ]);
 
       clearTimeout(timeout);
       await new Promise((r) => setTimeout(r, 300));
       ac.abort();
 
       expect(receivedEvents.length).toBeGreaterThanOrEqual(1);
-      const found = receivedEvents.some(
+      const matchingEvent = receivedEvents.find(
         (e) => typeof e.data === "object" && e.data !== null && (e.data as { id?: string }).id === newNotificationId
       );
-      expect(found).toBe(true);
+      expect(matchingEvent).toBeDefined();
+      expect((matchingEvent!.data as { id: string }).id).toBe(newNotificationId);
 
       await fetchPromise.catch((err: unknown) => {
         if (err instanceof Error && err.name === "AbortError") return;
@@ -348,6 +361,7 @@ describe("communication routes (COMP-028.6)", () => {
       expect(body.data.threadId).toBe(threadId);
       expect(body.data.participants).toContain(TEST_USER_ID);
       expect(Array.isArray(body.data.messages)).toBe(true);
+      expect(body.data.messages.length).toBeGreaterThanOrEqual(0);
     });
 
     it("returns 403 when user is not a participant", async () => {

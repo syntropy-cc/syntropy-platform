@@ -1,6 +1,6 @@
 /**
  * Port for resolving which delivery channels are enabled for a user (COMP-028.4).
- * Stub in 028.4; real implementation in COMP-028.5 (user notification preferences).
+ * Architecture: COMP-028. Stub in 028.4; real implementation in COMP-028.5 (user notification preferences).
  */
 
 import type { DeliveryChannel } from "../delivery-channel.js";

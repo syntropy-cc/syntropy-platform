@@ -1,6 +1,6 @@
 /**
  * Port for sending push notifications (COMP-028.4).
- * Implemented by FCM adapter; throw on failure so caller can retry.
+ * Architecture: COMP-028. Implemented by FCM adapter; throw on failure so caller can retry.
  */
 
 export interface PushSendParams {

@@ -1,6 +1,6 @@
 /**
  * In-memory implementation of NotificationPreferencesRepository (COMP-028.5).
- * Used in tests and when persistence is not required.
+ * Architecture: COMP-028. Used in tests and when persistence is not required.
  */
 
 import type { NotificationPreferences } from "../../domain/notification-preferences.js";

@@ -1,6 +1,6 @@
 /**
  * Client interface for Communication domain SQL (COMP-028.3).
- * Implement with pg.Pool or test double; app wires the implementation.
+ * Architecture: COMP-028. Implement with pg.Pool or test double; app wires the implementation.
  */
 
 /**

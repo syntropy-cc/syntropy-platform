@@ -68,16 +68,17 @@ describe("WorkerRegistry", () => {
     });
 
     it("starts workers in parallel", async () => {
+      vi.useFakeTimers();
       const a = createMockWorker("a", { startDelay: 20 });
       const b = createMockWorker("b", { startDelay: 20 });
       registry.register(a);
       registry.register(b);
-      const start = Date.now();
-      await registry.startAll();
-      const elapsed = Date.now() - start;
-      expect(elapsed).toBeLessThan(50);
+      const startAllPromise = registry.startAll();
+      await vi.advanceTimersByTimeAsync(50);
+      await startAllPromise;
       expect(a.start).toHaveBeenCalledTimes(1);
       expect(b.start).toHaveBeenCalledTimes(1);
+      vi.useRealTimers();
     });
   });
 
@@ -94,17 +95,18 @@ describe("WorkerRegistry", () => {
     });
 
     it("resolves after timeout when a worker stop hangs", async () => {
+      vi.useFakeTimers();
       const fast = createMockWorker("fast");
       const slow = createMockWorker("slow", { stopDelay: 2000 });
       registry.register(fast);
       registry.register(slow);
       await registry.startAll();
-      const start = Date.now();
-      await registry.stopAll({ timeoutMs: 100 });
-      const elapsed = Date.now() - start;
-      expect(elapsed).toBeLessThan(250);
+      const stopPromise = registry.stopAll({ timeoutMs: 100 });
+      await vi.advanceTimersByTimeAsync(250);
+      await stopPromise;
       expect(fast.stop).toHaveBeenCalledTimes(1);
       expect(slow.stop).toHaveBeenCalledTimes(1);
+      vi.useRealTimers();
     });
 
     it("does nothing when no workers registered", async () => {

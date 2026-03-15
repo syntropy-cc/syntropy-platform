@@ -1,6 +1,6 @@
 /**
  * FCM push notification sender (COMP-028.4).
- * No-op implementation; production can inject a real adapter (e.g. Firebase Admin SDK).
+ * Architecture: COMP-028. No-op implementation; production can inject a real adapter (e.g. Firebase Admin SDK).
  * With StubPushTokenProvider returning [], send() is typically never called with tokens.
  */
 

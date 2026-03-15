@@ -1,6 +1,6 @@
 /**
  * Maps domain event (topic, eventType, payload) to notification DTOs (COMP-028.3).
- * Event types that trigger notifications per communication domain architecture.
+ * Architecture: COMP-028. Event types that trigger notifications per communication domain architecture.
  */
 
 /** Event types that trigger a notification. */

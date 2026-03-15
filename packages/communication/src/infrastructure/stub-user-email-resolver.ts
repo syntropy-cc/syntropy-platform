@@ -1,6 +1,6 @@
 /**
  * Stub user email resolver for tests and default (COMP-028.4).
- * Returns a configurable email or null; production can use Identity lookup.
+ * Architecture: COMP-028. Returns a configurable email or null; production can use Identity lookup.
  */
 
 import type { UserEmailResolver } from "../domain/ports/user-email-resolver.js";

@@ -1,6 +1,6 @@
 /**
  * REST API server factory (COMP-033.1).
- *
+ * Architecture: COMP-033.
  * Builds Fastify app with CORS, correlation-id, request logging, and health route.
  * Route registration is centralized in router.ts (COMP-033.4).
  * Does not call .listen(); see main.ts for bootstrap and graceful shutdown.

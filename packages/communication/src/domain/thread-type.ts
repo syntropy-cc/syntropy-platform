@@ -1,6 +1,6 @@
 /**
  * Thread type — classification of a conversation (COMP-028.1).
- * Architecture: communication domain
+ * Architecture: COMP-028, communication domain
  */
 
 export type ThreadType = "direct" | "group" | "notification";

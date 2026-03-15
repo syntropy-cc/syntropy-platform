@@ -1,6 +1,6 @@
 /**
  * Repository port for NotificationPreferences (COMP-028.5).
- * Architecture: communication domain, PAT-004
+ * Architecture: COMP-028, communication domain, PAT-004
  */
 
 import type { NotificationPreferences } from "../notification-preferences.js";

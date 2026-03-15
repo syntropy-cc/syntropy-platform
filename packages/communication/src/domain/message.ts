@@ -1,7 +1,7 @@
 /**
  * Message entity — single message in a thread (COMP-028.2).
  * Soft-deletable for audit and data retention.
- * Architecture: communication domain, COMP-039.1
+ * Architecture: COMP-028, communication domain, COMP-039.1
  */
 
 import { SoftDeletableMixin } from "@syntropy/platform-core";

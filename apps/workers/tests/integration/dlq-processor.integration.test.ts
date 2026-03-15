@@ -45,11 +45,10 @@ describeIntegration("DLQ processor (COMP-034.7)", () => {
     worker = createDlqProcessor();
     await worker.start();
 
-    const maxWaitMs = 50_000;
+    const maxAttempts = 25;
     const pollIntervalMs = 2_000;
     let row: { topic: string; retry_count: number } | null = null;
-    const deadline = Date.now() + maxWaitMs;
-    while (Date.now() < deadline) {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const result = await ctx.pool.query(
         `SELECT topic, retry_count FROM platform_core.dlq_archive WHERE topic = $1 ORDER BY created_at DESC LIMIT 1`,
         ["default.dlq"]
@@ -65,9 +64,10 @@ describeIntegration("DLQ processor (COMP-034.7)", () => {
     expect(row!.topic).toBe("default.dlq");
     expect(row!.retry_count).toBe(3);
 
+    const stopTimeoutMs = 10_000;
     await Promise.race([
       worker.stop(),
-      new Promise<void>((r) => setTimeout(r, 10_000)),
+      new Promise<void>((r) => setTimeout(r, stopTimeoutMs)),
     ]);
     worker = null!;
     },

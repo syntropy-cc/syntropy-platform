@@ -1,6 +1,6 @@
 /**
  * NotificationPreferences entity — per-user notification settings (COMP-028.5).
- * Architecture: communication domain
+ * Architecture: COMP-028, communication domain
  */
 
 import type { DeliveryChannel } from "./delivery-channel.js";

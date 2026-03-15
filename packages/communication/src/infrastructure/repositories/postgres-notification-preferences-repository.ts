@@ -1,5 +1,6 @@
 /**
  * PostgreSQL implementation of NotificationPreferencesRepository (COMP-028.5).
+ * Architecture: COMP-028.
  */
 
 import { NotificationPreferences } from "../../domain/notification-preferences.js";

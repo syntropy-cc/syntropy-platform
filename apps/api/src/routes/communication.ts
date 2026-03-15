@@ -1,6 +1,6 @@
 /**
  * Communication REST routes (COMP-028.6, COMP-028.7).
- *
+ * Architecture: COMP-033, COMP-028.
  * GET  /api/v1/notifications — list notifications for current user (paginated, auth).
  * GET  /api/v1/notifications/stream — SSE stream for real-time notifications (auth).
  * PUT  /api/v1/notifications/:id/read — mark notification as read (auth).

@@ -1,6 +1,6 @@
 /**
  * In-memory implementation of NotificationRepository (COMP-028.3, COMP-028.6).
- * Used in tests and when DATABASE_URL is not set (stub mode).
+ * Architecture: COMP-028. Used in tests and when DATABASE_URL is not set (stub mode).
  */
 
 import { Notification } from "../../domain/notification.js";

@@ -1,6 +1,6 @@
 /**
  * Resolver that uses persisted NotificationPreferences (COMP-028.5).
- * Returns enabled channels per user and notification type; respects mute_until snooze.
+ * Architecture: COMP-028. Returns enabled channels per user and notification type; respects mute_until snooze.
  */
 
 import type { NotificationPreferenceResolver } from "../domain/ports/notification-preference-resolver.js";

@@ -22,7 +22,7 @@ describe("LegitimacyChain", () => {
     const entry = chain.append(payload);
 
     expect(entry.previousChainHash).toBe(LEGITIMACY_CHAIN_GENESIS_HASH);
-    expect(entry.chainHash).toBeTruthy();
+    expect(entry.chainHash).toBeDefined();
     expect(entry.chainHash).toMatch(/^[a-f0-9]{64}$/);
     expect(entry.institutionId).toBe("inst-1");
     expect(entry.proposalId).toBe("prop-1");
@@ -45,7 +45,7 @@ describe("LegitimacyChain", () => {
     });
 
     expect(second.previousChainHash).toBe(first.chainHash);
-    expect(second.chainHash).toBeTruthy();
+    expect(second.chainHash).toBeDefined();
     expect(second.chainHash).not.toBe(first.chainHash);
     expect(chain.entries).toHaveLength(2);
     expect(chain.verify()).toBe(true);
@@ -130,7 +130,8 @@ describe("LegitimacyChain", () => {
       institutionStateBeforeHash: "hash-before",
       institutionStateAfterHash: "hash-after",
     });
-    expect(entry.chainHash).toBeTruthy();
+    expect(entry.chainHash).toBeDefined();
+    expect(entry.chainHash).toMatch(/^[a-f0-9]{64}$/);
     expect(chain.verify()).toBe(true);
   });
 });

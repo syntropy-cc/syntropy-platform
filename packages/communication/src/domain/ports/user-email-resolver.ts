@@ -1,6 +1,6 @@
 /**
  * Port for resolving user ID to email address (COMP-028.4).
- * Used by NotificationDeliveryService for email channel delivery.
+ * Architecture: COMP-028. Used by NotificationDeliveryService for email channel delivery.
  */
 
 /**

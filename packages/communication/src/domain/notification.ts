@@ -1,6 +1,6 @@
 /**
  * Notification entity — system-generated alert for a user (COMP-028.3).
- * Architecture: communication domain, PAT-004
+ * Architecture: COMP-028, communication domain, PAT-004
  */
 
 export interface NotificationParams {

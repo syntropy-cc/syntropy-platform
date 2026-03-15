@@ -1,6 +1,6 @@
 /**
  * Notification delivery service — delivers via in-app, email, push (COMP-028.4).
- * Respects user preferences; uses RetryPolicy for external channels.
+ * Architecture: COMP-028. Respects user preferences; uses RetryPolicy for external channels.
  */
 
 import type { Notification } from "../domain/notification.js";

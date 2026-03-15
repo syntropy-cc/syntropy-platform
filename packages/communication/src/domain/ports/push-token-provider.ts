@@ -1,6 +1,6 @@
 /**
  * Port for resolving user ID to FCM/push device tokens (COMP-028.4).
- * Stub returns [] until token storage exists.
+ * Architecture: COMP-028. Stub returns [] until token storage exists.
  */
 
 /**

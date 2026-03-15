@@ -1,6 +1,6 @@
 /**
  * Health and server info routes (COMP-033.7).
- *
+ * Architecture: COMP-033.
  * GET /health — status, version, timestamp (no auth).
  * GET /health/ready — readiness (DB, Kafka, Redis connectivity).
  * GET /health/live — liveness (no dependency checks).

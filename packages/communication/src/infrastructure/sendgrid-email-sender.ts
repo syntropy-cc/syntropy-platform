@@ -1,6 +1,6 @@
 /**
  * SendGrid adapter for email notification delivery (COMP-028.4).
- * Uses SendGrid v3 Mail Send API; throws on non-2xx so caller can retry.
+ * Architecture: COMP-028. Uses SendGrid v3 Mail Send API; throws on non-2xx so caller can retry.
  */
 
 import type { EmailNotificationSender } from "../domain/ports/email-notification-sender.js";

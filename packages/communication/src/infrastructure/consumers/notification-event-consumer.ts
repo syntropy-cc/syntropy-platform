@@ -1,6 +1,6 @@
 /**
  * Kafka consumer that creates Notification entities from domain events (COMP-028.3, 028.4).
- * Subscribes to learn.events, hub.events, labs.events, dip.events; maps events to
+ * Architecture: COMP-028. Subscribes to learn.events, hub.events, labs.events, dip.events; maps events to
  * notifications and delivers via NotificationDeliveryService (in-app, email, push).
  */
 

@@ -27,7 +27,8 @@ describe("Error boundary", () => {
     const reset = vi.fn();
     const { container } = render(<ErrorBoundary error={new Error("Fail")} reset={reset} />);
     const button = container.querySelector("button");
-    expect(button).toBeTruthy();
+    expect(button).toBeDefined();
+    expect(button?.tagName).toBe("BUTTON");
     if (button) fireEvent.click(button);
     expect(reset).toHaveBeenCalledTimes(1);
   });

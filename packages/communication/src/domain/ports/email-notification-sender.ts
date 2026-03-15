@@ -1,6 +1,6 @@
 /**
  * Port for sending notification emails (COMP-028.4).
- * Implemented by SendGrid adapter; throw on failure so caller can retry.
+ * Architecture: COMP-028. Implemented by SendGrid adapter; throw on failure so caller can retry.
  */
 
 export interface EmailSendParams {

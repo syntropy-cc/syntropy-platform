@@ -1,6 +1,6 @@
 /**
  * Delivery channel and result types for notification delivery (COMP-028.4).
- * Architecture: communication domain
+ * Architecture: COMP-028, communication domain
  */
 
 /** Channels through which a notification can be delivered. */

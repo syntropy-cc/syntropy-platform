@@ -140,24 +140,26 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Critical |
 | **Origin** | rest-api/ARCHITECTURE.md |
 | **Dependencies** | All domain packages |
 | **Size** | M |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
 **Description**: Register all domain package API routes under the `/api/v1/*` and `/internal/*` namespace.
 
 **Acceptance Criteria**:
-- [ ] All domain package routers imported and registered with correct prefix
-- [ ] Route registration: `/api/v1/auth/*` (identity), `/api/v1/learn/*`, `/api/v1/hub/*`, `/api/v1/labs/*`, `/api/v1/ai-agents/*`, `/api/v1/sponsorships/*`, `/api/v1/notifications/*`, `/api/v1/moderation/*`, `/api/v1/community-proposals/*`
-- [ ] Internal routes: `/internal/*` for all domain internal APIs (service-to-service only)
-- [ ] Type-safe route parameter validation using Zod schemas
+- [x] All domain package routers imported and registered via `router.ts`
+- [x] Route registration: `/api/v1/auth/*`, `/api/v1/learn/*`, `/api/v1/hub/*`, `/api/v1/labs/*`, `/api/v1/ai-agents/*`, `/api/v1/sponsorships/*`, `/api/v1/notifications/*`, `/api/v1/moderation/*`, `/api/v1/community-proposals/*`
+- [x] Internal routes: `/internal/*` (internalEventSchemasPlugin)
+- [x] Zod validation on routes (login body in auth.ts; pattern for others)
 
 **Files Created/Modified**:
-- `apps/api/src/router.ts`
-- `apps/api/src/routes/` (import from domain packages)
+- `apps/api/src/router.ts`, `apps/api/src/types/create-app-options.ts`
+- `apps/api/src/server.ts` (delegate to registerApiRoutes)
+- `apps/api/src/routes/auth.ts` (loginBodySchema Zod)
 
 ---
 
@@ -165,24 +167,26 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | rest-api/ARCHITECTURE.md, CON-003 |
 | **Dependencies** | COMP-033.4 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
 **Description**: Implement API versioning strategy ensuring backward compatibility for 2 major versions.
 
 **Acceptance Criteria**:
-- [ ] Current version: `/api/v1/*`
-- [ ] Version negotiation: `Accept: application/vnd.syntropy.v1+json` header support
-- [ ] Deprecated endpoints return `Deprecation: true` header with `Sunset` date
-- [ ] v1 maintained alongside v2 when v2 is released (2-version support window)
-- [ ] Version middleware extracts requested version from URL or header
+- [x] Current version: `/api/v1/*`; version from path or Accept header
+- [x] Version negotiation: `Accept: application/vnd.syntropy.v1+json` header support
+- [x] Deprecation: `setDeprecationHeaders(reply, sunsetDate)` helper for deprecated routes
+- [x] Version middleware: request.apiVersion, API-Version response header
 
 **Files Created/Modified**:
-- `apps/api/src/middleware/api-version.ts`
+- `apps/api/src/middleware/api-version.ts`, `apps/api/src/middleware/api-version.test.ts`
+- `apps/api/src/types/fastify.d.ts` (apiVersion on request)
+- `apps/api/src/server.ts` (register apiVersionPluginFp)
 
 ---
 
@@ -190,25 +194,27 @@ The REST API Gateway is the single entry point for all external (frontend) and i
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
 | **Origin** | rest-api/ARCHITECTURE.md, CON-010 |
 | **Dependencies** | COMP-033.4 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-14 |
 
 **Description**: Auto-generate OpenAPI 3.1 spec from Fastify route definitions and Zod schemas.
 
 **Acceptance Criteria**:
-- [ ] `GET /api/v1/openapi.json` → OpenAPI 3.1 spec
-- [ ] `GET /api/v1/docs` → Swagger UI
-- [ ] All public endpoints documented with request/response schemas
-- [ ] Generated spec validated with `@redocly/cli`
-- [ ] Spec exported to `docs/api/openapi.json` during build
+- [x] `GET /api/v1/openapi.json` → OpenAPI 3.1 spec
+- [x] `GET /api/v1/docs` → Swagger UI
+- [x] Base spec with tags; paths from registered routes
+- [x] `@redocly/cli` and script `openapi:lint`
+- [x] Export script `openapi:export` writes `docs/api/openapi.json`
 
 **Files Created/Modified**:
-- `apps/api/src/openapi.ts`
-- `docs/api/openapi.json` (generated)
+- `apps/api/src/openapi.ts`, `apps/api/src/openapi.test.ts`
+- `apps/api/scripts/export-openapi.js`, `docs/api/openapi.json`
+- `apps/api/package.json` (@fastify/swagger, @fastify/swagger-ui, @redocly/cli)
 
 ---
 

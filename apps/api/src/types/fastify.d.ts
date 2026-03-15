@@ -18,5 +18,7 @@ declare module "fastify" {
     requestLog: Logger | null;
     /** Set by auth middleware when Bearer token is valid. */
     user?: RequestUser;
+    /** Set by api-version middleware (COMP-033.5): e.g. "v1". */
+    apiVersion?: string;
   }
 }

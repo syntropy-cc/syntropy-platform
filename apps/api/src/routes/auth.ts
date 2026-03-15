@@ -8,18 +8,14 @@
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import { AuthProviderError } from "@syntropy/identity";
+import { z } from "zod";
 import { successEnvelope, errorEnvelope } from "../types/api-envelope.js";
 
-interface LoginBody {
-  email?: string;
-  password?: string;
-}
-
-function isLoginBody(value: unknown): value is LoginBody {
-  if (value === null || typeof value !== "object") return false;
-  const o = value as Record<string, unknown>;
-  return typeof o.email === "string" && typeof o.password === "string";
-}
+/** Zod schema for POST /api/v1/auth/login body (COMP-033.4). */
+const loginBodySchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
+});
 
 function getRequestId(request: FastifyRequest): string | undefined {
   return request.correlationId;
@@ -32,13 +28,13 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Body: unknown }>(
     "/api/v1/auth/login",
     async (request, reply) => {
-      if (!isLoginBody(request.body)) {
+      const parsed = loginBodySchema.safeParse(request.body);
+      if (!parsed.success) {
+        const msg = parsed.error.errors
+          .map((e) => `${e.path.join(".")}: ${e.message}`)
+          .join("; ");
         return reply.status(400).send(
-          errorEnvelope(
-            "BAD_REQUEST",
-            "Body must be { email: string, password: string }.",
-            getRequestId(request)
-          )
+          errorEnvelope("BAD_REQUEST", msg, getRequestId(request))
         );
       }
       if (!auth || !supabase) {
@@ -50,8 +46,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
           )
         );
       }
-      const email = request.body.email as string;
-      const password = request.body.password as string;
+      const { email, password } = parsed.data;
       try {
         const {
           data: { session },

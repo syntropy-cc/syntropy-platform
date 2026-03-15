@@ -16,6 +16,7 @@ import {
   type LabsDbClient,
 } from "@syntropy/labs-package";
 import type { Worker } from "../types.js";
+import { runDataRetentionPurge } from "../jobs/data-retention-purge.js";
 import { acquireLock, releaseLock, type LockRedis } from "./distributed-lock.js";
 
 const log = createLogger("workers:cron");
@@ -54,6 +55,7 @@ const CRON_JOBS: ReadonlyArray<{ name: string; schedule: string }> = [
   { name: "portfolio-rebuild", schedule: "0 2 * * *" }, // daily 02:00
   { name: "review-publication", schedule: "*/15 * * * *" }, // every 15 min (COMP-025.6)
   { name: "dlq-sweep", schedule: "*/15 * * * *" }, // every 15 min
+  { name: "data-retention-purge", schedule: "0 3 * * *" }, // daily 03:00 (COMP-039.5)
 ];
 
 export function createCronScheduler(): Worker {
@@ -97,6 +99,8 @@ export function createCronScheduler(): Worker {
               await runReviewPublication(reviewRepo);
             } else if (name === "review-publication") {
               log.debug({ job: name }, "Skipping (no Labs DB URL)");
+            } else if (name === "data-retention-purge") {
+              await runDataRetentionPurge();
             } else {
               await runStubJob(name);
             }

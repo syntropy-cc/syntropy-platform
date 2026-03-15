@@ -20,7 +20,8 @@
     "@opentelemetry/semantic-conventions": "^1.28.0",
     "@syntropy/event-bus": "workspace:*",
     "pino": "^9.5.0",
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "prom-client": "^15.1.0"
   },
   "devDependencies": {
     "@types/pg": "^8.11.0",

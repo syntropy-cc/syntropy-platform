@@ -9,6 +9,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import fp from "fastify-plugin";
+import { createMetrics } from "@syntropy/platform-core";
 import { apiVersionPluginFp } from "./middleware/api-version.js";
 import { correlationIdPlugin } from "./middleware/correlation-id.js";
 import { requestLoggerPlugin } from "./middleware/request-logger.js";
@@ -43,6 +44,9 @@ export type { CreateAppOptions } from "./types/create-app-options.js";
 
 export async function createApp(options?: CreateAppOptions) {
   const app = Fastify({ logger: false });
+
+  const metrics = createMetrics("api");
+  app.decorate("metricsRegistry", metrics.registry);
 
   await app.register(cors, {
     origin: getCorsOrigins(),

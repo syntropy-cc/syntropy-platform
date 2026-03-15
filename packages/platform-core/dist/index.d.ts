@@ -13,6 +13,7 @@ export { createLogger, withCorrelationId, type LoggerOptions, } from "./observab
 export type { Logger } from "pino";
 export { runWithCorrelationId, getCorrelationId, getCausationId, fetchWithCorrelationId, runWithMessageContext, setCorrelationContextForRequest, } from "./observability/correlation-context.js";
 export { initTracing, shutdownTracing, type TracingOptions, } from "./observability/tracing.js";
+export { createMetrics, type PlatformMetrics, } from "./observability/metrics.js";
 export { CircuitBreaker, type CircuitState, type CircuitBreakerConfig, type CircuitBreakerCallbacks, } from "./resilience/circuit-breaker.js";
 export { CircuitOpenError, TimeoutError } from "./resilience/errors.js";
 export { withTimeout, DEFAULT_HTTP_TIMEOUT_MS, DEFAULT_DB_TIMEOUT_MS, DEFAULT_JOB_TIMEOUT_MS, } from "./resilience/timeout.js";

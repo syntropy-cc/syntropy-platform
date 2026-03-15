@@ -38,6 +38,19 @@ export {
   type LogEventWithMeta,
 } from "./data-integrity/MockAppendOnlyLog.js";
 export {
+  DEFAULT_DATA_RETENTION_POLICY,
+  type DataRetentionPolicy,
+  type RetentionWindow,
+  type RetentionEntityType,
+} from "./data-integrity/data-retention-policy.js";
+export {
+  DataRetentionService,
+  type PurgeResult,
+  type PurgeAuditSink,
+  type DataRetentionRepositories,
+  type DataRetentionServiceOptions,
+} from "./data-integrity/data-retention-service.js";
+export {
   createLogger,
   withCorrelationId,
   type LoggerOptions,
@@ -56,6 +69,10 @@ export {
   shutdownTracing,
   type TracingOptions,
 } from "./observability/tracing.js";
+export {
+  createMetrics,
+  type PlatformMetrics,
+} from "./observability/metrics.js";
 
 export {
   CircuitBreaker,

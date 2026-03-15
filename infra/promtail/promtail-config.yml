@@ -1,0 +1,41 @@
+# Promtail configuration for Syntropy Platform (COMP-038.6).
+# Scrapes Docker container logs and forwards to Loki.
+# correlation_id is extracted from JSON log lines for search in Grafana Explore.
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Docker container logs: mount host /var/lib/docker/containers into this container.
+  - job_name: docker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: containerlogs
+          __path__: /var/lib/docker/containers/*/*-json.log
+    pipeline_stages:
+      # Docker JSON log format: {"log":"...","stream":"stdout","time":"..."}
+      - json:
+          expressions:
+            log: log
+            stream: stream
+      # Parse inner log line (if JSON) to extract correlation_id for LogQL search.
+      - json:
+          expressions:
+            correlation_id: correlation_id
+            service: service
+          source: log
+      - labels:
+          stream:
+          correlation_id:
+          service:
+      - output:
+          source: log

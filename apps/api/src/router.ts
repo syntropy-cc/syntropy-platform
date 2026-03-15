@@ -12,6 +12,7 @@
 
 import type { FastifyInstance } from "fastify";
 import { healthRoutes } from "./routes/health.js";
+import { metricsRoutes } from "./routes/metrics.js";
 import { authRoutes } from "./routes/auth.js";
 import { usersRoutes } from "./routes/users.js";
 import { aiAgentsRoutes } from "./routes/ai-agents.js";
@@ -54,6 +55,7 @@ export async function registerApiRoutes(
   options?: CreateAppOptions
 ): Promise<void> {
   await app.register(healthRoutes);
+  await app.register(metricsRoutes);
 
   // /api/v1/auth/* (identity), /api/v1/users/*
   await app.register(authRoutes);

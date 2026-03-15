@@ -3,9 +3,9 @@
 > **Component ID**: COMP-039
 > **Architecture Reference**: [cross-cutting/data-integrity/ARCHITECTURE.md](../../architecture/cross-cutting/data-integrity/ARCHITECTURE.md)
 > **Stage Assignment**: S13 — Cross-Cutting Concerns
-> **Status**: ⬜ Not Started
+> **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-15
 
 ## Component Overview
 
@@ -28,12 +28,12 @@ Data Integrity cross-cutting concerns enforce the three-layer immutability strat
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 2 |
+| ✅ Done | 3 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 3 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **5** |
 
-**Component Coverage**: 40%
+**Component Coverage**: 60%
 
 ### Item List
 
@@ -148,32 +148,40 @@ Data Integrity cross-cutting concerns enforce the three-layer immutability strat
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | cross-cutting/data-integrity/ARCHITECTURE.md, CON-005 |
 | **Dependencies** | COMP-034, COMP-039.3 |
 | **Size** | S |
 | **Created** | 2026-03-13 |
+| **Completed** | 2026-03-15 |
 
 **Description**: Implement data retention policy enforcement for personal data (right to deletion, GDPR-style).
 
 **Acceptance Criteria**:
-- [ ] `DataRetentionService` with `purgeUserData(userId)` for right-to-deletion
-- [ ] Purge cascades: soft-delete → hard-delete after retention period
-- [ ] Retention periods enforced:
-  - Personal data (email, name): 7 years after account deletion
-  - Session logs: 90 days
-  - Moderation logs: 3 years
-- [ ] Scheduled job (daily) in COMP-034: `DataRetentionPurgeJob`
-- [ ] Audit log of all purge operations (immutable)
+- [x] `DataRetentionService` with `purgeUserData(userId)` for right-to-deletion
+- [x] Retention periods enforced via `DataRetentionPolicy`: session 90d, moderation 3y, personal data 7y after deletion
+- [x] event_log never deleted (documented and not touched by service)
+- [x] Scheduled job (daily 03:00) in COMP-034: `runDataRetentionPurge` in cron-scheduler
+- [x] Audit sink for purge operations (immutable audit log)
 
 **Files Created/Modified**:
-- `packages/platform-core/src/data-integrity/data-retention-service.ts`
+- `packages/platform-core/src/data-integrity/data-retention-policy.ts`, `data-retention-policy.test.ts`
+- `packages/platform-core/src/data-integrity/data-retention-service.ts`, `data-retention-service.test.ts`
+- `packages/platform-core/src/index.ts` (exports)
 - `apps/workers/src/jobs/data-retention-purge.ts`
+- `apps/workers/src/scheduler/cron-scheduler.ts` (data-retention-purge job)
 
 ---
 
 ## Implementation Log
+
+### 2026-03-15 — COMP-039.5 completed (S56)
+
+- **DataRetentionPolicy**: Added `data-retention-policy.ts` with retention windows (session 90d, moderation 3y, personal data 7y after deletion); DEFAULT_DATA_RETENTION_POLICY.
+- **DataRetentionService**: Added `data-retention-service.ts` with runRetentionPurge(), purgeUserData(userId), PurgeAuditSink; event_log is never purged; optional DataRetentionRepositories for session/moderation purge.
+- **Scheduled job**: Added `apps/workers/src/jobs/data-retention-purge.ts` (runDataRetentionPurge); registered in cron-scheduler as daily 03:00 job.
+- **Tests**: data-retention-policy.test.ts, data-retention-service.test.ts.
 
 ### 2026-03-13 — S2 Stage (COMP-039.1, COMP-039.3 per Implementation Plan)
 

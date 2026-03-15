@@ -1,7 +1,9 @@
 /**
- * HTTP server for Prometheus /metrics and /health (COMP-034.5).
+ * HTTP server for Prometheus /metrics and /health (COMP-034.5, COMP-038.4).
  *
  * Serves GET /metrics (Prometheus text format) and GET /health (JSON with workers status).
+ * When metricsRegistry is provided (from createMetrics('workers')), that registry is used;
+ * otherwise the default prom-client register is used (e.g. in tests).
  */
 
 import {
@@ -11,15 +13,17 @@ import {
   type ServerResponse,
 } from "node:http";
 import { register, collectDefaultMetrics } from "prom-client";
+import type { Registry } from "prom-client";
 import type { WorkerRegistry } from "./worker-registry.js";
 
 let defaultMetricsCollected = false;
 
-function ensureDefaultMetrics(): void {
-  if (!defaultMetricsCollected) {
-    collectDefaultMetrics({ register });
-    defaultMetricsCollected = true;
+function ensureDefaultMetrics(reg: Registry): void {
+  if (defaultMetricsCollected) {
+    return;
   }
+  collectDefaultMetrics({ register: reg });
+  defaultMetricsCollected = true;
 }
 
 const METRICS_CONTENT_TYPE = "text/plain; version=0.0.4; charset=utf-8";
@@ -37,12 +41,13 @@ function getPort(): number {
 }
 
 async function handleMetrics(
+  metricsRegistry: Registry,
   _req: IncomingMessage,
   res: ServerResponse
 ): Promise<void> {
   res.setHeader("Content-Type", METRICS_CONTENT_TYPE);
   try {
-    const metrics = await register.metrics();
+    const metrics = await metricsRegistry.metrics();
     res.statusCode = 200;
     res.end(metrics);
   } catch (err) {
@@ -54,13 +59,13 @@ async function handleMetrics(
 }
 
 async function handleHealth(
-  registry: WorkerRegistry,
+  workerRegistry: WorkerRegistry,
   _req: IncomingMessage,
   res: ServerResponse
 ): Promise<void> {
   res.setHeader("Content-Type", "application/json");
   try {
-    const workers = await registry.getHealth();
+    const workers = await workerRegistry.getHealth();
     const status = Object.values(workers).every((w) => w.status === "ok")
       ? "ok"
       : "degraded";
@@ -85,28 +90,46 @@ async function handleHealth(
 
 /**
  * Creates and starts an HTTP server for /metrics and /health.
- * Registers default Node.js metrics with prom-client.
  *
- * @param registry - WorkerRegistry for health worker status.
- * @param port - Port to listen on (default from WORKERS_HTTP_PORT or 9090).
+ * @param workerRegistry - WorkerRegistry for health worker status.
+ * @param metricsRegistryOrPort - Optional Prometheus registry (from createMetrics('workers'));
+ *   when provided, /metrics uses this registry and default Node.js metrics are not collected
+ *   here (platform-core already collected them). When omitted, the default prom-client
+ *   register is used (and default metrics are collected).
+ * @param port - Port to listen on (default from WORKERS_HTTP_PORT or 9090). When
+ *   metricsRegistryOrPort is a number, it is used as port.
  * @returns The server instance (already listening).
  */
 export function createMetricsHealthServer(
-  registry: WorkerRegistry,
+  workerRegistry: WorkerRegistry,
+  metricsRegistryOrPort?: Registry | number,
   port?: number
 ): Server {
-  const listenPort = port ?? getPort();
+  let metricsRegistry: Registry = register;
+  let listenPort: number;
 
-  ensureDefaultMetrics();
+  if (metricsRegistryOrPort !== undefined) {
+    if (typeof metricsRegistryOrPort === "number") {
+      listenPort = metricsRegistryOrPort;
+      ensureDefaultMetrics(register);
+    } else {
+      metricsRegistry = metricsRegistryOrPort;
+      listenPort = port ?? getPort();
+      // Do not collect default metrics again; platform-core createMetrics already did
+    }
+  } else {
+    listenPort = port ?? getPort();
+    ensureDefaultMetrics(register);
+  }
 
   const server = createServer((req, res) => {
     const url = req.url?.split("?")[0] ?? "";
     if (req.method === "GET" && url === "/metrics") {
-      void handleMetrics(req, res);
+      void handleMetrics(metricsRegistry, req, res);
       return;
     }
     if (req.method === "GET" && (url === "/health" || url === "/health/live")) {
-      void handleHealth(registry, req, res);
+      void handleHealth(workerRegistry, req, res);
       return;
     }
     res.statusCode = 404;

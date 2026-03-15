@@ -1,0 +1,43 @@
+# Prometheus alerting rules for Syntropy Platform (COMP-038.5).
+# Load in Prometheus via rule_files or equivalent.
+
+groups:
+  - name: syntropy-api
+    rules:
+      - alert: ApiHighLatencyP99
+        expr: histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API p99 latency above 500ms"
+          description: "API p99 latency has been above 500ms for 5 minutes."
+
+      - alert: ApiHighErrorRate
+        expr: sum(rate(http_requests_total{status_code=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API error rate above 1%"
+          description: "API 5xx error rate has exceeded 1% for 5 minutes."
+
+  - name: syntropy-workers
+    rules:
+      - alert: DlqDepthHigh
+        expr: worker_dlq_depth > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "DLQ depth above 100"
+          description: "Dead-letter queue depth is above 100 messages."
+
+      - alert: IdeSessionsNearQuota
+        expr: ide_sessions_active_total / ide_sessions_quota > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "IDE sessions near quota"
+          description: "Active IDE sessions are above 90% of quota."

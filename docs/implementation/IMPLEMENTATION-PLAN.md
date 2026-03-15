@@ -1,7 +1,7 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-15 (S55: COMP-036.3–036.4, 038.2–038.3 done)
+> **Last Updated**: 2026-03-15 (S56: COMP-038.4–038.6, 039.5 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,16 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S56 - Observability Completion (M5)
-CURRENT ITEM  : COMP-038.4 - Prometheus metrics
+CURRENT STAGE : S56 - Observability Completion (M5) — COMPLETE
+CURRENT ITEM  : —
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 4 / 4 items done (S55); S56 next
-OVERALL       : 258 / 262 items done (98.5%)
+STAGE PROGRESS: 4 / 4 items done (S56)
+OVERALL       : 262 / 262 items done (100%)
 ```
 
-**Next 5 items**:
-1. `COMP-038.4` - Prometheus metrics - **START HERE**
-2. `COMP-038.5` - Grafana dashboards and alerting rules
-3. `COMP-038.6` - Log aggregation pipeline configuration
-4. `COMP-039.5` - Data retention and archival policy
-5. (see Section 6 for full order)
+**Next 5 items**: All 262 items complete. No further items in Section 6.
 
-**Component record**: [`COMP-038`](./components/COMP-038-observability.md)
-
-**Next item (COMP-038.4) acceptance criteria**: `createMetrics(service)` factory; standard metrics: `http_request_duration_seconds`, `http_requests_total`; custom: `artifact_publications_total`, `ai_agent_invocations_total`; `GET /metrics` endpoint.
-
-**Suggested steps**: (1) Write `metrics.ts` factory in `packages/platform-core` (2) Add to API + workers (3) Verify Prometheus scrapes
+**Component records**: [`COMP-038`](./components/COMP-038-observability.md), [`COMP-039`](./components/COMP-039-data-integrity.md)
 
 ---
 
@@ -3169,7 +3160,7 @@ Status: Done | **Deps**: COMP-038.1
 
 #### [COMP-038.4] Prometheus metrics
 `S56` `High` `S` [Record-](./components/COMP-038-observability.md)
-Status: - | **Deps**: COMP-038.1
+Status: Done | **Deps**: COMP-038.1
 **Criteria**: `createMetrics(service)` factory; standard metrics: `http_request_duration_seconds`, `http_requests_total`; custom: `artifact_publications_total`, `ai_agent_invocations_total`; `GET /metrics` endpoint.
 **Steps**: (1) Write `metrics.ts` factory in `packages/platform-core` (2) Add to API + workers (3) Verify Prometheus scrapes
 
@@ -3177,7 +3168,7 @@ Status: - | **Deps**: COMP-038.1
 
 #### [COMP-038.5] Grafana dashboards and alerting rules
 `S56` `Medium` `M` [Record-](./components/COMP-038-observability.md)
-Status: - | **Deps**: COMP-038.4
+Status: Done | **Deps**: COMP-038.4
 **Criteria**: `Platform Overview`, `DIP Activity`, `AI Agents` dashboards as JSON; alerting rules: p99 latency, error rate, DLQ depth, IDE quota; dashboards as code in repo.
 **Steps**: (1) Write 3 Grafana dashboard JSONs (2) Write Prometheus alert rules YAML (3) Import dashboards in docker-compose
 
@@ -3185,7 +3176,7 @@ Status: - | **Deps**: COMP-038.4
 
 #### [COMP-038.6] Log aggregation pipeline configuration
 `S56` `Medium` `S` [Record-](./components/COMP-038-observability.md)
-Status: - | **Deps**: COMP-038.1
+Status: Done | **Deps**: COMP-038.1
 **Criteria**: `docker-compose.observability.yml` with Grafana + Loki + Promtail; Promtail scrapes Docker logs; 30-day retention; `correlation_id` searchable as Loki label.
 **Steps**: (1) Write `docker-compose.observability.yml` (2) Configure Promtail scraping (3) Add LogQL queries to Grafana
 
@@ -3193,7 +3184,7 @@ Status: - | **Deps**: COMP-038.1
 
 #### [COMP-039.5] Data retention and archival policy
 `S56` `High` `S` [Record-](./components/COMP-039-data-integrity.md)
-Status: - | **Deps**: COMP-039.3, COMP-009.3
+Status: Done | **Deps**: COMP-039.3, COMP-009.3
 **Criteria**: `DataRetentionPolicy` defines retention windows per entity type; scheduled job archives expired records to cold storage (or soft-deletes); `event_log` entries: immutable, never deleted; PII records: deleted per CON-005.
 **Steps**: (1) Write `DataRetentionPolicy` config (2) Write retention cron job (3) Write retention policy test
 
@@ -3201,15 +3192,15 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-15 | S55 COMP-036.3–036.4, 038.2–038.3 done; next COMP-038.4
+> Last Updated: 2026-03-15 | S56 COMP-038.4–038.6, 039.5 done; all 262 items complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 258 / 262 items (98.5%) | 262 / 262 | - |
+| **Overall Progress** | 262 / 262 items (100%) | 262 / 262 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S56 - Observability Completion | S56 | - |
+| **Current Stage** | S56 - Observability Completion (complete) | S56 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
@@ -3217,6 +3208,10 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-15 COMP-039.5 - Data retention policy; DataRetentionService, purgeUserData, runRetentionPurge; daily cron job; policy and service tests
+- 2026-03-15 COMP-038.6 - Log aggregation; docker-compose.observability.yml (Loki, Promtail, Grafana); 30-day retention; Promtail correlation_id extraction
+- 2026-03-15 COMP-038.5 - Grafana dashboards (Platform Overview, DIP Activity, AI Agents) and Prometheus alert rules (p99, error rate, DLQ, IDE quota)
+- 2026-03-15 COMP-038.4 - Prometheus metrics; createMetrics(service) in platform-core; GET /metrics on API and workers; standard and custom metrics
 - 2026-03-15 COMP-038.3 - OpenTelemetry distributed tracing; initTracing in platform-core; API, workers, institutional-site instrumentation; no-op exporter for unit tests
 - 2026-03-15 COMP-038.2 - Correlation ID propagation; AsyncLocalStorage context; setCorrelationContextForRequest in API; KafkaProducer optional headers; runWithMessageContext in session-invalidation worker
 - 2026-03-15 COMP-036.4 - Performance optimization; next/font Inter in layout; image policy comment in InstitutionHero

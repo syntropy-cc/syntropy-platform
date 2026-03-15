@@ -9,7 +9,8 @@
  * Architecture: COMP-034, platform/background-services/ARCHITECTURE.md
  */
 
-import { createLogger, initTracing } from "@syntropy/platform-core";
+import { createLogger, createMetrics, initTracing } from "@syntropy/platform-core";
+import { initWorkerMetrics } from "./metrics.js";
 import { getKafkaWorkers } from "./workers/kafka-workers.js";
 import { createSearchIndexWorker } from "./workers/search-index-consumer.js";
 import { createPublicSquareIndexerWorker } from "./workers/public-square-indexer-consumer.js";
@@ -44,7 +45,9 @@ async function run(): Promise<void> {
   registry.register(createIDESessionSupervisorWorker());
   registry.register(createCronScheduler());
 
-  const httpServer = createMetricsHealthServer(registry);
+  const platformMetrics = createMetrics("workers");
+  initWorkerMetrics(platformMetrics.registry);
+  const httpServer = createMetricsHealthServer(registry, platformMetrics.registry);
 
   process.on("unhandledRejection", (reason: unknown, promise: Promise<unknown>) => {
     log.error({ err: reason, promise }, "Unhandled rejection; crashing process");

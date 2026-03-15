@@ -15,6 +15,7 @@ import { requestLoggerPlugin } from "./middleware/request-logger.js";
 import { authContextPluginFp } from "./plugins/auth-context.js";
 import { authMiddlewarePluginFp } from "./plugins/auth-middleware.js";
 import { rateLimitPluginFp } from "./plugins/rate-limit.js";
+import fastifyWebsocket from "@fastify/websocket";
 import { mtlsPlugin } from "./plugins/mtls.js";
 import { securityHeadersPlugin } from "./plugins/security-headers.js";
 import {
@@ -54,6 +55,7 @@ export async function createApp(options?: CreateAppOptions) {
   await app.register(fp(authContextPluginFp), options ?? {});
   await app.register(fp(authMiddlewarePluginFp));
   await app.register(fp(rateLimitPluginFp));
+  await app.register(fastifyWebsocket);
   await registerSwagger(app);
   await registerApiRoutes(app, options);
   await registerOpenApiEndpoints(app);

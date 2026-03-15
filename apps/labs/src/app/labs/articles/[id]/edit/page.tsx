@@ -1,10 +1,11 @@
 /**
- * Labs article edit page (COMP-032.5).
+ * Labs article edit page (COMP-032.5, COMP-035.1).
  * GET /labs/articles/:id/edit — editor for article (auth; author only).
  */
 
 import Link from "next/link";
 import { fetchApi, type ArticleItem } from "../../../../../lib/api";
+import { ArticleEditorClient } from "./article-editor-client";
 
 export default async function LabsArticleEditPage({
   params,
@@ -66,14 +67,12 @@ export default async function LabsArticleEditPage({
         </Link>
       </div>
       <h1 className="text-2xl font-semibold text-foreground">Edit article</h1>
-      <p className="mt-1 text-muted-foreground">
-        Use the API (PUT /api/v1/labs/articles/{id}) to update title and content. In-app editor coming soon.
-      </p>
-      <div className="mt-4 rounded-lg border border-border bg-card p-4">
-        <p className="text-sm font-medium text-foreground">{article.title}</p>
-        <pre className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
-          {article.content}
-        </pre>
+      <div className="mt-4">
+        <ArticleEditorClient
+          articleId={id}
+          title={article.title}
+          initialContent={article.content ?? ""}
+        />
       </div>
     </div>
   );

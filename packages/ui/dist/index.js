@@ -6,4 +6,5 @@ export { Button } from "./components/button";
 export { ThemeToggle } from "./components/theme-toggle";
 export { AppLayout } from "./components/app-layout";
 export { ThemeProvider, useTheme, } from "./components/theme-provider";
+export { MonacoEditor, } from "./components/monaco-editor";
 export { cn } from "./lib/utils";

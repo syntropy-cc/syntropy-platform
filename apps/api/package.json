@@ -13,6 +13,7 @@
     "openapi:lint": "redocly lint docs/api/openapi.json"
   },
   "dependencies": {
+    "@fastify/websocket": "^11.0.0",
     "@fastify/cors": "^10.0.0",
     "@fastify/helmet": "^13.0.0",
     "@fastify/rate-limit": "^10.0.0",
@@ -44,11 +45,13 @@
     "pg": "^8.13.0"
   },
   "devDependencies": {
+    "@types/ws": "^8.5.0",
     "@redocly/cli": "^1.25.0",
     "@testcontainers/postgresql": "^10.14.0",
     "@types/node": "^22.10.0",
     "@types/pg": "^8.11.0",
     "typescript": "~5.6.0",
-    "vitest": "^2.1.0"
+    "vitest": "^2.1.0",
+    "ws": "^8.18.0"
   }
 }

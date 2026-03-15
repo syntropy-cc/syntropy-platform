@@ -39,6 +39,7 @@ import { sponsorshipRoutes } from "./routes/sponsorships.js";
 import { communicationRoutes } from "./routes/communication.js";
 import { planningRoutes } from "./routes/planning.js";
 import { ideRoutes } from "./routes/ide.js";
+import { ideWebSocketGateway } from "./websocket/ide-gateway.js";
 import { moderationRoutes } from "./routes/moderation.js";
 import { communityProposalsRoutes } from "./routes/community-proposals.js";
 import type { CreateAppOptions } from "./types/create-app-options.js";
@@ -123,6 +124,7 @@ export async function registerApiRoutes(
   }
   if (options?.ide) {
     await app.register(ideRoutes, { ide: options.ide });
+    await app.register(ideWebSocketGateway, { ide: options.ide });
   }
 
   // /api/v1/moderation/*, /api/v1/community-proposals/*

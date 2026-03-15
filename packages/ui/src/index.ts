@@ -11,4 +11,13 @@ export {
   useTheme,
   type Theme,
 } from "./components/theme-provider";
+export {
+  MonacoEditor,
+  type MonacoEditorProps,
+  type MonacoLanguage,
+} from "./components/monaco-editor";
+export {
+  IdeReconnectionIndicator,
+  type IdeReconnectionIndicatorProps,
+} from "./components/ide-reconnection-indicator";
 export { cn } from "./lib/utils";

@@ -13,3 +13,6 @@ export { IDESessionProvisioningService, SessionNotFoundError, SessionNotSuspensi
 export { PostgresIDESessionRepository } from "./infrastructure/repositories/postgres-ide-session-repository.js";
 export { PostgresWorkspaceSnapshotRepository } from "./infrastructure/repositories/postgres-workspace-snapshot-repository.js";
 export { runSupervisorTick, } from "./application/ide-session-supervisor-service.js";
+export { DockerContainerAdapter } from "./infrastructure/docker-container-adapter.js";
+export { KubernetesContainerAdapter } from "./infrastructure/kubernetes-container-adapter.js";
+export { createContainerOrchestrator } from "./infrastructure/container-orchestrator-factory.js";

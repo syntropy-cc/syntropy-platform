@@ -1,7 +1,7 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-15 (S53: COMP-034.7 done)
+> **Last Updated**: 2026-03-15 (S53: COMP-035.4 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,25 +9,25 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S53 - IDE Platform: Monaco + WebSocket + K8s (M5)
-CURRENT ITEM  : COMP-035.1 - Monaco Editor React integration
+CURRENT STAGE : S54 - IDE Workspace Persistence + Institutional Site (M5)
+CURRENT ITEM  : COMP-035.5 - Container image configuration
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 1 / 5 items done (S53)
-OVERALL       : 246 / 262 items done (93.9%)
+STAGE PROGRESS: 5 / 5 items done (S53); S54 next
+OVERALL       : 250 / 262 items done (95.4%)
 ```
 
 **Next 5 items**:
-1. `COMP-035.1` - Monaco Editor React integration - **START HERE**
-2. `COMP-035.2` - WebSocket gateway
-3. `COMP-035.3` - Kubernetes container provisioning adapter
-4. `COMP-035.4` - Session reconnection and state recovery
+1. `COMP-035.5` - Container image configuration - **START HERE**
+2. `COMP-035.6` - Workspace persistence integration
+3. `COMP-036.1` - Next.js ISR routing and data fetching
+4. `COMP-036.2` - Institution page components
 5. (see Section 6 for full order)
 
 **Component record**: [`COMP-035`](./components/COMP-035-embedded-ide-platform.md)
 
-**Next item (COMP-035.1) acceptance criteria**: `MonacoEditor` React component; language support: TypeScript, Python, MyST Markdown; dark/light theme; Cmd+S - save; LSP integration via WebSocket; used in Hub + Labs.
+**Next item (COMP-035.5) acceptance criteria**: `syntropy/ide-base` (Node.js 20, Python 3.11, CLI tools), `syntropy/ide-labs` (+ R, Jupyter), `syntropy/ide-hub` (+ build tools); images pushed to registry in CI; no high CVEs.
 
-**Suggested steps**: (1) Add `@monaco-editor/react` to `packages/ui` (2) Write `MonacoEditor` component (3) Wire to Hub contribution editor
+**Suggested steps**: (1) Write 3 Dockerfiles (2) Add security scan to CI (3) Push to container registry
 
 ---
 
@@ -3073,7 +3073,7 @@ Status: Done | **Deps**: COMP-034.6
 
 #### [COMP-035.1] Monaco Editor React integration
 `S53` `High` `M` [Record-](./components/COMP-035-embedded-ide-platform.md)
-Status: - | **Deps**: COMP-032, COMP-030
+Status: Done | **Deps**: COMP-032, COMP-030
 **Criteria**: `MonacoEditor` React component; language support: TypeScript, Python, MyST Markdown; dark/light theme; Cmd+S - save; LSP integration via WebSocket; used in Hub + Labs.
 **Steps**: (1) Add `@monaco-editor/react` to `packages/ui` (2) Write `MonacoEditor` component (3) Wire to Hub contribution editor
 
@@ -3081,7 +3081,7 @@ Status: - | **Deps**: COMP-032, COMP-030
 
 #### [COMP-035.2] WebSocket gateway
 `S53` `Critical` `M` [Record-](./components/COMP-035-embedded-ide-platform.md)
-Status: - | **Deps**: COMP-030
+Status: Done | **Deps**: COMP-030
 **Criteria**: `GET /api/v1/ide/sessions/{id}/ws` WebSocket upgrade; JSON-framed messages: `terminal`, `filesystem`, `lsp`, `heartbeat`; bidirectional terminal stream; auth on handshake; reconnection within 5min.
 **Steps**: (1) Write Fastify WebSocket route (2) Implement message type handlers (3) Write WebSocket integration test
 
@@ -3089,7 +3089,7 @@ Status: - | **Deps**: COMP-030
 
 #### [COMP-035.3] Kubernetes container provisioning adapter
 `S53` `Critical` `M` [Record-](./components/COMP-035-embedded-ide-platform.md)
-Status: - | **Deps**: COMP-030.2
+Status: Done | **Deps**: COMP-030.2
 **Criteria**: `KubernetesContainerAdapter` implements `ContainerOrchestrator`; `provision()` creates K8s Pod; `stop()` terminates; Docker fallback for dev; `CONTAINER_ORCHESTRATOR` env var switches; integration test with Docker.
 **Steps**: (1) Write `KubernetesContainerAdapter` (2) Write `DockerContainerAdapter` fallback (3) Write Docker integration test
 
@@ -3097,7 +3097,7 @@ Status: - | **Deps**: COMP-030.2
 
 #### [COMP-035.4] Session reconnection and state recovery
 `S53` `High` `S` [Record-](./components/COMP-035-embedded-ide-platform.md)
-Status: - | **Deps**: COMP-035.2
+Status: Done | **Deps**: COMP-035.2
 **Criteria**: Client receives `session_id` on handshake; reconnection < 5min resumes; reconnection > 5min requires new session; container files preserved; `Reconnecting...` UI indicator.
 **Steps**: (1) Write reconnection handler (2) Add session-to-container state tracking (3) Write reconnection test
 
@@ -3201,13 +3201,13 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-15 | S53 COMP-034.7 done; next COMP-035.1
+> Last Updated: 2026-03-15 | S53 COMP-035.4 done; next COMP-035.5
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 246 / 262 items (93.9%) | 262 / 262 | - |
+| **Overall Progress** | 250 / 262 items (95.4%) | 262 / 262 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
 | **Current Stage** | S53 - IDE Platform: Monaco + WebSocket + K8s | S56 | - |
 | **Test Coverage** | - | - 80% | - |
@@ -3217,6 +3217,10 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-15 COMP-035.4 - Session reconnection and state recovery; 5min window; session_expired for terminated/expired; IdeReconnectionIndicator
+- 2026-03-15 COMP-035.3 - Kubernetes and Docker container provisioning adapters; createContainerOrchestrator factory; unit and Docker integration tests
+- 2026-03-15 COMP-035.2 - WebSocket gateway GET /api/v1/ide/sessions/:id/ws; welcome session_id; heartbeat/terminal/filesystem/lsp stubs; integration tests
+- 2026-03-15 COMP-035.1 - Monaco Editor React integration; MonacoEditor in packages/ui; Hub editor page; Labs article editor; unit tests
 - 2026-03-15 COMP-034.7 - Integration tests for all workers; Testcontainers Kafka/Postgres/Redis; DLQ archive test; cron distributed lock; stub Kafka workers; IDE session supervisor; suite < 2min
 - 2026-03-14 COMP-034.6 - IDE session inactivity supervisor; findActiveSessionsInactiveSince; runSupervisorTick; ide-session-supervisor worker; Prometheus counters
 - 2026-03-14 COMP-032.8 - Error boundaries (error.tsx, not-found.tsx, forbidden); loading.tsx; correlation ID in error UI

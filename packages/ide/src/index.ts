@@ -61,3 +61,8 @@ export {
   type SupervisorTickResult,
   type SuspendSessionPort,
 } from "./application/ide-session-supervisor-service.js";
+export { DockerContainerAdapter } from "./infrastructure/docker-container-adapter.js";
+export type { DockerContainerAdapterOptions } from "./infrastructure/docker-container-adapter.js";
+export { KubernetesContainerAdapter } from "./infrastructure/kubernetes-container-adapter.js";
+export type { KubernetesContainerAdapterOptions } from "./infrastructure/kubernetes-container-adapter.js";
+export { createContainerOrchestrator } from "./infrastructure/container-orchestrator-factory.js";

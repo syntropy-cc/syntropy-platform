@@ -23,7 +23,13 @@ export default async function HubContributePage({
         </p>
       </div>
       <div className="rounded-lg border border-border p-6 text-center text-muted-foreground">
-        <p>Contribution editor and merge flow — wired to POST /api/v1/hub/contributions and merge when authenticated.</p>
+        <p className="mb-4">Contribution editor and merge flow — wired to POST /api/v1/hub/contributions and merge when authenticated.</p>
+        <Link
+          href={`/hub/contribute/${id}/editor`}
+          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+        >
+          Open in editor
+        </Link>
       </div>
     </div>
   );

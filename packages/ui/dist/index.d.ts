@@ -6,5 +6,6 @@ export { Button, type ButtonProps } from "./components/button";
 export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
 export { AppLayout, type AppLayoutProps, type NavLinkConfig } from "./components/app-layout";
 export { ThemeProvider, useTheme, type Theme, } from "./components/theme-provider";
+export { MonacoEditor, type MonacoEditorProps, type MonacoLanguage, } from "./components/monaco-editor";
 export { cn } from "./lib/utils";
 //# sourceMappingURL=index.d.ts.map

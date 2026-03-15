@@ -12,3 +12,4 @@ export { IDEArtifactBridge, SessionNotActiveError, } from "./application/artifac
 export { IDESessionProvisioningService, SessionNotFoundError, SessionNotSuspensibleError, } from "./application/ide-session-provisioning-service.js";
 export { PostgresIDESessionRepository } from "./infrastructure/repositories/postgres-ide-session-repository.js";
 export { PostgresWorkspaceSnapshotRepository } from "./infrastructure/repositories/postgres-workspace-snapshot-repository.js";
+export { runSupervisorTick, } from "./application/ide-session-supervisor-service.js";

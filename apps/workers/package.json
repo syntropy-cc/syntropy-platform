@@ -8,7 +8,8 @@
     "dev": "tsc && node dist/main.js",
     "lint": "echo 'lint placeholder'",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:integration": "WORKERS_INTEGRATION=true vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "@syntropy/communication": "workspace:*",
@@ -23,9 +24,12 @@
     "prom-client": "^15.1.0"
   },
   "devDependencies": {
+    "@testcontainers/kafka": "^11.12.0",
+    "@testcontainers/postgresql": "^10.14.0",
     "@types/node": "^22.10.0",
     "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.11.0",
+    "testcontainers": "^11.12.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.0"
   }

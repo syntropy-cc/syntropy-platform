@@ -32,7 +32,7 @@ function getDatabaseUrl(): string | undefined {
 function createStubContainerOrchestrator(): ContainerOrchestrator {
   return {
     async provision() {
-      return new Container({
+      return Container.create({
         containerId: "stub",
         image: "stub",
         cpuLimit: 1,

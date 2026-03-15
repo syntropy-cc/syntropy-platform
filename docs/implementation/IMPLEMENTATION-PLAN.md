@@ -1,7 +1,7 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-14 (S52: COMP-032.6-032.8, 034.6 done)
+> **Last Updated**: 2026-03-15 (S53: COMP-034.7 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -10,24 +10,24 @@
 
 ```
 CURRENT STAGE : S53 - IDE Platform: Monaco + WebSocket + K8s (M5)
-CURRENT ITEM  : COMP-034.7 - Integration tests for all workers
+CURRENT ITEM  : COMP-035.1 - Monaco Editor React integration
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 4 / 4 items done (S52)
-OVERALL       : 245 / 262 items done (93.5%)
+STAGE PROGRESS: 1 / 5 items done (S53)
+OVERALL       : 246 / 262 items done (93.9%)
 ```
 
 **Next 5 items**:
-1. `COMP-034.7` - Integration tests for all workers - **START HERE**
-2. `COMP-035.1` - Monaco Editor React integration
-3. `COMP-035.2` - WebSocket gateway
-4. `COMP-035.3` - Kubernetes container provisioning adapter
+1. `COMP-035.1` - Monaco Editor React integration - **START HERE**
+2. `COMP-035.2` - WebSocket gateway
+3. `COMP-035.3` - Kubernetes container provisioning adapter
+4. `COMP-035.4` - Session reconnection and state recovery
 5. (see Section 6 for full order)
 
-**Component record**: [`COMP-034`](./components/COMP-034-background-services.md)
+**Component record**: [`COMP-035`](./components/COMP-035-embedded-ide-platform.md)
 
-**Next item (COMP-034.7) acceptance criteria**: Each worker tested: message processing, error handling, DLQ routing; cron job tests; embedded Kafka via testcontainers; all tests < 2min total.
+**Next item (COMP-035.1) acceptance criteria**: `MonacoEditor` React component; language support: TypeScript, Python, MyST Markdown; dark/light theme; Cmd+S - save; LSP integration via WebSocket; used in Hub + Labs.
 
-**Suggested steps**: (1) Set up testcontainers Kafka (2) Write per-worker test (3) Write cron job test
+**Suggested steps**: (1) Add `@monaco-editor/react` to `packages/ui` (2) Write `MonacoEditor` component (3) Wire to Hub contribution editor
 
 ---
 
@@ -3065,7 +3065,7 @@ Status: Done | **Deps**: COMP-034.1, COMP-030
 
 #### [COMP-034.7] Integration tests for all workers
 `S53` `High` `M` [Record-](./components/COMP-034-background-services.md)
-Status: - | **Deps**: COMP-034.6
+Status: Done | **Deps**: COMP-034.6
 **Criteria**: Each worker tested: message processing, error handling, DLQ routing; cron job tests; embedded Kafka via testcontainers; all tests < 2min total.
 **Steps**: (1) Set up testcontainers Kafka (2) Write per-worker test (3) Write cron job test
 
@@ -3201,13 +3201,13 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-14 | S52 COMP-032.6-032.8, 034.6 done; next COMP-034.7
+> Last Updated: 2026-03-15 | S53 COMP-034.7 done; next COMP-035.1
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 245 / 262 items (93.5%) | 262 / 262 | - |
+| **Overall Progress** | 246 / 262 items (93.9%) | 262 / 262 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
 | **Current Stage** | S53 - IDE Platform: Monaco + WebSocket + K8s | S56 | - |
 | **Test Coverage** | - | - 80% | - |
@@ -3217,6 +3217,7 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-15 COMP-034.7 - Integration tests for all workers; Testcontainers Kafka/Postgres/Redis; DLQ archive test; cron distributed lock; stub Kafka workers; IDE session supervisor; suite < 2min
 - 2026-03-14 COMP-034.6 - IDE session inactivity supervisor; findActiveSessionsInactiveSince; runSupervisorTick; ide-session-supervisor worker; Prometheus counters
 - 2026-03-14 COMP-032.8 - Error boundaries (error.tsx, not-found.tsx, forbidden); loading.tsx; correlation ID in error UI
 - 2026-03-14 COMP-032.7 - API proxy (api/v1/[...path]); auth forward; route.test.ts

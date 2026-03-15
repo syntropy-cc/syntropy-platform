@@ -4,11 +4,7 @@
  */
 
 import type { EmbeddingPort } from "../ports/embedding-port.js";
-import type {
-  SearchRepository,
-  SearchFilters,
-  SearchByVectorOptions,
-} from "../ports/search-repository.js";
+import type { SearchRepository, SearchFilters } from "../ports/search-repository.js";
 import type { SearchIndex } from "../search-index.js";
 
 export interface SemanticSearchServiceOptions {

@@ -5,7 +5,7 @@
  * with graceful shutdown (30s timeout).
  */
 
-import { createLogger } from "@syntropy/platform-core";
+import { createLogger, initTracing } from "@syntropy/platform-core";
 import { createApp } from "./server.js";
 
 const SHUTDOWN_TIMEOUT_MS = 30_000;
@@ -13,6 +13,7 @@ const DEFAULT_PORT = 8080;
 const log = createLogger("api");
 
 async function run(): Promise<void> {
+  initTracing({ serviceName: "api" });
   const app = await createApp();
   const port = Number(process.env.PORT) || DEFAULT_PORT;
 

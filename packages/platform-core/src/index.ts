@@ -43,6 +43,19 @@ export {
   type LoggerOptions,
 } from "./observability/logger.js";
 export type { Logger } from "pino";
+export {
+  runWithCorrelationId,
+  getCorrelationId,
+  getCausationId,
+  fetchWithCorrelationId,
+  runWithMessageContext,
+  setCorrelationContextForRequest,
+} from "./observability/correlation-context.js";
+export {
+  initTracing,
+  shutdownTracing,
+  type TracingOptions,
+} from "./observability/tracing.js";
 
 export {
   CircuitBreaker,

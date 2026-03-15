@@ -9,7 +9,7 @@
  * Architecture: COMP-034, platform/background-services/ARCHITECTURE.md
  */
 
-import { createLogger } from "@syntropy/platform-core";
+import { createLogger, initTracing } from "@syntropy/platform-core";
 import { getKafkaWorkers } from "./workers/kafka-workers.js";
 import { createSearchIndexWorker } from "./workers/search-index-consumer.js";
 import { createPublicSquareIndexerWorker } from "./workers/public-square-indexer-consumer.js";
@@ -25,6 +25,7 @@ const SHUTDOWN_TIMEOUT_MS = 30_000;
 const log = createLogger("workers");
 
 async function run(): Promise<void> {
+  initTracing({ serviceName: "workers" });
   const registry = new WorkerRegistry();
   registry.register(createSearchIndexWorker());
   registry.register(createPublicSquareIndexerWorker());

@@ -1,10 +1,11 @@
 /**
- * Unit tests for correlation-id middleware (COMP-033.1).
+ * Unit tests for correlation-id middleware (COMP-033.1, COMP-038.2).
  */
 
 import { describe, it, expect } from "vitest";
 import Fastify from "fastify";
 import fp from "fastify-plugin";
+import { getCorrelationId } from "@syntropy/platform-core";
 import { correlationIdPlugin } from "./correlation-id.js";
 
 const UUID_V4_REGEX =
@@ -61,5 +62,24 @@ describe("correlationIdPlugin", () => {
     });
     expect(response.statusCode).toBe(200);
     expect(UUID_V4_REGEX.test(response.headers["x-correlation-id"] as string)).toBe(true);
+  });
+
+  it("getCorrelationId() in handler returns same as request.correlationId (COMP-038.2)", async () => {
+    const app = Fastify();
+    await app.register(fp(correlationIdPlugin));
+    const existingId = "550e8400-e29b-41d4-a716-446655440000";
+    app.get("/", async (request) => {
+      const fromContext = getCorrelationId();
+      expect(fromContext).toBe(existingId);
+      expect(fromContext).toBe(request.correlationId);
+      return { ok: true };
+    });
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/",
+      headers: { "x-correlation-id": existingId },
+    });
+    expect(response.statusCode).toBe(200);
   });
 });

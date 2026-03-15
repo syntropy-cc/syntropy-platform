@@ -1,7 +1,7 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-15 (S54: COMP-035.5–036.2 done)
+> **Last Updated**: 2026-03-15 (S55: COMP-036.3–036.4, 038.2–038.3 done)
 > **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
@@ -9,23 +9,25 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S55 - Institutional Site SEO + Observability (M5)
-CURRENT ITEM  : COMP-036.3 - SEO and structured data
+CURRENT STAGE : S56 - Observability Completion (M5)
+CURRENT ITEM  : COMP-038.4 - Prometheus metrics
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 4 / 4 items done (S54); S55 next
-OVERALL       : 254 / 262 items done (96.9%)
+STAGE PROGRESS: 4 / 4 items done (S55); S56 next
+OVERALL       : 258 / 262 items done (98.5%)
 ```
 
 **Next 5 items**:
-1. `COMP-036.3` - SEO and structured data - **START HERE**
-2. `COMP-036.4` - Performance optimization
-3. (see Section 6 for full order)
+1. `COMP-038.4` - Prometheus metrics - **START HERE**
+2. `COMP-038.5` - Grafana dashboards and alerting rules
+3. `COMP-038.6` - Log aggregation pipeline configuration
+4. `COMP-039.5` - Data retention and archival policy
+5. (see Section 6 for full order)
 
-**Component record**: [`COMP-036`](./components/COMP-036-institutional-site.md)
+**Component record**: [`COMP-038`](./components/COMP-038-observability.md)
 
-**Next item (COMP-036.3) acceptance criteria**: OpenGraph metadata per institution; Schema.org `Organization` structured data; `sitemap.xml` dynamically generated; `robots.txt` allows indexing.
+**Next item (COMP-038.4) acceptance criteria**: `createMetrics(service)` factory; standard metrics: `http_request_duration_seconds`, `http_requests_total`; custom: `artifact_publications_total`, `ai_agent_invocations_total`; `GET /metrics` endpoint.
 
-**Suggested steps**: (1) Write `generateMetadata()` for institution pages (2) Add Schema.org JSON-LD (3) Write `sitemap.ts`
+**Suggested steps**: (1) Write `metrics.ts` factory in `packages/platform-core` (2) Add to API + workers (3) Verify Prometheus scrapes
 
 ---
 
@@ -3135,7 +3137,7 @@ Status: Done | **Deps**: COMP-036.1
 
 #### [COMP-036.3] SEO and structured data
 `S55` `Medium` `S` [Record-](./components/COMP-036-institutional-site.md)
-Status: - | **Deps**: COMP-036.2
+Status: Done | **Deps**: COMP-036.2
 **Criteria**: OpenGraph metadata per institution; Schema.org `Organization` structured data; `sitemap.xml` dynamically generated; `robots.txt` allows indexing.
 **Steps**: (1) Write `generateMetadata()` for institution pages (2) Add Schema.org JSON-LD (3) Write `sitemap.ts`
 
@@ -3143,7 +3145,7 @@ Status: - | **Deps**: COMP-036.2
 
 #### [COMP-036.4] Performance optimization
 `S55` `Medium` `S` [Record-](./components/COMP-036-institutional-site.md)
-Status: - | **Deps**: COMP-036.2
+Status: Done | **Deps**: COMP-036.2
 **Criteria**: `next/image` with `priority` for above-fold; `next/font` preloaded; LCP < 2.5s in Lighthouse; CLS < 0.1; JS bundle < 50KB per page.
 **Steps**: (1) Convert images to `next/image` (2) Preload fonts (3) Run Lighthouse and fix issues
 
@@ -3151,7 +3153,7 @@ Status: - | **Deps**: COMP-036.2
 
 #### [COMP-038.2] Correlation ID propagation middleware
 `S55` `Critical` `S` [Record-](./components/COMP-038-observability.md)
-Status: - | **Deps**: COMP-033, COMP-038.1
+Status: Done | **Deps**: COMP-033, COMP-038.1
 **Criteria**: `X-Correlation-ID` header generated if missing; propagated in all downstream HTTP calls; `AsyncLocalStorage` for Node.js thread-local propagation; Kafka messages include `correlation_id` header.
 **Steps**: (1) Write correlation context using `AsyncLocalStorage` (2) Auto-include in all outbound HTTP calls (3) Write propagation test
 
@@ -3159,7 +3161,7 @@ Status: - | **Deps**: COMP-033, COMP-038.1
 
 #### [COMP-038.3] OpenTelemetry distributed tracing
 `S55` `High` `M` [Record-](./components/COMP-038-observability.md)
-Status: - | **Deps**: COMP-038.1
+Status: Done | **Deps**: COMP-038.1
 **Criteria**: OpenTelemetry SDK initialized in all apps; auto-instrumentation for HTTP, Postgres, Redis, Kafka; custom spans for key operations; traces exported to Jaeger (dev) via OTLP; 100% sampling in dev.
 **Steps**: (1) Add OTel SDK + auto-instrumentation to all apps (2) Add custom spans (3) Verify Jaeger shows traces
 
@@ -3199,15 +3201,15 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-15 | S54 COMP-035.5–036.2 done; next COMP-036.3
+> Last Updated: 2026-03-15 | S55 COMP-036.3–036.4, 038.2–038.3 done; next COMP-038.4
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 254 / 262 items (96.9%) | 262 / 262 | - |
+| **Overall Progress** | 258 / 262 items (98.5%) | 262 / 262 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S55 - Institutional Site SEO + Observability | S56 | - |
+| **Current Stage** | S56 - Observability Completion | S56 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
@@ -3215,6 +3217,10 @@ Status: - | **Deps**: COMP-039.3, COMP-009.3
 
 ### Recent completions
 
+- 2026-03-15 COMP-038.3 - OpenTelemetry distributed tracing; initTracing in platform-core; API, workers, institutional-site instrumentation; no-op exporter for unit tests
+- 2026-03-15 COMP-038.2 - Correlation ID propagation; AsyncLocalStorage context; setCorrelationContextForRequest in API; KafkaProducer optional headers; runWithMessageContext in session-invalidation worker
+- 2026-03-15 COMP-036.4 - Performance optimization; next/font Inter in layout; image policy comment in InstitutionHero
+- 2026-03-15 COMP-036.3 - SEO and structured data; generateMetadata, Schema.org JSON-LD, sitemap.ts, robots.ts for institutional-site
 - 2026-03-15 COMP-036.2 - Institution page components; InstitutionHero, GovernanceSummary, LegitimacyChainTimeline, ProjectGrid, ContributorHighlights; composed on institution [slug] page
 - 2026-03-15 COMP-036.1 - Next.js ISR routing; apps/institutional-site; /institutions/[slug] revalidate 60; generateStaticParams; public API routes; revalidate route
 - 2026-03-15 COMP-035.6 - Workspace persistence; workspace-sync auto-save 2min; restore before welcome; IdeWorkspaceRestoreIndicator; gateway integration

@@ -1,9 +1,11 @@
 /**
- * Institution profile page — ISR 60s (COMP-036.1, COMP-036.2).
+ * Institution profile page — ISR 60s (COMP-036.1, COMP-036.2, COMP-036.3).
+ * SEO: generateMetadata (OpenGraph), Schema.org Organization JSON-LD.
  */
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { InstitutionHero } from "@/components/institution-hero";
 import { GovernanceSummary } from "@/components/governance-summary";
 import { LegitimacyChainTimeline } from "@/components/legitimacy-chain-timeline";
@@ -11,6 +13,8 @@ import { ProjectGrid } from "@/components/project-grid";
 import { ContributorHighlights } from "@/components/contributor-highlights";
 
 const API_URL = process.env.API_URL ?? "http://localhost:8080";
+const SITE_BASE =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://syntropy.cc";
 
 interface PublicInstitution {
   institutionId: string;
@@ -31,6 +35,35 @@ async function getInstitution(slug: string): Promise<PublicInstitution | null> {
 }
 
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const institution = await getInstitution(slug);
+  if (!institution) {
+    return { title: "Institution Not Found" };
+  }
+  const title = `${institution.name} — Syntropy`;
+  const description =
+    `Profile for ${institution.name} on the Syntropy Platform.`;
+  const url = `${SITE_BASE}/institutions/${slug}`;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url,
+      siteName: "Syntropy",
+      images: [],
+    },
+    alternates: { canonical: url },
+  };
+}
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   try {
@@ -57,8 +90,23 @@ export default async function InstitutionPage({
   const institution = await getInstitution(slug);
   if (!institution) notFound();
 
+  const canonicalUrl = `${SITE_BASE}/institutions/${slug}`;
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: institution.name,
+    url: canonicalUrl,
+    description: `Profile for ${institution.name} on the Syntropy Platform.`,
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationJsonLd),
+        }}
+      />
       <Link
         href="/institutions"
         className="text-sm text-muted-foreground hover:underline"

@@ -1,12 +1,14 @@
 /**
- * Correlation ID middleware for the REST API.
+ * Correlation ID middleware for the REST API (COMP-033, COMP-038.2).
  *
  * Generates or forwards X-Correlation-ID (UUID v4) per request, attaches it to
- * the request and sets it on the response for tracing (ARCH-009, COMP-033).
+ * the request and response, and runs the rest of the request inside
+ * AsyncLocalStorage so getCorrelationId() is available in handlers and Kafka.
  */
 
 import type { FastifyInstance } from "fastify";
 import { randomUUID } from "node:crypto";
+import { setCorrelationContextForRequest } from "@syntropy/platform-core";
 
 const HEADER_NAME = "x-correlation-id";
 const UUID_V4_REGEX =
@@ -28,5 +30,6 @@ export async function correlationIdPlugin(
         : randomUUID();
     request.correlationId = value;
     reply.header("X-Correlation-ID", value);
+    setCorrelationContextForRequest(value);
   });
 }

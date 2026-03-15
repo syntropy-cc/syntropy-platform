@@ -5,7 +5,7 @@
  * invalidates sessions and clears Redis token cache for that user.
  */
 
-import { createLogger } from "@syntropy/platform-core";
+import { createLogger, runWithMessageContext } from "@syntropy/platform-core";
 import {
   createKafkaClient,
   getKafkaConfigFromEnv,
@@ -91,17 +91,19 @@ export function createSessionInvalidationConsumer(): Worker {
       });
       await client.consumer.connect();
       client.consumer.subscribe(IDENTITY_TOPIC, async (message: ConsumedMessage) => {
-        const parsed = parseIdentityEvent(message.value);
-        if (!parsed || !EVENTS_THAT_INVALIDATE.includes(parsed.eventType)) {
-          return;
-        }
-        log.info(
-          { eventType: parsed.eventType, userId: parsed.userId },
-          "Processing session invalidation event"
-        );
-        if (redis && parsed.userId) {
-          await clearUserTokenCache(redis, parsed.userId);
-        }
+        await runWithMessageContext(message.headers, message.offset, async () => {
+          const parsed = parseIdentityEvent(message.value);
+          if (!parsed || !EVENTS_THAT_INVALIDATE.includes(parsed.eventType)) {
+            return;
+          }
+          log.info(
+            { eventType: parsed.eventType, userId: parsed.userId },
+            "Processing session invalidation event"
+          );
+          if (redis && parsed.userId) {
+            await clearUserTokenCache(redis, parsed.userId);
+          }
+        });
       });
       log.info({ topic: IDENTITY_TOPIC }, "Session invalidation consumer started");
     },

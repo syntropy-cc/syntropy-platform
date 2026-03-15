@@ -62,4 +62,18 @@ describe("KafkaProducer", () => {
     await producer.disconnect();
     expect(mockProducer.disconnect).toHaveBeenCalledTimes(1);
   });
+
+  it("publish includes optional headers when provided (COMP-038.2)", async () => {
+    const producer = new KafkaProducer(mockProducer as never);
+    await producer.publish("topic", { eventType: "test", payload: {} }, {
+      headers: { correlation_id: "550e8400-e29b-41d4-a716-446655440000" },
+    });
+
+    expect(mockSend).toHaveBeenCalledTimes(1);
+    const msg = mockSend.mock.calls[0][0].messages[0];
+    expect(msg.headers).toBeDefined();
+    expect(msg.headers!.correlation_id).toBeDefined();
+    const val = msg.headers!.correlation_id as Buffer;
+    expect(val.toString("utf8")).toBe("550e8400-e29b-41d4-a716-446655440000");
+  });
 });

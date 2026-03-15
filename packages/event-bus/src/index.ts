@@ -9,6 +9,7 @@
 
 export { createKafkaClient } from "./createKafkaClient.js";
 export { KafkaProducer } from "./KafkaProducer.js";
+export type { PublishOptions } from "./KafkaProducer.js";
 export { KafkaConsumer } from "./KafkaConsumer.js";
 export type { KafkaClientConfig } from "./config.js";
 export { getKafkaConfigFromEnv } from "./config.js";

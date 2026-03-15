@@ -1,6 +1,7 @@
 /**
  * InstitutionHero — name, type, description, member count, creation (COMP-036.2).
  * Server component; receives data from parent fetch.
+ * Above-the-fold images must use next/image with priority (COMP-036.4, LCP).
  */
 
 import type { ReactElement } from "react";

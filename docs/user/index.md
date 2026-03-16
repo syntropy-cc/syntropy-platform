@@ -4,7 +4,7 @@ Syntropy is a unified platform where learning, building, and researching are one
 
 ## What is Syntropy?
 
-Syntropy connects three pillars — **Learn**, **Hub**, and **Labs** — on a shared foundation. You learn by building real projects (Learn), collaborate in digital institutions with transparent governance (Hub), and run the full research cycle from hypothesis to peer-reviewed publication (Labs). Every action is recorded; your portfolio builds itself from what the ecosystem records, not from self-reporting. Artifacts you create are cryptographically anchored so that authorship and contributions are verifiable.
+Syntropy connects three pillars — **Learn**, **Hub**, and **Labs** — on a shared foundation. You reach the application via the **institutional home** (the landing page): sign in or sign up there, then access Learn, Hub, Labs, and your shared area (portfolio, search, recommendations, settings) in a single web application. You learn by building real projects (Learn), collaborate in digital institutions with transparent governance (Hub), and run the full research cycle from hypothesis to peer-reviewed publication (Labs). Every action is recorded; your portfolio builds itself from what the ecosystem records, not from self-reporting. Artifacts you create are cryptographically anchored so that authorship and contributions are verifiable.
 
 The platform is designed for learners who want to learn by doing, contributors who want to apply their skills to real projects, researchers who want open and reproducible science, and creators who want to own and be recognized for what they produce.
 

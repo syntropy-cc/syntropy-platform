@@ -1,6 +1,6 @@
 ---
 artifact_type: llm-documentation
-generated_by: "Vision-to-System Framework / Prompt 07"
+generated_by: "Vision-to-System Framework / Prompt 07, Prompt 08c"
 last_updated: 2026-03-16
 token_budget: 4000
 system_version: "1.0.0"
@@ -11,7 +11,7 @@ completeness: complete
 
 ## 1. System Identity
 
-The Syntropy Ecosystem is a unified platform where learning (Syntropy Learn), building (Syntropy Hub), and researching (Syntropy Labs) share a single event log, portfolio, and identity layer. Agents interact via REST API to manage artifacts, institutions, learning content, collaborative projects, and scientific publications. The system records every meaningful action as an immutable event; portfolio state is derived from this log, not from self-reporting. The system does not accept direct database writes from external callers; all mutations go through domain services. The system does not expose LLM-to-LLM agent interfaces directly; agents interact through the same REST API as human users.
+The Syntropy Ecosystem is a unified platform where learning (Syntropy Learn), building (Syntropy Hub), and researching (Syntropy Labs) share a single event log, portfolio, and identity layer. The web experience is a single application: users reach it via the institutional site (landing, login, signup) and then access Learn, Hub, Labs, and shared areas (e.g. dashboard, portfolio, search). "Platform" is not a user-facing route or section. Agents interact via REST API to manage artifacts, institutions, learning content, collaborative projects, and scientific publications. The system records every meaningful action as an immutable event; portfolio state is derived from this log, not from self-reporting. The system does not accept direct database writes from external callers; all mutations go through domain services. The system does not expose LLM-to-LLM agent interfaces directly; agents interact through the same REST API as human users.
 
 ---
 
@@ -230,7 +230,7 @@ A peer review of a published Article, linked to specific passages.
 
 ---
 
-### Portfolio (Platform Core)
+### Portfolio (Core)
 
 The verifiable record of a user's contributions across all pillars, derived from the AppendOnlyLog.
 
@@ -239,7 +239,7 @@ The verifiable record of a user's contributions across all pillars, derived from
 | user_id | string (UUID) | yes | 1:1 with Identity User; immutable |
 | xp_total | integer | yes | monotonically increasing |
 | skill_records | SkillRecord[] | yes | derived from completed Fragments and Contributions |
-| achievement_ids | string[] | yes | references Platform Core Achievements |
+| achievement_ids | string[] | yes | references Core Achievements |
 | collectible_instance_ids | string[] | yes | awarded items |
 | last_updated_at | timestamp | yes | — |
 
@@ -509,7 +509,7 @@ Publish a specific version of an article, making it public and opening peer revi
 
 ---
 
-#### Platform Core
+#### Portfolio, Search & Recommendations
 
 ##### GET /portfolio/{user_id}
 Get a user's verifiable portfolio.

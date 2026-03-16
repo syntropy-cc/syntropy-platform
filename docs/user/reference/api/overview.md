@@ -120,7 +120,7 @@ Response includes `pagination.page`, `pagination.per_page`, `pagination.total`, 
 |--------|--------|
 | `/api/v1/auth/*`, `/api/v1/users/*` | Identity |
 | `/api/v1/artifacts/*`, `/api/v1/contracts/*`, `/api/v1/projects/*`, `/api/v1/iacp/*` | DIP |
-| `/api/v1/portfolios/*`, `/api/v1/search`, `/api/v1/recommendations/*` | Platform Core |
+| `/api/v1/portfolios/*`, `/api/v1/search`, `/api/v1/recommendations/*` | Portfolio, Search & Recommendations |
 | `/api/v1/learn/*` (tracks, fragments, etc.) | Learn |
 | `/api/v1/hub/*`, `/api/v1/institutions/*`, `/api/v1/proposals/*` | Hub / Governance |
 | `/api/v1/labs/*` (articles, reviews, doi, experiments) | Labs |

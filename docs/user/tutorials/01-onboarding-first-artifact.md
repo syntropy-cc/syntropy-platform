@@ -15,9 +15,9 @@ This tutorial follows the new-user path: you land on the platform, create an acc
 - [ ] A modern browser and internet connection
 - [ ] The Syntropy Platform is available (e.g. production or a provided demo URL)
 
-## Step 1: Open the platform and create an account
+## Step 1: Open the app and create an account
 
-Open the platform URL (e.g. `https://app.syntropy.cc` or the URL provided to you). Click **Get Started** or **Sign up**.
+Open the app URL (e.g. `https://app.syntropy.cc` or the URL provided to you). You land on the **institutional home** (landing page). Click **Get Started** or **Sign up**.
 
 Create an account with your email and a password, or use OAuth (e.g. GitHub or Google) if offered. Complete any email verification step.
 

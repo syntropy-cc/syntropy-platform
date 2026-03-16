@@ -82,18 +82,18 @@ Start the API server (typically on port 8080):
 pnpm --filter api run start
 ```
 
-Start the platform web app (typically port 3000):
+Start the web app (typically port 3000):
 
 ```bash
 pnpm --filter platform run dev
 ```
 
-Learn, Hub, and Labs apps may run on other ports (e.g. 3001, 3002, 3003) — check each app’s `package.json` and docs.
+Learn, Hub, and Labs are part of the same web application; some setups may use other ports (e.g. 3001, 3002, 3003) — check each app’s `package.json` and docs.
 
 ## Verify installation
 
 1. **Health check** — Open `http://localhost:8080/health` (or the configured API port). You should see a JSON response with `"status": "ok"`.
-2. **Login** — Open the platform app (e.g. `http://localhost:3000/login`) and sign in with a Supabase-backed user.
+2. **Login** — Open the web app (e.g. the institutional home or `http://localhost:3000/login`) and sign in with a Supabase-backed user.
 3. **API with auth** — Call `GET /api/v1/auth/me` with a valid Bearer token; without a token you should get `401 UNAUTHORIZED`.
 
 ## See Also

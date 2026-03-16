@@ -13,10 +13,9 @@ You will sign in to the platform, then either publish a first artifact (Learn) o
 
 ## Option A: Quick start via web app
 
-1. Open the platform URL (e.g. `http://localhost:3000`).
-2. Click **Login** and sign in with your email and password.
-3. Go to **Learn** and pick a track, or go to **Hub** and browse projects.
-4. Complete one action: for example, open a fragment in Learn, build the artifact in the embedded IDE, and publish it. Your portfolio will record the event.
+1. Open the app URL (e.g. `http://localhost:3000`). You land on the **institutional home** (landing page). Click **Login** or **Sign up** and sign in with your email and password.
+2. After sign-in you reach the application: **Learn**, **Hub**, **Labs**, or your dashboard (portfolio, search, recommendations). Go to **Learn** and pick a track, or go to **Hub** and browse projects.
+3. Complete one action: for example, open a fragment in Learn, build the artifact in the embedded IDE, and publish it. Your portfolio will record the event.
 
 ## Option B: Quick start via API
 

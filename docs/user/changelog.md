@@ -6,9 +6,10 @@ This project follows [Semantic Versioning](https://semver.org/). This changelog 
 
 ## [Unreleased]
 
-### Added
+### Changed
 
-- (No unreleased changes yet.)
+- **Entry flow and navigation** — Documentation now describes how you reach the application: via the **institutional home** (landing page), then sign in or sign up. The app offers **Learn**, **Hub**, and **Labs**, plus a shared area for portfolio, search, recommendations, and settings. "Platform" is no longer used as a user-facing section or destination.
+- **API reference** — Portfolio, search, and recommendations are now labeled **"Portfolio, Search & Recommendations"** (or "core services") instead of "Platform Core" in the API overview and reference pages.
 
 ---
 

@@ -1,6 +1,6 @@
 # Portfolios, Search, and Recommendations API
 
-Platform Core: user portfolio (XP, skills, achievements), cross-pillar search, and personalized recommendations. Portfolio and recommendations require authentication; search may allow unauthenticated or restricted access.
+Portfolio, search, and recommendations (core services): user portfolio (XP, skills, achievements), cross-pillar search, and personalized recommendations. Portfolio and recommendations require authentication; search may allow unauthenticated or restricted access.
 
 ## Endpoints
 

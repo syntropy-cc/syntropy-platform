@@ -1,10 +1,10 @@
 ---
 artifact_type: llm-documentation
-generated_by: "Vision-to-System Framework / Prompt 01-C"
-last_updated: 2026-03-12
+generated_by: "Vision-to-System Framework / Prompt 07"
+last_updated: 2026-03-16
 token_budget: 4000
 system_version: "1.0.0"
-completeness: "architecture-only"
+completeness: complete
 ---
 
 # Syntropy Ecosystem — LLM Agent Reference
@@ -299,21 +299,13 @@ A single agent interaction session for a user, scoped to a specific agent and co
 
 **API versioning**: Version is embedded in the URL path as `/v1/` — all paths below already include it.
 
-**Credential acquisition**: Call `POST /v1/auth/login` with:
+**Credential acquisition**: Call `POST /api/v1/auth/login` with:
 ```
 email: string — registered user email
 password: string — user password
 ```
 
-Response `200`:
-```
-access_token: string — use as Bearer token in Authorization header
-refresh_token: string — use to obtain a new access_token when expired
-expires_in: integer — seconds until access_token expires (typically 3600)
-token_type: "bearer"
-```
-
-Refresh: `POST /v1/auth/refresh` with `{ refresh_token: string }` → new `access_token`.
+Response `200` (envelope): `data.token` (use as Bearer), `data.userId`, `data.actorId`, `data.roles`. The API returns the Supabase session token as `data.token`; use it in `Authorization: Bearer {data.token}`. No separate refresh endpoint is exposed in the current API; clients should re-login when the token expires.
 
 **SDK availability**: No official SDK — use the REST API directly.
 
@@ -771,6 +763,23 @@ Idempotency-Key header is supported for all POST mutation endpoints. Include `Id
 
 **Wrong**: Assume Nostr anchoring is synchronous; use `identity_record_id` immediately after `POST /artifacts`.
 **Correct**: Anchoring is asynchronous. Poll `GET /artifacts/{id}` with `anchoring_status` check. The `identity_record_id` field is null until `anchoring_status: anchored`.
+
+### Implementation-observed (from API code)
+
+**Wrong**: Pass a non-UUID or malformed string as artifact ID to `GET/PUT /api/v1/artifacts/:id` or `.../submit` or `.../publish`.
+**Correct**: Use a valid UUID. Invalid format returns `400 BAD_REQUEST` with message "Invalid artifact id format."
+
+**Wrong**: Call `PUT /api/v1/artifacts/:id/submit` or `.../publish` when the artifact is not in the required prior state (e.g. submit when not draft, publish when not submitted).
+**Correct**: Follow draft → submit → publish exactly. Invalid transition returns `409 CONFLICT` with the lifecycle error message.
+
+**Wrong**: Create more IDE sessions than the per-user quota allows.
+**Correct**: Suspend or close existing sessions before creating new ones. Exceeding quota returns `429` (rate limit or quota response).
+
+**Wrong**: Send a message to an agent session that is already closed.
+**Correct**: Check session status before sending. `POST /api/v1/ai-agents/sessions/:id/messages` (or invoke) returns `422 DOMAIN_ERROR` when session is closed.
+
+**Wrong**: Send invalid or empty body to `POST /api/v1/iacp` (e.g. missing required parties or artifact refs).
+**Correct**: Send a valid IACP payload per the route schema. Invalid body returns `400 BAD_REQUEST`.
 
 ---
 

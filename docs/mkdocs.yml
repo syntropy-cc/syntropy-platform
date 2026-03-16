@@ -1,0 +1,124 @@
+# Syntropy Platform — User Documentation
+# See: https://squidfunk.github.io/mkdocs-material/
+# To serve locally:   mkdocs serve -f docs/mkdocs.yml
+# To build for deploy: mkdocs build -f docs/mkdocs.yml
+
+site_name: Syntropy Platform Documentation
+site_description: Learn, build, and research in one unified ecosystem with verifiable portfolios and the Digital Institutions Protocol.
+site_url: "https://syntropy.cc/docs/"
+
+docs_dir: "user"
+site_dir: "../site"
+
+repo_url: "https://github.com/syntropy-cc/syntropy-platform"
+repo_name: syntropy-cc/syntropy-platform
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - navigation.indexes
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+  - Tutorials:
+    - Overview: tutorials/index.md
+    - Onboarding to First Artifact: tutorials/01-onboarding-first-artifact.md
+    - Complete a Learn Track: tutorials/02-complete-learn-track.md
+    - Create Institution and Project: tutorials/03-create-institution-and-project.md
+    - Contribute to a Hub Project: tutorials/04-contribute-to-hub-project.md
+    - Publish a Labs Article: tutorials/05-publish-labs-article.md
+  - How-to Guides:
+    - Overview: how-to/index.md
+    - Authenticate with the API: how-to/authenticate-api.md
+    - Create an Artifact: how-to/create-artifact.md
+    - Create an Institution: how-to/create-institution.md
+    - Submit a Contribution: how-to/submit-contribution.md
+    - Submit a Labs Review: how-to/submit-review-labs.md
+    - Use an IDE Session: how-to/use-ide-session.md
+    - Sponsor a Creator: how-to/sponsor-creator.md
+  - Reference:
+    - Overview: reference/index.md
+    - API:
+      - API Overview: reference/api/overview.md
+      - Artifacts: reference/api/artifacts.md
+      - Contracts: reference/api/contracts.md
+      - Projects: reference/api/projects.md
+      - IACP: reference/api/iacp.md
+      - Institutions and Governance: reference/api/institutions-governance.md
+      - Portfolios, Search, Recommendations: reference/api/portfolios-search.md
+      - Learn: reference/api/learn.md
+      - Hub: reference/api/hub.md
+      - Labs: reference/api/labs.md
+      - AI Agents: reference/api/ai-agents.md
+      - Identity: reference/api/identity.md
+      - Sponsorships: reference/api/sponsorships.md
+      - Communication, Planning, IDE: reference/api/communication-planning-ide.md
+      - Moderation: reference/api/moderation.md
+    - Configuration: reference/configuration.md
+  - Concepts:
+    - Overview: concepts/index.md
+    - Artifacts and the DIP: concepts/artifacts-and-dip.md
+    - Portfolio and Events: concepts/portfolio-and-events.md
+    - Learn: Tracks and Fragments: concepts/learn-track-fragment.md
+    - Institutions and Governance: concepts/institutions-and-governance.md
+    - Labs: Research and Review: concepts/labs-research-and-review.md
+    - AI Agents: concepts/ai-agents.md
+  - FAQ: faq.md
+  - Glossary: glossary.md
+  - Changelog: changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: "https://github.com/syntropy-cc/syntropy-platform"

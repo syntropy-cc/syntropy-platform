@@ -1,24 +1,24 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-15 (S56: COMP-038.4–038.6, 039.5 done)
-> **Total Work Items**: 262 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
+> **Last Updated**: 2026-03-16 (ADR-012: COMP-032.9–032.11 added; S57)
+> **Total Work Items**: 265 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
 
 ---
 
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S56 - Observability Completion (M5) — COMPLETE
+CURRENT STAGE : S56 - Observability Completion (M5) — COMPLETE | Next: S57
 CURRENT ITEM  : —
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
 STAGE PROGRESS: 4 / 4 items done (S56)
-OVERALL       : 262 / 262 items done (100%)
+OVERALL       : 262 / 265 items done (3 in backlog — ADR-012)
 ```
 
-**Next 5 items**: All 262 items complete. No further items in Section 6.
+**Next 5 items**: COMP-032.9 (Remove /platform route; shared user area), COMP-032.10 (Institutional site as main entry), COMP-032.11 (Navigation and IA: three pillars + shared user area).
 
-**Component records**: [`COMP-038`](./components/COMP-038-observability.md), [`COMP-039`](./components/COMP-039-data-integrity.md)
+**Component records**: [`COMP-032`](./components/COMP-032-web-application.md), [`COMP-036`](./components/COMP-036-institutional-site.md), [`COMP-038`](./components/COMP-038-observability.md), [`COMP-039`](./components/COMP-039-data-integrity.md)
 
 ---
 
@@ -815,9 +815,19 @@ Items: `COMP-038.4`, `038.5`, `038.6`, `039.5`
 
 ---
 
+#### S57 - ADR-012 Platform as Foundation (M5)
+| Items | 3 | Sessions | 1 | Deps | S56 |
+|-------|---|----------|---|------|------|
+
+Items: `COMP-032.9`, `032.10`, `032.11`
+
+**Verification**: Institutional home at `/`; no `/platform` route; shared user area (e.g. `/dashboard`) hosts portfolio, search, recommendations, planning, settings; navigation shows three pillars + shared user area only (no "Platform" section).
+
+---
+
 ## Section 6 - Work Items in Topological Order
 
-> Complete flat list of all 262 items. No item appears before its dependencies. Use this list to verify ordering and find item positions.
+> Complete flat list of all 265 items. No item appears before its dependencies. Use this list to verify ordering and find item positions.
 
 ```
   1. COMP-001.1  - Initialize Turborepo + pnpm workspaces                [S1, Critical, S]
@@ -1082,6 +1092,9 @@ Items: `COMP-038.4`, `038.5`, `038.6`, `039.5`
 260. COMP-038.5  - Grafana dashboards and alerting rules                 [S56, Medium, M]
 261. COMP-038.6  - Log aggregation pipeline configuration                [S56, Medium, S]
 262. COMP-039.5  - Data retention and archival policy                    [S56, High, S]
+263. COMP-032.9  - Remove /platform route; shared user area (e.g. /dashboard) [S57, High, M]
+264. COMP-032.10 - Institutional site as main entry (landing, login, signup, app access) [S57, High, M]
+265. COMP-032.11 - Navigation and IA: three pillars + shared user area; no Platform section [S57, Medium, S]
 ```
 
 ---
@@ -3190,21 +3203,47 @@ Status: Done | **Deps**: COMP-039.3, COMP-009.3
 
 ---
 
+#### [COMP-032.9] Remove /platform route; shared user area (e.g. /dashboard)
+`S57` `High` `M` [Record-](./components/COMP-032-web-application.md)
+Status: Backlog | **Deps**: —
+**Criteria**: No `/platform` route (remove or redirect); portfolio, search, recommendations, planning, settings under shared prefix (e.g. `/dashboard` or `/me`); routing and links updated (ADR-012).
+**Steps**: (1) Remove or redirect `/platform` (2) Ensure shared user area prefix for cross-pillar features (3) Update nav and links
+
+---
+
+#### [COMP-032.10] Institutional site as main entry (landing, login, signup, app access)
+`S57` `High` `M` [Record-](./components/COMP-032-web-application.md)
+Status: Backlog | **Deps**: COMP-036
+**Criteria**: Landing/entry is institutional home; login/signup reachable from entry flow; after auth user reaches Learn, Hub, Labs, shared user area; no separate "Platform" page (ADR-012).
+**Steps**: (1) Wire institutional site as entry (e.g. `/` or single app entry) (2) Ensure login/signup and app access flow from it (3) Verify no Platform page
+
+---
+
+#### [COMP-032.11] Navigation and IA: three pillars + shared user area; no Platform section
+`S57` `Medium` `S` [Record-](./components/COMP-032-web-application.md)
+Status: Backlog | **Deps**: COMP-032.9, COMP-032.10
+**Criteria**: Navigation shows Learn, Hub, Labs, and shared user area only; no "Platform" tab/section/nav item; IA and in-app labels aligned (ADR-012).
+**Steps**: (1) Update nav components to three pillars + shared user area (2) Remove Platform from IA (3) Update labels
+
+---
+
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-15 | S56 COMP-038.4–038.6, 039.5 done; all 262 items complete
+> Last Updated: 2026-03-16 | 3 items added for ADR-012 (COMP-032.9–032.11); 262 / 265 complete
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 262 / 262 items (100%) | 262 / 262 | - |
+| **Overall Progress** | 262 / 265 items (3 backlog) | 265 / 265 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S56 - Observability Completion (complete) | S56 | - |
+| **Current Stage** | S56 complete; next S57 - ADR-012 Platform as Foundation | S57 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
+
+**Recent additions** (2026-03-16): 3 work items for ADR-012 — COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA). All in backlog; stage S57.
 
 ### Recent completions
 
@@ -3517,7 +3556,7 @@ Status: Done | **Deps**: COMP-039.3, COMP-009.3
 | COMP-029 Planning | 6 | 0 | - Not Started |
 | COMP-030 IDE Domain | 8 | 0 | - Not Started |
 | COMP-031 Governance & Moderation | 6 | 6 | - Complete |
-| COMP-032 Web Application | 8 | 2 | -- In Progress |
+| COMP-032 Web Application | 11 | 2 | -- In Progress (3 ADR-012 backlog) |
 | COMP-033 REST API Gateway | 7 | 4 | -- In Progress |
 | COMP-034 Background Services | 7 | 6 | -- In Progress |
 | COMP-035 Embedded IDE Platform | 6 | 0 | - Not Started |
@@ -3526,7 +3565,7 @@ Status: Done | **Deps**: COMP-039.3, COMP-009.3
 | COMP-038 Observability | 6 | 1 | -- In Progress |
 | COMP-039 Data Integrity | 5 | 4 | -- In Progress |
 | COMP-040 Resilience | 5 | 5 | - Complete |
-| **Total** | **262** | **90** | |
+| **Total** | **265** | **90** | |
 
 ### Layer Coverage
 

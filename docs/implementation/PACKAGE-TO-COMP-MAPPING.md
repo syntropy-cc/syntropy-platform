@@ -21,7 +21,7 @@ This table maps workspace packages to their primary architecture component(s). U
 | `packages/event-bus` | COMP-009 | [COMP-009-event-bus-audit](components/COMP-009-event-bus-audit.md) |
 | `packages/ui` | COMP-001, COMP-032 | Monorepo infra, web app |
 | `apps/api` | COMP-033 | [COMP-033-rest-api](components/COMP-033-rest-api.md) |
-| `apps/platform` | COMP-032 | [COMP-032-web-application](components/COMP-032-web-application.md) |
+| `apps/platform` | COMP-032 | [COMP-032-web-application](components/COMP-032-web-application.md) — Single web application (institutional home + Learn, Hub, Labs, dashboard, admin). Not a separate "Platform" pillar (ADR-012). |
 | `apps/workers` | COMP-034 | [COMP-034-background-services](components/COMP-034-background-services.md) |
 
 **Usage**: When adding traceability to a file under `packages/<name>/src` or `apps/<name>/src`, add a line `Architecture: COMP-XXX` (or `COMP-XXX, …`) in the file’s top docblock, using the primary COMP for that package. A single package may map to multiple COMPs; use the most specific one for the file (e.g. COMP-028.6 for communication notification repository).

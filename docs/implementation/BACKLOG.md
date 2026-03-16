@@ -1,8 +1,8 @@
 # Implementation Backlog
 
 > **Project**: Syntropy Platform
-> **Last Updated**: 2026-03-13
-> **Total Items**: 270 | **Done**: 0 | **In Progress**: 0 | **Ready**: 270 | **Backlog**: 0
+> **Last Updated**: 2026-03-16
+> **Total Items**: 273 | **Done**: 0 | **In Progress**: 0 | **Ready**: 270 | **Backlog**: 3
 
 ## Overview
 
@@ -19,9 +19,9 @@ For items currently being worked on, see [CURRENT-WORK.md](./CURRENT-WORK.md).
 | Done | 0 | 0% |
 | Review | 0 | 0% |
 | In Progress | 0 | 0% |
-| Ready | 270 | 100% |
-| Backlog | 0 | 0% |
-| **Total** | **270** | **100%** |
+| Ready | 270 | 98.9% |
+| Backlog | 3 | 1.1% |
+| **Total** | **273** | **100%** |
 
 ---
 
@@ -564,6 +564,9 @@ Items are grouped by architectural component. Each component links to its detail
 | COMP-032.6 | Admin pillar pages | ⬜ Ready | Medium | M | COMP-032.2, COMP-031 |
 | COMP-032.7 | API route handlers (thin proxy) | ⬜ Ready | High | S | COMP-033 |
 | COMP-032.8 | Error boundaries, loading states, SEO | ⬜ Ready | Medium | S | COMP-032.3 |
+| COMP-032.9 | Remove /platform route; shared user area (e.g. /dashboard) | ⬜ Backlog | High | M | — |
+| COMP-032.10 | Institutional site as main entry (landing, login, signup, app access) | ⬜ Backlog | High | M | COMP-036 |
+| COMP-032.11 | Navigation and IA: three pillars + shared user area; no Platform section | ⬜ Backlog | Medium | S | COMP-032.9, COMP-032.10 |
 
 ---
 

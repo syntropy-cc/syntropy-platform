@@ -6,29 +6,29 @@
 > **Stage Assignment**: S12 — Platform Services
 > **Status**: 🔵 In Progress
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-16
 
 ## Component Overview
 
 ### Architecture Summary
 
-The Web Application platform service delivers the 4 pillar Next.js applications (Learn, Hub, Labs, Admin) using the Next.js 14 App Router. Each app is a separate workspace (`apps/learn`, `apps/hub`, `apps/labs`, `apps/admin`) that imports domain packages and renders their APIs. Key concerns: WCAG 2.1 AA accessibility, Auth Provider integration (Supabase Auth client), and design system adoption from `packages/ui`.
+The Web Application is the single user-facing delivery interface for the Syntropy Ecosystem (ADR-012). It is a Next.js application using the App Router, delivering the institutional home (entry, login, signup), the three pillar areas (Learn, Hub, Labs), a shared user area for cross-pillar features (portfolio, search, recommendations, planning, settings — e.g. under `/dashboard`), and admin. There is no dedicated "Platform" route or section; the Platform is the technical foundation (backend), not a user-facing pillar. See [platform/web-application/ARCHITECTURE.md](../../architecture/platform/web-application/ARCHITECTURE.md).
 
 **Responsibilities**:
-- Next.js 14 App Router routing configuration for all pillar apps
+- Next.js 14 App Router routing for institutional home, three pillars, shared user area, and admin
 - Auth Provider integration (Supabase client-side, token in cookie)
 - Design system adoption (UI package theme, layout components)
 - API route handlers delegating to domain packages
 - WCAG 2.1 AA compliance setup
 
 **Key Interfaces**:
-- Browser routes: each pillar app's URL structure
+- Browser routes: institutional home, `/learn/*`, `/hub/*`, `/labs/*`, `/dashboard/*`, `/admin/*` (no `/platform`)
 - API routes: `/api/v1/*` delegating to domain packages
 
 ### Implementation Scope
 
 **In Scope**:
-- Next.js routing structure for all 4 apps
+- Next.js routing for institutional home + three pillars (Learn, Hub, Labs) + shared user area (e.g. `/dashboard`) + admin
 - Auth provider setup (login/callback pages, middleware for protected routes)
 - Layout components (sidebar nav, header, breadcrumbs) from UI package
 - Core page components for each pillar (index, detail, editor pages)
@@ -40,6 +40,7 @@ The Web Application platform service delivers the 4 pillar Next.js applications 
 - Domain business logic (in domain packages)
 - Design system component library (COMP-032 uses it but doesn't own it)
 - Institutional Site SSG (COMP-036)
+- Any "Platform" pillar or `/platform` route (ADR-012)
 
 ---
 
@@ -51,10 +52,10 @@ The Web Application platform service delivers the 4 pillar Next.js applications 
 |--------|-------|
 | ✅ Done | 2 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 8 |
-| **Total** | **8** |
+| ⬜ Ready/Backlog | 9 |
+| **Total** | **11** |
 
-**Component Coverage**: 25% (2/8 per Implementation Plan numbering)
+**Component Coverage**: 25% (2/8 original items; 3 ADR-012 items in backlog)
 
 **Implementation Log (Implementation Plan item COMP-032.1 — Next.js app scaffolding and design system)**  
 2026-03-13: Implemented shared design system and app shells. **packages/ui**: Tailwind + shadcn-style components (Button, ThemeToggle, AppLayout), ThemeProvider with light/dark and `data-theme` + localStorage persistence, theme CSS variables in `src/theme.css` (exported as `@syntropy/ui/styles`). **apps/platform**: Upgraded to use @syntropy/ui (ThemeProvider, AppLayout, ThemeToggle), Tailwind and PostCSS, AppShell client wrapper. **apps/learn, hub, labs**: Scaffolded as Next.js 14 App Router apps (ports 3001, 3002, 3003), each with layout using ThemeProvider + AppLayout + nav links to other apps, stub index page. Cross-app nav uses localhost URLs in dev. Removed legacy `src/env.ts` from learn/hub/labs (had depended on @syntropy/platform-core). Unit/component tests in packages/ui for ThemeProvider, useTheme, Button, AppLayout (Vitest + RTL + jest-dom).
@@ -283,6 +284,76 @@ The Web Application platform service delivers the 4 pillar Next.js applications 
 
 ---
 
+#### [COMP-032.9] Remove /platform route; add or rename shared user area (e.g. /dashboard)
+
+| Field | Value |
+|-------|-------|
+| **Status** | ⬜ Backlog |
+| **Priority** | High |
+| **Origin** | ADR-012 |
+| **Dependencies** | — |
+| **Size** | M |
+| **Created** | 2026-03-16 |
+
+**Description**: Remove or redirect any `/platform` route; adopt a shared user area prefix (e.g. `/dashboard` or `/me`) for portfolio, search, recommendations, planning, and settings so cross-pillar features are not under a "Platform" pillar (ADR-012).
+
+**Acceptance Criteria**:
+- [ ] No `/platform` route (remove or redirect to shared user area)
+- [ ] Portfolio, search, recommendations, planning, settings live under shared prefix (e.g. `/dashboard` or `/me`)
+- [ ] Routing and links updated consistently
+
+**Files Created/Modified**:
+- `apps/platform/` routing and nav (and any pillar apps that reference /platform)
+
+---
+
+#### [COMP-032.10] Ensure institutional site is the main entry (landing, login, signup, app access)
+
+| Field | Value |
+|-------|-------|
+| **Status** | ⬜ Backlog |
+| **Priority** | High |
+| **Origin** | ADR-012 |
+| **Dependencies** | COMP-036 |
+| **Size** | M |
+| **Created** | 2026-03-16 |
+
+**Description**: Ensure the institutional site is the main entry point of the single web application: landing at `/`, login/signup, and access to the application (Learn, Hub, Labs, dashboard) flow from it (GitHub-style; ADR-012).
+
+**Acceptance Criteria**:
+- [ ] Landing/entry is the institutional home (e.g. `/` or institutional site)
+- [ ] Login and signup are reachable from the entry flow
+- [ ] After auth, user can reach Learn, Hub, Labs, and shared user area
+- [ ] No separate "Platform" page; institutional site is the public face of the app
+
+**Files Created/Modified**:
+- `apps/platform/` or integration with `apps/institutional-site` for entry flow
+
+---
+
+#### [COMP-032.11] Update navigation and IA (three pillars + shared user area; no Platform section)
+
+| Field | Value |
+|-------|-------|
+| **Status** | ⬜ Backlog |
+| **Priority** | Medium |
+| **Origin** | ADR-012 |
+| **Dependencies** | COMP-032.9, COMP-032.10 |
+| **Size** | S |
+| **Created** | 2026-03-16 |
+
+**Description**: Update navigation and information architecture to reflect three pillar areas plus shared user area only; remove any "Platform" section from nav/IA (ADR-012).
+
+**Acceptance Criteria**:
+- [ ] Navigation shows Learn, Hub, Labs, and shared user area (e.g. Dashboard) only
+- [ ] No "Platform" tab, section, or nav item
+- [ ] IA docs and in-app labels aligned with three pillars + shared user area
+
+**Files Created/Modified**:
+- `packages/ui` nav components, `apps/platform` layout/nav, any IA or menu config
+
+---
+
 ## Dependencies
 
 ### This Component Requires
@@ -296,8 +367,35 @@ The Web Application platform service delivers the 4 pillar Next.js applications 
 
 ---
 
+## Evolution History
+
+### v1.0 - Initial Implementation
+
+**Date**: 2026-03-13
+**Milestone**: M1–M5
+
+- Initial implementation: app shells, auth, pillar pages (Learn, Hub, Labs), admin, API proxy, error boundaries.
+- Coverage: COMP-032.1–032.8 per Implementation Plan.
+
+### v1.1 - ADR-012 Platform as Foundation
+
+**Date**: 2026-03-16
+**Trigger**: ADR-012
+
+- Platform is technical foundation only; no user-facing "Platform" pillar or `/platform` route.
+- Shared user area (e.g. `/dashboard`) for portfolio, search, recommendations, planning, settings.
+- New work items: COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA update).
+
+---
+
 ## References
 
 ### Architecture Documents
 
 - [Web Application Platform Architecture](../../architecture/platform/web-application/ARCHITECTURE.md)
+
+### Related ADRs
+
+| ADR | Title | Relevance |
+|-----|-------|-----------|
+| [ADR-012](../../architecture/decisions/ADR-012-platform-as-foundation-institutional-home.md) | Platform as Technical Foundation Only; Institutional Site as System Home | No /platform route; shared user area; institutional site as main entry. |

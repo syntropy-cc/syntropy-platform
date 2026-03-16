@@ -6,22 +6,23 @@
 > **Stage Assignment**: S12 — Platform Services
 > **Status**: ⬜ Not Started
 > **Created**: 2026-03-13
-> **Last Updated**: 2026-03-15
+> **Last Updated**: 2026-03-16
 
 ## Component Overview
 
 ### Architecture Summary
 
-The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site`) serving as the public-facing website for each Digital Institution's permanent identity page. Built with SSG/ISR to ensure fast page loads and SEO-friendly URLs. Content sourced from DIP (institution metadata, LegitimacyChain summary) and Platform Core (portfolio highlights). The site is read-only — no interactive features except external links.
+The Institutional Site is the **main entry point** of the Syntropy Ecosystem (GitHub-style; ADR-012). It is the public face of the single web application (`apps/institutional-site`). When a user visits unauthenticated, they see the institutional home, which presents the ecosystem, explains the three pillars (Learn, Hub, Labs — not "Platform"), provides institutional content, and offers login/signup and access to the application. After authentication, the user reaches Learn, Hub, Labs, and the shared user area. There is no separate "Platform" page. The site also serves public read-only pages (institution directory, project pages, artifact pages, Labs articles) with SSG/ISR. See [platform/institutional-site/ARCHITECTURE.md](../../architecture/platform/institutional-site/ARCHITECTURE.md).
 
 **Responsibilities**:
-- Generate static pages for each `DigitalInstitution` (ISR with 60s revalidation)
+- Act as main entry (home, login, signup, access to app) for the single web application
+- Generate static/ISR pages for each `DigitalInstitution` (ISR with 60s revalidation)
 - Display institution profile, governance summary, published artifacts, and contributor profiles
 - SEO-optimized with OpenGraph/Schema.org metadata
 - Lightweight and fast (LCP < 2.5s)
 
 **Key Interfaces**:
-- Public web routes: `https://syntropy.cc/institutions/{slug}`, `/institutions/{slug}/projects`, etc.
+- Public web routes: `/` (home/entry), `/institutions/{slug}`, `/institutions/{slug}/projects`, etc.
 - Data sources: DIP internal API (read-only), Platform Core internal API (read-only)
 
 ---
@@ -160,6 +161,24 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 
 ---
 
+## Evolution History
+
+### v1.0 - Initial Implementation
+
+**Date**: 2026-03-13–2026-03-15
+**Milestone**: M5
+
+- ISR routing, institution page components, SEO, performance optimization (COMP-036.1–036.4).
+
+### v1.1 - ADR-012 Institutional Site as Main Entry
+
+**Date**: 2026-03-16
+**Trigger**: ADR-012
+
+- Reframed as main entry point of the ecosystem (GitHub-style). Entry flow: home → login/signup → application (Learn, Hub, Labs, dashboard). No separate "Platform" page. Wiring of entry flow in single web application is tracked in COMP-032.10.
+
+---
+
 ## Dependencies
 
 ### This Component Requires
@@ -178,3 +197,9 @@ The Institutional Site is a Next.js 14 static/ISR site (`apps/institutional-site
 ### Architecture Documents
 
 - [Institutional Site Platform Architecture](../../architecture/platform/institutional-site/ARCHITECTURE.md)
+
+### Related ADRs
+
+| ADR | Title | Relevance |
+|-----|-------|-----------|
+| [ADR-012](../../architecture/decisions/ADR-012-platform-as-foundation-institutional-home.md) | Platform as Technical Foundation Only; Institutional Site as System Home | Institutional site is the main entry point of the single web application; no "Platform" pillar. |

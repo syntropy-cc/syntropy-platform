@@ -224,7 +224,7 @@ The Syntropy Platform is a **modular monolith** (Turborepo + pnpm workspaces) th
 1. `GET /api/v1/openapi.json` - full OpenAPI 3.1 spec with all endpoints documented
 2. `wss://localhost:8080/api/v1/ide/sessions/{id}/ws` - WebSocket upgrade succeeds, terminal stream active
 3. `http://localhost:3002/hub/contribute/{id}/editor` - Monaco Editor loads with TypeScript LSP
-4. `http://localhost:4000/institutions/{slug}` (apps/institutional-site) - ISR page renders in < 2.5s
+4. `http://localhost:3000/institutions/{slug}` (apps/platform) - ISR page renders in < 2.5s
 5. `http://localhost:3000/metrics` (Grafana) - all dashboards show live data
 
 ---
@@ -791,7 +791,7 @@ Items: `COMP-034.7`, `035.1`, `035.2`, `035.3`, `035.4`
 
 Items: `COMP-035.5`, `035.6`, `036.1`, `036.2`
 
-**Verification**: Container images build with `docker build`; workspace auto-saves every 2min; `http://localhost:4000/institutions/{slug}` renders institution page from ISR; institution components (`InstitutionHero`, `GovernanceSummary`) render correctly.
+**Verification**: Container images build with `docker build`; workspace auto-saves every 2min; `http://localhost:3000/institutions/{slug}` renders institution page from ISR; institution components (`InstitutionHero`, `GovernanceSummary`) render correctly.
 
 ---
 
@@ -3126,8 +3126,8 @@ Status: Done | **Deps**: COMP-035.2, COMP-030.4
 #### [COMP-036.1] Next.js ISR routing and data fetching
 `S54` `High` `S` [Record-](./components/COMP-036-institutional-site.md)
 Status: Done | **Deps**: COMP-001, COMP-007, COMP-009
-**Criteria**: `apps/institutional-site`; `/institutions/[slug]` with ISR (60s revalidation); `generateStaticParams()` pre-renders top-100; `revalidatePath` on `dip.governance.proposal_executed`.
-**Steps**: (1) Scaffold `apps/institutional-site` (2) Write ISR page routing (3) Write revalidation webhook
+**Criteria**: `apps/platform`; `/institutions/[slug]` with ISR (60s revalidation); `generateStaticParams()` pre-renders top-100; `revalidatePath` on `dip.governance.proposal_executed`.
+**Steps**: (1) ISR routes in apps/platform (2) Revalidation webhook at /api/revalidate
 
 ---
 
@@ -3254,12 +3254,12 @@ Status: Done | **Deps**: COMP-032.9, COMP-032.10
 - 2026-03-15 COMP-038.6 - Log aggregation; docker-compose.observability.yml (Loki, Promtail, Grafana); 30-day retention; Promtail correlation_id extraction
 - 2026-03-15 COMP-038.5 - Grafana dashboards (Platform Overview, DIP Activity, AI Agents) and Prometheus alert rules (p99, error rate, DLQ, IDE quota)
 - 2026-03-15 COMP-038.4 - Prometheus metrics; createMetrics(service) in platform-core; GET /metrics on API and workers; standard and custom metrics
-- 2026-03-15 COMP-038.3 - OpenTelemetry distributed tracing; initTracing in platform-core; API, workers, institutional-site instrumentation; no-op exporter for unit tests
+- 2026-03-15 COMP-038.3 - OpenTelemetry distributed tracing; initTracing in platform-core; API, workers instrumentation; no-op exporter for unit tests
 - 2026-03-15 COMP-038.2 - Correlation ID propagation; AsyncLocalStorage context; setCorrelationContextForRequest in API; KafkaProducer optional headers; runWithMessageContext in session-invalidation worker
 - 2026-03-15 COMP-036.4 - Performance optimization; next/font Inter in layout; image policy comment in InstitutionHero
-- 2026-03-15 COMP-036.3 - SEO and structured data; generateMetadata, Schema.org JSON-LD, sitemap.ts, robots.ts for institutional-site
+- 2026-03-15 COMP-036.3 - SEO and structured data; generateMetadata, Schema.org JSON-LD, sitemap.ts, robots.ts in apps/platform
 - 2026-03-15 COMP-036.2 - Institution page components; InstitutionHero, GovernanceSummary, LegitimacyChainTimeline, ProjectGrid, ContributorHighlights; composed on institution [slug] page
-- 2026-03-15 COMP-036.1 - Next.js ISR routing; apps/institutional-site; /institutions/[slug] revalidate 60; generateStaticParams; public API routes; revalidate route
+- 2026-03-15 COMP-036.1 - Next.js ISR routing; apps/platform; /institutions/[slug] revalidate 60; generateStaticParams; public API routes; revalidate route
 - 2026-03-15 COMP-035.6 - Workspace persistence; workspace-sync auto-save 2min; restore before welcome; IdeWorkspaceRestoreIndicator; gateway integration
 - 2026-03-15 COMP-035.5 - Container image configuration; docker/ide-base, ide-labs, ide-hub; CI build + Trivy scan; push to GHCR on main
 - 2026-03-15 COMP-035.4 - Session reconnection and state recovery; 5min window; session_expired for terminated/expired; IdeReconnectionIndicator

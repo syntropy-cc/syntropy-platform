@@ -48,7 +48,7 @@ describe("Moderation page", () => {
       ok: false,
       status: 403,
       error: { code: "FORBIDDEN", message: "PlatformModerator role required" },
-      meta: {},
+      meta: { timestamp: new Date().toISOString() },
     });
 
     const node = await ModerationPage();

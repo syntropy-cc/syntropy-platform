@@ -100,7 +100,7 @@ The Syntropy Ecosystem is built as a **modular monolith** using Turborepo and pn
 | **Size** | M |
 | **Created** | 2026-03-13 |
 
-**Description**: Scaffold all `apps/*` (learn, hub, labs, admin, institutional-site) as Next.js 14 App Router projects and all `packages/*` domain packages with their 4-layer internal structure (`domain/`, `application/`, `infrastructure/`, `api/`).
+**Description**: Scaffold all `apps/*` (platform, learn, hub, labs, api, workers) as Next.js 14 App Router projects (platform, learn, hub, labs) or Node services (api, workers), and all `packages/*` domain packages with their 4-layer internal structure (`domain/`, `application/`, `infrastructure/`, `api/`). Admin and institutional site are consolidated in `apps/platform`.
 
 **Acceptance Criteria**:
 - [ ] All 5 `apps/*` have `package.json`, `tsconfig.json`, `next.config.ts`, `src/app/layout.tsx`, `src/app/page.tsx`
@@ -110,7 +110,7 @@ The Syntropy Ecosystem is built as a **modular monolith** using Turborepo and pn
 - [ ] Each package exports an empty module that can be imported
 
 **Files Created/Modified**:
-- `apps/learn/`, `apps/hub/`, `apps/labs/`, `apps/admin/`, `apps/institutional-site/` (each with Next.js scaffold)
+- `apps/platform/`, `apps/learn/`, `apps/hub/`, `apps/labs/` (Next.js); `apps/api/`, `apps/workers/` (Node)
 - `packages/platform-core/`, `packages/dip/`, `packages/ai-agents/`, `packages/learn/`, `packages/hub/`, `packages/labs/`, `packages/sponsorship/`, `packages/communication/`, `packages/planning/`, `packages/ide/`, `packages/governance-moderation/`, `packages/identity/` (each with 4-layer structure)
 - `packages/types/`, `packages/events/`, `packages/ui/`
 

@@ -200,11 +200,7 @@ Security cross-cutting concerns implement defense-in-depth across all layers: AP
 **Files Created/Modified**:
 - `packages/platform-core/src/config/env-validator.ts`
 - `packages/platform-core/src/config/env-validator.test.ts`
-- `apps/admin/.env.example`, `apps/admin/src/env.ts`
-- `apps/hub/.env.example`, `apps/hub/src/env.ts`
-- `apps/institutional-site/.env.example`, `apps/institutional-site/src/env.ts`
-- `apps/labs/.env.example`, `apps/labs/src/env.ts`
-- `apps/learn/.env.example`, `apps/learn/src/env.ts`
+- `apps/platform/.env.local.example`, `apps/hub/.env.example`, `apps/labs/.env.example`, `apps/learn/.env.example`
 
 ---
 

@@ -2,24 +2,62 @@
 
 /**
  * Client shell: ThemeProvider + AppLayout + AuthProvider.
+ * Uses pathname to switch between landing layout (Navbar + Footer) and default layout.
  * Architecture: COMP-032
  */
 
+import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/components/auth/AuthProvider";
-import { ThemeProvider, AppLayout, ThemeToggle } from "@syntropy/ui";
+import { UserMenu } from "@/components/UserMenu";
+import {
+  ThemeProvider,
+  AppLayout,
+  ThemeToggle,
+  Footer,
+} from "@syntropy/ui";
 
-const PLATFORM_NAV_LINKS = [
+/** Links to institutional landings (platform routes). */
+const INSTITUTIONAL_NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "http://localhost:3001", label: "Learn" },
-  { href: "http://localhost:3002", label: "Hub" },
-  { href: "http://localhost:3003", label: "Labs" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/learn", label: "Learn" },
+  { href: "/hub", label: "Hub" },
+  { href: "/labs", label: "Labs" },
 ];
 
+/** Paths that use landing variant (Navbar + Footer). */
+const INSTITUTIONAL_PATHS = [
+  "/",
+  "/learn",
+  "/hub",
+  "/labs",
+  "/portfolio",
+  "/contribute",
+];
+
+function useIsInstitutionalPath(pathname: string | null): boolean {
+  if (!pathname) return false;
+  if (pathname === "/") return true;
+  return INSTITUTIONAL_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isLanding = useIsInstitutionalPath(pathname);
+
   return (
     <ThemeProvider>
-      <AppLayout navLinks={PLATFORM_NAV_LINKS} headerRight={<ThemeToggle />}>
+      <AppLayout
+        variant={isLanding ? "landing" : "default"}
+        footer={isLanding ? <Footer /> : undefined}
+        currentPath={pathname ?? ""}
+        navLinks={INSTITUTIONAL_NAV_LINKS}
+        headerRight={
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <UserMenu />
+          </div>
+        }
+      >
         <AuthProvider>{children}</AuthProvider>
       </AppLayout>
     </ThemeProvider>

@@ -34,11 +34,13 @@ describe("API proxy route", () => {
   });
 
   it("forwards GET with Authorization header when session exists", async () => {
-    let capturedUrl: string | null = null;
-    let capturedInit: RequestInit | null = null;
+    const captured: { url: string | null; init: RequestInit | null } = {
+      url: null,
+      init: null,
+    };
     globalThis.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
-      capturedUrl = url;
-      capturedInit = init ?? null;
+      captured.url = url;
+      captured.init = init ?? null;
       return Promise.resolve(
         new Response(JSON.stringify({ data: [], meta: { timestamp: new Date().toISOString() } }), {
           status: 200,
@@ -51,9 +53,13 @@ describe("API proxy route", () => {
     const res = await GET(req, { params: Promise.resolve({ path: ["moderation", "flags"] }) });
 
     expect(res.status).toBe(200);
-    expect(capturedUrl).toBe("http://backend:8080/api/v1/moderation/flags");
-    expect(capturedInit?.headers).toBeDefined();
-    const auth = (capturedInit?.headers as Headers)?.get?.("authorization") ?? (capturedInit?.headers as Record<string, string>)?.authorization;
+    expect(captured.url).toBe("http://backend:8080/api/v1/moderation/flags");
+    expect(captured.init?.headers).toBeDefined();
+    const headers = captured.init?.headers;
+    const auth =
+      headers instanceof Headers
+        ? headers.get("authorization")
+        : (headers as Record<string, string> | undefined)?.authorization ?? null;
     expect(auth).toBe("Bearer test-token");
   });
 

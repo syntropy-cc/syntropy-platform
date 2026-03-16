@@ -1,9 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import "@syntropy/ui/styles";
-
-body {
-  margin: 0;
-}

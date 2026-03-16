@@ -1,6 +1,6 @@
 /**
  * Public institution routes for Institutional Site (COMP-036.1).
- * No auth; read-only. Used by apps/institutional-site for ISR.
+ * No auth; read-only. Used by apps/platform for ISR (institutions pages).
  *
  * GET /api/v1/public/institutions — list top institution slugs (for generateStaticParams).
  * GET /api/v1/public/institutions/:slug — institution profile by slug (id).

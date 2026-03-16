@@ -104,7 +104,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 - [ ] Auth callback page handles Supabase redirect
 
 **Files Created/Modified**:
-- `apps/learn/middleware.ts`, `apps/hub/middleware.ts`, `apps/labs/middleware.ts`, `apps/admin/middleware.ts`
+- `apps/learn/middleware.ts`, `apps/hub/middleware.ts`, `apps/labs/middleware.ts`; admin is in `apps/platform/src/app/admin/`
 - `apps/learn/src/app/(auth)/login/page.tsx`, etc.
 - `apps/learn/src/app/(auth)/callback/page.tsx`, etc.
 
@@ -240,7 +240,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 - [ ] Only accessible to `PlatformAdmin` and `PlatformModerator` roles
 
 **Files Created/Modified**:
-- `apps/admin/src/app/(main)/` pages
+- `apps/platform/src/app/admin/` (moderation, users, policies)
 
 ---
 
@@ -336,7 +336,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 - [ ] No separate "Platform" page; institutional site is the public face of the app
 
 **Files Created/Modified**:
-- `apps/platform/` or integration with `apps/institutional-site` for entry flow
+- `apps/platform/` (institutional home at `/`, institutions at `/institutions`; institutional site consolidated into platform)
 
 ---
 

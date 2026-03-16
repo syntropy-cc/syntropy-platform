@@ -119,7 +119,7 @@ Observability cross-cutting concerns implement the three pillars of observabilit
 
 **Files Created/Modified**:
 - `packages/platform-core/src/observability/tracing.ts`, tracing.test.ts
-- `apps/institutional-site/instrumentation.ts` (register + initTracing)
+- `apps/platform/instrumentation.ts` (register + initTracing when added)
 - `apps/api/src/main.ts`, `apps/workers/src/main.ts` (initTracing at startup)
 
 ---

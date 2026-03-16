@@ -7,3 +7,29 @@
 body {
   margin: 0;
 }
+
+/* Landing utilities (DESIGN-SYSTEM) */
+.gradient-bg {
+  background: var(--gradient-hero);
+}
+
+.section-alt {
+  background: hsl(var(--bg-section-alt));
+}
+
+/* Scrollbar (optional; dark theme) */
+[data-theme="dark"] .scrollbar-custom,
+.dark .scrollbar-custom {
+  scrollbar-color: hsl(var(--scrollbar-thumb) / 0.6) hsl(var(--scrollbar-track) / 0.5);
+}
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: hsl(var(--scrollbar-track) / 0.5);
+}
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: hsl(var(--scrollbar-thumb) / 0.6);
+  border-radius: 9999px;
+}

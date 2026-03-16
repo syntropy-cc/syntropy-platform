@@ -12,7 +12,7 @@
 
 ### Architecture Summary
 
-The Institutional Site is the **main entry point** of the Syntropy Ecosystem (GitHub-style; ADR-012). It is the public face of the single web application (`apps/institutional-site`). When a user visits unauthenticated, they see the institutional home, which presents the ecosystem, explains the three pillars (Learn, Hub, Labs — not "Platform"), provides institutional content, and offers login/signup and access to the application. After authentication, the user reaches Learn, Hub, Labs, and the shared user area. There is no separate "Platform" page. The site also serves public read-only pages (institution directory, project pages, artifact pages, Labs articles) with SSG/ISR. See [platform/institutional-site/ARCHITECTURE.md](../../architecture/platform/institutional-site/ARCHITECTURE.md).
+The Institutional Site is the **main entry point** of the Syntropy Ecosystem (GitHub-style; ADR-012). It is consolidated into **apps/platform**: institutional home at `/`, institutions at `/institutions` and `/institutions/[slug]`, with ISR/SSG. When a user visits unauthenticated, they see the institutional home; after authentication they reach Learn, Hub, Labs, and the shared user area. There is no separate "Platform" page. Public read-only pages (institution directory, institution profiles, projects, legitimacy-chain) live under `apps/platform`. See [platform/institutional-site/ARCHITECTURE.md](../../architecture/platform/institutional-site/ARCHITECTURE.md).
 
 **Responsibilities**:
 - Act as main entry (home, login, signup, access to app) for the single web application
@@ -63,7 +63,7 @@ The Institutional Site is the **main entry point** of the Syntropy Ecosystem (Gi
 - [x] `revalidatePath` called via webhook on POST /api/revalidate (secret in header/query/body)
 
 **Files Created/Modified**:
-- `apps/institutional-site/` scaffold (Next 14, port 4000); `src/app/institutions/[slug]/page.tsx`, projects, legitimacy-chain; `src/app/api/revalidate/route.ts`; `src/app/institutions/page.tsx`
+- `apps/platform/` (institutions routes); `src/app/institutions/[slug]/page.tsx`, projects, legitimacy-chain; `src/app/api/revalidate/route.ts`; `src/app/institutions/page.tsx`
 - `apps/api/src/routes/public-institutions.ts` (GET /api/v1/public/institutions, GET .../:slug); router registration
 
 ---
@@ -89,8 +89,8 @@ The Institutional Site is the **main entry point** of the Syntropy Ecosystem (Gi
 - [x] `ContributorHighlights` component: top contributors with portfolio links
 
 **Files Created/Modified**:
-- `apps/institutional-site/src/components/institution-hero.tsx`, `governance-summary.tsx`, `legitimacy-chain-timeline.tsx`, `project-grid.tsx`, `contributor-highlights.tsx`
-- `apps/institutional-site/src/app/institutions/[slug]/page.tsx` (composes all five; data from getInstitution)
+- `apps/platform/src/components/institution-hero.tsx`, `governance-summary.tsx`, `legitimacy-chain-timeline.tsx`, `project-grid.tsx`, `contributor-highlights.tsx`
+- `apps/platform/src/app/institutions/[slug]/page.tsx` (composes all five; data from getInstitution)
 
 ---
 
@@ -114,9 +114,9 @@ The Institutional Site is the **main entry point** of the Syntropy Ecosystem (Gi
 - [x] `robots.txt` allowing all indexing
 
 **Files Created/Modified**:
-- `apps/institutional-site/src/app/sitemap.ts`
-- `apps/institutional-site/src/app/robots.ts`
-- `apps/institutional-site/src/app/institutions/[slug]/page.tsx` (generateMetadata, JSON-LD)
+- `apps/platform/src/app/sitemap.ts`
+- `apps/platform/src/app/robots.ts`
+- `apps/platform/src/app/institutions/[slug]/page.tsx` (generateMetadata, JSON-LD)
 
 ---
 
@@ -141,9 +141,9 @@ The Institutional Site is the **main entry point** of the Syntropy Ecosystem (Gi
 - [x] JS bundle < 50KB per page (server components minimize client bundle)
 
 **Files Created/Modified**:
-- `apps/institutional-site/src/app/layout.tsx` (Inter font, preload)
-- `apps/institutional-site/src/components/institution-hero.tsx` (image policy comment)
-- `apps/institutional-site/next.config.mjs` (comment for future images.domains)
+- `apps/platform/src/app/layout.tsx` (fonts, theme)
+- `apps/platform/src/components/institution-hero.tsx` (image policy comment)
+- `apps/platform/next.config.mjs` (comment for future images.domains)
 
 ---
 
@@ -156,7 +156,7 @@ The Institutional Site is the **main entry point** of the Syntropy Ecosystem (Gi
 
 ### 2026-03-15 — S54 implementation (COMP-036.1, 036.2)
 
-- **036.1**: Scaffolded `apps/institutional-site` (Next 14, port 4000). ISR pages `/institutions/[slug]`, projects, legitimacy-chain with revalidate 60. generateStaticParams fetches from GET /api/v1/public/institutions (empty until repo has findAll). POST /api/revalidate with REVALIDATE_SECRET. Public API: GET /api/v1/public/institutions, GET /api/v1/public/institutions/:slug (no auth).
+- **036.1**: Institutional site consolidated into `apps/platform`. ISR pages `/institutions/[slug]`, projects, legitimacy-chain with revalidate 60. generateStaticParams fetches from GET /api/v1/public/institutions. POST /api/revalidate with REVALIDATE_SECRET. Public API: GET /api/v1/public/institutions, GET /api/v1/public/institutions/:slug (no auth).
 - **036.2**: InstitutionHero, GovernanceSummary, LegitimacyChainTimeline, ProjectGrid, ContributorHighlights as server components; composed on institution [slug] page with data from public institution fetch. Timeline/Grid/Contributors show placeholder when no API data yet.
 
 ---

@@ -3,7 +3,12 @@
  * Architecture: COMP-001, COMP-032
  */
 export { Button, type ButtonProps } from "./components/button";
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, type CardProps, } from "./components/card";
+export { Badge, type BadgeProps } from "./components/badge";
 export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
+export { Sheet, SheetContent, SheetTrigger, type SheetProps, type SheetContentProps, type SheetTriggerProps, } from "./components/sheet";
+export { Navbar, type NavbarProps, type NavbarLink, } from "./components/navbar";
+export { Footer, type FooterProps, type FooterColumn } from "./components/footer";
 export { AppLayout, type AppLayoutProps, type NavLinkConfig } from "./components/app-layout";
 export { ThemeProvider, useTheme, type Theme, } from "./components/theme-provider";
 export { MonacoEditor, type MonacoEditorProps, type MonacoLanguage, } from "./components/monaco-editor";

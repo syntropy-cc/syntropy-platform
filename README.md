@@ -39,7 +39,7 @@ Optional: run `./scripts/setup.sh` to install deps and start infrastructure in o
 
 ## Workspace layout
 
-- `apps/` — Next.js pillar applications (learn, hub, labs, admin, institutional-site)
+- `apps/` — Platform (single web app: institutional home, dashboard, admin, institutions), API (Fastify), workers; pillar apps (learn, hub, labs)
 - `packages/` — Domain packages and shared libs (platform-core, dip, identity, types, events, ui, …)
 
 See [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) and [docs/implementation/IMPLEMENTATION-PLAN.md](docs/implementation/IMPLEMENTATION-PLAN.md) for details.

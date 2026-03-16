@@ -10,6 +10,10 @@
  */
 
 import { createLogger, createMetrics, initTracing } from "@syntropy/platform-core";
+import {
+  ensureKafkaTopicsExist,
+  getKafkaConfigFromEnv,
+} from "@syntropy/event-bus";
 import { initWorkerMetrics } from "./metrics.js";
 import { getKafkaWorkers } from "./workers/kafka-workers.js";
 import { createSearchIndexWorker } from "./workers/search-index-consumer.js";
@@ -73,6 +77,12 @@ async function run(): Promise<void> {
 
   process.on("SIGTERM", () => shutdown("SIGTERM"));
   process.on("SIGINT", () => shutdown("SIGINT"));
+
+  const kafkaConfig = getKafkaConfigFromEnv();
+  if (kafkaConfig.brokers.length > 0) {
+    await ensureKafkaTopicsExist(kafkaConfig);
+    log.info("Kafka topics ensured");
+  }
 
   await registry.startAll();
   log.info("All workers started");

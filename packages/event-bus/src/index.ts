@@ -13,6 +13,10 @@ export type { PublishOptions } from "./KafkaProducer.js";
 export { KafkaConsumer } from "./KafkaConsumer.js";
 export type { KafkaClientConfig } from "./config.js";
 export { getKafkaConfigFromEnv } from "./config.js";
+export {
+  ensureKafkaTopicsExist,
+  REQUIRED_KAFKA_TOPICS,
+} from "./ensureKafkaTopics.js";
 export type { KafkaClient } from "./createKafkaClient.js";
 export type { EventEnvelope } from "./types.js";
 export type { ConsumedMessage } from "./KafkaConsumer.js";

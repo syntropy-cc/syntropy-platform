@@ -4,7 +4,7 @@
 > **Project**: Syntropy Ecosystem
 > **Applicability**: Web Application and Dashboard/Admin (see `.cursor/rules/design-system/design-system.mdc`, Rule DS-001)
 > **Created**: 2026-03-12
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-16
 > **UX Architect**: AGT-UXA
 > **Design System Reference**: `docs/design-system/DESIGN-SYSTEM.md`
 > **Rules Reference**: `.cursor/rules/design-system/design-system.mdc` (DS-016)
@@ -28,11 +28,11 @@ This document translates the design token decisions in `DESIGN-SYSTEM.md` into a
 
 > *One word that captures the system's visual and experiential character. This is the primary calibration tool for any new visual decision: "Does this choice fit the archetype?"*
 
-**Archetype**: Purposeful
+**Archetype**: Purposeful & Immersive
 
-**Expansion**: An ecosystem that respects what its users build — precise where precision matters, accessible where access matters, and always oriented toward real progress over display.
+**Expansion**: Professional and progress-oriented; first impression is dark and immersive (gradient, glass). Clear hierarchy and readable content; animations confirm action or reveal state. Pillar palettes give identity without breaking unity. Dark-first, gradients on hero and cards, glass morphism, and subtle motion (scroll, entrance, hover) are part of the language.
 
-**When to use this section**: Reference the archetype whenever making a visual decision not explicitly covered by the design tokens. Ask: "Does this fit the archetype in one word?" A new component that introduces unnecessary decoration, animation for its own sake, or visual complexity that obscures content fails the archetype test.
+**When to use this section**: Reference the archetype whenever making a visual decision not explicitly covered by the design tokens. Ask: "Does this fit the archetype?" A new component that introduces unnecessary decoration, animation for its own sake, or visual complexity that obscures content fails the archetype test.
 
 ---
 
@@ -40,13 +40,13 @@ This document translates the design token decisions in `DESIGN-SYSTEM.md` into a
 
 > *3–5 concrete sentences describing the overall visual and experiential character of the interface. Be specific, not aspirational.*
 
-The first impression is one of deliberate calm: a light neutral background, dark text with strong contrast, and blue anchors for action. There is nothing to look at that is not there for a reason.
+The first impression is dark and immersive: a gradient background (slate to blue), glass or elevated cards, and blue as the anchor for action. CTAs and active nav items use primary blue with subtle shadow. There is nothing to look at that is not there for a reason.
 
 Information is organized with a clear hierarchy — headings have authority without being decorative, body text is comfortable for sustained reading, and interactive elements are unambiguous about what they do. The layout feels structured and grid-based; sections have natural breathing room without wasting space. Dense views (Hub issue lists, Labs review threads) and airy views (Learn track maps, onboarding steps) use the same design language, varying in density through spacing choices rather than color or decoration.
 
-The emotional register is that of a serious tool that takes the user's work seriously. It does not congratulate you for opening it. It does not animate unnecessarily. It communicates that this is a place where real things get built, researched, and published — and that the platform's job is to get out of the way of that work.
+The emotional register is that of a serious tool that takes the user's work seriously. The interface can be immersive — gradients on hero and pillar cards, subtle particles or depth on cards — without becoming consumer entertainment. It communicates that this is a place where real things get built, researched, and published.
 
-What this interface explicitly is not: it is not a consumer entertainment product. There are no gradients cascading across hero sections. There are no bouncing mascots or confetti explosions on every action. The gamification system (XP, collectibles, achievements) is present and rewarding, but it exists within the same composed visual language — it does not override the interface's professional register.
+Gradients and motion are used with purpose: hero background, pillar cards, CTAs, and indicators. There are no confetti or mascotes on every action. The gamification system (XP, collectibles, achievements) is present and rewarding within the same composed visual language — it does not override the interface's professional register.
 
 ---
 
@@ -64,15 +64,23 @@ What this interface explicitly is not: it is not a consumer entertainment produc
 
 ### 3.2 Neutral Scale Narrative
 
-The neutral scale runs from a near-black that avoids the harshness of pure black to pure white for surfaces, with a carefully chosen mid-range for borders and disabled states. The choice of near-black (#0a0a0a) over pure black for text gives extended reading sessions a slightly softer quality — important for a platform where users read articles, review code, and study fragments for sustained periods. The neutrals are cool-toned throughout, with no warmth added; this maintains the systematic, precise character and ensures the brand blue reads as the only warm note on a page.
+The dark scale (background slate/blue, light foreground) is the default experience; light neutrals exist for the light theme and accessibility. In light mode, the neutral scale runs from near-black to pure white with a careful mid-range for borders and disabled states. The choice of near-black over pure black for text gives extended reading sessions a slightly softer quality. The neutrals are cool-toned throughout; this maintains the systematic, precise character and ensures the brand blue reads as the anchor.
 
 ### 3.3 Semantic Color Rationale
 
 The semantic colors (success green, warning yellow, error red, info blue) follow conventional expectations deliberately. For a platform where status indicators govern contribution acceptance, governance vote outcomes, peer review states, and publication statuses, deviating from convention would introduce cognitive load for no aesthetic benefit. The precise tones chosen — mid-saturation, not neon — maintain the composed palette. The non-negotiable rule that status is never conveyed by color alone (icon + text always) means these semantic colors support legibility rather than carrying the full communicative burden.
 
-### 3.4 Palette as a Set
+### 3.4 Gradients and Glass
 
-Seen together, the palette reads as cool, systematic, and trust-building. This is intentional: the Syntropy ecosystem is a place where artifacts are cryptographically anchored, governance contracts are publicly readable, and contributions are verifiably recorded. A warm, playful, or energetic palette would undermine the credibility those qualities require. The palette fits the primary user types — technical contributors, researchers, institutional founders — who associate this register with tools they can depend on.
+The hero gradient and divider gradients communicate depth and focus; the cyan-to-purple gradient on icons and CTAs provides emphasis. Glass morphism (blur, semi-transparent border) on nav and overlays keeps legibility and a modern feel without competing with content.
+
+### 3.5 Pillar Palettes
+
+Each pillar (Learn, Projects, Labs, Contribute, Portfolio) may use a semantic palette (blue, purple-blue, magenta, green, orange) on cards and icons for visual recognition, without creating separate component sets.
+
+### 3.6 Palette as a Set
+
+Seen together, the palette reads as cool, systematic, and trust-building. This is intentional: the Syntropy ecosystem is a place where artifacts are cryptographically anchored, governance contracts are publicly readable, and contributions are verifiably recorded. The palette fits the primary user types — technical contributors, researchers, institutional founders — who associate this register with tools they can depend on.
 
 ---
 
@@ -116,9 +124,9 @@ The 4px base unit produces a tight, systematic grid that allows both dense and o
 
 ### 5.2 Border Radius Character
 
-**Range**: 4px (`--radius-sm`) to 16px (`--radius-xl`) in primary use; 9999px (`--radius-full`) for pills and avatars
+**Base**: 0.5rem (8px); inputs and tags use smaller derived values; cards and modals in the 8–12px range; pills use full radius.
 
-The practical rounding range of 4–16px lands in the "approachable professional tool" zone. It is rounded enough to avoid clinical precision (0px corners), but not soft enough to suggest consumer entertainment (24px+). Input fields at 4px feel precise and form-like. Cards at 8px feel organized and contained. Modals at 12px feel elevated and composed. Pills at 9999px — used for tags, status labels, and avatars — are the deliberate exception: their full rounding signals "categorical label," not the character of the larger interface. This matches the expectations of the primary user types: technical contributors and researchers trust interfaces that feel structured over interfaces that feel soft.
+The practical rounding range lands in the "approachable professional tool" zone. It is rounded enough to avoid clinical precision (0px corners), but not soft enough to suggest consumer entertainment (24px+). Input fields at the smaller radius feel precise and form-like. Cards at 8px feel organized and contained. Modals at 12px feel elevated and composed. Pills at 9999px — used for tags, status labels, and avatars — are the deliberate exception: their full rounding signals "categorical label," not the character of the larger interface.
 
 ### 5.3 Layout Grid Intention
 
@@ -142,9 +150,9 @@ The speed profile makes the interface feel snappy and tool-like rather than flui
 
 ### 6.2 Animation Philosophy
 
-Every animation in this interface confirms an action or reveals a state change. Motion is never decorative: a button does not wiggle to attract attention, a card does not float in to create atmosphere, a transition does not linger to feel cinematic. Animations are short enough to be invisible in repeated use — a user submitting their twentieth contribution should not feel like they are watching the same performance again — but present enough to communicate system responsiveness to new users.
+Every animation confirms an action or reveals a state change. Entrance animations (fade-in, translateY) in sections, scroll-driven effects (parallax, opacity) on the hero, hover scale and tap scale on cards and buttons, and bounce on indicators are permitted. Subtle motion on CTA icons (e.g. "rocket" pulse) is allowed when it supports the CTA. Avoid motion that is purely decorative with no relation to content or state.
 
-The spring easing (`--ease-spring`) is reserved for positive-outcome moments where a subtle bounce adds appropriate energy: collectible completion, achievement unlock, first artifact published. It is used in exactly those moments and no others — its rarity preserves its signal.
+Animations are short enough to be invisible in repeated use — a user submitting their twentieth contribution should not feel like they are watching the same performance again — but present enough to communicate system responsiveness. The spring easing (`--ease-spring`) is reserved for positive-outcome moments where a subtle bounce adds appropriate energy: collectible completion, achievement unlock, first artifact published.
 
 **Commitment**: All animations respect the `prefers-reduced-motion` media query. No animation is required for functionality — they are enhancements only.
 
@@ -158,11 +166,11 @@ The spring easing (`--ease-spring`) is reserved for positive-outcome moments whe
 
 **Style**: Geometric flat
 
-**Style description**: Flat vector illustrations built from clean geometric shapes — rectangles, circles, paths — with no gradients, no shadows, and no textures. Compositions are simple and focused: one primary object or concept per illustration, generous negative space. The visual vocabulary echoes the UI's own spatial structure and token system — the same sense of order, the same restraint. This style scales well from onboarding screens (larger, more narrative) to spot illustrations in empty states (small, single-concept).
+**Style description**: Flat vector illustrations built from clean geometric shapes — rectangles, circles, paths — with no heavy shadows or textures. Compositions are simple and focused: one primary object or concept per illustration, generous negative space. Gradients are permitted in hero/marketing illustrations when aligned to design tokens (`--gradient-hero`, `--gradient-accent`); spot illustrations and empty states remain gradient-free unless specified. The visual vocabulary echoes the UI's spatial structure and token system.
 
 ### 7.2 Color Usage in Illustrations
 
-Illustrations draw from the design system token palette only: the primary blue, the slate secondary, the accent sky-blue, and the neutral scale (light neutrals for backgrounds, near-black for outlines or anchor elements). A maximum of four tones per illustration — primary, one neutral, and up to two semantic or accent colors when the concept requires (e.g., a success state illustration may include the success green as a highlight). Gradients are prohibited. Off-palette colors are permitted only for recognizable world objects where palette restriction would make the illustration ambiguous (e.g., a leaf in a nature metaphor may be green even though green does not appear as a brand color).
+Illustrations draw from the design system token palette only: the primary blue, the slate secondary, the accent sky-blue, and the neutral scale (light neutrals for backgrounds, near-black or dark for outlines in the relevant theme). A maximum of four tones per illustration — primary, one neutral, and up to two semantic or accent colors when the concept requires. For hero/marketing assets, gradient usage may follow the defined gradient tokens. Off-palette colors are permitted only for recognizable world objects where palette restriction would make the illustration ambiguous (e.g., a leaf in a nature metaphor may be green).
 
 ### 7.3 Human Presence
 
@@ -193,21 +201,21 @@ The platform is a digital tool operating entirely in the abstract domain of code
 
 The following must not appear in this product's visual interface or assets:
 
-1. **Gradients on large surfaces**: The neutral palette and flat elevation model establish a strictly flat background hierarchy. Gradients on page backgrounds, card surfaces, or hero sections would introduce a warmth and visual dynamism that contradicts the purposeful archetype and signals a consumer app rather than a professional ecosystem tool.
+1. **Gradients outside design tokens**: Gradients on large surfaces are permitted only when defined by tokens (hero, pillar cards, dividers). Avoid arbitrary or consumer-style gradients everywhere.
 
-2. **Heavy drop shadows for depth signaling**: The shadow system (`--shadow-sm` through `--shadow-lg`) is calibrated for subtle elevation — dropdowns, modals, focused elements. Applying large shadows to create visual drama or "float" primary content panels above the page introduces a 2010s-era skeuomorphic quality that the flat, systematic palette explicitly rejects.
+2. **Heavy drop shadows for depth signaling**: The shadow system (`--shadow-sm` through `--shadow-lg`) is calibrated for subtle elevation — dropdowns, modals, focused elements. Blue-tinted shadows for nav active and CTA emphasis are allowed per `--shadow-nav-active`. Applying large untokenized shadows to create visual drama or "float" primary content panels above the page is prohibited.
 
 3. **Decorative illustration within functional data-dense screens**: Spot illustrations belong in empty states, onboarding, and success/error moments. Using them inside Hub issue lists, Labs review threads, or Portfolio dashboards would fragment information hierarchy and signal that the platform does not trust its own data to carry the view.
 
-4. **Consumer-gamification color explosions**: The XP, collectible, and achievement system uses the same design token vocabulary as the rest of the interface. Introducing neon accent colors, rainbow gradients, or high-saturation "celebration" palettes that deviate from the design system for gamification moments would undermine the platform's professional register — particularly for researchers and institutional founders who would experience those moments as tonal mismatches.
+4. **Consumer-gamification color explosions**: The XP, collectible, and achievement system uses the same design token vocabulary as the rest of the interface. Introducing neon accent colors, rainbow gradients, or high-saturation "celebration" palettes that deviate from the design system for gamification moments would undermine the platform's professional register.
 
 5. **Rounded corners beyond `--radius-xl` (16px) on UI containers**: Radii beyond 16px on cards, panels, sidebars, or modals push the interface toward a soft, playful quality incompatible with the purposeful archetype. The `--radius-full` (9999px) is reserved exclusively for pills, avatars, and circular icon buttons — categorical UI elements, not layout containers.
 
-6. **Animation for atmosphere**: Any motion not explicitly confirming an action, revealing a state change, or completing a meaningful user milestone (e.g., collectible assembly) is prohibited. Parallax scrolling on the landing page, hover-triggered floating animations, or decorative particle effects are not part of this visual system.
+6. **Animation without purpose**: Motion must serve a purpose (entrance, scroll, hover, confirmation). Parallax and subtle particles on hero/cards are permitted. Avoid motion that is purely decorative with no relation to content or state.
 
 7. **Typography mixing beyond the defined token scale**: Introducing custom font sizes outside the 11-level scale, using font-weight values not defined in the system (e.g., 300 or 800), or switching font families within a single UI context (not code/prose) introduces inconsistency that degrades the composed, unified character of the interface.
 
-8. **Full-bleed color backgrounds on primary content areas**: The page background (`--bg-page`, `--color-neutral-50`) and surface color (`--bg-surface`, `#ffffff`) are the only two background registers for content areas. Introducing a third register — colored panels, tinted section backgrounds, pillar-specific full-bleed fills — would fragment the visual unity of the ecosystem and leak pillar identity into the shared platform surfaces where the design system mandates consistency.
+8. **Full-bleed color outside tokens**: Full-bleed color on sections is permitted when using gradient tokens or pillar palette (e.g. hero gradient, section-alt). Do not introduce ad-hoc colored panels or tinted section backgrounds that fragment visual unity.
 
 ---
 
@@ -222,6 +230,7 @@ The following must not appear in this product's visual interface or assets:
 | Overleaf | The editorial rendering quality of the article writing view — clean typesetting, real-time preview, clear separation between editor and rendered output | Vision §4 Component 3 (Labs): "The article editor aspires to Overleaf's rendering quality" |
 | Notion | The fluidity and low-friction quality of the editing experience — starting to write should feel immediate, not ceremonial | Vision §4 Component 3 (Labs): "with Notion's editing fluidity" |
 | VS Code / Monaco | The contextual IDE integration standard — keyboard-first, state-persistent, with clear entry and exit from the editing context | Architecture reference: `platform/embedded-ide` |
+| syntropy-cc/syntropy | Reference implementation for visual style: landing page, Navbar, Footer, pillar cards (Learn, Projects, Labs, Contribute, Portfolio), MyST content styling | [GitHub — syntropy-cc/syntropy](https://github.com/syntropy-cc/syntropy) |
 
 **Anti-reference** (do not emulate): Duolingo / Coursera
 
@@ -241,7 +250,7 @@ The following must not appear in this product's visual interface or assets:
 
 4. **When a new pillar-specific surface or interaction needs a visual distinction**, reach for a pillar semantic token (`--pillar-learn-bg-subtle`, `--pillar-hub-font-code`) rather than introducing an off-palette value. Pillar identity is expressed through these tokens and through information density and copy choices — not through separate color palettes or component sets.
 
-5. **When generating or selecting an icon for a new use case**, stay within the chosen icon library (Lucide, Heroicons, or Phosphor — whichever was pinned). Do not mix icons from different libraries even if a better icon exists elsewhere. Consistency in the icon family is a measurable property of visual cohesion; mixing libraries produces subtle but cumulative visual noise.
+5. **When generating or selecting an icon for a new use case**, stay within the chosen icon library (Lucide — pinned). Do not mix icons from different libraries even if a better icon exists elsewhere. Consistency in the icon family is a measurable property of visual cohesion; mixing libraries produces subtle but cumulative visual noise.
 
 6. **When a gamification moment (achievement, collectible completion, XP milestone) calls for visual emphasis**, express it through the accent color (`--color-brand-accent`) and the spring easing (`--ease-spring`) — not through off-palette celebratory colors or animation styles not defined in the motion system. The gamification layer lives within the design system, not above it.
 
@@ -255,11 +264,13 @@ When adding a new component, illustration, page, or visual asset, verify:
 
 - [ ] Does every color value come from a token in `DESIGN-SYSTEM.md`? (No hardcoded hex values.)
 - [ ] Does every spacing value use a spacing token? (No arbitrary `margin: 13px`.)
-- [ ] Does the element fit the aesthetic archetype — **Purposeful** — in one word? Would a first-time user of the platform understand immediately what this element is for?
+- [ ] Do gradients and glass use only the defined tokens (e.g. `--gradient-hero`, `--gradient-accent`, `--glass-bg`, `--glass-blur`)?
+- [ ] Does the element fit the aesthetic archetype — **Purposeful & Immersive**? Would a first-time user understand immediately what this element is for?
 - [ ] Does the element avoid every anti-pattern listed in Section 8? (Check each of the 8 items explicitly.)
-- [ ] If the element contains an illustration or image: does it follow the geometric flat style, four-tone maximum, and no-gradient rules in Section 7?
-- [ ] If the element introduces motion: is the duration within the 100–400ms range in `DESIGN-SYSTEM.md §6`? Is it confirming an action or revealing a state change — not decorative? Does it respect `prefers-reduced-motion`?
-- [ ] Would a developer familiar with Linear and GitHub consider this element visually consistent with the quality and density expectations of those reference products?
+- [ ] If the element contains an illustration or image: does it follow the geometric flat style and token-based color rules in Section 7? (Gradients only where specified for hero/marketing.)
+- [ ] If the element introduces motion: is the duration within the 100–400ms range in `DESIGN-SYSTEM.md §6`? Is it confirming an action or revealing a state change — not purely decorative? Does it respect `prefers-reduced-motion`?
+- [ ] In dark mode: does text/background contrast meet WCAG AA where applicable?
+- [ ] Would a developer familiar with Linear and GitHub (or syntropy-cc/syntropy) consider this element visually consistent with the quality and density expectations of those references?
 - [ ] Does the element extend the design system rather than contradict it? If it introduces a new pattern not covered by the tokens, has that pattern been proposed as an Extension Guideline addition?
 
 ---

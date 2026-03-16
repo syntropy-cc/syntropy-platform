@@ -4,7 +4,7 @@
 > **Project**: Syntropy Ecosystem
 > **Applicability**: Applicable — see Section 1
 > **Created**: 2026-03-12
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-16
 > **UX Architect**: AGT-UXA
 > **Visual Direction Reference**: `docs/design-system/VISUAL-DIRECTION.md`
 > **Design System Reference**: `docs/design-system/DESIGN-SYSTEM.md`
@@ -51,16 +51,19 @@ Image generation prompts are applicable for this project. The Syntropy Ecosystem
 **Base Style Specification:**
 
 ```
-Flat geometric vector illustration, clean shapes with no gradients or shadows, color palette of medium-saturation 
-blue (#2563eb equivalent), slate gray, and light cool neutrals with a sky-blue accent used sparingly, 
-white and near-white backgrounds only, precise and purposeful aesthetic, generous negative space, 
-professional digital-tool visual style, 2D only, no textures, no decorative elements without function
+Flat geometric vector illustration, clean shapes; color palette of medium-saturation blue (#3b82f6 equivalent), 
+slate gray, and cool neutrals with sky-blue accent used sparingly. 
+Dark mode option: dark gradient background (slate and blue) or light neutral background; 
+optional glass morphism (blur, translucent borders). 
+Gradient allowed only on hero or card surfaces per design tokens (slate-to-blue hero gradient, cyan-to-purple accent). 
+Precise and purposeful aesthetic, generous negative space, professional digital-tool visual style, 
+2D only, no textures, no decorative elements without function
 ```
 
 **What this specification encodes:**
-- Aesthetic archetype: Purposeful
-- Primary color mood: Cool, systematic, trust-building — medium-saturation blue dominant, cool neutrals as ground
-- Rendering: Flat geometric vector, 2D only
+- Aesthetic archetype: Purposeful & Immersive
+- Primary color mood: Cool, systematic, trust-building — medium-saturation blue dominant, cool neutrals as ground; dark gradient or light neutral option
+- Rendering: Flat geometric vector, 2D only; gradients only where specified (hero, accent)
 - Tone: Professional, precise
 
 ---
@@ -84,6 +87,7 @@ indicators, and an active fragment card"],
 prominent call-to-action", "filled with realistic content"],
 displayed in a [DEVICE FRAME — e.g., "browser window frame on a light gray background", 
 "no frame, edge-to-edge", "laptop mockup at slight angle"],
+[THEME — e.g., "light theme", "dark theme with gradient background and glass-style navigation"],
 [ASPECT — e.g., "widescreen 16:9", "4:3 for documentation"]
 ```
 
@@ -93,7 +97,7 @@ displayed in a [DEVICE FRAME — e.g., "browser window frame on a light gray bac
 [UNIVERSAL NEGATIVE PROMPT FROM SECTION 8], cluttered layout, too much text, unreadable typography,
 outdated UI patterns, skeuomorphic elements, excessive drop shadows, neon colors,
 misaligned elements, placeholder "Lorem ipsum" text visible at readable scale,
-dark mode interface, mobile layout (desktop only)
+mobile layout (desktop only). Omit "dark mode interface" if the asset is explicitly dark theme.
 ```
 
 **Recommended aspect ratio**: 16:9 for widescreen, 4:3 for documentation, 2:1 for README headers
@@ -114,8 +118,10 @@ dark mode interface, mobile layout (desktop only)
 [BASE STYLE SPECIFICATION]
 
 Hero marketing image for a unified learning, collaboration, and research ecosystem platform,
+[BACKGROUND — "dark gradient background (slate to blue)" or "light neutral background"];
+[optional: "glass-style overlays"];
 [VISUAL METAPHOR OR CONCEPT — choose one:
-  Option A: "abstract geometric visualization of three interconnected flows — learning, building, and researching — converging toward a central node, suggesting the ecosystem's cross-pillar unification"
+  Option A: "abstract geometric visualization of three interconnected flows — learning, building, and researching (Aprenda, Desenvolva, Pesquise) — converging toward a central node, suggesting the ecosystem's cross-pillar unification"
   Option B: "a structured city-like grid of interconnected nodes and pathways, some illuminated to suggest progress, others visible on the horizon, representing knowledge territories to be explored"
   Option C: "three distinct geometric clusters — a progression map, a collaborative network, and a document structure — connected by a central flowing path, representing Learn, Hub, and Labs unified"],
 [MOOD — e.g., "confident and purposeful", "calm and structured", "expansive and forward-looking"],
@@ -128,7 +134,7 @@ no text or typography, purely visual
 ```
 [UNIVERSAL NEGATIVE PROMPT FROM SECTION 8], stock photo clichés, handshakes, generic business imagery,
 people in suits, rocket ships, light bulbs as metaphor, gears as metaphor, excessive complexity,
-dark or moody atmosphere, text or typography embedded in the image,
+text or typography embedded in the image,
 consumer app aesthetic, playful or cartoon style
 ```
 
@@ -269,15 +275,16 @@ dark or moody backgrounds that reduce legibility at thumbnail size
 **Paste this at the end of every prompt:**
 
 ```
-Negative prompt: gradients on large surfaces, heavy drop shadows, skeuomorphic textures or depth effects,
-colors outside the brand palette (no neon, no warm tones, no off-brand purples or oranges),
-consumer-gamification aesthetic (no confetti, cartoon mascots, or celebratory explosions),
+Negative prompt: gradients outside design tokens (no arbitrary rainbow or consumer-style gradients),
+heavy drop shadows, skeuomorphic textures or depth effects,
+colors outside the brand palette (no neon, no confetti),
+consumer-gamification aesthetic (no cartoon mascots or celebratory explosions),
 border radius exceeding 16px on rectangular containers (no pill-shaped cards),
 decorative motion references or implied animation, photorealism (for illustration categories),
 generic stock illustration style, clipart aesthetic, excessive detail competing with the focal element,
 cluttered composition, amateurish quality, watermarks, blurry or low-resolution output,
 rounded-soft consumer-app style, warm neutral backgrounds (cool neutrals only),
-full-bleed colored section backgrounds, typography mixing multiple font families in one scene
+full-bleed colored section backgrounds except when using design token gradients, typography mixing multiple font families in one scene
 ```
 
 ---
@@ -289,12 +296,15 @@ full-bleed colored section backgrounds, typography mixing multiple font families
 Before using a generated image, verify:
 
 - [ ] The color palette is consistent with the project's brand colors — medium-saturation blue dominant, slate gray secondary, cool neutrals as background, sky-blue accent used sparingly if at all?
-- [ ] The rendering style matches the aesthetic archetype: flat, geometric, no gradients, no heavy shadows?
-- [ ] No anti-patterns from `VISUAL-DIRECTION.md §8` are present? (Check all 8 items: no large-surface gradients, no heavy shadows, no functional-screen illustration, no consumer-gamification palette, no oversize border radius on containers, no decorative animation reference, no off-scale typography, no full-bleed color backgrounds.)
+- [ ] If dark mode: does text/background contrast meet WCAG AA where applicable?
+- [ ] Gradients are used only per design tokens (hero gradient, accent gradient) — no arbitrary or consumer-style gradients?
+- [ ] Glass/blur is used only where specified (e.g. hero overlays)?
+- [ ] The rendering style matches the aesthetic archetype: flat, geometric; gradients only where specified; no heavy shadows?
+- [ ] No anti-patterns from `VISUAL-DIRECTION.md §8` are present? (Check all 8 items.)
 - [ ] The image works at the intended display size — is it legible and unambiguous at thumbnail scale for social media assets?
 - [ ] If the image includes people: are the figures simplified and geometric (silhouette-level abstraction), with no facial features, consistent with `VISUAL-DIRECTION.md §7.3`?
 - [ ] The image does not look like it came from a consumer edtech product (Duolingo, Coursera aesthetic), a generic stock illustration library, or a different product visual system?
-- [ ] A product owner who has read `VISUAL-DIRECTION.md §1` could look at this image and immediately connect it to the Purposeful archetype?
+- [ ] A product owner who has read `VISUAL-DIRECTION.md §1` could look at this image and immediately connect it to the Purposeful & Immersive archetype?
 - [ ] For onboarding series: is this illustration visually consistent with all other illustrations in the same series (same color palette, same stroke weight, same level of detail, same background treatment)?
 
 ---
@@ -307,3 +317,4 @@ Before using a generated image, verify:
 |------|----------------|--------|-----------|
 | 2026-03-12 | Base Style Specification | Initial version derived from DESIGN-SYSTEM.md and VISUAL-DIRECTION.md | AGT-UXA |
 | 2026-03-12 | All sections | Initial prompt library for all five applicable asset categories | AGT-UXA |
+| 2026-03-16 | Base Style, §3–4, §8, §9, §10 | Alignment with syntropy-cc/syntropy style: dark-first option, token-based gradients, glass permitted; negative prompt and calibration updated | — |

@@ -2,27 +2,55 @@
 
 > **Document Type**: Platform Service Architecture Document
 > **Parent**: [System Architecture](../../ARCHITECTURE.md)
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-16
 > **Owner**: Syntropy Core Team
 
 ---
 
 ## Service Overview
 
-The Institutional Site is the public-facing read layer for the Syntropy Ecosystem. It presents platform-level metrics, public DIP entities (institutions, projects, artifacts), and Labs publications to the general public — including people who are not registered users. It has no owned business data or domain logic. Every piece of data it displays is read from other domains.
+The Institutional Site is the **main entry point** of the Syntropy Ecosystem (GitHub-style). It is the public face of the single web application. When a user visits the system unauthenticated, they see the institutional home, which:
 
-**This is NOT a domain.** It is a delivery mechanism — a server-rendered static/ISR website powered entirely by reads from Platform Core and DIP.
+- **Presents the ecosystem** — what Syntropy is and why it exists
+- **Explains the three pillars** — Learn, Hub, Labs (not "Platform"; the Platform is the technical foundation, not a user-facing pillar — ADR-012)
+- **Provides institutional content** — e.g. contribution, portfolio, community, about
+- **Offers login and signup** — and access to the application
+
+After authentication, the user reaches the application areas: Learn, Hub, Labs (and the shared user area for portfolio, search, settings). There is no separate "Platform" page. The institutional site also serves public read-only pages (institution directory, project pages, artifact pages, Labs articles, ecosystem metrics) powered by reads from Platform Core and DIP.
+
+**This is NOT a domain.** It has no owned business data or domain logic. It is part of (or the public face of) the single web application — a server-rendered static/ISR layer for public and entry routes.
 
 ---
 
 ## Architecture
 
-### High-Level Diagram
+### Entry Flow
+
+```mermaid
+graph LR
+    subgraph entry [Institutional Home]
+        HOME["/ — Ecosystem,\npillars, about"]
+        LOGIN["Login / Signup"]
+    end
+    subgraph app [Application]
+        LEARN["/learn"]
+        HUB["/hub"]
+        LABS["/labs"]
+        DASH["/dashboard"]
+    end
+    HOME --> LOGIN
+    LOGIN -->|"Authenticated"| LEARN
+    LOGIN -->|"Authenticated"| HUB
+    LOGIN -->|"Authenticated"| LABS
+    LOGIN -->|"Authenticated"| DASH
+```
+
+### High-Level Diagram (Data Flow)
 
 ```mermaid
 graph TB
     subgraph instSite [Institutional Site — Next.js SSG/ISR]
-        HOME["Home / About"]
+        HOME["Home / About\n(entry, ecosystem, login, signup)"]
         INST_DIR["Institution Directory\n(/institutions)"]
         INST_PAGE["Institution Profile Page\n(/institutions/{slug})"]
         PROJECT_PAGE["Project Page\n(/projects/{slug})"]

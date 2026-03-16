@@ -2,14 +2,14 @@
 
 > **Document Type**: Platform Service Architecture Document
 > **Parent**: [System Architecture](../../ARCHITECTURE.md)
-> **Last Updated**: 2026-03-12
+> **Last Updated**: 2026-03-16
 > **Owner**: Syntropy Core Team
 
 ---
 
 ## Service Overview
 
-The Web Application is the primary user-facing delivery interface for all three pillars of the Syntropy Ecosystem. It is a Next.js application using the App Router, delivering Server-Side Rendering (SSR) for public-facing routes and Client-Side Rendering (CSR) for interactive application views. It is not a domain — it has no owned business logic; it renders domain state.
+The Web Application is the single user-facing delivery interface for the Syntropy Ecosystem. It is a Next.js application using the App Router, delivering the institutional home (entry, login, signup), the three pillar areas (Learn, Hub, Labs), a shared user area for cross-pillar features (portfolio, search, recommendations, planning, settings), and admin. There is no dedicated "Platform" route or section — the Platform is the technical foundation (backend), not a user-facing pillar (ADR-012). The app uses SSR for public-facing routes and CSR for interactive application views. It is not a domain; it has no owned business logic; it renders domain state.
 
 ---
 
@@ -29,8 +29,8 @@ graph TB
         subgraph labsRoutes [/labs — Labs Pillar]
             LABS_PAGES["Article browser,\nArticle editor,\nPeer review interface"]
         end
-        subgraph platformRoutes [/platform — Cross-Pillar]
-            PLAT_PAGES["Portfolio dashboard,\nSearch, Recommendations,\nPlanning board, Settings"]
+        subgraph dashboardRoutes ["/dashboard — Shared User Area"]
+            DASH_PAGES["Portfolio dashboard,\nSearch, Recommendations,\nPlanning board, Settings"]
         end
         subgraph adminRoutes [/admin — Platform Admin]
             ADMIN_PAGES["User management,\nModerationFlags,\nSchema registry,\nSystem health"]
@@ -42,7 +42,7 @@ graph TB
     LEARN_PAGES --> DESIGN_SYS
     HUB_PAGES --> DESIGN_SYS
     LABS_PAGES --> DESIGN_SYS
-    PLAT_PAGES --> DESIGN_SYS
+    DASH_PAGES --> DESIGN_SYS
 
     AUTH_PROVIDER -->|"IdentityToken in session"| LEARN_PAGES
     AUTH_PROVIDER -->|"IdentityToken in session"| HUB_PAGES
@@ -56,13 +56,15 @@ graph TB
 
 | Route Prefix | Pillar / Function | Rendering Mode | Authentication |
 |-------------|-------------------|----------------|----------------|
-| `/` | Landing page | SSG | Public |
+| `/` | Institutional home (entry, ecosystem, login, signup) | SSG / ISR | Public |
 | `/learn/*` | Learn pillar | SSR + CSR | Required for enrolled content |
 | `/hub/*` | Hub pillar | SSR + CSR | Required for private projects |
 | `/labs/*` | Labs pillar | SSR + CSR | Required for drafts |
-| `/platform/*` | Cross-pillar (portfolio, search) | CSR | Required |
+| `/dashboard/*` | Shared user area (portfolio, search, recommendations, planning, settings) | CSR | Required |
 | `/admin/*` | Platform administration | CSR | PlatformAdmin role required |
 | `/api/*` | BFF (Backend for Frontend) routes | Server | Internal |
+
+There is no `/platform` route. Cross-pillar features are under the shared user area (e.g. `/dashboard` or `/me`), not under a "Platform" pillar (ADR-012).
 
 ### Design System
 

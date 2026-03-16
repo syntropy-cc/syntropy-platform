@@ -2,7 +2,7 @@
 
 > **Document Type**: Diagram Index
 > **Parent**: [System Architecture](../ARCHITECTURE.md)
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-16
 
 This index catalogs all Mermaid diagrams embedded in the architecture documents. Diagrams are grouped by category and reference their source document with the diagram name and type.
 
@@ -12,7 +12,7 @@ This index catalogs all Mermaid diagrams embedded in the architecture documents.
 
 | Diagram Name | Type | Location | Description |
 |-------------|------|----------|-------------|
-| System Context | `graph TB` | [Root Architecture](../ARCHITECTURE.md#system-context-diagram) | All actors, pillar apps, and external systems |
+| System Context | `graph TB` | [Root Architecture](../ARCHITECTURE.md#system-context-diagram) | All actors, single web application (institutional home + Learn, Hub, Labs, dashboard, admin), and external systems |
 
 ---
 
@@ -151,12 +151,13 @@ This index catalogs all Mermaid diagrams embedded in the architecture documents.
 
 | Diagram Name | Type | Location | Description |
 |-------------|------|----------|-------------|
-| Web Application Routing | `graph TB` | [Web Application Architecture](../platform/web-application/ARCHITECTURE.md#high-level-diagram) | Route prefixes, pillar apps, auth provider |
+| Web Application Routing | `graph TB` | [Web Application Architecture](../platform/web-application/ARCHITECTURE.md#high-level-diagram) | Route prefixes: Learn, Hub, Labs, shared user area (/dashboard), admin; auth provider |
 | REST API Gateway | `graph TB` | [REST API Architecture](../platform/rest-api/ARCHITECTURE.md#high-level-diagram) | Middleware layers, domain routing |
 | Background Services Topology | `graph TB` | [Background Services Architecture](../platform/background-services/ARCHITECTURE.md#high-level-diagram) | Kafka topics → consumer workers |
 | Embedded IDE Architecture | `graph TB` | [Embedded IDE Architecture](../platform/embedded-ide/ARCHITECTURE.md#high-level-diagram) | Monaco, session manager, container provisioner |
 | Container Lifecycle | `stateDiagram-v2` | [Embedded IDE Architecture](../platform/embedded-ide/ARCHITECTURE.md#container-lifecycle) | Creating→Active→Suspended→Terminated |
-| Institutional Site Data Flow | `graph TB` | [Institutional Site Architecture](../platform/institutional-site/ARCHITECTURE.md#high-level-diagram) | Read-only data flow from DIP, Platform Core, Labs |
+| Institutional Site Entry Flow | `graph LR` | [Institutional Site Architecture](../platform/institutional-site/ARCHITECTURE.md#entry-flow) | Home → Login/Signup → Application (Learn, Hub, Labs, dashboard) |
+| Institutional Site Data Flow | `graph TB` | [Institutional Site Architecture](../platform/institutional-site/ARCHITECTURE.md#high-level-diagram-data-flow) | Read-only data flow from DIP, Platform Core, Labs |
 
 ---
 
@@ -173,5 +174,5 @@ This index catalogs all Mermaid diagrams embedded in the architecture documents.
 | Hub | 9 |
 | Labs | 9 |
 | Cross-Cutting | 3 |
-| Platform | 7 |
-| **Total** | **68** |
+| Platform | 8 |
+| **Total** | **69** |

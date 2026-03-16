@@ -192,6 +192,12 @@ All cross-domain integrations must be documented with an explicit integration pa
 
 > **AI Instruction**: When creating or modifying cross-domain integrations, identify the pattern and document it in the Context Map section of both affected domain architecture documents. Never let an external model's vocabulary leak into a Core Domain.
 
+### Rule ARCH-013: Platform as Technical Foundation Only
+
+The **Platform** is the technical foundation of the ecosystem: infrastructure, shared services, base code, and integration mechanisms. It must **not** be represented as a user-facing pillar or as a dedicated route or section of the application (e.g. no `/platform` as a peer to `/learn`, `/hub`, `/labs`). The three functional pillars exposed to users are **Learn**, **Hub**, and **Labs** only. Cross-pillar features (portfolio, search, recommendations, planning, settings) are provided via a shared user area (e.g. `/dashboard` or `/me`), not under a route named "platform".
+
+> **AI Instruction**: When documenting or implementing the web application, do not add a "Platform" page or pillar. The domain "Platform Core" owns event bus, portfolio, and search; it is a bounded context, not a product surface. See ADR-012.
+
 ## Decision References
 
 | Rule | Related ADR | Status |
@@ -201,6 +207,7 @@ All cross-domain integrations must be documented with an explicit integration pa
 | ARCH-003 | ADR-002 | Active |
 | ARCH-011 | (create ADR when subdomain classification is established) | Active |
 | ARCH-012 | (create ADR when Context Map is first documented) | Active |
+| ARCH-013 | ADR-012 | Active |
 
 > **Maintenance Note**: Update this table when creating new ADRs that affect architecture rules.
 
@@ -212,5 +219,6 @@ When rules conflict, apply this precedence:
 3. Layer boundary rules (ARCH-001, ARCH-002)
 4. Communication rules (ARCH-003, ARCH-004)
 5. DDD investment rules (ARCH-011, ARCH-012) — govern design quality, not safety or integrity
+6. Platform vs pillars (ARCH-013) — Platform is foundation only, not a user-facing route or section
 
 When uncertain, create a proposal document before proceeding.

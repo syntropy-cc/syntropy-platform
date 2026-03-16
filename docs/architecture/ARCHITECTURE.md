@@ -1,7 +1,7 @@
 # Syntropy Ecosystem — System Architecture
 
 > **Document Type**: Root Architecture Document (Level 1 - Context)
-> **Last Updated**: 2026-03-13
+> **Last Updated**: 2026-03-16
 > **Version**: 1.0.0
 
 ## Generation Metadata
@@ -17,9 +17,11 @@
 
 ## System Purpose
 
-The Syntropy Ecosystem is a unified platform where learning, building, and researching are a single continuous journey rather than three disconnected activities. It addresses the fundamental fragmentation of knowledge work: creators who learn in isolation, researchers whose findings never reach practitioners, and contributors who build without recognition or ownership of what they produce.
+The Syntropy Ecosystem is a unified system where learning, building, and researching are a single continuous journey rather than three disconnected activities. It addresses the fundamental fragmentation of knowledge work: creators who learn in isolation, researchers whose findings never reach practitioners, and contributors who build without recognition or ownership of what they produce.
 
-The platform is composed of three pillars — **Syntropy Learn** (project-first education where every fragment builds a real artifact), **Syntropy Hub** (digital institution creation, collaboration, and open source project management with verifiable governance), and **Syntropy Labs** (open, decentralized scientific research with transparent peer review and cryptographic artifact identity) — unified by a shared foundation layer (**Syntropy Platform**) that provides authentication, a verifiable dynamic portfolio, an event bus, gamification, an embedded IDE, AI agents, cross-pillar search and recommendation, and the Digital Institutions Protocol.
+The **three functional pillars** exposed to users are **Syntropy Learn** (project-first education where every fragment builds a real artifact), **Syntropy Hub** (digital institution creation, collaboration, and open source project management with verifiable governance), and **Syntropy Labs** (open, decentralized scientific research with transparent peer review and cryptographic artifact identity). The **Platform** is the technical foundation — not a user-facing pillar. It comprises infrastructure, shared services (authentication, verifiable dynamic portfolio, event bus, gamification, embedded IDE, AI agents, cross-pillar search and recommendation), base code, and the Digital Institutions Protocol. The Platform exists in the backend to serve the three pillars; it is never represented as a page or section of the application (see ADR-012).
+
+Users enter the system via the **institutional site** (GitHub-style home): it presents the ecosystem, explains the pillars, provides institutional content (e.g. contribution, portfolio, community), and offers login, signup, and access to the application. After authentication, users reach the application areas (Learn, Hub, Labs) within a single web application.
 
 Every action in the ecosystem leaves a verifiable trace. A user's portfolio builds itself from what the ecosystem recorded — not from self-reporting. Creators own their artifacts cryptographically. Institutions exist as complete entities with governance contracts, decision histories, contributor structures, and value distribution mechanisms — all in one place, all verifiable, all executable without depending on external legal infrastructure.
 
@@ -115,7 +117,7 @@ docs/architecture/ARCHITECTURE.md   ← You are here (root)
 │   ├── rest-api/ARCHITECTURE.md              → API gateway, versioning, envelope format, rate limiting
 │   ├── background-services/ARCHITECTURE.md   → Event bus topology, workers, pipelines
 │   ├── embedded-ide/ARCHITECTURE.md          → Monaco embedding, container lifecycle, resource quotas
-│   └── institutional-site/ARCHITECTURE.md    → Public read layer over Platform Core + DIP entities
+│   └── institutional-site/ARCHITECTURE.md    → Main entry (GitHub-style); ecosystem, pillars, login, app access
 │
 ├── diagrams/
 │   └── README.md                             → Index of all diagrams across architecture documents
@@ -138,11 +140,17 @@ graph TB
         PLAT_ADMIN["Platform Admin\n(moderation, platform policies)"]
     end
 
-    subgraph syntropy [Syntropy Platform Boundary]
-        LEARN_APP["Syntropy Learn\n(apps/learn)"]
-        HUB_APP["Syntropy Hub\n(apps/hub)"]
-        LABS_APP["Syntropy Labs\n(apps/labs)"]
-        PLATFORM_PKG["Syntropy Platform\n(packages/platform-core, packages/dip, ...)"]
+    subgraph webApp [Single Web Application]
+        INST_HOME["Institutional Home\n(entry: ecosystem, login, signup)"]
+        LEARN_APP["Learn\n(/learn)"]
+        HUB_APP["Hub\n(/hub)"]
+        LABS_APP["Labs\n(/labs)"]
+        DASH_APP["Shared User Area\n(/dashboard — portfolio, search, settings)"]
+        ADMIN_APP["Admin\n(/admin)"]
+    end
+
+    subgraph foundation [Platform — Technical Foundation]
+        PLATFORM_PKG["packages/platform-core, packages/dip,\nREST API, event bus, IDE, etc."]
     end
 
     subgraph external [External Systems]
@@ -154,17 +162,22 @@ graph TB
         DOCKER_K8S["Docker / Kubernetes\n(Container orchestration for IDE)"]
     end
 
+    LEARNER --> INST_HOME
     LEARNER --> LEARN_APP
+    CREATOR --> INST_HOME
     CREATOR --> LEARN_APP
     CREATOR --> HUB_APP
+    RESEARCHER --> INST_HOME
     RESEARCHER --> LABS_APP
     RESEARCHER --> HUB_APP
     INST_ADMIN --> HUB_APP
-    PLAT_ADMIN --> PLATFORM_PKG
+    PLAT_ADMIN --> ADMIN_APP
 
     LEARN_APP --> PLATFORM_PKG
     HUB_APP --> PLATFORM_PKG
     LABS_APP --> PLATFORM_PKG
+    DASH_APP --> PLATFORM_PKG
+    ADMIN_APP --> PLATFORM_PKG
 
     PLATFORM_PKG --> SUPABASE
     PLATFORM_PKG --> NOSTR
@@ -195,7 +208,9 @@ The system is organized into 12 bounded contexts. Each domain owns its data and 
 | **IDE** | Supporting | Embedded code editor, container lifecycle per session, artifact publish bridge to DIP | [→ Architecture](./domains/ide/ARCHITECTURE.md) |
 | **Governance & Moderation** | Supporting | Platform-level content moderation policies, role policy management, community governance | [→ Architecture](./domains/governance-moderation/ARCHITECTURE.md) |
 
-> **Note on Institutional Site**: The Institutional Site is NOT a domain. It has no owned business data or domain logic. It is a platform delivery document (`platform/institutional-site/`) serving as a public-facing read layer over Platform Core metrics and public DIP entities.
+> **Note on Platform vs pillars**: "Platform" is the technical foundation (infrastructure, shared services, integration). It is **not** a user-facing pillar. The three functional pillars exposed to users are Learn, Hub, and Labs only (ADR-012). The domain "Platform Core" owns event bus, portfolio, and search; it is a bounded context, not a product surface.
+
+> **Note on Institutional Site**: The Institutional Site is NOT a domain. It is the **main entry point** of the system (GitHub-style): it presents the ecosystem, explains the three pillars, provides institutional content (e.g. contribution, portfolio, community), and offers login, signup, and access to the application. It is the public face of the single web application (`platform/institutional-site/`). It has no owned business data; it reads from Platform Core and DIP for public metrics and entity pages.
 
 ---
 
@@ -327,12 +342,13 @@ The system follows a **4-layer clean architecture** within a **Turborepo + pnpm 
 
 ```mermaid
 graph TB
-    subgraph presentation [Presentation Layer — apps/]
-        LEARN_APP2["apps/learn\n(Next.js — /learn routes)"]
-        HUB_APP2["apps/hub\n(Next.js — /hub routes)"]
-        LABS_APP2["apps/labs\n(Next.js — /labs routes)"]
-        ADMIN_APP["apps/admin\n(/admin protected routes)"]
-        INST_SITE2["apps/institutional-site\n(SSG/ISR public site)"]
+    subgraph presentation [Presentation Layer — single web application]
+        INST_SITE2["Institutional home\n(entry, login, signup — SSG/ISR)"]
+        LEARN_APP2["Learn\n(/learn)"]
+        HUB_APP2["Hub\n(/hub)"]
+        LABS_APP2["Labs\n(/labs)"]
+        DASH_APP2["Shared user area\n(/dashboard — portfolio, search, settings)"]
+        ADMIN_APP2["Admin\n(/admin protected routes)"]
     end
 
     subgraph application [Application Layer — packages/*/application/]
@@ -369,15 +385,15 @@ graph TB
 
 ## Platform Services
 
-Shared infrastructure and platform capabilities that all domains depend on.
+Shared infrastructure and platform capabilities that all domains depend on. These are technical foundation services; they are not user-facing pillars (ADR-012).
 
 | Service | Purpose | Documentation |
 |---------|---------|---------------|
-| **Web Application** | Next.js SPA/SSR frontend, routing, design system, WCAG 2.1 AA | [→ Architecture](./platform/web-application/ARCHITECTURE.md) |
+| **Web Application** | Single Next.js app: institutional home (entry), Learn, Hub, Labs, shared user area (/dashboard), admin; design system, WCAG 2.1 AA | [→ Architecture](./platform/web-application/ARCHITECTURE.md) |
 | **REST API** | API gateway, versioning strategy, cross-pillar endpoints, error envelope | [→ Architecture](./platform/rest-api/ARCHITECTURE.md) |
 | **Background Services** | Event bus topology, workers, event schema enforcement, pipelines | [→ Architecture](./platform/background-services/ARCHITECTURE.md) |
 | **Embedded IDE** | Monaco/VS Code embedding, container lifecycle, artifact publish flow | [→ Architecture](./platform/embedded-ide/ARCHITECTURE.md) |
-| **Institutional Site** | Public-facing read layer over Platform Core metrics and public DIP entities | [→ Architecture](./platform/institutional-site/ARCHITECTURE.md) |
+| **Institutional Site** | Main entry point of the system (GitHub-style): presents ecosystem and pillars, institutional content, login/signup, access to application | [→ Architecture](./platform/institutional-site/ARCHITECTURE.md) |
 
 ---
 
@@ -492,6 +508,8 @@ The following ADRs govern system-wide choices. All are created in Prompt 01-C.
 | ADR-008 | MyST Markdown + LaTeX adoption for scientific writing | *Pending — created in Prompt 01-C* |
 | ADR-009 | AVU accounting model; prohibition on platform tokens; oracle-based liquidation | *Pending — created in Prompt 01-C* |
 | ADR-010 | Two-level event signing hierarchy; Event Schema Registry as versioned inter-domain contract | *Pending — created in Prompt 01-C* |
+| ADR-011 | ContributionSandbox rename and definition (HackinDimension → ContributionSandbox) | Accepted |
+| ADR-012 | Platform as technical foundation only; institutional site as system home; no "Platform" pillar route | Accepted |
 
 ---
 

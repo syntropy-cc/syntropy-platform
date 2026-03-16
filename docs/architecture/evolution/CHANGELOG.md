@@ -8,6 +8,7 @@ All notable architectural changes to the Syntropy Ecosystem are documented here.
 
 ### Changed
 
+- **Platform and application structure**: Platform is defined as technical foundation only (not a user-facing pillar). Institutional site is the main entry point of the system (GitHub-style). Single web application has no `/platform` route; cross-pillar features are under a shared user area (e.g. `/dashboard`). Three functional pillars exposed to users are Learn, Hub, Labs only. See [ADR-012](../decisions/ADR-012-platform-as-foundation-institutional-home.md). Root ARCHITECTURE.md, platform/web-application, platform/institutional-site, and diagrams index updated; ARCH-013 added to architecture rules.
 - **Hub**: Renamed HackinDimension to **ContributionSandbox** and clarified definition. ContributionSandbox is the mechanism that encapsulates the contribution workflow: isolated instance/container, clone artifact, contributor edits and sees effects, optional pull request (accepted or rejected). Applies to all DIP artifacts; available to every contributor who has access to the artifact (including owners and authorized contributors on private or closed projects). See [ADR-011](../decisions/ADR-011-contribution-sandbox-rename-and-definition.md).
 
 ---

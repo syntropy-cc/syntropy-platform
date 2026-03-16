@@ -72,6 +72,15 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 **Implementation Log (COMP-032.8 — Error boundaries)**  
 2026-03-14: Root `error.tsx` (client) with message and digest/correlation ID; `not-found.tsx` (404); `forbidden/page.tsx` (403); `loading.tsx` skeleton. Tests: error.test.tsx, not-found.test.tsx.
 
+**Implementation Log (COMP-032.9 — Remove /platform route; shared user area)**  
+2026-03-16: Added `apps/platform/src/app/platform/[[...path]]/page.tsx` (optional catch-all) redirecting `/platform` and `/platform/*` to `/dashboard`. Dashboard page extended with placeholder links for portfolio, search, recommendations, planning, settings under `/dashboard/*`. AppShell nav: Home, Learn, Hub, Labs, Dashboard (no "Platform"). `packages/ui` AppLayout default label "Platform" → "Home". Learn, Hub, Labs app layouts: "Platform" → "Home", added "Dashboard" link to `http://localhost:3000/dashboard`. ADR-012 compliant.
+
+**Implementation Log (COMP-032.10 — Institutional site as main entry)**  
+2026-03-16: Replaced `apps/platform/src/app/page.tsx` stub with institutional home: ecosystem headline, three pillars (Learn, Hub, Labs) copy, Log in and Get started CTAs to `/login`, post-auth flow description. Entry flow: `/` → login → `/dashboard`; no separate Platform page.
+
+**Implementation Log (COMP-032.11 — Navigation and IA)**  
+2026-03-16: Audited nav (already updated in 032.9). Root layout metadata: description set to "Institutional home, Learn, Hub, Labs, Dashboard". `packages/ui` AppLayout comment updated to "Home, Learn, Hub, Labs, Dashboard"; no "Platform" section in IA.
+
 ### Item List
 
 #### [COMP-032.1] Auth Provider setup and protected route middleware
@@ -288,7 +297,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Backlog |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | ADR-012 |
 | **Dependencies** | — |
@@ -311,7 +320,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Backlog |
+| **Status** | ✅ Done |
 | **Priority** | High |
 | **Origin** | ADR-012 |
 | **Dependencies** | COMP-036 |
@@ -335,7 +344,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Backlog |
+| **Status** | ✅ Done |
 | **Priority** | Medium |
 | **Origin** | ADR-012 |
 | **Dependencies** | COMP-032.9, COMP-032.10 |
@@ -384,7 +393,7 @@ The Web Application is the single user-facing delivery interface for the Syntrop
 
 - Platform is technical foundation only; no user-facing "Platform" pillar or `/platform` route.
 - Shared user area (e.g. `/dashboard`) for portfolio, search, recommendations, planning, settings.
-- New work items: COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA update).
+- COMP-032.9, COMP-032.10, COMP-032.11 implemented: `/platform` redirect to `/dashboard`; institutional home at `/`; nav = Home, Learn, Hub, Labs, Dashboard; dashboard placeholders for portfolio, search, recommendations, planning, settings.
 
 ---
 

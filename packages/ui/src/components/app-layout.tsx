@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * Global layout with top navigation (Platform, Learn, Hub, Labs).
+ * Global layout with top navigation (Home, Learn, Hub, Labs, Dashboard).
+ * Three pillars + shared user area only; no "Platform" section (ADR-012).
  * Architecture: COMP-032
  */
 
@@ -14,7 +15,7 @@ export interface NavLinkConfig {
 }
 
 const DEFAULT_NAV_LINKS: NavLinkConfig[] = [
-  { href: "/", label: "Platform" },
+  { href: "/", label: "Home" },
   { href: "/learn", label: "Learn" },
   { href: "/hub", label: "Hub" },
   { href: "/labs", label: "Labs" },

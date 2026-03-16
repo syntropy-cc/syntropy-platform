@@ -8,8 +8,9 @@ import { AppShell } from "@/components/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Syntropy Platform",
-  description: "Syntropy Platform — Learn, Hub, Labs",
+  title: "Syntropy",
+  description:
+    "Institutional home, Learn, Hub, Labs, Dashboard — digital institutions with governance and artifact registries.",
 };
 
 export default function RootLayout({

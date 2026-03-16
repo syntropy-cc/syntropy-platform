@@ -6,11 +6,12 @@ import type { Metadata } from "next";
 import { ThemeProvider, AppLayout, ThemeToggle } from "@syntropy/ui";
 
 const HUB_NAV_LINKS = [
-  { href: "http://localhost:3000", label: "Platform" },
+  { href: "http://localhost:3000", label: "Home" },
   { href: "http://localhost:3001", label: "Learn" },
   { href: "/", label: "Hub" },
   { href: "/hub", label: "Discover" },
   { href: "http://localhost:3003", label: "Labs" },
+  { href: "http://localhost:3000/dashboard", label: "Dashboard" },
 ];
 
 export const metadata: Metadata = {

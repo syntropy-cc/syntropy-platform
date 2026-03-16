@@ -9,14 +9,14 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S56 - Observability Completion (M5) — COMPLETE | Next: S57
+CURRENT STAGE : S57 - ADR-012 Platform as Foundation (M5) — COMPLETE
 CURRENT ITEM  : —
 MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 4 / 4 items done (S56)
-OVERALL       : 262 / 265 items done (3 in backlog — ADR-012)
+STAGE PROGRESS: 3 / 3 items done (S57)
+OVERALL       : 265 / 265 items done
 ```
 
-**Next 5 items**: COMP-032.9 (Remove /platform route; shared user area), COMP-032.10 (Institutional site as main entry), COMP-032.11 (Navigation and IA: three pillars + shared user area).
+**Next 5 items**: (none; all work items complete)
 
 **Component records**: [`COMP-032`](./components/COMP-032-web-application.md), [`COMP-036`](./components/COMP-036-institutional-site.md), [`COMP-038`](./components/COMP-038-observability.md), [`COMP-039`](./components/COMP-039-data-integrity.md)
 
@@ -3205,7 +3205,7 @@ Status: Done | **Deps**: COMP-039.3, COMP-009.3
 
 #### [COMP-032.9] Remove /platform route; shared user area (e.g. /dashboard)
 `S57` `High` `M` [Record-](./components/COMP-032-web-application.md)
-Status: Backlog | **Deps**: —
+Status: Done | **Deps**: —
 **Criteria**: No `/platform` route (remove or redirect); portfolio, search, recommendations, planning, settings under shared prefix (e.g. `/dashboard` or `/me`); routing and links updated (ADR-012).
 **Steps**: (1) Remove or redirect `/platform` (2) Ensure shared user area prefix for cross-pillar features (3) Update nav and links
 
@@ -3213,7 +3213,7 @@ Status: Backlog | **Deps**: —
 
 #### [COMP-032.10] Institutional site as main entry (landing, login, signup, app access)
 `S57` `High` `M` [Record-](./components/COMP-032-web-application.md)
-Status: Backlog | **Deps**: COMP-036
+Status: Done | **Deps**: COMP-036
 **Criteria**: Landing/entry is institutional home; login/signup reachable from entry flow; after auth user reaches Learn, Hub, Labs, shared user area; no separate "Platform" page (ADR-012).
 **Steps**: (1) Wire institutional site as entry (e.g. `/` or single app entry) (2) Ensure login/signup and app access flow from it (3) Verify no Platform page
 
@@ -3221,7 +3221,7 @@ Status: Backlog | **Deps**: COMP-036
 
 #### [COMP-032.11] Navigation and IA: three pillars + shared user area; no Platform section
 `S57` `Medium` `S` [Record-](./components/COMP-032-web-application.md)
-Status: Backlog | **Deps**: COMP-032.9, COMP-032.10
+Status: Done | **Deps**: COMP-032.9, COMP-032.10
 **Criteria**: Navigation shows Learn, Hub, Labs, and shared user area only; no "Platform" tab/section/nav item; IA and in-app labels aligned (ADR-012).
 **Steps**: (1) Update nav components to three pillars + shared user area (2) Remove Platform from IA (3) Update labels
 
@@ -3229,24 +3229,27 @@ Status: Backlog | **Deps**: COMP-032.9, COMP-032.10
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-16 | 3 items added for ADR-012 (COMP-032.9–032.11); 262 / 265 complete
+> Last Updated: 2026-03-16 | S57 complete; 265 / 265 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 262 / 265 items (3 backlog) | 265 / 265 | - |
+| **Overall Progress** | 265 / 265 items | 265 / 265 | - |
 | **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S56 complete; next S57 - ADR-012 Platform as Foundation | S57 | - |
+| **Current Stage** | S57 - ADR-012 Platform as Foundation — complete | S57 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent additions** (2026-03-16): 3 work items for ADR-012 — COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA). All in backlog; stage S57.
+**Recent additions** (2026-03-16): 3 work items for ADR-012 — COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA). All done; S57 complete.
 
 ### Recent completions
 
+- 2026-03-16 COMP-032.11 - Navigation and IA: three pillars + shared user area; no Platform section; nav labels and metadata updated
+- 2026-03-16 COMP-032.10 - Institutional home at / (platform app root); login/signup CTAs; three pillars copy
+- 2026-03-16 COMP-032.9 - /platform redirect to /dashboard; dashboard placeholders (portfolio, search, recommendations, planning, settings); nav Home + Dashboard; learn/hub/labs nav updated
 - 2026-03-15 COMP-039.5 - Data retention policy; DataRetentionService, purgeUserData, runRetentionPurge; daily cron job; policy and service tests
 - 2026-03-15 COMP-038.6 - Log aggregation; docker-compose.observability.yml (Loki, Promtail, Grafana); 30-day retention; Promtail correlation_id extraction
 - 2026-03-15 COMP-038.5 - Grafana dashboards (Platform Overview, DIP Activity, AI Agents) and Prometheus alert rules (p99, error rate, DLQ, IDE quota)

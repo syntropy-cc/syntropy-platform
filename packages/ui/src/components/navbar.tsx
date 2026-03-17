@@ -22,7 +22,9 @@ export interface NavbarProps {
   headerRight?: React.ReactNode;
   /** Current path for active state (e.g. from usePathname()). */
   currentPath?: string;
-  /** Logo text. */
+  /** Optional logo (e.g. <Logo src="..." />). When set, rendered inside the logo link. */
+  logo?: React.ReactNode;
+  /** Logo text (fallback when logo not set, or for accessibility). */
   logoText?: string;
   /** Logo href (default /). */
   logoHref?: string;
@@ -33,6 +35,7 @@ export function Navbar({
   navLinks,
   headerRight,
   currentPath = "",
+  logo,
   logoText = "Syntropy",
   logoHref = "/",
   className,
@@ -56,9 +59,10 @@ export function Navbar({
       <nav className="flex flex-1 items-center gap-6" aria-label="Main navigation">
         <a
           href={logoHref}
-          className="text-lg font-semibold text-foreground hover:opacity-90"
+          className="flex items-center gap-2 text-lg font-medium text-foreground hover:opacity-90"
+          aria-label={logoText}
         >
-          {logoText}
+          {logo ?? logoText}
         </a>
         <div className="hidden items-center gap-1 md:flex">
           {navLinks.map(({ href, label }) => (

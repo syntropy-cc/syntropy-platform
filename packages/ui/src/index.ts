@@ -29,6 +29,7 @@ export {
   type NavbarLink,
 } from "./components/navbar";
 export { Footer, type FooterProps, type FooterColumn } from "./components/footer";
+export { Logo, type LogoProps } from "./components/logo";
 export { AppLayout, type AppLayoutProps, type NavLinkConfig } from "./components/app-layout";
 export {
   ThemeProvider,

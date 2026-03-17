@@ -33,6 +33,8 @@ export interface AppLayoutProps {
   currentPath?: string;
   /** Override nav links (institutional landings). */
   navLinks?: NavLinkConfig[];
+  /** Optional logo for landing Navbar (e.g. <Logo src="..." />). */
+  logo?: React.ReactNode;
   /** Optional slot for header right (e.g. ThemeToggle, UserMenu). */
   headerRight?: React.ReactNode;
 }
@@ -44,6 +46,7 @@ export function AppLayout({
   footer,
   currentPath = "",
   navLinks = DEFAULT_NAV_LINKS,
+  logo,
   headerRight,
 }: AppLayoutProps) {
   const isLanding = variant === "landing";
@@ -58,6 +61,7 @@ export function AppLayout({
       {isLanding ? (
         <Navbar
           navLinks={navLinks}
+          logo={logo}
           headerRight={headerRight}
           currentPath={currentPath}
         />

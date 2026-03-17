@@ -9,6 +9,7 @@ export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, type SheetProps, type SheetContentProps, type SheetTriggerProps, } from "./components/sheet";
 export { Navbar, type NavbarProps, type NavbarLink, } from "./components/navbar";
 export { Footer, type FooterProps, type FooterColumn } from "./components/footer";
+export { Logo, type LogoProps } from "./components/logo";
 export { AppLayout, type AppLayoutProps, type NavLinkConfig } from "./components/app-layout";
 export { ThemeProvider, useTheme, type Theme, } from "./components/theme-provider";
 export { MonacoEditor, type MonacoEditorProps, type MonacoLanguage, } from "./components/monaco-editor";

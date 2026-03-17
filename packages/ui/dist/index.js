@@ -9,6 +9,7 @@ export { ThemeToggle } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, } from "./components/sheet";
 export { Navbar, } from "./components/navbar";
 export { Footer } from "./components/footer";
+export { Logo } from "./components/logo";
 export { AppLayout } from "./components/app-layout";
 export { ThemeProvider, useTheme, } from "./components/theme-provider";
 export { MonacoEditor, } from "./components/monaco-editor";

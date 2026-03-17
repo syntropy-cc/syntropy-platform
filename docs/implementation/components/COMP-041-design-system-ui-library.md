@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 13 |
+| ✅ Done | 18 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 7 |
+| ⬜ Ready/Backlog | 2 |
 | **Total** | **20** |
 
-**Component Coverage**: 65% (13/20 items complete)
+**Component Coverage**: 90% (18/20 items complete)
 
 ### Item List
 
@@ -415,7 +415,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -441,7 +441,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -463,7 +463,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -485,7 +485,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | M |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -509,7 +509,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -685,6 +685,14 @@ Components that require complex interaction (Select, Dialog, DropdownMenu, Toolt
 ---
 
 ## Implementation Log
+
+### 2026-03-17 — COMP-041.14–041.18 implemented
+
+- **COMP-041.14 (Toast)**: Sonner wrapper in `toast.tsx`; Toaster with position bottom-right, duration 5s; toastOptions classNames use DS tokens (bg-surface, border-border, rounded-lg, shadow-md, z-toast); toast.success/error/warning/info re-exported; `toast.test.tsx` added.
+- **COMP-041.15 (DropdownMenu + Breadcrumb)**: `dropdown-menu.tsx` on Radix DropdownMenu (Content bg-surface-raised, Item h-9, hover bg-hover, Separator bg-border); `breadcrumb.tsx` custom (BreadcrumbItem isCurrent → span aria-current + text-primary, href → a text-link; BreadcrumbSeparator chevron). Both exported with tests.
+- **COMP-041.16 (StatCard + EmptyState)**: StatCard bg-surface-sunken, label caption/secondary, value text-h3/primary, optional trend success color; EmptyState max-w 400px, title h3, description body/secondary, optional action/illustration. Exported with tests.
+- **COMP-041.17 (TabBar + PageHeader + EntityHeader)**: TabBar on Radix Tabs (TabList h-11, TabTrigger active border action-primary; TabContent); PageHeader h1 + description + action (flex responsive); EntityHeader name + Badge + stats row + action, bg-surface border-b. Exported with tests.
+- **COMP-041.18 (ListRow)**: list-row.tsx with status dot (success/neutral/error), title, metadata, optional idLabel/leading/trailing/href; min-h 44 max-h 56, py space-3 px space-4, hover bg-hover, selected bg-selected. Exported with tests.
 
 ### 2026-03-17 — COMP-041.6, COMP-041.7 implemented
 

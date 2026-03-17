@@ -94,6 +94,7 @@ const config: Config = {
       zIndex: {
         overlay: "var(--z-overlay)",
         modal: "var(--z-modal)",
+        toast: "var(--z-toast)",
       },
       keyframes: {
         "skeleton-shimmer": {

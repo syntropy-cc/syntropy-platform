@@ -10,21 +10,18 @@
 
 ```
 CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — IN PROGRESS
-CURRENT ITEM  : COMP-041.14 - Create Toast
+CURRENT ITEM  : COMP-041.19 - Migrate consuming apps to new component API
 MILESTONE     : M6 - Design System Compliance (packages/ui)
-STAGE PROGRESS: 13 / 20 items done (S58)
-OVERALL       : 278 / 285 items done
+STAGE PROGRESS: 18 / 20 items done (S58)
+OVERALL       : 283 / 285 items done
 ```
 
 **Next 5 items**:
-1. `COMP-041.14` — Create Toast — Medium, S
-2. `COMP-041.15` — Create DropdownMenu + Breadcrumb — Medium, S
-3. `COMP-041.16` — Create StatCard + EmptyState — Medium, S
-4. `COMP-041.17` — Create TabBar + PageHeader + EntityHeader — Medium, M
-5. `COMP-041.18` — Create ListRow — Medium, S
+1. `COMP-041.19` — Migrate consuming apps to new component API — High, M
+2. `COMP-041.20` — Unit tests for all new and refactored components — Medium, L
 
-**Current item (COMP-041.14) acceptance criteria**: Sonner-based, 5 variants, bottom-right/center positioning, DS token styles, `<Toaster>` provider, `aria-live`.
-**Suggested steps**: (1) Install/configure Sonner (2) Create token-based toast styles (3) Export `<Toaster>` and toast utilities
+**Current item (COMP-041.19) acceptance criteria**: No deprecated variant names anywhere in `apps/`; no inline Tailwind button-style anchors; all four apps build successfully.
+**Suggested steps**: (1) Run find-replace for Card variants (2) Run find-replace for Badge variants (3) Run find-replace for Button variants (4) Replace inline button-style anchors (5) Verify builds
 **Architecture refs**: COMP-041 record, COMPONENT-LIBRARY.md, DESIGN-TOKENS.md
 
 **Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
@@ -3405,7 +3402,7 @@ Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.14] Create Toast
 `S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Sonner-based, 5 variants, bottom-right/center positioning, DS token styles, `<Toaster>` provider, `aria-live`.
 **Steps**: (1) Install/configure Sonner (2) Create token-based toast styles (3) Export `<Toaster>` and toast utilities
 
@@ -3413,7 +3410,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.15] Create DropdownMenu + Breadcrumb
 `S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: DropdownMenu Radix, `--bg-surface-raised`, keyboard nav; Breadcrumb `--text-link` parents, `--text-primary` current.
 **Steps**: (1) Create `dropdown-menu.tsx` (2) Create `breadcrumb.tsx` (3) Export
 
@@ -3421,7 +3418,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.16] Create StatCard + EmptyState
 `S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: StatCard `--bg-surface-sunken` + label caption + value h3; EmptyState max-width 400px, title + description + optional action.
 **Steps**: (1) Create `stat-card.tsx` (2) Create `empty-state.tsx` (3) Export
 
@@ -3429,7 +3426,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.17] Create TabBar + PageHeader + EntityHeader
 `S58` `Medium` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: TabBar Radix Tabs, arrow key nav, 44px, active teal border; PageHeader h1 + description + action; EntityHeader name + type badge + stats + action.
 **Steps**: (1) Create `tab-bar.tsx` (2) Create `page-header.tsx` (3) Create `entity-header.tsx` (4) Export
 
@@ -3437,7 +3434,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.18] Create ListRow
 `S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: 44–56px height, status dot + title + metadata, hover `--bg-hover`, selected `--bg-selected`, mobile wrapping.
 **Steps**: (1) Create `list-row.tsx` (2) Export
 
@@ -3461,21 +3458,21 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-17 | S58 COMP-041.13 done; 278 / 285 items done
+> Last Updated: 2026-03-17 | S58 COMP-041.14–041.18 done; 283 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 278 / 285 items | 285 / 285 | - |
+| **Overall Progress** | 283 / 285 items | 285 / 285 | - |
 | **Current Milestone** | M6 - Design System Compliance | M6 | - |
-| **Current Stage** | S58 - Design System UI Library Compliance — 13/20 done | S58 | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — 18/20 done | S58 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent completions** (2026-03-17): COMP-041.13 (Dialog), COMP-041.12 (Tooltip + FormField), COMP-041.9 (Checkbox + Switch), COMP-041.10 (Avatar + PillarBadge), COMP-041.11 (Skeleton + ProgressBar). S58 at 13/20.
+**Recent completions** (2026-03-17): COMP-041.14 (Toast), COMP-041.15 (DropdownMenu + Breadcrumb), COMP-041.16 (StatCard + EmptyState), COMP-041.17 (TabBar + PageHeader + EntityHeader), COMP-041.18 (ListRow). S58 at 18/20.
 
 **Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests.
 
@@ -3483,6 +3480,11 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ### Recent completions
 
+- 2026-03-17 COMP-041.18 - Create ListRow (44–56px; status dot; hover/selected; exported; tests)
+- 2026-03-17 COMP-041.17 - TabBar + PageHeader + EntityHeader (Radix Tabs; h1 + action; entity name + badge + stats; exported; tests)
+- 2026-03-17 COMP-041.16 - StatCard + EmptyState (surface-sunken; max-w 400px; exported; tests)
+- 2026-03-17 COMP-041.15 - DropdownMenu + Breadcrumb (Radix DM; surface-raised; breadcrumb link/current; exported; tests)
+- 2026-03-17 COMP-041.14 - Create Toast (Sonner; 5 variants; DS tokens; Toaster + toast API; exported; tests)
 - 2026-03-17 COMP-041.13 - Create Dialog (Radix Dialog; sm/md/lg; --bg-overlay; 200ms/150ms; mobile sheet; focus trap; exported; tests)
 - 2026-03-17 COMP-041.12 - Tooltip + FormField (Radix tooltip 300ms/Escape/aria-describedby; FormField label/helper/error + aria linkage; exported; tests)
 - 2026-03-17 COMP-041.11 - Skeleton + ProgressBar (shimmer + reduced-motion; progressbar ARIA; exported; tests)

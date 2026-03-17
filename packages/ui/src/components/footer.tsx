@@ -61,7 +61,7 @@ export function Footer({
   return (
     <footer
       className={cn(
-        "border-t border-border bg-muted/50 text-muted-foreground",
+        "border-t border-border bg-surface-sunken text-muted-foreground",
         className
       )}
       role="contentinfo"
@@ -81,7 +81,7 @@ export function Footer({
           )}
           {columns.map((col) => (
             <div key={col.title}>
-              <h3 className="text-sm font-medium text-foreground">
+              <h3 className="text-sm font-medium text-[var(--text-label)]">
                 {col.title}
               </h3>
               <ul className="mt-3 space-y-2">
@@ -89,7 +89,7 @@ export function Footer({
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      className="text-sm hover:text-foreground transition-colors"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {link.label}
                     </a>
@@ -99,7 +99,7 @@ export function Footer({
             </div>
           ))}
         </div>
-        <p className="mt-10 border-t border-border pt-6 text-center text-sm">
+        <p className="mt-10 border-t border-border pt-6 text-center text-sm text-[var(--text-caption)] text-[var(--text-tertiary)]">
           {copyright}
         </p>
       </div>

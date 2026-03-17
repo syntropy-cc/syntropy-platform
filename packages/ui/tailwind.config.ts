@@ -30,6 +30,7 @@ const config: Config = {
         /* Semantic surfaces */
         background: "var(--bg-page)",
         surface: "var(--bg-surface)",
+        overlay: "var(--bg-overlay)",
         "surface-raised": "var(--bg-surface-raised)",
         "surface-sunken": "var(--bg-surface-sunken)",
         /* Semantic text */
@@ -88,6 +89,11 @@ const config: Config = {
       boxShadow: {
         focus: "var(--focus-ring)",
         "focus-error": "var(--focus-ring-error)",
+        lg: "var(--shadow-lg)",
+      },
+      zIndex: {
+        overlay: "var(--z-overlay)",
+        modal: "var(--z-modal)",
       },
     },
   },

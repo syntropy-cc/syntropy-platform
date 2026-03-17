@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 5 |
+| ✅ Done | 7 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 15 |
+| ⬜ Ready/Backlog | 13 |
 | **Total** | **20** |
 
-**Component Coverage**: 25% (5/20 items complete)
+**Component Coverage**: 35% (7/20 items complete)
 
 ### Item List
 
@@ -206,7 +206,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | High |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -232,7 +232,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | High |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -672,10 +672,15 @@ Components that require complex interaction (Select, Dialog, DropdownMenu, Toolt
 
 ## Implementation Log
 
+### 2026-03-17 — COMP-041.6, COMP-041.7 implemented
+
+- **COMP-041.6 (Sheet)**: Backdrop uses `bg-overlay` (Tailwind color overlay → `--bg-overlay`); panel uses `bg-surface`, `border-border`, `shadow-lg` (extended in tailwind.config: boxShadow.lg, zIndex.overlay/modal). Width 300px. Internal `isExiting` state keeps Sheet mounted for 150ms on close so exit animation runs; `visible = open || isExiting` drives escape/body lock. Animation classes (sheet-backdrop, sheet-panel) and 200ms enter / 150ms exit in `tokens.css` with `@media (prefers-reduced-motion: reduce)` zeroing duration.
+- **COMP-041.7 (Navbar, Footer, AppLayout)**: Navbar: removed glass vars; `bg-surface border-border`; active link `border-b-2 border-primary text-foreground`; inactive `text-muted-foreground hover:bg-accent hover:text-foreground`; Sheet links and mobile trigger same tokens. Footer: `bg-surface-sunken`; column titles `text-[var(--text-label)]`; links `text-muted-foreground hover:text-foreground`; copyright `text-[var(--text-caption)] text-[var(--text-tertiary)]`. AppLayout: comment updated (no "glass"); default header links `text-muted-foreground hover:text-foreground`. API unchanged.
+
 ### 2026-03-17 — COMP-041.1–041.5 implemented
 
 - **COMP-041.1**: Created `packages/ui/src/styles/tokens.css` with primitive (color scales), semantic (text, surfaces, borders, actions, focus), pillar defaults, typography, spacing, radius, shadow, z-index, motion; shadcn bridge (§7.2); dark mode overrides. Replaced `theme.css` with `@import './styles/tokens.css'`. No glass/gradient vars.
-- **COMP-041.2**: Extended `tailwind.config.ts` with full Section 7.1: primary 50–900 + DEFAULT + foreground, pillar, surfaces, foreground/muted-foreground, success/error/warning/info (50/500/700), border/border-strong, borderRadius sm–full, boxShadow focus/focus-error.
+- **COMP-041.2**: Extended `tailwind.config.ts` with full Section 7.1: primary 50–900 + DEFAULT + foreground, pillar, surfaces, overlay, foreground/muted-foreground, success/error/warning/info (50/500/700), border/border-strong, borderRadius sm–full, boxShadow focus/focus-error/lg, zIndex overlay/modal.
 - **COMP-041.3**: Button refactored to variants primary (default), secondary, ghost, destructive, link, icon-only; sizes sm (32px), md (40px), lg (48px), icon; `loading` prop with Loader2 spinner and aria-busy; focus ring `var(--focus-ring)`; active scale 0.98. Tests updated (8 tests).
 - **COMP-041.4**: Card refactored to variants default, elevated, interactive, sunken; removed glass, pillar, pillarHeader; CardTitle font-medium (500); hover lift only on interactive.
 - **COMP-041.5**: Badge refactored to 7 variants (default, primary, success, error, warning, info, pillar); token-based classes; 11px/500, py-[3px] px-[10px], rounded-full; removed learn/hub/labs/contribute/portfolio and size prop.

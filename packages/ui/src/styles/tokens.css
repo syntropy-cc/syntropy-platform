@@ -262,6 +262,30 @@
 }
 
 /* ==========================================================================
+   Sheet animation (COMP-041.6) — 200ms enter, 150ms exit, respects reduced motion
+   ========================================================================== */
+.sheet-backdrop {
+  transition: opacity var(--duration-normal) var(--ease-default);
+}
+.sheet-backdrop[data-exiting] {
+  transition-duration: var(--duration-fast);
+}
+.sheet-panel {
+  transition: transform var(--duration-normal) var(--ease-default),
+    opacity var(--duration-normal) var(--ease-default);
+}
+.sheet-panel[data-exiting] {
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-exit);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-backdrop,
+  .sheet-panel {
+    transition-duration: 0ms !important;
+  }
+}
+
+/* ==========================================================================
    Dark mode overrides (DESIGN-TOKENS §2)
    ========================================================================== */
 

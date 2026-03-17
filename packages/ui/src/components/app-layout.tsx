@@ -25,7 +25,7 @@ const DEFAULT_NAV_LINKS: NavLinkConfig[] = [
 export interface AppLayoutProps {
   children: React.ReactNode;
   className?: string;
-  /** "default" = simple header; "landing" = Navbar (glass) + optional Footer. */
+  /** "default" = simple header; "landing" = Navbar + optional Footer. */
   variant?: "default" | "landing";
   /** Rendered below main when set (e.g. <Footer />). */
   footer?: React.ReactNode;
@@ -78,7 +78,7 @@ export function AppLayout({
               <a
                 key={href}
                 href={href}
-                className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 {label}
               </a>

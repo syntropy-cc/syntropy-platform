@@ -3,9 +3,11 @@
 /**
  * Sheet — overlay + side panel for mobile menu.
  * COMPONENT-LIBRARY: Sheet
+ * COMP-041.6: Backdrop --bg-overlay; panel --bg-surface, --shadow-lg; z-index tokens;
+ * 200ms slide+fade enter, 150ms exit; prefers-reduced-motion respected; 300px width.
  */
 
-import { type ReactNode, useEffect, useCallback } from "react";
+import { type ReactNode, useEffect, useCallback, useState } from "react";
 import { cn } from "../lib/utils";
 
 export interface SheetProps {
@@ -16,14 +18,19 @@ export interface SheetProps {
 }
 
 export function Sheet({ open, onClose, children, className }: SheetProps) {
+  const [isExiting, setIsExiting] = useState(false);
+
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     },
     [onClose]
   );
+
+  const visible = open || isExiting;
+
   useEffect(() => {
-    if (open) {
+    if (visible) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
     }
@@ -31,25 +38,61 @@ export function Sheet({ open, onClose, children, className }: SheetProps) {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
     };
-  }, [open, handleEscape]);
+  }, [visible, handleEscape]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (open) {
+      setIsExiting(false);
+    } else {
+      setIsExiting(true);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      setIsExiting(true);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!isExiting) return;
+    const t = setTimeout(() => setIsExiting(false), 150);
+    return () => clearTimeout(t);
+  }, [isExiting]);
+
+  if (!visible) return null;
+
+  const state = open && !isExiting ? "open" : "closed";
 
   return (
-    <div className={cn("fixed inset-0 z-50", className)}>
-        <div
-          className="fixed inset-0 bg-black/50"
-          aria-hidden
-          onClick={onClose}
-        />
-        <div
-          className="fixed right-0 top-0 h-full w-80 max-w-[85vw] border-l border-border bg-background shadow-lg"
-          role="dialog"
-          aria-modal="true"
-        >
-          {children}
-        </div>
+    <div
+      className={cn("fixed inset-0 z-overlay", className)}
+      data-state={state}
+      data-exiting={isExiting ? "" : undefined}
+    >
+      <div
+        className={cn(
+          "sheet-backdrop fixed inset-0 bg-overlay",
+          state === "open" ? "opacity-100" : "opacity-0"
+        )}
+        aria-hidden
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          "sheet-panel fixed right-0 top-0 z-modal h-full w-[300px] max-w-[85vw] border-l border-border bg-surface shadow-lg",
+          state === "open"
+            ? "translate-x-0 opacity-100"
+            : "translate-x-full opacity-0"
+        )}
+        role="dialog"
+        aria-modal="true"
+        data-state={state}
+        data-exiting={isExiting ? "" : undefined}
+      >
+        {children}
       </div>
+    </div>
   );
 }
 

@@ -50,8 +50,7 @@ export function Navbar({
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 flex h-14 items-center gap-4 border-b px-4",
-        "bg-[var(--glass-bg)] backdrop-blur-[var(--glass-blur)] border-[var(--glass-border)]",
+        "sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border bg-surface px-4",
         className
       )}
       role="banner"
@@ -72,8 +71,8 @@ export function Navbar({
               className={cn(
                 "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive(href)
-                  ? "bg-primary/15 text-primary shadow-[var(--shadow-nav-active)]"
-                  : "text-foreground/80 hover:bg-white/5 hover:text-foreground"
+                  ? "border-b-2 border-primary text-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
             >
               {label}
@@ -85,7 +84,7 @@ export function Navbar({
         {headerRight}
         <SheetTrigger
           onClick={() => setMobileOpen(true)}
-          className="md:hidden rounded-md p-2 text-foreground hover:bg-white/5"
+          className="md:hidden rounded-md p-2 text-foreground hover:bg-accent"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />
@@ -102,8 +101,8 @@ export function Navbar({
                 className={cn(
                   "flex items-center rounded-lg px-3 py-3 text-sm font-medium transition-colors",
                   isActive(href)
-                    ? "bg-primary/15 text-primary"
-                    : "text-foreground/80 hover:bg-muted"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
               >
                 {label}

@@ -18,6 +18,8 @@ export { Sheet, SheetContent, SheetTrigger, type SheetProps, type SheetContentPr
 export { Navbar, type NavbarProps, type NavbarLink, } from "./components/navbar";
 export { Footer, type FooterProps, type FooterColumn } from "./components/footer";
 export { Skeleton, type SkeletonProps } from "./components/skeleton";
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, tooltipDelayDuration, type TooltipProviderProps, type TooltipContentProps, } from "./components/tooltip";
+export { FormField, type FormFieldProps } from "./components/form-field";
 export { Logo, type LogoProps } from "./components/logo";
 export { AppLayout, type AppLayoutProps, type NavLinkConfig } from "./components/app-layout";
 export { ThemeProvider, useTheme, type Theme, } from "./components/theme-provider";

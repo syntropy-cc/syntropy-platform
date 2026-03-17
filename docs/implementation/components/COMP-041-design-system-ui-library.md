@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 11 |
+| ✅ Done | 12 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 9 |
+| ⬜ Ready/Backlog | 8 |
 | **Total** | **20** |
 
-**Component Coverage**: 55% (11/20 items complete)
+**Component Coverage**: 60% (12/20 items complete)
 
 ### Item List
 
@@ -362,7 +362,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | M |
 | **Priority** | High |
 | **Dependencies** | COMP-041.8, COMP-041.1, COMP-041.2 |
@@ -370,14 +370,17 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 **Description**: Implement Tooltip and FormField as per `COMPONENT-LIBRARY.md`. FormField is the standard wrapper for all form inputs.
 
 **Acceptance Criteria**:
-- [ ] **Tooltip**: `--radius-md`; `--shadow-md`; `--text-caption` (11px); padding `--space-1.5 --space-2`; dark bg in light mode / light bg in dark mode; 300ms delay on hover; dismiss on Escape; `role="tooltip"`; `aria-describedby` on trigger
-- [ ] **FormField**: renders Label (500 weight, `--text-label`, 13px) → optional helper text (`--text-caption`, `--text-secondary`) → input slot → optional error message (`--text-caption`, `--color-error-500`, error icon from Lucide); required fields show " *" asterisk in `--color-error-500`; label `htmlFor` links to input `id`; error text has `id` referenced by input `aria-describedby`
-- [ ] FormField wraps Input, Textarea, Select, Checkbox (via `asChild` or children pattern)
-- [ ] Both exported from `packages/ui/src/index.ts`
+- [x] **Tooltip**: `--radius-md`; `--shadow-md`; `--text-caption` (11px); padding `--space-1.5 --space-2`; dark bg in light mode / light bg in dark mode; 300ms delay on hover; dismiss on Escape; `role="tooltip"`; `aria-describedby` on trigger
+- [x] **FormField**: renders Label (500 weight, `--text-label`, 13px) → optional helper text (`--text-caption`, `--text-secondary`) → input slot → optional error message (`--text-caption`, `--color-error-500`, error icon from Lucide); required fields show " *" asterisk in `--color-error-500`; label `htmlFor` links to input `id`; error text has `id` referenced by input `aria-describedby`
+- [x] FormField wraps Input, Textarea, Select, Checkbox (via children slot; clones single child to inject id, aria-describedby, aria-invalid, required)
+- [x] Both exported from `packages/ui/src/index.ts`
 
-**Files to Create**:
-- `packages/ui/src/components/tooltip.tsx`
-- `packages/ui/src/components/form-field.tsx`
+**Files Created**:
+- `packages/ui/src/components/tooltip.tsx` — Radix Tooltip (TooltipProvider with delayDuration 300, Tooltip, TooltipTrigger, TooltipContent); token styling; optional Arrow
+- `packages/ui/src/components/form-field.tsx` — Label, optional helper, children slot (cloned with id/aria-describedby/aria-invalid/required), optional error with AlertCircle icon
+- `packages/ui/src/components/tooltip.test.tsx`, `form-field.test.tsx`
+
+**Implementation notes**: Added `@radix-ui/react-tooltip`. Tooltip content is portaled (tests use screen for content queries). FormField uses useId() for stable ids when id prop omitted.
 
 ---
 

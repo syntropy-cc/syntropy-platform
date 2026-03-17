@@ -1,0 +1,508 @@
+# Frontend Coding Rules
+
+## Purpose
+
+This file defines the coding standards for implementing frontend code that is consistent with the design system. These rules govern **how** design tokens, components, and patterns are expressed in code. They complement the design system documentation rules (`design-system.mdc`) by specifying the code-level requirements.
+
+These rules apply to all web frontend code, regardless of the framework (React, Next.js, Vue, etc.). Framework-specific notes are provided where relevant.
+
+> **AI Instruction**: Apply these rules to ALL frontend code you write. When reviewing existing frontend code, note violations and fix them when the file is in scope. Before writing any frontend code, read `docs/design-system/LLM-QUICKREF.md` as your primary reference.
+
+---
+
+## Token Usage in Code
+
+### Rule FE-001: No Hardcoded Visual Values
+
+Never hardcode visual values in frontend code. All colors, typography, spacing, border radii, shadows, and motion values must reference design system tokens.
+
+```tsx
+// CORRECT: Uses design system tokens
+<div className="text-body text-text-primary bg-surface border border-border-default p-4 rounded-md">
+  Content
+</div>
+
+// CORRECT: CSS variable reference
+const styles = {
+  color: 'var(--text-primary)',
+  padding: 'var(--space-4)',
+  borderRadius: 'var(--radius-md)',
+};
+
+// INCORRECT: Hardcoded values
+<div style={{ color: '#1A1A2E', padding: '16px', fontSize: '14px' }}>
+  Content
+</div>
+
+// INCORRECT: Magic numbers
+<div className="p-[13px] text-[15px] rounded-[6px]">
+  Content
+</div>
+```
+
+**Prohibited in any frontend file**:
+- Hex color codes (`#RRGGBB`, `#RGB`)
+- RGB/HSL color functions (`rgb()`, `hsl()`) unless referencing CSS variables internally
+- Raw pixel values that do not map to a spacing scale step
+- Arbitrary Tailwind values (e.g., `p-[13px]`, `text-[15px]`, `w-[320px]`) unless explicitly approved in a design system document
+- CSS color names (`red`, `blue`, `gray`) in styles
+
+### Rule FE-002: Font Weight Constraint
+
+Only two font weights are permitted: **400 (regular)** and **500 (medium)**. No other weight shall appear anywhere in the codebase.
+
+```tsx
+// CORRECT
+<h2 className="font-medium">Section Title</h2>
+<p className="font-normal">Body text</p>
+
+// INCORRECT
+<h1 className="font-bold">Title</h1>      // 700 — prohibited
+<span className="font-semibold">Label</span> // 600 — prohibited
+<p className="font-light">Caption</p>     // 300 — prohibited
+```
+
+**In CSS/Tailwind config**: only `fontWeight: { normal: '400', medium: '500' }` should appear in the font weight scale.
+
+### Rule FE-003: Spacing Scale Compliance
+
+All spacing must use values from the design system spacing scale. Do not use arbitrary pixel values for `margin`, `padding`, `gap`, `width`, or `height` when the intent is to follow the spacing system.
+
+```tsx
+// CORRECT: Spacing scale values
+<div className="p-4 gap-6 mt-8">          // 16px, 24px, 32px — on-scale
+  <div className="mb-3">...</div>         // 12px — on-scale
+</div>
+
+// INCORRECT: Off-scale values
+<div className="p-[13px] gap-[18px]">    // 13px, 18px — not on the scale
+  <div style={{ marginBottom: '10px' }}>  // 10px — not on the scale
+  </div>
+</div>
+```
+
+**Exception**: pixel-perfect values required by third-party library constraints may use arbitrary values only if documented in the component record.
+
+### Rule FE-004: Semantic Token Priority
+
+Components must reference **semantic tokens** (Level 2) or **pillar tokens** (Level 3), never primitive tokens (Level 1) directly. Semantic tokens encode purpose; primitive tokens encode raw values.
+
+```tsx
+// CORRECT: Semantic token
+className="bg-surface text-text-primary border-border-default"
+// or via CSS variable: var(--bg-surface), var(--text-primary)
+
+// INCORRECT: Primitive token used directly
+className="bg-neutral-100 text-neutral-900"
+// or via CSS variable: var(--color-neutral-100)
+```
+
+---
+
+## Component Implementation
+
+### Rule FE-005: All Interactive States Are Required
+
+Every interactive component must implement all applicable states defined in DS-009. A component that only handles the default and hover states is incomplete. States must be visually distinct and accessible.
+
+**Required states checklist** for interactive components:
+
+| State | Implementation requirement |
+|---|---|
+| Default | Base styles, fully functional |
+| Hover | Visual change indicating interactivity (`cursor-pointer`, color shift) |
+| Focus | Visible focus ring — minimum 2px, uses `--focus-ring` token or equivalent, 3:1 contrast |
+| Active/Pressed | Visual depression or feedback |
+| Disabled | `disabled` or `aria-disabled="true"`, visual distinction beyond opacity alone, non-interactive |
+| Loading | Spinner or skeleton, `aria-busy="true"`, prevents re-submission |
+| Error | Error color + error icon + error text — never color alone |
+| Success | Success color + success icon + confirmation text (where applicable) |
+| Selected | Uses `--bg-selected` token, visually distinct from default |
+
+```tsx
+// CORRECT: Button with all states
+<button
+  disabled={isDisabled}
+  aria-busy={isLoading}
+  className={cn(
+    // Default
+    "px-4 py-2 rounded-md text-sm font-medium",
+    "bg-action-primary text-text-inverse",
+    // Hover
+    "hover:bg-action-primary-hover",
+    // Focus
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2",
+    // Active
+    "active:bg-action-primary-active",
+    // Disabled
+    "disabled:bg-action-disabled disabled:text-text-disabled disabled:cursor-not-allowed",
+    // Loading
+    isLoading && "opacity-75 cursor-wait",
+  )}
+>
+  {isLoading ? <Spinner aria-hidden="true" /> : null}
+  {children}
+</button>
+
+// INCORRECT: Only default and hover, focus ring missing
+<button className="bg-blue-500 hover:bg-blue-600 px-4 py-2">
+  {children}
+</button>
+```
+
+### Rule FE-006: Component File Structure
+
+Frontend component files follow a consistent structure:
+
+```tsx
+// 1. Imports (grouped: React → third-party → local → types)
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { Icon } from '@/components/ui/icon';
+import type { ButtonProps } from './button.types';
+
+// 2. Type definitions (if not in separate .types.ts file)
+interface Props { ... }
+
+// 3. Component function
+export function ComponentName({ prop1, prop2, ...rest }: Props) {
+  // 3a. State and derived values
+  // 3b. Event handlers
+  // 3c. Effects (if any)
+  // 3d. Render
+  return ( ... );
+}
+
+// 4. Display name (for dev tools)
+ComponentName.displayName = 'ComponentName';
+```
+
+**Naming**:
+- Component files: `kebab-case.tsx` (e.g., `data-table.tsx`)
+- Component exports: `PascalCase` (e.g., `DataTable`)
+- Variant-specific files: `component-name--variant.tsx` (only when variant is truly separate)
+
+### Rule FE-007: No Custom Re-implementations of Library Components
+
+If a component exists in the design system component library (`docs/design-system/COMPONENT-LIBRARY.md`), use it. Do not create a custom implementation that duplicates its function.
+
+If the existing component does not support a needed use case:
+1. Check whether a documented variant covers it
+2. If not, propose a new variant via `/08d` and implement after design system is updated
+3. Temporary deviations must be documented in the component record
+
+```tsx
+// CORRECT: Uses the design system Alert component
+import { Alert } from '@/components/ui/alert';
+<Alert variant="warning" title="Heads up">...</Alert>
+
+// INCORRECT: Custom warning implementation
+<div className="bg-yellow-100 border border-yellow-300 p-4 rounded">
+  <span className="font-semibold">Heads up:</span> ...
+</div>
+```
+
+---
+
+## Loading, Empty, and Error States
+
+### Rule FE-008: Skeleton Loading Over Generic Spinners
+
+For content with a predictable layout, loading states must use skeleton components that mirror the expected content shape. Generic full-page spinners are only acceptable when the content layout cannot be predicted.
+
+```tsx
+// CORRECT: Skeleton mirrors content
+{isLoading ? (
+  <div className="space-y-3">
+    <Skeleton className="h-6 w-3/4" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-5/6" />
+  </div>
+) : (
+  <ArticleContent title={data.title} body={data.body} />
+)}
+
+// INCORRECT: Generic spinner for structured content
+{isLoading ? <Spinner /> : <ArticleContent ... />}
+```
+
+### Rule FE-009: Empty States Are Not Optional
+
+Any data view that can return zero items must have a designed empty state. A blank container or a cryptic "No data" message is not acceptable.
+
+Empty states must include:
+- An icon or illustration relevant to the content type
+- A message explaining why the view is empty (or that it is empty)
+- A call to action when applicable (e.g., "Create your first pipeline")
+
+```tsx
+// CORRECT: Meaningful empty state
+{items.length === 0 ? (
+  <EmptyState
+    icon={<PipelineIcon className="w-12 h-12 text-text-disabled" />}
+    title="No pipelines yet"
+    description="Create your first pipeline to start processing data."
+    action={<Button onClick={onCreateClick}>Create pipeline</Button>}
+  />
+) : (
+  <PipelineList items={items} />
+)}
+
+// INCORRECT: Blank container or bare text
+{items.length === 0 ? <p>No data</p> : <PipelineList ... />}
+```
+
+### Rule FE-010: Error States Must Be Actionable
+
+Error states must tell the user what went wrong and what they can do about it. Error messages must use the error semantic color token, an error icon, and descriptive text — never color alone.
+
+```tsx
+// CORRECT: Actionable error with color + icon + text
+{error ? (
+  <ErrorState
+    icon={<AlertCircleIcon className="text-error" aria-hidden="true" />}
+    title="Could not load pipelines"
+    description={error.message}
+    action={<Button variant="secondary" onClick={onRetry}>Try again</Button>}
+  />
+) : ...}
+
+// INCORRECT: Color-only error indicator
+{error ? <div className="bg-red-50 text-red-500">Error occurred</div> : ...}
+```
+
+---
+
+## Responsive Behavior
+
+### Rule FE-011: Mobile-First Implementation
+
+All layout code must be mobile-first: base styles serve the smallest viewport, breakpoint prefixes add complexity for larger screens.
+
+```tsx
+// CORRECT: Mobile-first
+<div className="flex flex-col gap-4 md:flex-row md:gap-6 lg:gap-8">
+  ...
+</div>
+
+// INCORRECT: Desktop-first (requires overrides for mobile)
+<div className="flex flex-row gap-8 max-md:flex-col max-md:gap-4">
+  ...
+</div>
+```
+
+### Rule FE-012: Breakpoints from Design System Only
+
+Use only the breakpoints defined in `docs/design-system/RESPONSIVE-SYSTEM.md`. Do not introduce custom breakpoints.
+
+Breakpoint names in code must match the design system names exactly (e.g., if the design system defines `md` as 768px, the code uses `md:` — never `min-[768px]:`).
+
+### Rule FE-013: Touch Targets on Mobile
+
+Interactive elements must have a minimum touch target of 44×44px on mobile viewports (DS-020). If the visual size of an element is smaller, use padding or a pseudo-element to extend the touch area.
+
+```tsx
+// CORRECT: Small icon button with adequate touch target
+<button
+  className="p-2 md:p-1.5" // 40px → 36px on desktop (where mouse is used)
+  aria-label="Close"
+>
+  <CloseIcon className="w-5 h-5" />
+</button>
+
+// INCORRECT: Icon button with inadequate touch target on mobile
+<button className="p-1" aria-label="Close">
+  <CloseIcon className="w-4 h-4" /> // Only 24px touch target
+</button>
+```
+
+---
+
+## Page Archetypes
+
+### Rule FE-014: Every Page Must Use a Page Archetype
+
+Before implementing a new page, classify it using the archetypes in `docs/design-system/PAGE-ARCHETYPES.md`. The archetype determines the layout structure, information density, and responsive behavior.
+
+```tsx
+// In the component record or implementation notes, document:
+// Archetype: #4 Dashboard — "Metrics and recent activity"
+// Deviations: None
+
+// If no archetype fits, compose from the nearest match and document:
+// Archetype: Composite — #6 Entity Detail + #4 Dashboard sections
+// Rationale: [explanation]
+```
+
+If a page does not fit any existing archetype, document the deviation in the component record and propose a new archetype via `/08d`.
+
+### Rule FE-015: Layout Composition Using Archetype Templates
+
+When implementing a page, start from the archetype's layout template (if defined in `PAGE-ARCHETYPES.md`) before adding content-specific elements. Do not build layouts from scratch if an archetype applies.
+
+---
+
+## Accessibility in Code
+
+### Rule FE-016: Accessible Names for Interactive Elements
+
+Every interactive element must have an accessible name. Buttons and links must have descriptive text, or an `aria-label` if icon-only.
+
+```tsx
+// CORRECT: Icon button with aria-label
+<button aria-label="Delete pipeline">
+  <TrashIcon aria-hidden="true" />
+</button>
+
+// CORRECT: Button with visible text
+<button>Delete pipeline</button>
+
+// INCORRECT: Icon button without accessible name
+<button>
+  <TrashIcon />
+</button>
+```
+
+### Rule FE-017: Focus Management in Dynamic Content
+
+When content changes dynamically (modals open, drawers slide, route changes), focus must be managed explicitly.
+
+```tsx
+// Modal: focus moves to first focusable element on open
+// Drawer: focus moves to drawer container or first interactive element
+// Route change: focus moves to page heading or skip link
+// Toast: focus is NOT moved (toast is non-blocking)
+// Inline error: focus stays where it is; error is announced via aria-live
+```
+
+### Rule FE-018: Semantic HTML First
+
+Use semantic HTML elements before ARIA. ARIA supplements semantics — it does not replace them.
+
+```tsx
+// CORRECT: Semantic HTML
+<nav aria-label="Main navigation">
+  <ul>
+    <li><a href="/learn">Learn</a></li>
+  </ul>
+</nav>
+
+// INCORRECT: Div soup with ARIA
+<div role="navigation" aria-label="Main navigation">
+  <div role="list">
+    <div role="listitem"><span role="link" tabIndex={0}>Learn</span></div>
+  </div>
+</div>
+```
+
+---
+
+## Pillar Token Overrides
+
+### Rule FE-019: Pillar Tokens Applied via CSS Scope
+
+Pillar-specific token overrides are applied by wrapping the pillar's root layout element with a CSS class or data attribute that defines the pillar tokens. Components inside do not check which pillar they render in — they always use pillar tokens.
+
+```tsx
+// CORRECT: Pillar root applies overrides; components inside are pillar-agnostic
+<div data-pillar="learn" className="pillar-learn">
+  <Card /> // uses --pillar-accent, --pillar-body-size, etc. without knowing "learn"
+</div>
+
+// INCORRECT: Component checks which pillar it is in
+function Card({ pillar }: { pillar: 'learn' | 'hub' | 'labs' }) {
+  const accentColor = pillar === 'learn' ? '#0FA87F' : '#8B5CF6'; // hardcoded per pillar
+  return <div style={{ borderColor: accentColor }} />;
+}
+```
+
+### Rule FE-020: Primary Action Color Is Never Overridden per Pillar
+
+The primary action color (`--action-primary`, used for buttons, links, focus rings) must be identical across all pillars. It must not be assigned the pillar accent color. This is an absolute constraint from DS-018.
+
+```tsx
+// CORRECT: Primary button uses action-primary everywhere
+<Button variant="primary" className="bg-action-primary hover:bg-action-primary-hover">
+  Start learning
+</Button>
+
+// INCORRECT: Overriding action color with pillar accent
+<Button className="bg-pillar-accent hover:bg-pillar-accent-hover">
+  Start learning
+</Button>
+```
+
+---
+
+## Content Rendering
+
+### Rule FE-021: Authored Content Uses Content Rendering Rules
+
+When rendering authored content (articles, tutorials, documentation), apply the content rendering rules from `docs/design-system/CONTENT-RENDERING.md` rather than the UI chrome styles.
+
+```tsx
+// CORRECT: Authored content wrapped in content renderer
+<ContentRenderer className="prose-syntropy">
+  {article.body}
+</ContentRenderer>
+
+// INCORRECT: Applying UI chrome styles to article content
+<div className="text-body text-text-primary">
+  {article.body} // Will have UI density, not reading-optimized density
+</div>
+```
+
+Authored content has different typographic rules: larger line height (1.7), more generous paragraph spacing, reading-optimized max-width, and heading spacing as defined in the content rendering document.
+
+---
+
+## Anti-Patterns
+
+### Rule FE-022: Prohibited Anti-Patterns Checklist
+
+The following are prohibited in all frontend code:
+
+| Anti-Pattern | Prohibition | Correct Alternative |
+|---|---|---|
+| Hardcoded hex colors | FE-001 | Use semantic CSS variable token |
+| Font weight ≠ 400 or 500 | FE-002 | Use `font-normal` or `font-medium` |
+| Off-scale spacing | FE-003 | Use spacing scale tokens |
+| Primitive token in component | FE-004 | Use semantic token |
+| Missing focus ring | FE-005 | `focus-visible:ring-2 focus-visible:ring-focus-ring` |
+| Generic spinner for structured content | FE-008 | Skeleton matching content shape |
+| Blank container as "empty state" | FE-009 | EmptyState component with message + CTA |
+| Color-only error indicator | FE-010 | Error color + icon + text |
+| Desktop-first responsive | FE-011 | Mobile-first with breakpoint prefixes |
+| Custom breakpoints | FE-012 | Use design system breakpoints only |
+| Re-implementing library components | FE-007 | Use the component from the library |
+| Glass morphism (unless DS-approved) | FE-001, DS-016 | Use elevation shadow tokens |
+| `backdrop-filter: blur` without DS approval | FE-001, DS-016 | Use solid background tokens |
+| `position: fixed` overlays without focus trap | FE-017 | Implement focus trap in modals/dialogs |
+| Pillar-specific colors hardcoded in components | FE-019 | Use `--pillar-accent` token |
+| Overriding `--action-primary` per pillar | FE-020 | Pillar accent ≠ primary action |
+
+---
+
+## References
+
+| Rule | Related Design System Rule |
+|---|---|
+| FE-001 | DS-002, DS-003 (token-first, no hardcoded values) |
+| FE-002 | DS-004 (typography — two weights only) |
+| FE-003 | DS-005 (spacing scale) |
+| FE-004 | DS-002 (semantic token priority) |
+| FE-005 | DS-009 (all interactive states) |
+| FE-008 | DS-010, UX-003 (loading patterns, feedback) |
+| FE-009 | DS-010, UX-003 (empty state pattern) |
+| FE-010 | DS-010, DS-003, UX-003 (error state, no color-only signals) |
+| FE-011 through FE-013 | DS-020 (responsive system) |
+| FE-014 through FE-015 | DS-019 (page archetypes) |
+| FE-016 through FE-018 | DS-003, UX-006 (accessibility) |
+| FE-019 through FE-020 | DS-018 (pillar token system) |
+| FE-021 | DS-021 (content rendering) |
+
+See also:
+- `docs/design-system/LLM-QUICKREF.md` — primary quick reference for token names and decision tree
+- `.cursor/skills/design-system-compliance-audit.md` — audit procedure that verifies these rules
+- `.cursor/rules/design-system/design-system.mdc` — design system documentation standards
+- `.cursor/rules/ux/ux-principles.mdc` — UX principles that govern interaction behavior

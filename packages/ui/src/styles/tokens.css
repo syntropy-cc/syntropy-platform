@@ -1,0 +1,298 @@
+/**
+ * Canonical design tokens — Syntropy Design System.
+ * Three layers: Primitive, Semantic, Pillar.
+ * Architecture: COMP-041, DESIGN-TOKENS.md
+ * Apps must import this (via theme.css) and add Tailwind base/components/utilities.
+ */
+
+/* ==========================================================================
+   1. Primitive tokens — color scales (DESIGN-TOKENS §1)
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+  /* 1.1 Primary — Teal-Esmeralda */
+  --color-primary-50: #E0F5F0;
+  --color-primary-100: #B3E8DB;
+  --color-primary-200: #80D9C4;
+  --color-primary-300: #4DCAAD;
+  --color-primary-400: #26BD9A;
+  --color-primary-500: #0FA87F;
+  --color-primary-600: #0D8F6C;
+  --color-primary-700: #0A7358;
+  --color-primary-800: #075A44;
+  --color-primary-900: #04402F;
+
+  /* 1.2 Neutral */
+  --color-neutral-0: #FFFFFF;
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-100: #F4F4F5;
+  --color-neutral-200: #E4E4E7;
+  --color-neutral-300: #D4D4D8;
+  --color-neutral-400: #A1A1AA;
+  --color-neutral-500: #71717A;
+  --color-neutral-600: #52525B;
+  --color-neutral-700: #3F3F46;
+  --color-neutral-800: #27272A;
+  --color-neutral-850: #1A1D27;
+  --color-neutral-900: #141419;
+  --color-neutral-950: #0F1117;
+
+  /* 1.3 Semantic scales — Success */
+  --color-success-50: #EAF3DE;
+  --color-success-100: #C0DD97;
+  --color-success-500: #639922;
+  --color-success-700: #3B6D11;
+  --color-success-900: #173404;
+
+  /* 1.3 Semantic scales — Error */
+  --color-error-50: #FCEBEB;
+  --color-error-100: #F7C1C1;
+  --color-error-500: #E24B4A;
+  --color-error-700: #A32D2D;
+  --color-error-900: #501313;
+
+  /* 1.3 Semantic scales — Warning */
+  --color-warning-50: #FAEEDA;
+  --color-warning-100: #FAC775;
+  --color-warning-500: #EF9F27;
+  --color-warning-700: #854F0B;
+  --color-warning-900: #412402;
+
+  /* 1.3 Semantic scales — Info */
+  --color-info-50: #E6F1FB;
+  --color-info-100: #B5D4F4;
+  --color-info-500: #378ADD;
+  --color-info-700: #185FA5;
+  --color-info-900: #042C53;
+
+  /* 1.4 Pillar — Learn (Amber) */
+  --color-learn-50: #FFF8E7;
+  --color-learn-100: #FEEAB5;
+  --color-learn-200: #FDDA82;
+  --color-learn-300: #FCC94F;
+  --color-learn-400: #FBBD2E;
+  --color-learn-500: #F5A623;
+  --color-learn-600: #D4891A;
+  --color-learn-700: #A66B14;
+  --color-learn-800: #7A4F0E;
+  --color-learn-900: #4E3309;
+
+  /* 1.4 Pillar — Hub (Slate) */
+  --color-hub-50: #F0F2F5;
+  --color-hub-100: #D5DAE1;
+  --color-hub-200: #B8C0CC;
+  --color-hub-300: #9AA5B5;
+  --color-hub-400: #8290A4;
+  --color-hub-500: #6B7B93;
+  --color-hub-600: #576680;
+  --color-hub-700: #44516A;
+  --color-hub-800: #333D52;
+  --color-hub-900: #222A3A;
+
+  /* 1.4 Pillar — Labs (Indigo) */
+  --color-labs-50: #EBF0FA;
+  --color-labs-100: #C5D4F2;
+  --color-labs-200: #9EB7E9;
+  --color-labs-300: #779AE0;
+  --color-labs-400: #5A83D8;
+  --color-labs-500: #3D6BCF;
+  --color-labs-600: #2F55B3;
+  --color-labs-700: #234192;
+  --color-labs-800: #1A3170;
+  --color-labs-900: #11204E;
+
+  /* ========================================================================
+     2. Semantic tokens — light mode (DESIGN-TOKENS §2)
+     ======================================================================== */
+
+  /* 2.1 Text */
+  --text-primary: var(--color-neutral-800);
+  --text-secondary: var(--color-neutral-600);
+  --text-tertiary: var(--color-neutral-400);
+  --text-disabled: var(--color-neutral-400);
+  --text-inverse: var(--color-neutral-0);
+  --text-link: var(--color-primary-600);
+
+  /* 2.2 Surfaces */
+  --bg-page: var(--color-neutral-50);
+  --bg-surface: var(--color-neutral-0);
+  --bg-surface-raised: var(--color-neutral-0);
+  --bg-surface-sunken: var(--color-neutral-100);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-hover: var(--color-neutral-100);
+  --bg-selected: var(--color-primary-50);
+
+  /* 2.3 Borders */
+  --border-default: var(--color-neutral-200);
+  --border-strong: var(--color-neutral-300);
+  --border-focus: var(--color-primary-500);
+  --border-error: var(--color-error-500);
+
+  /* 2.4 Actions */
+  --action-primary: var(--color-primary-500);
+  --action-primary-hover: var(--color-primary-600);
+  --action-primary-active: var(--color-primary-700);
+  --action-destructive: var(--color-error-500);
+  --action-destructive-hover: var(--color-error-700);
+
+  /* 2.5 Focus */
+  --focus-ring: 0 0 0 3px rgba(15, 168, 127, 0.4);
+  --focus-ring-error: 0 0 0 3px rgba(226, 75, 74, 0.4);
+
+  /* ========================================================================
+     3. Pillar semantic tokens — default Learn (DESIGN-TOKENS §3)
+     ======================================================================== */
+  --pillar-accent: var(--color-learn-500);
+  --pillar-accent-subtle: var(--color-learn-50);
+  --pillar-accent-text: var(--color-learn-800);
+  --pillar-body-size: 16px;
+  --pillar-card-padding: var(--space-6);
+  --pillar-section-gap: var(--space-12);
+  --pillar-content-max-width: 720px;
+
+  /* ========================================================================
+     4. Typography (DESIGN-TOKENS §4)
+     ======================================================================== */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+
+  /* Type scale — size / line-height / weight */
+  --text-display: 36px;
+  --text-display-line: 1.15;
+  --text-display-weight: 500;
+  --text-h1: 28px;
+  --text-h1-line: 1.25;
+  --text-h1-weight: 500;
+  --text-h2: 22px;
+  --text-h2-line: 1.3;
+  --text-h2-weight: 500;
+  --text-h3: 18px;
+  --text-h3-line: 1.4;
+  --text-h3-weight: 500;
+  --text-body-lg: 16px;
+  --text-body-lg-line: 1.6;
+  --text-body: 14px;
+  --text-body-line: 1.6;
+  --text-body-sm: 13px;
+  --text-body-sm-line: 1.5;
+  --text-caption: 11px;
+  --text-caption-line: 1.4;
+  --text-label: 13px;
+  --text-label-line: 1.2;
+  --text-label-weight: 500;
+  --text-code: 14px;
+  --text-code-line: 1.5;
+
+  /* ========================================================================
+     5. Spacing (DESIGN-TOKENS §5)
+     ======================================================================== */
+  --space-0.5: 2px;
+  --space-1: 4px;
+  --space-1.5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ========================================================================
+     6. Border radius, shadows, z-index (DESIGN-TOKENS §6)
+     ======================================================================== */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-default: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+  --shadow-focus: 0 0 0 3px rgba(15, 168, 127, 0.4);
+
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-overlay: 30;
+  --z-modal: 40;
+  --z-toast: 50;
+  --z-tooltip: 60;
+
+  /* ========================================================================
+     8. Motion (DESIGN-TOKENS §8)
+     ======================================================================== */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 400ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ========================================================================
+     7.2 shadcn/ui variable bridge (DESIGN-TOKENS §7.2)
+     ======================================================================== */
+  --background: var(--bg-page);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface-raised);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--text-inverse);
+  --secondary: var(--bg-surface-sunken);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-surface-sunken);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-hover);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--action-destructive);
+  --destructive-foreground: var(--text-inverse);
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --ring: var(--color-primary-500);
+  --radius: 8px;
+}
+
+/* ==========================================================================
+   Dark mode overrides (DESIGN-TOKENS §2)
+   ========================================================================== */
+
+[data-theme="dark"] {
+  /* 2.1 Text */
+  --text-primary: var(--color-neutral-100);
+  --text-secondary: var(--color-neutral-400);
+  --text-tertiary: var(--color-neutral-500);
+  --text-disabled: var(--color-neutral-600);
+  --text-inverse: var(--color-neutral-0);
+  --text-link: var(--color-primary-400);
+
+  /* 2.2 Surfaces */
+  --bg-page: var(--color-neutral-950);
+  --bg-surface: var(--color-neutral-850);
+  --bg-surface-raised: var(--color-neutral-900);
+  --bg-surface-sunken: var(--color-neutral-950);
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-selected: rgba(15, 168, 127, 0.12);
+
+  /* 2.3 Borders */
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-focus: var(--color-primary-400);
+  --border-error: var(--color-error-500);
+
+  /* 2.4 Actions */
+  --action-primary: var(--color-primary-500);
+  --action-primary-hover: var(--color-primary-400);
+  --action-primary-active: var(--color-primary-300);
+  --action-destructive: var(--color-error-500);
+  --action-destructive-hover: var(--color-error-700);
+}

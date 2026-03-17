@@ -1,50 +1,94 @@
 "use client";
 
 /**
- * Button component — shadcn-style variants.
- * Architecture: COMP-032
+ * Button component — design system compliant variants.
+ * Architecture: COMP-041, COMPONENT-LIBRARY Button
  */
 
 import { type ComponentPropsWithoutRef, forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 import { cn } from "../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:opacity-90",
-        secondary: "bg-muted text-muted-foreground hover:bg-muted/80",
-        outline: "border border-border bg-background hover:bg-accent",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        primary:
+          "bg-primary text-primary-foreground hover:bg-primary-600 dark:hover:bg-primary-400 active:bg-primary-700 dark:active:bg-primary-300",
+        secondary:
+          "border border-border bg-surface text-foreground hover:bg-surface-sunken",
+        ghost: "text-foreground hover:bg-surface-sunken",
+        destructive:
+          "bg-error text-primary-foreground hover:bg-error-700 active:opacity-90",
+        link: "text-primary-600 underline-offset-4 hover:underline dark:text-primary-400",
+        "icon-only":
+          "text-foreground hover:bg-surface-sunken [&>svg]:size-4",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        sm: "h-8 px-3 rounded-md",
+        md: "h-10 px-4 rounded-lg",
+        lg: "h-12 px-6 rounded-lg",
+        icon: "h-10 w-10 rounded-lg",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "primary",
+      size: "md",
     },
   }
 );
 
-export interface ButtonProps
-  extends ComponentPropsWithoutRef<"button">,
-    VariantProps<typeof buttonVariants> {}
+type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
+
+export type ButtonProps = Omit<
+  ComponentPropsWithoutRef<"button">,
+  "aria-busy"
+> &
+  VariantProps<typeof buttonVariants> & {
+    loading?: boolean;
+  } & (
+    | { variant?: Exclude<ButtonVariant, "icon-only"> }
+    | { variant: "icon-only"; "aria-label": string }
+  );
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      loading = false,
+      children,
+      disabled,
+      "aria-label": ariaLabel,
+      ...props
+    },
+    ref
+  ) => {
+    const resolvedSize = variant === "icon-only" ? "icon" : size;
+    const isDisabled = disabled ?? loading;
+
     return (
       <button
         ref={ref}
-        className={cn(buttonVariants({ variant, size, className }))}
+        type="button"
+        className={cn(
+          buttonVariants({ variant, size: resolvedSize, className })
+        )}
+        disabled={isDisabled}
+        aria-busy={loading ? "true" : undefined}
+        aria-label={variant === "icon-only" ? ariaLabel : undefined}
+        aria-disabled={isDisabled ? "true" : undefined}
         {...props}
-      />
+      >
+        {loading ? (
+          <Loader2 className="size-4 animate-spin" aria-hidden />
+        ) : (
+          children
+        )}
+      </button>
     );
   }
 );

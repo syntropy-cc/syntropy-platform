@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 0 |
+| ✅ Done | 5 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 20 |
+| ⬜ Ready/Backlog | 15 |
 | **Total** | **20** |
 
-**Component Coverage**: 0% (0/20 items complete)
+**Component Coverage**: 25% (5/20 items complete)
 
 ### Item List
 
@@ -70,7 +70,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | M |
 | **Priority** | Critical |
 | **Dependencies** | — |
@@ -99,7 +99,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Critical |
 | **Dependencies** | COMP-041.1 |
@@ -125,7 +125,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Critical |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -155,7 +155,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Critical |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -181,7 +181,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | Critical |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -671,6 +671,15 @@ Components that require complex interaction (Select, Dialog, DropdownMenu, Toolt
 ---
 
 ## Implementation Log
+
+### 2026-03-17 — COMP-041.1–041.5 implemented
+
+- **COMP-041.1**: Created `packages/ui/src/styles/tokens.css` with primitive (color scales), semantic (text, surfaces, borders, actions, focus), pillar defaults, typography, spacing, radius, shadow, z-index, motion; shadcn bridge (§7.2); dark mode overrides. Replaced `theme.css` with `@import './styles/tokens.css'`. No glass/gradient vars.
+- **COMP-041.2**: Extended `tailwind.config.ts` with full Section 7.1: primary 50–900 + DEFAULT + foreground, pillar, surfaces, foreground/muted-foreground, success/error/warning/info (50/500/700), border/border-strong, borderRadius sm–full, boxShadow focus/focus-error.
+- **COMP-041.3**: Button refactored to variants primary (default), secondary, ghost, destructive, link, icon-only; sizes sm (32px), md (40px), lg (48px), icon; `loading` prop with Loader2 spinner and aria-busy; focus ring `var(--focus-ring)`; active scale 0.98. Tests updated (8 tests).
+- **COMP-041.4**: Card refactored to variants default, elevated, interactive, sunken; removed glass, pillar, pillarHeader; CardTitle font-medium (500); hover lift only on interactive.
+- **COMP-041.5**: Badge refactored to 7 variants (default, primary, success, error, warning, info, pillar); token-based classes; 11px/500, py-[3px] px-[10px], rounded-full; removed learn/hub/labs/contribute/portfolio and size prop.
+- **Fix**: app-layout.test.tsx updated to expect "Home" instead of "Platform" (ADR-012 IA).
 
 ### 2026-03-17 — Component Created
 

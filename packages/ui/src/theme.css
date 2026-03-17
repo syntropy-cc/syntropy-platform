@@ -1,49 +1,7 @@
 /**
- * Design system theme — light/dark CSS variables only.
+ * Design system theme — re-exports canonical tokens.
  * Apps must add @tailwind base/components/utilities in their globals and import this.
- * Architecture: COMP-032
+ * Architecture: COMP-041, COMP-032
  */
 
-:root,
-[data-theme="light"] {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --radius: 0.5rem;
-  --radius-full: 9999px;
-  /* Gradients and effects (DESIGN-SYSTEM §2.7) */
-  --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e3a8a 20%, #0f172a 100%);
-  --gradient-accent: linear-gradient(90deg, #00afff 0%, #33ddff 80%, #b266ff 100%);
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-blur: 10px;
-  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
-  --shadow-focus: 0 0 0 3px hsl(221.2 83.2% 53.3% / 0.4);
-  --shadow-nav-active: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
-  --bg-section-alt: 210 40% 97%;
-  --scrollbar-track: 215 28% 17%;
-  --scrollbar-thumb: 217.2 91.2% 59.8%;
-}
-
-[data-theme="dark"] {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  /* Primary as action blue for nav active and CTAs (DESIGN-SYSTEM §2.1.1, §2.4) */
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --border: 217.2 32.6% 17.5%;
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.15);
-  --bg-section-alt: 217.2 32.6% 12%;
-  --scrollbar-track: 215 28% 17%;
-  --scrollbar-thumb: 217.2 91.2% 59.8%;
-}
+@import './styles/tokens.css';

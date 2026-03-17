@@ -17,11 +17,11 @@ describe("AppLayout", () => {
     expect(container.querySelector("main")).toHaveTextContent("Main content");
   });
 
-  it("renders default nav links for Platform, Learn, Hub, Labs", () => {
+  it("renders default nav links for Home, Learn, Hub, Labs", () => {
     const { container } = render(<AppLayout><span>Content</span></AppLayout>);
     const nav = container.querySelector("nav");
     expect(nav).toBeInTheDocument();
-    expect(nav?.textContent).toMatch(/Platform/);
+    expect(nav?.textContent).toMatch(/Home/);
     expect(nav?.textContent).toMatch(/Learn/);
     expect(nav?.textContent).toMatch(/Hub/);
     expect(nav?.textContent).toMatch(/Labs/);

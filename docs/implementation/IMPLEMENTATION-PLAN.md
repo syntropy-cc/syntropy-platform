@@ -9,19 +9,19 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — NOT STARTED
-CURRENT ITEM  : COMP-041.1 - Create tokens.css (canonical design token file)
+CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — IN PROGRESS
+CURRENT ITEM  : COMP-041.6 - Refactor Sheet (overlay token, animation, z-index)
 MILESTONE     : M6 - Design System Compliance (packages/ui)
-STAGE PROGRESS: 0 / 20 items done (S58)
-OVERALL       : 265 / 285 items done
+STAGE PROGRESS: 5 / 20 items done (S58)
+OVERALL       : 270 / 285 items done
 ```
 
 **Next 5 items**:
-1. `COMP-041.1` — Create `tokens.css` (primitive + semantic + pillar + shadcn bridge) — Critical, M
-2. `COMP-041.2` — Update `tailwind.config.ts` (DESIGN-TOKENS Section 7.1) — Critical, S
-3. `COMP-041.3` — Refactor Button (variants, loading, focus ring, sizes) — Critical, S
-4. `COMP-041.4` — Refactor Card (remove glass/pillar, add elevated/interactive/sunken) — Critical, S
-5. `COMP-041.5` — Refactor Badge (token-based variants, remove non-spec, fix typography) — Critical, S
+1. `COMP-041.6` — Refactor Sheet (overlay token, animation, z-index) — High, S
+2. `COMP-041.7` — Refactor Navbar/Footer/AppLayout (new token names) — High, S
+3. `COMP-041.8` — Create Input + Textarea + Select — High, M
+4. `COMP-041.9` — Create Checkbox + Switch — High, S
+5. `COMP-041.10` — Create Avatar + PillarBadge — High, S
 
 **Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
 
@@ -3297,7 +3297,7 @@ Status: Done | **Deps**: COMP-032.9, COMP-032.10
 
 #### [COMP-041.1] Create `tokens.css` — canonical design token file
 `S58` `Critical` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: —
+Status: **Done** | **Deps**: —
 **Criteria**: `packages/ui/src/styles/tokens.css` created with all three token layers (primitive, semantic, pillar) + shadcn bridge; primary `#0FA87F` renders; glass/gradient vars removed; `packages/ui` builds.
 **Steps**: (1) Create `src/styles/tokens.css` (2) Implement `:root` + dark mode + shadcn bridge (3) Replace `theme.css` content with `@import` (4) Verify build
 
@@ -3305,7 +3305,7 @@ Status: Ready | **Deps**: —
 
 #### [COMP-041.2] Update `tailwind.config.ts` — full DESIGN-TOKENS Section 7.1 mapping
 `S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1
+Status: **Done** | **Deps**: COMP-041.1
 **Criteria**: Primary scale, pillar tokens, surface/text/state aliases, border radius all mapped to CSS variables per DESIGN-TOKENS §7.1.
 **Steps**: (1) Extend `theme.extend.colors` with full token map (2) Update radius aliases (3) Verify Tailwind picks up token values
 
@@ -3313,7 +3313,7 @@ Status: Ready | **Deps**: COMP-041.1
 
 #### [COMP-041.3] Refactor Button to DS compliance
 `S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Variants `primary`, `secondary`, `ghost`, `destructive`, `link`, `icon-only`; sizes 32/40/48px; `loading` prop + `aria-busy`; focus ring `var(--focus-ring)`; breaking changes: `default`→`primary`, `outline`→`secondary`.
 **Steps**: (1) Update CVA variants (2) Add loading state (3) Fix focus ring (4) Update tests
 
@@ -3321,7 +3321,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.4] Refactor Card to DS compliance
 `S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Variants `default`, `elevated`, `interactive`, `sunken`; no `glass`, no `pillar`, no `pillarHeader`; `CardTitle` weight 500; hover lift only on `interactive`.
 **Steps**: (1) Remove deprecated variants (2) Add new variants with token classes (3) Fix CardTitle weight
 
@@ -3329,7 +3329,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.5] Refactor Badge to DS compliance
 `S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: 7 token-based variants; no `learn/hub/labs/contribute/portfolio`; 11px/500 weight; 3px 10px padding; pill shape.
 **Steps**: (1) Remove non-spec variants (2) Replace utility opacity classes with token classes (3) Fix typography
 
@@ -3457,26 +3457,33 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-17 | ADR-013: COMP-041 added (S58/M6); 265 / 285 items done
+> Last Updated: 2026-03-17 | S58 COMP-041.1–041.5 done; 270 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 265 / 285 items | 285 / 285 | - |
+| **Overall Progress** | 270 / 285 items | 285 / 285 | - |
 | **Current Milestone** | M6 - Design System Compliance | M6 | - |
-| **Current Stage** | S58 - Design System UI Library Compliance — not started | S58 | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — 5/20 done | S58 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests. S58 not yet started.
+**Recent completions** (2026-03-17): COMP-041.1 (tokens.css), COMP-041.2 (tailwind.config.ts), COMP-041.3 (Button refactor), COMP-041.4 (Card refactor), COMP-041.5 (Badge refactor). S58 token foundation and first three components complete.
+
+**Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests.
 
 **Recent additions** (2026-03-16): 3 work items for ADR-012 — COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA). All done; S57 complete.
 
 ### Recent completions
 
+- 2026-03-17 COMP-041.5 - Badge refactor (7 token variants, 11px/500, pill)
+- 2026-03-17 COMP-041.4 - Card refactor (default/elevated/interactive/sunken; no glass/pillar)
+- 2026-03-17 COMP-041.3 - Button refactor (6 variants, loading, focus ring, sizes)
+- 2026-03-17 COMP-041.2 - tailwind.config.ts full Section 7.1 mapping
+- 2026-03-17 COMP-041.1 - tokens.css (primitive, semantic, pillar, shadcn bridge)
 - 2026-03-16 COMP-032.11 - Navigation and IA: three pillars + shared user area; no Platform section; nav labels and metadata updated
 - 2026-03-16 COMP-032.10 - Institutional home at / (platform app root); login/signup CTAs; three pillars copy
 - 2026-03-16 COMP-032.9 - /platform redirect to /dashboard; dashboard placeholders (portfolio, search, recommendations, planning, settings); nav Home + Dashboard; learn/hub/labs nav updated
@@ -3799,7 +3806,7 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 | COMP-038 Observability | 6 | 1 | -- In Progress |
 | COMP-039 Data Integrity | 5 | 4 | -- In Progress |
 | COMP-040 Resilience | 5 | 5 | - Complete |
-| COMP-041 Design System UI Library | 20 | 0 | ⬜ Not Started |
+| COMP-041 Design System UI Library | 20 | 5 | -- In Progress |
 | **Total** | **285** | **90** | |
 
 ### Layer Coverage

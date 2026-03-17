@@ -4,14 +4,20 @@
  */
 export { Button } from "./components/button";
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, } from "./components/card";
+export { Avatar } from "./components/avatar";
 export { Badge } from "./components/badge";
+export { Checkbox } from "./components/checkbox";
 export { Input } from "./components/input";
 export { Textarea } from "./components/textarea";
+export { Switch } from "./components/switch";
+export { PillarBadge, } from "./components/pillar-badge";
+export { ProgressBar } from "./components/progress-bar";
 export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectGroupLabel, SelectSeparator, } from "./components/select";
 export { ThemeToggle } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, } from "./components/sheet";
 export { Navbar, } from "./components/navbar";
 export { Footer } from "./components/footer";
+export { Skeleton } from "./components/skeleton";
 export { Logo } from "./components/logo";
 export { AppLayout } from "./components/app-layout";
 export { ThemeProvider, useTheme, } from "./components/theme-provider";

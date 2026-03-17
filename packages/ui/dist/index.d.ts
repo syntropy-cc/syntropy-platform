@@ -4,14 +4,20 @@
  */
 export { Button, type ButtonProps } from "./components/button";
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, type CardProps, } from "./components/card";
+export { Avatar, type AvatarProps, type AvatarSize } from "./components/avatar";
 export { Badge, type BadgeProps } from "./components/badge";
+export { Checkbox, type CheckboxProps } from "./components/checkbox";
 export { Input, type InputProps } from "./components/input";
 export { Textarea, type TextareaProps } from "./components/textarea";
+export { Switch, type SwitchProps } from "./components/switch";
+export { PillarBadge, type PillarBadgeProps, type PillarBadgePillar, } from "./components/pillar-badge";
+export { ProgressBar, type ProgressBarProps } from "./components/progress-bar";
 export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectGroupLabel, SelectSeparator, } from "./components/select";
 export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, type SheetProps, type SheetContentProps, type SheetTriggerProps, } from "./components/sheet";
 export { Navbar, type NavbarProps, type NavbarLink, } from "./components/navbar";
 export { Footer, type FooterProps, type FooterColumn } from "./components/footer";
+export { Skeleton, type SkeletonProps } from "./components/skeleton";
 export { Logo, type LogoProps } from "./components/logo";
 export { AppLayout, type AppLayoutProps, type NavLinkConfig } from "./components/app-layout";
 export { ThemeProvider, useTheme, type Theme, } from "./components/theme-provider";

@@ -95,6 +95,16 @@ const config: Config = {
         overlay: "var(--z-overlay)",
         modal: "var(--z-modal)",
       },
+      keyframes: {
+        "skeleton-shimmer": {
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
+        },
+      },
+      animation: {
+        "skeleton-shimmer":
+          "skeleton-shimmer 1.5s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

@@ -10,21 +10,21 @@
 
 ```
 CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — IN PROGRESS
-CURRENT ITEM  : COMP-041.9 - Create Checkbox + Switch
+CURRENT ITEM  : COMP-041.12 - Create Tooltip + FormField
 MILESTONE     : M6 - Design System Compliance (packages/ui)
-STAGE PROGRESS: 8 / 20 items done (S58)
-OVERALL       : 273 / 285 items done
+STAGE PROGRESS: 11 / 20 items done (S58)
+OVERALL       : 276 / 285 items done
 ```
 
 **Next 5 items**:
-1. `COMP-041.9` — Create Checkbox + Switch — High, S
-2. `COMP-041.10` — Create Avatar + PillarBadge — High, S
-3. `COMP-041.11` — Create Skeleton + ProgressBar — High, S
-4. `COMP-041.12` — Create Tooltip + FormField — High, M
-5. `COMP-041.13` — Create Dialog — Medium, M
+1. `COMP-041.12` — Create Tooltip + FormField — High, M
+2. `COMP-041.13` — Create Dialog — Medium, M
+3. `COMP-041.14` — Create Toast — Medium, S
+4. `COMP-041.15` — Create DropdownMenu + Breadcrumb — Medium, S
+5. `COMP-041.16` — Create StatCard + EmptyState — Medium, S
 
-**Current item (COMP-041.9) acceptance criteria**: Checkbox 20px, Radix Checkbox, `--action-primary` checked; Switch 40×24px, Radix Switch, `--action-primary` on state.
-**Suggested steps**: (1) Create `checkbox.tsx` (2) Create `switch.tsx` (3) Export
+**Current item (COMP-041.12) acceptance criteria**: Tooltip Radix, 300ms delay, Escape dismiss, `aria-describedby`; FormField label→helper→input→error with `aria-describedby` linkage.
+**Suggested steps**: (1) Create `tooltip.tsx` (2) Create `form-field.tsx` (3) Export
 **Architecture refs**: COMP-041 record, COMPONENT-LIBRARY.md, DESIGN-TOKENS.md
 
 **Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
@@ -3365,7 +3365,7 @@ Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.9] Create Checkbox + Switch
 `S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Checkbox 20px, Radix Checkbox, `--action-primary` checked; Switch 40×24px, Radix Switch, `--action-primary` on state.
 **Steps**: (1) Create `checkbox.tsx` (2) Create `switch.tsx` (3) Export
 
@@ -3373,7 +3373,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.10] Create Avatar + PillarBadge
 `S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Avatar 4 sizes, fallback initials; PillarBadge with `pillar` prop Learn/Hub/Labs, token-based pillar colors.
 **Steps**: (1) Create `avatar.tsx` (2) Create `pillar-badge.tsx` (3) Export
 
@@ -3381,7 +3381,7 @@ Status: Ready | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.11] Create Skeleton + ProgressBar
 `S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Skeleton shimmer animation + reduced-motion; ProgressBar `role="progressbar"` + `aria-valuenow`.
 **Steps**: (1) Create `skeleton.tsx` (2) Create `progress-bar.tsx` (3) Export
 
@@ -3461,21 +3461,21 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-17 | S58 COMP-041.8 done; 273 / 285 items done
+> Last Updated: 2026-03-17 | S58 COMP-041.9, 041.10, 041.11 done; 276 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 273 / 285 items | 285 / 285 | - |
+| **Overall Progress** | 276 / 285 items | 285 / 285 | - |
 | **Current Milestone** | M6 - Design System Compliance | M6 | - |
-| **Current Stage** | S58 - Design System UI Library Compliance — 8/20 done | S58 | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — 11/20 done | S58 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent completions** (2026-03-17): COMP-041.8 (Input, Textarea, Select with Radix; design tokens; component tests). COMP-041.6–041.7 (Sheet, Navbar/Footer/AppLayout) and COMP-041.1–041.5 done earlier. S58 at 8/20.
+**Recent completions** (2026-03-17): COMP-041.9 (Checkbox + Switch), COMP-041.10 (Avatar + PillarBadge), COMP-041.11 (Skeleton + ProgressBar). S58 at 11/20.
 
 **Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests.
 
@@ -3483,6 +3483,9 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ### Recent completions
 
+- 2026-03-17 COMP-041.11 - Skeleton + ProgressBar (shimmer + reduced-motion; progressbar ARIA; exported; tests)
+- 2026-03-17 COMP-041.10 - Avatar + PillarBadge (4 sizes, fallback initials; pillar token colors; exported; tests)
+- 2026-03-17 COMP-041.9 - Checkbox + Switch (Radix, 20px/40×24px, --action-primary; exported; tests)
 - 2026-03-17 COMP-041.8 - Input, Textarea, Select (40px height, focus ring, error state, Radix Select; exported; component tests)
 - 2026-03-17 COMP-041.7 - Navbar, Footer, AppLayout refactor (token-based class names; no glass/old refs)
 - 2026-03-17 COMP-041.6 - Sheet refactor (--bg-overlay, --bg-surface, shadow-lg, z-overlay/z-modal, 200ms/150ms animation, 300px, reduced-motion)

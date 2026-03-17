@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 8 |
+| ✅ Done | 11 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 12 |
+| ⬜ Ready/Backlog | 9 |
 | **Total** | **20** |
 
-**Component Coverage**: 40% (8/20 items complete)
+**Component Coverage**: 55% (11/20 items complete)
 
 ### Item List
 
@@ -289,7 +289,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | High |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -297,15 +297,18 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 **Description**: Implement Checkbox and Switch as per `COMPONENT-LIBRARY.md`.
 
 **Acceptance Criteria**:
-- [ ] **Checkbox**: 20×20px; `--radius-sm` (4px); unchecked `--border-default`; checked `--action-primary` fill + white checkmark; indeterminate state; focus ring; label right with `--space-2` gap; `aria-checked`
-- [ ] **Switch**: 40×24px track; off `--color-neutral-300` (light) / `--color-neutral-600` (dark); on `--action-primary`; thumb: white circle 20px; transition 200ms; `aria-checked`; `role="switch"`
-- [ ] Both use Radix primitives for accessibility
-- [ ] Exported from `packages/ui/src/index.ts`
-- [ ] Tests for checked, unchecked, disabled states
+- [x] **Checkbox**: 20×20px; `--radius-sm` (4px); unchecked `--border-default`; checked `--action-primary` fill + white checkmark; indeterminate state; focus ring; label right with `--space-2` gap; `aria-checked`
+- [x] **Switch**: 40×24px track; off `--color-neutral-300` (light) / `--color-neutral-600` (dark); on `--action-primary`; thumb: white circle 20px; transition 200ms; `aria-checked`; `role="switch"`
+- [x] Both use Radix primitives for accessibility
+- [x] Exported from `packages/ui/src/index.ts`
+- [x] Tests for checked, unchecked, disabled states
 
-**Files to Create**:
-- `packages/ui/src/components/checkbox.tsx`
-- `packages/ui/src/components/switch.tsx`
+**Files Created**:
+- `packages/ui/src/components/checkbox.tsx` — Radix Checkbox, Lucide Check/Minus for indeterminate
+- `packages/ui/src/components/switch.tsx` — Radix Switch
+- `packages/ui/src/components/checkbox.test.tsx`, `switch.test.tsx`
+
+**Implementation notes**: Added `@radix-ui/react-checkbox` and `@radix-ui/react-switch` to package.json. Switch off state uses `--color-neutral-300`; dark-mode off can be added via token override if needed.
 
 ---
 
@@ -313,7 +316,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | High |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -321,13 +324,14 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 **Description**: Implement Avatar and PillarBadge. PillarBadge replaces the deprecated Card `pillar`/`pillarHeader` pattern and the non-spec Badge `learn`/`hub`/`labs` variants.
 
 **Acceptance Criteria**:
-- [ ] **Avatar**: sizes `sm` (24px) / `md` (32px) / `lg` (40px) / `xl` (64px); `--radius-full`; image fills circle; fallback: initials on `--pillar-accent-subtle` background; border `--border-default` 1px
-- [ ] **PillarBadge**: props `pillar: "learn" | "hub" | "labs"`; Learn: `--color-learn-50` bg, `--color-learn-800` text; Hub: `--color-hub-50` bg, `--color-hub-800` text; Labs: `--color-labs-50` bg, `--color-labs-800` text; same shape/typography as Badge
-- [ ] Both exported from `packages/ui/src/index.ts`
+- [x] **Avatar**: sizes `sm` (24px) / `md` (32px) / `lg` (40px) / `xl` (64px); `--radius-full`; image fills circle; fallback: initials on `--pillar-accent-subtle` background; border `--border-default` 1px
+- [x] **PillarBadge**: props `pillar: "learn" | "hub" | "labs"`; Learn: `--color-learn-50` bg, `--color-learn-800` text; Hub: `--color-hub-50` bg, `--color-hub-800` text; Labs: `--color-labs-50` bg, `--color-labs-800` text; same shape/typography as Badge
+- [x] Both exported from `packages/ui/src/index.ts`
 
-**Files to Create**:
-- `packages/ui/src/components/avatar.tsx`
-- `packages/ui/src/components/pillar-badge.tsx`
+**Files Created**:
+- `packages/ui/src/components/avatar.tsx` — sizes via Tailwind, fallback initials from `alt`, optional `src`
+- `packages/ui/src/components/pillar-badge.tsx` — pillar config map, optional `label` override
+- `packages/ui/src/components/avatar.test.tsx`, `pillar-badge.test.tsx`
 
 ---
 
@@ -335,7 +339,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | S |
 | **Priority** | High |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -343,13 +347,14 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 **Description**: Implement Skeleton and ProgressBar as per `COMPONENT-LIBRARY.md`.
 
 **Acceptance Criteria**:
-- [ ] **Skeleton**: `--bg-surface-sunken`; shimmer animation (1.5s gradient sweep, infinite); `@media (prefers-reduced-motion: reduce)` disables animation; accepts `className` for shape/size matching
-- [ ] **ProgressBar**: 8px height; `--bg-surface-sunken` track; `--action-primary` fill; `--radius-full`; `role="progressbar"` + `aria-valuenow` + `aria-valuemin="0"` + `aria-valuemax="100"`; label text nearby
-- [ ] Both exported from `packages/ui/src/index.ts`
+- [x] **Skeleton**: `--bg-surface-sunken`; shimmer animation (1.5s gradient sweep, infinite); `@media (prefers-reduced-motion: reduce)` disables animation; accepts `className` for shape/size matching
+- [x] **ProgressBar**: 8px height; `--bg-surface-sunken` track; `--action-primary` fill; `--radius-full`; `role="progressbar"` + `aria-valuenow` + `aria-valuemin="0"` + `aria-valuemax="100"`; label text nearby
+- [x] Both exported from `packages/ui/src/index.ts`
 
-**Files to Create**:
-- `packages/ui/src/components/skeleton.tsx`
-- `packages/ui/src/components/progress-bar.tsx`
+**Files Created**:
+- `packages/ui/src/components/skeleton.tsx` — inline background style + Tailwind `animate-skeleton-shimmer`, `motion-reduce:animate-none`; keyframes in tailwind.config.ts
+- `packages/ui/src/components/progress-bar.tsx` — value 0–100, optional `aria-label`
+- `packages/ui/src/components/skeleton.test.tsx`, `progress-bar.test.tsx`
 
 ---
 

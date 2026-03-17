@@ -15,6 +15,7 @@ export { ProgressBar, type ProgressBarProps } from "./components/progress-bar";
 export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectGroupLabel, SelectSeparator, } from "./components/select";
 export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, type SheetProps, type SheetContentProps, type SheetTriggerProps, } from "./components/sheet";
+export { Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogContent, DialogTitle, DialogDescription, DialogClose, type DialogContentProps, type DialogContentSize, } from "./components/dialog";
 export { Navbar, type NavbarProps, type NavbarLink, } from "./components/navbar";
 export { Footer, type FooterProps, type FooterColumn } from "./components/footer";
 export { Skeleton, type SkeletonProps } from "./components/skeleton";

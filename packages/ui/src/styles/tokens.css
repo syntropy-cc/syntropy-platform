@@ -286,6 +286,32 @@
 }
 
 /* ==========================================================================
+   Dialog animation (COMP-041.13) — 200ms enter, 150ms exit, scale + fade
+   ========================================================================== */
+.dialog-overlay {
+  transition: opacity var(--duration-normal) var(--ease-default);
+}
+.dialog-overlay[data-state="closed"] {
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-exit);
+}
+.dialog-content {
+  transition:
+    opacity var(--duration-normal) var(--ease-default),
+    transform var(--duration-normal) var(--ease-default);
+}
+.dialog-content[data-state="closed"] {
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-exit);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog-overlay,
+  .dialog-content {
+    transition-duration: 0ms !important;
+  }
+}
+
+/* ==========================================================================
    Dark mode overrides (DESIGN-TOKENS §2)
    ========================================================================== */
 

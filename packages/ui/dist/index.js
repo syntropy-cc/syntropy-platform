@@ -15,6 +15,7 @@ export { ProgressBar } from "./components/progress-bar";
 export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectGroupLabel, SelectSeparator, } from "./components/select";
 export { ThemeToggle } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, } from "./components/sheet";
+export { Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogContent, DialogTitle, DialogDescription, DialogClose, } from "./components/dialog";
 export { Navbar, } from "./components/navbar";
 export { Footer } from "./components/footer";
 export { Skeleton } from "./components/skeleton";

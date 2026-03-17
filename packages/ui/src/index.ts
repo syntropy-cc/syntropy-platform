@@ -45,6 +45,18 @@ export {
   type SheetTriggerProps,
 } from "./components/sheet";
 export {
+  Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogOverlay,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  type DialogContentProps,
+  type DialogContentSize,
+} from "./components/dialog";
+export {
   Navbar,
   type NavbarProps,
   type NavbarLink,

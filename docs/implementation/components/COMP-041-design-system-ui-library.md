@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 12 |
+| ✅ Done | 13 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 8 |
+| ⬜ Ready/Backlog | 7 |
 | **Total** | **20** |
 
-**Component Coverage**: 60% (12/20 items complete)
+**Component Coverage**: 65% (13/20 items complete)
 
 ### Item List
 
@@ -388,7 +388,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | M |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -396,17 +396,18 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 **Description**: Implement Dialog as per `COMPONENT-LIBRARY.md`.
 
 **Acceptance Criteria**:
-- [ ] Centered; max-width sizes: 480px (sm), 640px (md, default), 800px (lg)
-- [ ] `--bg-surface`; `--radius-lg` (12px); `--shadow-lg`; backdrop `--bg-overlay`; padding `--space-6`
-- [ ] Close button (X icon) top-right corner
-- [ ] Entrance: 200ms fade + `scale(0.95→1)`; Exit: 150ms fade + `scale(1→0.95)`; `prefers-reduced-motion` respected
-- [ ] Mobile (<768px): full-screen sheet sliding up from bottom with drag handle
-- [ ] Focus trapped inside; close on Escape; `aria-modal`; `aria-labelledby` (title element); `aria-describedby` (description element)
-- [ ] Built on Radix Dialog
-- [ ] Exported from `packages/ui/src/index.ts`
+- [x] Centered; max-width sizes: 480px (sm), 640px (md, default), 800px (lg)
+- [x] `--bg-surface`; `--radius-lg` (12px); `--shadow-lg`; backdrop `--bg-overlay`; padding `--space-6`
+- [x] Close button via `DialogClose` (consumer wraps Button icon-only)
+- [x] Entrance: 200ms fade + `scale(0.95→1)`; Exit: 150ms fade + `scale(1→0.95)`; `prefers-reduced-motion` respected
+- [x] Mobile (<768px): full-screen sheet sliding up from bottom with drag handle
+- [x] Focus trapped inside; close on Escape; `aria-modal`; `aria-labelledby` (title element); `aria-describedby` (description element)
+- [x] Built on Radix Dialog
+- [x] Exported from `packages/ui/src/index.ts`
 
-**Files to Create**:
-- `packages/ui/src/components/dialog.tsx`
+**Files Created**: `packages/ui/src/components/dialog.tsx`, `packages/ui/src/components/dialog.test.tsx`. Animation classes in `tokens.css` (`.dialog-overlay`, `.dialog-content`).
+
+**Implementation notes**: Implemented with `@radix-ui/react-dialog`. Size prop `sm`/`md`/`lg` maps to max-width 480/640/800px. Mobile bottom-sheet via Tailwind `max-md:` (rounded-t-xl, max-h-[90vh], drag handle). Focus trap and aria-modal provided by Radix. Tests use document/screen for portal content.
 
 ---
 

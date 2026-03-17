@@ -10,21 +10,21 @@
 
 ```
 CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — IN PROGRESS
-CURRENT ITEM  : COMP-041.13 - Create Dialog
+CURRENT ITEM  : COMP-041.14 - Create Toast
 MILESTONE     : M6 - Design System Compliance (packages/ui)
-STAGE PROGRESS: 12 / 20 items done (S58)
-OVERALL       : 277 / 285 items done
+STAGE PROGRESS: 13 / 20 items done (S58)
+OVERALL       : 278 / 285 items done
 ```
 
 **Next 5 items**:
-1. `COMP-041.13` — Create Dialog — Medium, M
-2. `COMP-041.14` — Create Toast — Medium, S
-3. `COMP-041.15` — Create DropdownMenu + Breadcrumb — Medium, S
-4. `COMP-041.16` — Create StatCard + EmptyState — Medium, S
-5. `COMP-041.17` — Create TabBar + PageHeader + EntityHeader — Medium, M
+1. `COMP-041.14` — Create Toast — Medium, S
+2. `COMP-041.15` — Create DropdownMenu + Breadcrumb — Medium, S
+3. `COMP-041.16` — Create StatCard + EmptyState — Medium, S
+4. `COMP-041.17` — Create TabBar + PageHeader + EntityHeader — Medium, M
+5. `COMP-041.18` — Create ListRow — Medium, S
 
-**Current item (COMP-041.13) acceptance criteria**: 3 max-width sizes, Radix Dialog, `--bg-overlay` backdrop, 200ms enter + 150ms exit, mobile full-screen sheet, focus trap, `aria-modal`.
-**Suggested steps**: (1) Create `dialog.tsx` on Radix Dialog (2) Add animation (3) Add mobile bottom-sheet behavior (4) Export
+**Current item (COMP-041.14) acceptance criteria**: Sonner-based, 5 variants, bottom-right/center positioning, DS token styles, `<Toaster>` provider, `aria-live`.
+**Suggested steps**: (1) Install/configure Sonner (2) Create token-based toast styles (3) Export `<Toaster>` and toast utilities
 **Architecture refs**: COMP-041 record, COMPONENT-LIBRARY.md, DESIGN-TOKENS.md
 
 **Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
@@ -3397,7 +3397,7 @@ Status: **Done** | **Deps**: COMP-041.8
 
 #### [COMP-041.13] Create Dialog
 `S58` `Medium` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: 3 max-width sizes, Radix Dialog, `--bg-overlay` backdrop, 200ms enter + 150ms exit, mobile full-screen sheet, focus trap, `aria-modal`.
 **Steps**: (1) Create `dialog.tsx` on Radix Dialog (2) Add animation (3) Add mobile bottom-sheet behavior (4) Export
 
@@ -3461,21 +3461,21 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-17 | S58 COMP-041.12 done; 277 / 285 items done
+> Last Updated: 2026-03-17 | S58 COMP-041.13 done; 278 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 277 / 285 items | 285 / 285 | - |
+| **Overall Progress** | 278 / 285 items | 285 / 285 | - |
 | **Current Milestone** | M6 - Design System Compliance | M6 | - |
-| **Current Stage** | S58 - Design System UI Library Compliance — 12/20 done | S58 | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — 13/20 done | S58 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent completions** (2026-03-17): COMP-041.12 (Tooltip + FormField), COMP-041.9 (Checkbox + Switch), COMP-041.10 (Avatar + PillarBadge), COMP-041.11 (Skeleton + ProgressBar). S58 at 12/20.
+**Recent completions** (2026-03-17): COMP-041.13 (Dialog), COMP-041.12 (Tooltip + FormField), COMP-041.9 (Checkbox + Switch), COMP-041.10 (Avatar + PillarBadge), COMP-041.11 (Skeleton + ProgressBar). S58 at 13/20.
 
 **Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests.
 
@@ -3483,6 +3483,7 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ### Recent completions
 
+- 2026-03-17 COMP-041.13 - Create Dialog (Radix Dialog; sm/md/lg; --bg-overlay; 200ms/150ms; mobile sheet; focus trap; exported; tests)
 - 2026-03-17 COMP-041.12 - Tooltip + FormField (Radix tooltip 300ms/Escape/aria-describedby; FormField label/helper/error + aria linkage; exported; tests)
 - 2026-03-17 COMP-041.11 - Skeleton + ProgressBar (shimmer + reduced-motion; progressbar ARIA; exported; tests)
 - 2026-03-17 COMP-041.10 - Avatar + PillarBadge (4 sizes, fallback initials; pillar token colors; exported; tests)

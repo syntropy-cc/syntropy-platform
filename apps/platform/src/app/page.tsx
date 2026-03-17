@@ -3,10 +3,11 @@
 import type React from "react"
 
 import { useRef, useEffect, useState } from "react"
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion"
-import { Badge } from "@syntropy/ui"
+import { motion, useScroll, useTransform, useInView, useAnimation, AnimatePresence } from "framer-motion"
+import { Button } from "../components/ui/button"
 import { BookOpen, Users, FlaskConical, Check, Award, Briefcase, GraduationCap, Rocket, GitBranch, Handshake, DollarSign, Lightbulb, FileText, MessageCircle } from "lucide-react"
 import Link from "next/link"
+import { Badge } from "../components/ui/badge"
 import { useAuth } from "@/hooks/use-auth"
 import { isAuthEnabled } from "@/lib/feature-flags"
 
@@ -1493,18 +1494,17 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Link
-                    href="/learn/courses"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white text-lg transition-colors"
+                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
+                    <Link href="/learn/courses">Explorar cursos</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg"
                   >
-                    Explorar cursos
-                  </Link>
-                  <Link
-                    href="/learn"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 py-4 border border-white/20 text-white hover:bg-white/10 text-lg transition-colors"
-                  >
-                    Conhecer Syntropy Learn
-                  </Link>
+                    <Link href="/learn">Conhecer Syntropy Learn</Link>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1539,18 +1539,17 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Link
-                    href="/projects/coming-soon"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white text-lg transition-colors"
+                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
+                    <Link href="/projects/coming-soon">Descobrir projetos</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg"
                   >
-                    Descobrir projetos
-                  </Link>
-                  <Link
-                    href="/projects"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 py-4 border border-white/20 text-white hover:bg-white/10 text-lg transition-colors"
-                  >
-                    Conhecer Syntropy Projects
-                  </Link>
+                    <Link href="/projects">Conhecer Syntropy Projects</Link>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1589,18 +1588,17 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Link
-                    href="/labs/coming-soon"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white text-lg transition-colors"
+                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
+                    <Link href="/labs/coming-soon">Explorar laboratórios</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg"
                   >
-                    Explorar laboratórios
-                  </Link>
-                  <Link
-                    href="/labs"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 py-4 border border-white/20 text-white hover:bg-white/10 text-lg transition-colors"
-                  >
-                    Conhecer Syntropy Labs
-                  </Link>
+                    <Link href="/labs">Conhecer Syntropy Labs</Link>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1638,18 +1636,17 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Link
-                    href="/portfolio"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white text-lg transition-colors"
+                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg">
+                    <Link href="/portfolio">Começar meu portfólio</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white/20 text-white hover:bg-white/10 px-8 py-4 text-lg"
                   >
-                    Começar meu portfólio
-                  </Link>
-                  <Link
-                    href="/portfolio"
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-8 py-4 border border-white/20 text-white hover:bg-white/10 text-lg transition-colors"
-                  >
-                    Conhecer Portfólio Syntropy
-                  </Link>
+                    <Link href="/portfolio">Conhecer Portfólio Syntropy</Link>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1676,12 +1673,9 @@ export default function HomePage() {
               <p className="text-xl text-white/80 mb-8 max-w-xl">
                 O Syntropy é feito por pessoas como você. Contribua com código, ideias ou documentação e faça parte de uma comunidade que valoriza colaboração, inovação e impacto real. Toda contribuição conta!
               </p>
-              <Link
-                href="/contribute"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white text-xl transition-colors"
-              >
-                Quero contribuir
-              </Link>
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 text-xl">
+                <Link href="/contribute">Quero contribuir</Link>
+              </Button>
             </motion.div>
             <motion.div
               className="flex-1 flex justify-center"
@@ -1710,12 +1704,9 @@ export default function HomePage() {
               <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
                 Faça parte do ecossistema que conecta aprendizado prático, desenvolvimento colaborativo e pesquisa científica descentralizada.
               </p>
-              <Link
-                href="/auth?mode=signup"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium h-11 px-12 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg transition-colors"
-              >
-                Começar minha jornada
-              </Link>
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 text-lg">
+                <Link href="/auth?mode=signup">Começar minha jornada</Link>
+              </Button>
             </div>
           </div>
         </AnimatedSection>

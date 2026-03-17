@@ -33,21 +33,22 @@ All visual properties (colors, typography, spacing, shadows, radii) are expresse
 
 ```
 Level 1: Primitive tokens (raw values)
-  --color-blue-500: #3B82F6;
+  --color-primary-500: #0FA87F;
   --font-size-16: 16px;
   --space-4: 4px;
 
 Level 2: Semantic tokens (purpose-driven aliases)
-  --color-action-primary: var(--color-blue-500);
+  --color-action-primary: var(--color-primary-500);
   --text-size-body: var(--font-size-16);
   --space-component-gap: var(--space-4);
 
-Level 3: Component tokens (component-specific overrides)
-  --button-primary-bg: var(--color-action-primary);
-  --card-body-size: var(--text-size-body);
+Level 3: Pillar tokens (context-specific overrides per app/pillar)
+  --pillar-accent: var(--color-primary-500);
+  --pillar-body-size: var(--text-size-body);
+  --pillar-card-padding: var(--space-component-gap);
 ```
 
-Components reference Level 2 (semantic) or Level 3 (component) tokens only — never Level 1 directly.
+Components reference Level 2 (semantic) or Level 3 (pillar) tokens only — never Level 1 directly.
 
 ### Rule DS-003: Color System Requirements
 
@@ -57,14 +58,15 @@ The color system must define:
 |---------------|----------------|
 | Brand | Primary, Secondary |
 | Semantic | Success, Warning, Error, Info |
-| Neutral | Background (page, surface, overlay), Border, Text (primary, secondary, disabled, inverse) |
-| Interactive | Action (default, hover, active, disabled), Focus ring |
+| Neutral | Background (page, surface, sunken, overlay), Border, Text (primary, secondary, disabled, inverse) |
+| Interactive | Action (default, hover, active, disabled), Focus ring, Selected (`--bg-selected`) |
+| Pillar | Accent (per pillar), Accent Subtle, Accent Text |
 
 **Accessibility requirements**:
 - Text on background: minimum 4.5:1 contrast ratio (WCAG 2.1 AA)
 - Large text (18pt+ or 14pt+ bold) on background: minimum 3:1
 - Interactive components and focus indicators: minimum 3:1
-- Never rely on color alone to convey information
+- Status is never communicated by color alone — icon + text must always accompany color-coded states
 
 ### Rule DS-004: Typography Scale
 
@@ -83,6 +85,8 @@ Define a type scale based on a consistent ratio (e.g., Major Third = 1.25, Perfe
 | Code | `--text-code` | 14px | Monospace for code |
 
 Define line height, font weight, and letter spacing for each role.
+
+**Font weight constraint**: Only two weights are permitted across the entire system — **400 (regular)** and **500 (medium)**. No other weights (300, 600, 700, etc.) shall exist in the design system. Pillar-specific body text size adjustments are defined in `PILLAR-PROFILES.md`.
 
 ### Rule DS-005: Spacing System
 
@@ -104,6 +108,8 @@ Use a base unit (4px or 8px) to generate a consistent spacing scale:
 
 Components use spacing tokens only. `margin: 13px` is prohibited; `margin: var(--space-3)` is correct.
 
+Each pillar defines contextual spacing overrides via pillar tokens (`--pillar-card-padding`, `--pillar-section-gap`, `--pillar-content-max-width`) that replace the base values within that pillar's app. See `docs/design-system/PILLAR-PROFILES.md` for per-pillar specifications.
+
 ---
 
 ## Component Library
@@ -114,9 +120,9 @@ Classify components by reusability level:
 
 | Level | Name | Description | Examples |
 |-------|------|-------------|----------|
-| Atoms | Primitive UI elements | Cannot be broken down further | Button, Input, Label, Icon |
-| Molecules | Simple groups of atoms | Single clear function | Form Field (Label + Input + Error), Card Header |
-| Organisms | Complex groups | Distinct section of interface | Navigation Bar, Data Table, Form |
+| Atoms | Primitive UI elements | Cannot be broken down further | Button, Input, Label, Icon, Badge |
+| Molecules | Simple groups of atoms | Single clear function | Form Field (Label + Input + Error), Card Header, Search Bar |
+| Organisms | Complex groups | Distinct section of interface | Navigation Bar, Data Table, Form, Sidebar |
 | Templates | Page layouts | Arrange organisms in a layout | Dashboard Layout, Settings Layout |
 
 ### Rule DS-007: Component Documentation Requirements
@@ -126,10 +132,11 @@ Every component in the library must document:
 1. **Purpose**: One sentence describing what the component is for
 2. **Variants**: All visual and behavioral variations (e.g., Button: primary, secondary, destructive, disabled)
 3. **Props/Parameters**: All configurable inputs with types, defaults, and descriptions
-4. **States**: Every interactive state (default, hover, focus, active, disabled, loading, error)
+4. **States**: Every interactive state (default, hover, focus, active, disabled, loading, error, selected)
 5. **Accessibility**: ARIA roles, keyboard interactions, screen reader behavior
-6. **Examples**: At least one usage example per variant
-7. **Do / Don't**: At least one usage anti-pattern
+6. **Responsive behavior**: How the component adapts across breakpoints
+7. **Examples**: At least one usage example per variant
+8. **Do / Don't**: At least one usage anti-pattern
 
 ### Rule DS-008: Component Naming Conventions
 
@@ -151,6 +158,7 @@ Every interactive component must have designs for all applicable states:
 | Hover | Visual change that signals clickability |
 | Focus | Visible focus ring (min 2px, 3:1 contrast) |
 | Active / Pressed | Visual confirmation of interaction |
+| Selected | Visually distinct from default; uses `--bg-selected` token |
 | Disabled | Visually distinct; not interactive; `aria-disabled` |
 | Loading | Spinner or skeleton; prevents re-interaction |
 | Error | Error indicator (color + icon + text); not just color |
@@ -162,7 +170,7 @@ Every interactive component must have designs for all applicable states:
 
 ### Rule DS-010: Required Interaction Patterns
 
-Define standard patterns for these common interactions. Once defined, they must be applied consistently across the system:
+Define standard patterns for these common interactions. Once defined, they must be applied consistently across the system. Full pattern specifications are documented in `docs/design-system/INTERACTION-PATTERNS.md`.
 
 | Pattern | Required When |
 |---------|--------------|
@@ -231,27 +239,6 @@ Deprecated components and tokens:
 
 ---
 
-## Compliance Checklist
-
-Use during Phase 6b (Quality Audit) and design reviews:
-
-- [ ] All color values use semantic tokens (DS-002, DS-003)
-- [ ] All spacing uses spacing scale tokens (DS-005)
-- [ ] All text uses typography scale tokens (DS-004)
-- [ ] All components documented per DS-007
-- [ ] All interactive states designed per DS-009
-- [ ] Required patterns defined for all applicable scenarios (DS-010)
-- [ ] Icons from single source with accessible labels (DS-011)
-- [ ] No hardcoded hex, px, or raw values in component definitions
-- [ ] WCAG 2.1 AA contrast verified for all text on background combinations
-- [ ] `docs/design-system/VISUAL-DIRECTION.md` exists with all sections complete (DS-016)
-- [ ] Visual Direction Aesthetic Archetype is defined and unambiguous (DS-016)
-- [ ] Anti-Patterns section contains ≥ 5 specific items (DS-016)
-- [ ] `docs/design-system/IMAGE-PROMPTS.md` exists or is explicitly marked not applicable (DS-017)
-- [ ] Base Style Specification in IMAGE-PROMPTS.md reflects current token values (DS-017)
-
----
-
 ## Visual Direction and Image Prompts
 
 ### Rule DS-016: Visual Direction Document Requirement
@@ -259,8 +246,9 @@ Use during Phase 6b (Quality Audit) and design reviews:
 When the DS-001 gate is "Required" (web, dashboard, or mobile interface in scope), a Visual Direction document must exist at `docs/design-system/VISUAL-DIRECTION.md` before implementation begins. The Visual Direction document:
 
 - Translates design token choices into aesthetic narrative that developers and AI agents can act on
-- Defines the aesthetic archetype — a single word and expansion sentence — that serves as the primary calibration tool for new visual decisions
+- Defines the aesthetic archetype — a single word and expansion sentence — that serves as the primary calibration tool for new visual decisions. The archetype for well-designed professional tools is typically in the family of **"Trustworthy & Intelligent"** (precise, capable, evidence-backed) — adapt the exact archetype word to the project's character
 - Provides explicit anti-patterns that contradict the system's character
+- Contains a **Color Story** section that narrates the rationale for each color scale (primary, pillar accents, neutrals, semantic colors) in aesthetic terms, not just functional terms
 - Contains extension guidelines for visual decisions not covered by existing tokens
 - Must be created by Prompt 01-F (`.cursor/prompts/01f-visual-direction-and-image-prompts.md`)
 
@@ -271,16 +259,6 @@ When the DS-001 gate is "Required" (web, dashboard, or mobile interface in scope
 - When a new team member or AI agent needs to understand the product's visual character
 
 **Enforcement**: A design system that lacks a Visual Direction document is incomplete. The Compliance Checklist in the design system must include a VISUAL-DIRECTION.md check alongside the token checks.
-
-```
-## Updated Compliance Checklist (DS-016 addition)
-
-- [ ] `docs/design-system/VISUAL-DIRECTION.md` exists and all sections are filled
-- [ ] Aesthetic Archetype section contains a one-word archetype and expansion sentence
-- [ ] Anti-Patterns section contains at least 5 specific, actionable items
-- [ ] Extension Guidelines section contains at least 4 numbered rules
-- [ ] Calibration Checklist section contains at least 6 questions
-```
 
 ### Rule DS-017: Image Prompt Calibration Standard
 
@@ -300,11 +278,149 @@ When AI-generated visual assets (images, illustrations, mockups) are needed at a
 
 ---
 
+## Pillar Token System
+
+### Rule DS-018: Pillar Token System
+
+When the system has multiple visual contexts (pillars, modules, or sub-applications) that share the same visual foundation but have contextual variations, the design system must define pillar tokens that are overridden by each context.
+
+**Mandatory pillar tokens:**
+
+| Token | Purpose |
+|-------|---------|
+| `--pillar-accent` | Accent color for this context |
+| `--pillar-accent-subtle` | Subtle background using the accent color |
+| `--pillar-accent-text` | Text color on accent backgrounds |
+| `--pillar-body-size` | Default body text size for this context |
+| `--pillar-card-padding` | Internal padding for cards in this context |
+| `--pillar-section-gap` | Gap between sections in this context |
+| `--pillar-content-max-width` | Maximum width of the main content area |
+
+**Inviolable rules:**
+1. The primary action color (`--action-primary`) is **never** overridden per pillar. Buttons, links, and active states use the ecosystem's primary color across all contexts.
+2. Semantic colors (success, error, warning, info) are identical in all pillars.
+3. Focus ring is identical in all pillars.
+4. Components in `packages/ui` use pillar tokens — they never check which pillar they are rendering in.
+5. Pillar token definitions and rationale are documented in `docs/design-system/PILLAR-PROFILES.md`.
+
+### Rule DS-019: Page Archetypes
+
+Every new page must be classified into one of the page archetypes defined in `docs/design-system/PAGE-ARCHETYPES.md` before implementation begins. The archetype determines:
+- Layout structure (sidebar? full-width? split-pane?)
+- Information density (spacing tokens, font sizes)
+- Predominant components
+- Responsive behavior per breakpoint
+
+**Standard archetypes:**
+
+| # | Archetype | Primary Use |
+|---|-----------|-------------|
+| 1 | Dense List | Lists for scanning and selection |
+| 2 | Long-Form Reading | Long content for reading |
+| 3 | Guided Flow | Sequential step-by-step flow |
+| 4 | Dashboard | Metrics and recent activity |
+| 5 | Split Editor | Editor with side-by-side preview |
+| 6 | Entity Detail | Entity with header + tabs |
+| 7 | Discovery Grid | Navigable collection of cards |
+
+If a page does not fit any archetype, compose from the nearest match and document the deviation in the component record.
+
+### Rule DS-020: Responsive System Requirements
+
+Every web system must define a responsive system in `docs/design-system/RESPONSIVE-SYSTEM.md` containing:
+1. Breakpoints with names and values
+2. Grid system (columns per breakpoint)
+3. Container max-width and padding per breakpoint
+4. Z-index scale
+5. Sidebar behavior per breakpoint
+6. Minimum touch target size (44×44px for mobile)
+7. Responsive typography rules (which sizes change, which do not)
+
+The approach is **mobile-first**: base styles serve the smallest viewport, breakpoint modifiers add complexity for larger screens.
+
+### Rule DS-021: Content Rendering Patterns
+
+When the system renders authored content (articles, documentation, tutorials, educational fragments), rendering rules must be documented in `docs/design-system/CONTENT-RENDERING.md`, separate from the component library.
+
+Authored content receives different typographic treatment than UI chrome:
+- More generous line-height (1.7 vs 1.6 for UI)
+- Larger paragraph spacing
+- Max-width optimized for readability (60–75 characters per line)
+- Headings with more spacing above than below
+- Code blocks with syntax highlighting using the design system palette
+
+The document must cover: general prose, code blocks, admonitions/callouts, figures and captions, mathematical equations, citations and references, embedded/interactive content.
+
+### Rule DS-022: LLM Context Optimization
+
+The design system must include a quick-reference file (`docs/design-system/LLM-QUICKREF.md`) optimized for inclusion in the context window of LLMs during frontend code generation. This file:
+
+1. Must not exceed 2000 tokens
+2. Must contain: technology stack, primary and semantic colors, typography, spacing, border radius, key components, page archetypes, responsive rules, and anti-patterns
+3. Must include a decision tree for common patterns (which button to use, how to show status, which page archetype to choose)
+4. Must be updated whenever the design system changes
+5. Should be included as a Cursor global rule (`.cursor/rules/`) so it is present in every frontend code generation
+
+The `LLM-QUICKREF.md` is a derivative — never the source of truth. If there is a conflict between the quickref and the complete documents, the complete documents prevail.
+
+---
+
+## Compliance Checklist
+
+Use during Phase 6b (Quality Audit) and design reviews:
+
+### Tokens and Values
+- [ ] All color values use semantic tokens (DS-002, DS-003)
+- [ ] All spacing values use spacing scale tokens (DS-005)
+- [ ] All text uses typography scale tokens (DS-004)
+- [ ] No font weight other than 400 and 500 anywhere in the system (DS-004)
+- [ ] No hardcoded hex, px, or raw values in component definitions
+
+### Components
+- [ ] All components documented per DS-007 (including responsive behavior)
+- [ ] All interactive states designed per DS-009 (including Selected state)
+- [ ] Required patterns defined for all applicable scenarios (DS-010)
+- [ ] Icons from a single source with accessible labels (DS-011)
+
+### Accessibility
+- [ ] WCAG 2.1 AA verified for all text/background combinations
+- [ ] Status never communicated by color alone (icon + text always) (DS-003)
+- [ ] Focus ring visible on all interactive elements
+- [ ] Touch targets ≥ 44×44px on mobile (DS-020)
+
+### Design System Documents
+- [ ] `docs/design-system/VISUAL-DIRECTION.md` exists with all sections complete (DS-016)
+- [ ] `docs/design-system/PILLAR-PROFILES.md` exists with a profile for each pillar (DS-018)
+- [ ] `docs/design-system/PAGE-ARCHETYPES.md` exists with all archetypes (DS-019)
+- [ ] `docs/design-system/DESIGN-TOKENS.md` exists with 3 token layers + Tailwind mapping (DS-002)
+- [ ] `docs/design-system/RESPONSIVE-SYSTEM.md` exists with breakpoints and grid (DS-020)
+- [ ] `docs/design-system/COMPONENT-LIBRARY.md` exists with all components (DS-007)
+- [ ] `docs/design-system/INTERACTION-PATTERNS.md` exists with required patterns (DS-010)
+- [ ] `docs/design-system/CONTENT-RENDERING.md` exists if the system renders authored content (DS-021)
+- [ ] `docs/design-system/LLM-QUICKREF.md` exists and is up to date (DS-022)
+- [ ] `docs/design-system/IMAGE-PROMPTS.md` exists or is explicitly marked not applicable (DS-017)
+
+### Visual Calibration
+- [ ] Aesthetic Archetype defined and unambiguous (DS-016)
+- [ ] Anti-Patterns section contains ≥ 5 specific items (DS-016)
+- [ ] Extension Guidelines section contains ≥ 4 numbered rules (DS-016)
+- [ ] Calibration Checklist section contains ≥ 6 questions (DS-016)
+- [ ] Pillar tokens overridden per app/pillar (DS-018)
+- [ ] Every page classified in a page archetype (DS-019)
+
+---
+
 ## References
 
 - `.cursor/rules/ux/ux-principles.mdc` — UX principles (especially UX-006: Accessibility)
 - `.cursor/rules/ux/interaction-design.mdc` — IXD-006 through IXD-010: Web interaction standards
-- `.cursor/templates/design-system/DESIGN-SYSTEM-TEMPLATE.md` — Document your project's design system
-- `.cursor/templates/design-system/COMPONENT-LIBRARY-TEMPLATE.md` — Document individual components
+- `.cursor/templates/design-system/DESIGN-TOKENS-TEMPLATE.md` — Document your project's design token system (DS-002 to DS-005)
+- `.cursor/templates/design-system/COMPONENT-LIBRARY-TEMPLATE.md` — Document individual components (DS-006 to DS-009)
 - `.cursor/templates/design-system/VISUAL-DIRECTION-TEMPLATE.md` — Document visual direction and aesthetic narrative (DS-016)
 - `.cursor/templates/design-system/IMAGE-PROMPTS-TEMPLATE.md` — Document AI image generation prompt library (DS-017)
+- `.cursor/templates/design-system/PILLAR-PROFILES-TEMPLATE.md` — Document per-pillar visual parameters (DS-018)
+- `.cursor/templates/design-system/PAGE-ARCHETYPES-TEMPLATE.md` — Document page archetypes (DS-019)
+- `.cursor/templates/design-system/RESPONSIVE-SYSTEM-TEMPLATE.md` — Document the responsive system (DS-020)
+- `.cursor/templates/design-system/INTERACTION-PATTERNS-TEMPLATE.md` — Document interaction patterns (DS-010)
+- `.cursor/templates/design-system/CONTENT-RENDERING-TEMPLATE.md` — Document content rendering rules (DS-021)
+- `.cursor/templates/design-system/LLM-QUICKREF-TEMPLATE.md` — Template for LLM quick reference (DS-022)

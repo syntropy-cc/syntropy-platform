@@ -71,8 +71,14 @@ Read both agent definitions before starting.
 - **Accessibility Requirements**: `.cursor/templates/ux/ACCESSIBILITY-REQUIREMENTS-TEMPLATE.md` → `docs/ux/ACCESSIBILITY-REQUIREMENTS.md`
 
 **Design system templates (conditional — web/dashboard systems only):**
-- **Design System**: `.cursor/templates/design-system/DESIGN-SYSTEM-TEMPLATE.md` → `docs/design-system/DESIGN-SYSTEM.md`
+- **Design Tokens**: `.cursor/templates/design-system/DESIGN-TOKENS-TEMPLATE.md` → `docs/design-system/DESIGN-TOKENS.md`
 - **Component Library**: `.cursor/templates/design-system/COMPONENT-LIBRARY-TEMPLATE.md` → `docs/design-system/COMPONENT-LIBRARY.md`
+- **Pillar Profiles** (if system has multiple pillars): `.cursor/templates/design-system/PILLAR-PROFILES-TEMPLATE.md` → `docs/design-system/PILLAR-PROFILES.md`
+- **Page Archetypes**: `.cursor/templates/design-system/PAGE-ARCHETYPES-TEMPLATE.md` → `docs/design-system/PAGE-ARCHETYPES.md`
+- **Responsive System**: `.cursor/templates/design-system/RESPONSIVE-SYSTEM-TEMPLATE.md` → `docs/design-system/RESPONSIVE-SYSTEM.md`
+- **Interaction Patterns**: `.cursor/templates/design-system/INTERACTION-PATTERNS-TEMPLATE.md` → `docs/design-system/INTERACTION-PATTERNS.md`
+- **Content Rendering** (if system renders authored content): `.cursor/templates/design-system/CONTENT-RENDERING-TEMPLATE.md` → `docs/design-system/CONTENT-RENDERING.md`
+- **LLM Quick Reference**: `.cursor/templates/design-system/LLM-QUICKREF-TEMPLATE.md` → `docs/design-system/LLM-QUICKREF.md`
 
 **Context output template:**
 - **UX Generation Summary**: `.cursor/templates/context/UX-GENERATION-SUMMARY-TEMPLATE.md`
@@ -96,8 +102,13 @@ Before creating any file, produce the full Execution Plan. Follow the standard f
 - `docs/ux/UX-PRINCIPLES.md` → content outline: user profiles (from Section 3), core UX principles derived from Section 9, interface-specific principles per execution path
 - `docs/ux/ACCESSIBILITY-REQUIREMENTS.md` → content outline: compliance level (from Section 4 or WCAG 2.1 AA default), interface-specific requirements (keyboard navigation for web, color-safe output for CLI, structured errors for API)
 - `docs/ux/INTERACTION-DESIGN.md` → content outline: information architecture for the confirmed execution path, [N] primary flows with happy and error paths, affordances and signifiers per interface type, feedback system with notification channels
-- `docs/design-system/DESIGN-SYSTEM.md` _(if DS-001 Required)_ → content outline: color palette with semantic colors, type scale, spacing system, border and elevation tokens, aesthetic direction
-- `docs/design-system/COMPONENT-LIBRARY.md` _(if DS-001 Required)_ → content outline: Button and Input components with all variants and states
+- `docs/design-system/DESIGN-TOKENS.md` _(if DS-001 Required)_ → content outline: Layer 1 primitives (brand primary, pillar accents, semantic, neutral), Layer 2 semantic tokens (text, surfaces, borders, actions, motion, border radius, z-index), Layer 3 pillar overrides, Tailwind mapping, shadcn/ui mapping, contrast matrix
+- `docs/design-system/COMPONENT-LIBRARY.md` _(if DS-001 Required)_ → content outline: Button and Input components with all variants, states, responsive behavior, and accessibility; Composition Patterns for Page Header and Empty State
+- `docs/design-system/PAGE-ARCHETYPES.md` _(if DS-001 Required)_ → classify each primary page from the information architecture into one of the 7 standard archetypes
+- `docs/design-system/RESPONSIVE-SYSTEM.md` _(if DS-001 Required)_ → breakpoints, grid, containers, component responsive rules
+- `docs/design-system/INTERACTION-PATTERNS.md` _(if DS-001 Required)_ → form validation strategy, loading patterns, error patterns, confirmation rules, empty states
+- `docs/design-system/PILLAR-PROFILES.md` _(if system has multiple pillars)_ → pillar token overrides and character per pillar
+- `docs/design-system/LLM-QUICKREF.md` _(if DS-001 Required)_ → quick reference for LLM code generation
 
 **Key UX Decisions** — one entry per major decision:
 - Information architecture choice for the primary interface (command hierarchy for CLI, navigation structure for Web)
@@ -195,15 +206,27 @@ Create `docs/ux/INTERACTION-DESIGN.md` using the Interaction Design template.
 
 ##### Step 10 — Define design token system
 
-1. **Color palette**: brand colors, semantic colors, neutral scale
-2. **Type scale**: font families and sizes
-3. **Spacing system**: base unit and scale
-4. **Border and elevation tokens**
+1. **Layer 1 — Color primitives**: brand primary scale, pillar accent scales (one per pillar), semantic colors, neutral scale
+2. **Layer 2 — Semantic tokens**: text, surfaces, borders, interactive/action colors, semantic state colors
+3. **Layer 3 — Pillar tokens**: baseline defaults + per-pillar overrides for accent, body size, card padding, section gap, content max-width
+4. **Typography**: font families, type scale, enforce only weights 400 and 500
+5. **Spacing**: base unit and scale
+6. **Border radius**: sm=4px, md=6px, default=8px, lg=12px, xl=16px, full=9999px
+7. **Elevation**: shadow tokens only — no glass morphism
+8. **Z-index scale**
+9. **Motion tokens**
+10. **Tailwind CSS and shadcn/ui mapping**
 
-##### Step 11 — Create Design System and Component Library skeleton
+##### Step 11 — Create Design System documents
 
-1. Create `docs/design-system/DESIGN-SYSTEM.md` using the Design System template
-2. Create `docs/design-system/COMPONENT-LIBRARY.md` using the Component Library template, with at minimum Button and Input components
+1. Create `docs/design-system/DESIGN-TOKENS.md` using the Design Tokens template (3 layers + Tailwind/shadcn mappings)
+2. Create `docs/design-system/COMPONENT-LIBRARY.md` using the Component Library template, with at minimum Button and Input components (including responsive behavior)
+3. Create `docs/design-system/PAGE-ARCHETYPES.md` using the Page Archetypes template — classify each primary page from the IA
+4. Create `docs/design-system/RESPONSIVE-SYSTEM.md` using the Responsive System template
+5. Create `docs/design-system/INTERACTION-PATTERNS.md` using the Interaction Patterns template
+6. Create `docs/design-system/PILLAR-PROFILES.md` using the Pillar Profiles template (if the system has multiple pillars)
+7. Create `docs/design-system/CONTENT-RENDERING.md` using the Content Rendering template (if the system renders authored content)
+8. Create `docs/design-system/LLM-QUICKREF.md` using the LLM Quick Reference template — fill with actual token values from DESIGN-TOKENS.md
 
 ---
 
@@ -241,7 +264,7 @@ For every Critical or High finding: identify the affected document, update it, v
 
 **Interaction Design** — Flows designed: [list]; Happy paths: [count]; Error paths: [count]; UI states defined: [list]; Feedback system: [channels]
 
-**Design System** (if applicable) — Color tokens: [count]; Type scale: [levels]; Spacing: [values]; Components: [list]
+**Design System** (if applicable) — Primary color: [hex]; Pillar accents: [list]; Type scale levels: [count]; Spacing tokens: [count]; Components defined: [list]; Page archetypes classified: [count]; Documents created: [list]
 
 **Design Review** — Verdict: [Pass / Issues found]; Critical findings addressed: [count]; High findings addressed: [count]
 
@@ -249,8 +272,14 @@ For every Critical or High finding: identify the affected document, update it, v
 - `docs/ux/UX-PRINCIPLES.md`
 - `docs/ux/INTERACTION-DESIGN.md`
 - `docs/ux/ACCESSIBILITY-REQUIREMENTS.md`
-- `docs/design-system/DESIGN-SYSTEM.md` (if applicable)
-- `docs/design-system/COMPONENT-LIBRARY.md` (if applicable)
+- `docs/design-system/DESIGN-TOKENS.md` (if DS-001 Required)
+- `docs/design-system/COMPONENT-LIBRARY.md` (if DS-001 Required)
+- `docs/design-system/PAGE-ARCHETYPES.md` (if DS-001 Required)
+- `docs/design-system/RESPONSIVE-SYSTEM.md` (if DS-001 Required)
+- `docs/design-system/INTERACTION-PATTERNS.md` (if DS-001 Required)
+- `docs/design-system/PILLAR-PROFILES.md` (if multi-pillar system)
+- `docs/design-system/CONTENT-RENDERING.md` (if authored content rendered)
+- `docs/design-system/LLM-QUICKREF.md` (if DS-001 Required)
 
 **Next Steps**
 - **If a design system was created** (DS-001 gate "Required"): proceed to **Prompt 01-F** (`.cursor/prompts/01f-visual-direction-and-image-prompts.md`) — no copy-paste needed
@@ -278,8 +307,16 @@ For every Critical or High finding: identify the affected document, update it, v
 - [ ] All required UI states designed: loading, empty, error, success
 - [ ] Feedback system defined with notification channels
 - [ ] `docs/ux/INTERACTION-DESIGN.md` created using Interaction Design template
-- [ ] `docs/design-system/DESIGN-SYSTEM.md` created (if DS-001 gate Required)
-- [ ] `docs/design-system/COMPONENT-LIBRARY.md` skeleton created with Button and Input (if applicable)
+- [ ] `docs/design-system/DESIGN-TOKENS.md` created with 3 token layers + Tailwind/shadcn mapping (if DS-001 gate Required)
+- [ ] Only weights 400 and 500 used in the type scale
+- [ ] Border radius values: sm=4px, md=6px, default=8px, lg=12px, xl=16px, full=9999px
+- [ ] Elevation via shadows only (no glass morphism tokens)
+- [ ] `docs/design-system/COMPONENT-LIBRARY.md` skeleton created with Button and Input including responsive behavior (if applicable)
+- [ ] `docs/design-system/PAGE-ARCHETYPES.md` created; primary pages classified (if applicable)
+- [ ] `docs/design-system/RESPONSIVE-SYSTEM.md` created with breakpoints and component behavior (if applicable)
+- [ ] `docs/design-system/INTERACTION-PATTERNS.md` created with form, loading, and error patterns (if applicable)
+- [ ] `docs/design-system/PILLAR-PROFILES.md` created (if multi-pillar system)
+- [ ] `docs/design-system/LLM-QUICKREF.md` created with actual token values (if applicable)
 - [ ] UX Consistency Validation Skill invoked in design review mode; every check executed
 - [ ] All Critical and High findings from design review addressed and verified
 - [ ] `docs/context/ux-generation-summary.md` written with DS-001 gate result prominently included (Status: Active) (CTX-003)

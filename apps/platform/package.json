@@ -11,8 +11,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
     "@syntropy/ui": "workspace:*",
     "@supabase/ssr": "^0.5.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.4",
     "framer-motion": "^11.11.17",
     "lucide-react": "^0.460.0",
     "@supabase/supabase-js": "^2.47.0",

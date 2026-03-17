@@ -113,17 +113,20 @@ Never use interactive prompts in:
 - Every page reachable within 3 clicks from the home page
 - URLs are stable, descriptive, and bookmarkable
 
+**Multi-pillar systems**: In systems with multiple pillars or modules, primary navigation must clearly indicate which pillar is active. Transitions between pillars must feel like changing context within the same product, not navigating to a different product. Use consistent chrome (top nav, global actions) across all pillars; vary only the pillar-scoped accent color and density as defined in `docs/design-system/PILLAR-PROFILES.md`.
+
 ### Rule IXD-007: Forms and Data Entry
 
 | Element | Requirement |
 |---------|-------------|
 | Required fields | Marked with visible indicator (not just red color); explained in legend |
 | Optional fields | No marker, or explicit "(optional)" label |
-| Validation | Inline, on field blur (not only on submit); show validation state clearly |
+| Validation timing | On blur (field-level) + on submit (form-level); never on every keystroke |
+| Error scroll | On submit with errors, scroll to the first invalid field and give it focus |
 | Error placement | Directly beneath the field that caused the error |
-| Error messages | State what is wrong and how to fix it |
+| Error messages | State what is wrong and how to fix it; be specific ("Email is required", not "Field is required") |
 | Success confirmation | Shown after form submission; includes what was changed |
-| Destructive actions | Require confirmation dialog with explicit description of consequence |
+| Destructive actions | Require confirmation dialog with a button that names the specific action ("Delete institution", not "OK") |
 
 ### Rule IXD-008: State Communication
 
@@ -131,12 +134,15 @@ Users must always know the system state. Every possible state must be designed:
 
 | State | Design Requirement |
 |-------|-------------------|
-| Loading | Skeleton screen or spinner; never blank content area |
+| Loading | Skeleton screen (for layout-predictable content) or spinner; never blank content area |
 | Empty | Illustrated or textual empty state with call to action |
 | Error | Friendly error message with recovery option |
 | Success | Confirmation message; auto-dismiss for low-stakes actions |
+| Selected | Visually distinct row/item using `--bg-selected`; not just a checkbox state |
 | Partial / warning | Inline badge or banner; not a blocking modal |
 | Offline | Clear indicator; queue or disable actions that require connectivity |
+
+**Loading specifics**: Loading > 200ms shows a skeleton that mirrors the expected layout. Loading < 200ms shows nothing (avoid flash). Never show a full-screen spinner without context — always show a skeleton that reflects the expected layout shape.
 
 ### Rule IXD-009: Keyboard and Accessibility
 
@@ -152,9 +158,12 @@ Users must always know the system state. Every possible state must be designed:
 ### Rule IXD-010: Responsive Design
 
 - Mobile-first approach: design smallest viewport first, then expand
-- Breakpoints documented in design system (if web system has one)
+- Breakpoints are defined in `docs/design-system/RESPONSIVE-SYSTEM.md` — that document is the single source of truth for breakpoint values and grid behavior
 - Critical workflows must be completable on mobile without horizontal scrolling
-- Tables on mobile: use horizontal scroll container or responsive layout (not truncation without disclosure)
+- Modals become bottom sheets on mobile (slide up from bottom, full viewport width)
+- Sidebars become Sheets (slide-out from edge) on mobile, accessible via a hamburger or trigger button
+- Tables with many columns get horizontal scroll container on mobile, or transform into card list view
+- Touch targets are minimum 44×44px on all interactive elements
 
 ---
 
@@ -245,6 +254,26 @@ Every significant user interaction flow must be documented in the Interaction De
 - Differs from conventional patterns for the interface type
 - Represents a primary user workflow from the Vision Document
 
+### Rule IXD-016: Page Archetype Compliance
+
+Every web page must be classified into a page archetype (defined in `docs/design-system/PAGE-ARCHETYPES.md`) during design, before implementation. The archetype defines:
+- Layout structure (sidebar, centered column, split pane, etc.)
+- Density level (spacing tokens, font sizes)
+- Dominant components
+- Responsive behavior per breakpoint
+
+If a page combines multiple archetypes (e.g., Entity Detail with a tab that contains a Dense List), each section follows its corresponding archetype. Transitions between sections must be natural — same base tokens, density may vary. Archetype deviations must be documented in the component record.
+
+### Rule IXD-017: Dark/Light Mode Parity
+
+When the system supports both dark and light modes, both are first-class citizens:
+
+1. Neither mode is "derived" from the other — both are designed intentionally
+2. Mode switching is immediate (no page reload), with a smooth 200ms transition
+3. User preference persists in `localStorage`; default follows the system's `prefers-color-scheme`
+4. Every component must be verified in both modes before merge
+5. WCAG AA contrast must be verified in both modes independently
+
 ---
 
 ## Compliance Check
@@ -256,8 +285,13 @@ When auditing UX and interaction design during Phase 6b, verify:
 | Commands use noun-verb grammar | IXD-001 | CLI |
 | All exit codes documented | IXD-003 | CLI |
 | Help text present for every command | IXD-004 | CLI |
-| All states designed (loading, empty, error, success) | IXD-008 | Web |
+| All states designed (loading, empty, error, success, selected) | IXD-008 | Web |
+| Loading uses skeleton (not blank) for layout-predictable content | IXD-008 | Web |
 | All forms have accessible labels | IXD-009 | Web |
+| Modals become bottom sheets on mobile | IXD-010 | Web |
+| Sidebars become Sheets on mobile | IXD-010 | Web |
+| Every page classified in a page archetype | IXD-016 | Web |
+| Dark and light mode both tested | IXD-017 | Web |
 | API errors use standard format | IXD-012 | API |
 | List endpoints support pagination | IXD-013 | API |
 | Terminology consistent across interfaces | IXD-014 | All |

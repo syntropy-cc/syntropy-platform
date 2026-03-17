@@ -25,7 +25,7 @@ Before any analysis:
 
 **Applicability check**: Read the `## Design System Decision` section of `ux-generation-summary.md`. If DS-001 gate result is **"Not Required"**, state: "Prompt 01-F is not applicable — no design system was created. Phase 2b is complete. Proceed to **Prompt 03** (`.cursor/prompts/03-generate-implementation-docs.md`)." Update `docs/context/EXECUTION-STATE.md` accordingly. Do not proceed further.
 
-If the DS-001 gate was "Required" and `docs/design-system/DESIGN-SYSTEM.md` exists, proceed with this prompt.
+If the DS-001 gate was "Required" and `docs/design-system/DESIGN-TOKENS.md` exists, proceed with this prompt.
 
 ### Execution model
 
@@ -47,13 +47,14 @@ Read the **UX Architect Agent** definition at `.cursor/agents/ux-architect.md`. 
 ### Rules you must follow
 
 - **Context management**: `.cursor/rules/framework/context-management.mdc` (CTX-001 through CTX-009)
-- `.cursor/rules/design-system/design-system.mdc` — DS-001 through DS-015 (understand the token system before writing the narrative); DS-016 (Visual Direction requirement) and DS-017 (Image Prompt Calibration)
+- `.cursor/rules/design-system/design-system.mdc` — DS-001 through DS-017 (understand the token system, pillar system, and archetypes before writing the narrative); DS-016 (Visual Direction requirement) and DS-017 (Image Prompt Calibration); DS-018 (Pillar Token System)
 - `.cursor/rules/ux/ux-principles.mdc` — UX-001 through UX-008
 
 ### Templates you must use
 
 - **Visual Direction**: `.cursor/templates/design-system/VISUAL-DIRECTION-TEMPLATE.md` → `docs/design-system/VISUAL-DIRECTION.md`
 - **Image Prompts**: `.cursor/templates/design-system/IMAGE-PROMPTS-TEMPLATE.md` → `docs/design-system/IMAGE-PROMPTS.md`
+- **LLM Quick Reference** (update if it exists): `.cursor/templates/design-system/LLM-QUICKREF-TEMPLATE.md` → `docs/design-system/LLM-QUICKREF.md`
 
 ---
 
@@ -61,21 +62,23 @@ Read the **UX Architect Agent** definition at `.cursor/agents/ux-architect.md`. 
 
 #### Step 0 — Plan mode: read sources and produce Visual Direction Brief
 
-**Read all five source documents before producing the brief:**
+**Read all source documents before producing the brief:**
 
 1. `docs/vision/VISION.md` — Section 5 (Component Visions: stated visual character) and Section 3 (Users and Actors)
 2. `docs/ux/UX-PRINCIPLES.md` — Sections 1 and 2 (Interface Profile and UX Principles)
-3. `docs/design-system/DESIGN-SYSTEM.md` — Sections 1 through 7 (all token decisions)
-4. `docs/design-system/COMPONENT-LIBRARY.md` — component definitions, particularly Button and Input
-5. `docs/context/ux-generation-summary.md` (already read above)
+3. `docs/design-system/DESIGN-TOKENS.md` — all three token layers (primitives, semantics, pillar)
+4. `docs/design-system/PILLAR-PROFILES.md` — pillar accent colors and character descriptions (if it exists)
+5. `docs/design-system/COMPONENT-LIBRARY.md` — component definitions, particularly Button and Input
+6. `docs/context/ux-generation-summary.md` (already read above)
 
 **Extract and record before producing the brief:**
-- The one-sentence Aesthetic Direction from DESIGN-SYSTEM.md Section 1.2
-- All brand color hex values and their stated usage
-- The font families chosen (heading vs. body)
+- The one-sentence Aesthetic Direction from DESIGN-TOKENS.md Section 1.2
+- Primary action color hex value and the pillar accent colors (from DESIGN-TOKENS.md Sections 2.1 and 2.2)
+- The font families chosen (from DESIGN-TOKENS.md Section 2.5)
 - Any visual references mentioned in Vision Section 5
-- The spacing base unit and border radius range
-- The motion duration range and easing functions
+- The spacing base unit and border radius range (from DESIGN-TOKENS.md Sections 2.6 and 3.7)
+- The motion duration range and easing functions (from DESIGN-TOKENS.md Section 3.10)
+- Pillar character descriptions from PILLAR-PROFILES.md (if it exists) — use to inform Color Story per pillar
 
 **Produce the Visual Direction Brief (Execution Plan):**
 
@@ -86,8 +89,9 @@ Following the standard format from `.cursor/templates/context/EXECUTION-PLAN-TEM
 **Scope** — 2 files to create: `VISUAL-DIRECTION.md` and `IMAGE-PROMPTS.md`.
 
 **File Manifest:**
-- `docs/design-system/VISUAL-DIRECTION.md` → content outline: Aesthetic Archetype (one word + one sentence), Visual Character (3–5 concrete sentences), Color Story (narrative for each palette range), Typography Personality, Spatial Character, Motion Character, Illustration and Imagery Style, Anti-Patterns (5–8 specific items), Reference Landmarks (3–5 comparable products), Extension Guidelines (4–6 numbered rules), Calibration Checklist (6–8 yes/no questions)
+- `docs/design-system/VISUAL-DIRECTION.md` → content outline: Aesthetic Archetype (one word + one sentence), Visual Character (3–5 concrete sentences), Color Story (narrative for primary color + one section per pillar accent + neutral scale + semantic colors + palette as a set), Typography Personality, Spatial Character (including elevation strategy — shadows not glass morphism), Motion Character, Illustration and Imagery Style, Anti-Patterns (5–8 specific items, including glass morphism and weight-beyond-500 prohibitions), Reference Landmarks (3–5 comparable products), Extension Guidelines (4–6 numbered rules), Calibration Checklist (6–8 yes/no questions)
 - `docs/design-system/IMAGE-PROMPTS.md` → content outline: Base Style Specification (complete style string), 5 asset categories (UI Screenshots, Marketing/Hero, Onboarding, Spot Illustrations, Social Media) with positive/negative prompts, aspect ratios, and usage notes
+- `docs/design-system/LLM-QUICKREF.md` → update the quick reference to reflect the current token values, pillar accents, and anti-patterns from the completed Visual Direction document
 
 **Key Decisions:**
 - One-word aesthetic archetype (proposed, based on token profile)
@@ -104,7 +108,7 @@ Present the following to the user and state: "This is the Visual Direction Brief
 **Visual Direction Brief**
 
 **Source Extraction**
-- Aesthetic Direction (from DESIGN-SYSTEM.md §1.2): [quote verbatim]
+- Aesthetic Direction (from DESIGN-TOKENS.md §1.2): [quote verbatim]
 - Vision Section 5 visual references: [list any comparisons, adjectives, or product names]
 - Brand colors: [primary, secondary, accent with hex values]
 - Font families: [heading and body font names]
@@ -225,17 +229,19 @@ Verify that every positive prompt, when read alone, produces a result consistent
 - [ ] `docs/context/EXECUTION-STATE.md` read at startup (CTX-001)
 - [ ] `docs/context/ux-generation-summary.md` confirmed present (CTX-004)
 - [ ] DS-001 gate confirmed "Required" before proceeding; halt stated if "Not Required"
-- [ ] All five source documents read before producing the Visual Direction Brief
+- [ ] All source documents read before producing the Visual Direction Brief (including DESIGN-TOKENS.md and PILLAR-PROFILES.md if it exists)
 - [ ] Visual Direction Brief produced in Plan mode with all required fields (CTX-007, CTX-008)
 - [ ] User confirmation received before any file was created (CTX-009)
 - [ ] `docs/design-system/VISUAL-DIRECTION.md` created using the Visual Direction template
 - [ ] Every section of VISUAL-DIRECTION.md filled with project-specific content (no placeholder text)
 - [ ] Visual Character section is concrete and specific, not generic
-- [ ] Anti-Patterns section contains at least 5 specific, actionable items
+- [ ] Color Story includes one subsection per pillar accent in addition to primary color narrative
+- [ ] Anti-Patterns section contains at least 5 specific items (including glass morphism and font weights beyond 400/500)
 - [ ] Extension Guidelines section contains at least 4 numbered rules
 - [ ] `docs/design-system/IMAGE-PROMPTS.md` created using the Image Prompts template
 - [ ] Base Style Specification is a complete, usable style string
 - [ ] All positive prompts verified consistent with the aesthetic archetype
+- [ ] `docs/design-system/LLM-QUICKREF.md` updated with current token values from this session
 - [ ] `docs/context/EXECUTION-STATE.md` updated: Phase 2b complete, next = Prompt 03, ux-generation-summary.md → Delivered (CTX-002, CTX-006)
 - [ ] User directed to Prompt 03 with note that no copy-paste is needed
 

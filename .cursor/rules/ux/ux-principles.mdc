@@ -61,6 +61,8 @@ myapp deploy --help
 # INCORRECT: All options shown equally, overwhelming the user
 ```
 
+**Web systems with multiple pillars**: In multi-pillar systems, the navigation shows only the top-level pillars; content within each pillar is revealed progressively via sidebar, tabs, and drill-down. A user enters a pillar and sees the pillar's primary view; depth and advanced options reveal themselves as the user navigates deeper.
+
 ### Rule UX-003: Immediate and Clear Feedback
 
 Every action must produce feedback that confirms what happened, what the system is doing, or what went wrong.
@@ -79,6 +81,8 @@ Every action must produce feedback that confirms what happened, what the system 
 | 2s–30s | Progress message or spinner with estimated completion |
 | > 30s | Progress with percentage or steps if deterministic |
 | Background | Confirmation that it started; notification when done |
+
+**Loading patterns for web**: Skeleton loading is preferred over spinners for content with a predictable layout. Skeletons mirror the shape of the expected content, reducing perceived wait time. Never show a blank screen during loading — show a skeleton that reflects the expected content structure. See `docs/design-system/INTERACTION-PATTERNS.md` for full loading pattern specifications.
 
 ### Rule UX-004: Error Prevention Over Error Recovery
 
@@ -115,6 +119,8 @@ Users develop a mental model of your system. Consistency reinforces that model; 
 - Different parameter ordering for similar commands
 - Date formats inconsistent between API responses and CLI output
 
+**Cross-pillar visual consistency**: In systems with multiple visual pillars, consistency is maintained by the shared primary action color, shared components (`packages/ui`), and shared base tokens. Variation is permitted only in pillar tokens (accent color, density, typography size) as defined in `docs/design-system/PILLAR-PROFILES.md`. The pillar accent changes; the action buttons, forms, and focus ring do not.
+
 ### Rule UX-006: Accessibility as a First-Class Requirement
 
 Accessibility is not an afterthought. It is a requirement that must be addressed from the design phase.
@@ -148,7 +154,7 @@ Different system types have different UX expectations. Meet users where they are
 | System Type | Primary UX Expectation | Anti-patterns |
 |------------|----------------------|---------------|
 | CLI | Speed, scriptability, composability | Interactive prompts in pipes; non-zero exit codes for "not found"; inconsistent output format |
-| Web / Dashboard | Visual clarity, discoverability, state visibility | Hidden save buttons; modal overuse; unclear navigation; no empty states |
+| Web / Dashboard | Visual clarity, discoverability, state visibility | Hidden save buttons; modal overuse; unclear navigation; no empty states; visually disconnected pillars; inconsistent glass morphism; mixed font weights; skeleton loading absent |
 | REST API | Predictability, self-documentation, consistency | Inconsistent error formats; missing pagination; surprising status codes |
 | Library / SDK | Minimal cognitive overhead, strong types, clear error messages | Checked exceptions as normal flow; mutable shared state; magic strings |
 | Agent / Pipeline | Traceability, idempotency, recoverability | Silent failures; non-idempotent steps; no way to resume |

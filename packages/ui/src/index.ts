@@ -14,6 +14,18 @@ export {
   type CardProps,
 } from "./components/card";
 export { Badge, type BadgeProps } from "./components/badge";
+export { Input, type InputProps } from "./components/input";
+export { Textarea, type TextareaProps } from "./components/textarea";
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectGroupLabel,
+  SelectSeparator,
+} from "./components/select";
 export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
 export {
   Sheet,

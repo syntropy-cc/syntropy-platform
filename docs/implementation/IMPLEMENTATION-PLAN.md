@@ -10,21 +10,21 @@
 
 ```
 CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — IN PROGRESS
-CURRENT ITEM  : COMP-041.8 - Create Input + Textarea + Select
+CURRENT ITEM  : COMP-041.9 - Create Checkbox + Switch
 MILESTONE     : M6 - Design System Compliance (packages/ui)
-STAGE PROGRESS: 7 / 20 items done (S58)
-OVERALL       : 272 / 285 items done
+STAGE PROGRESS: 8 / 20 items done (S58)
+OVERALL       : 273 / 285 items done
 ```
 
 **Next 5 items**:
-1. `COMP-041.8` — Create Input + Textarea + Select — High, M
-2. `COMP-041.9` — Create Checkbox + Switch — High, S
-3. `COMP-041.10` — Create Avatar + PillarBadge — High, S
-4. `COMP-041.11` — Create Skeleton + ProgressBar — High, S
-5. `COMP-041.12` — Create Tooltip + FormField — High, M
+1. `COMP-041.9` — Create Checkbox + Switch — High, S
+2. `COMP-041.10` — Create Avatar + PillarBadge — High, S
+3. `COMP-041.11` — Create Skeleton + ProgressBar — High, S
+4. `COMP-041.12` — Create Tooltip + FormField — High, M
+5. `COMP-041.13` — Create Dialog — Medium, M
 
-**Current item (COMP-041.8) acceptance criteria**: Input 40px, correct focus ring, error state, all input types; Textarea min-height 80px; Select with Radix dropdown; all exported.
-**Suggested steps**: (1) Create `input.tsx` (2) Create `textarea.tsx` (3) Create `select.tsx` with Radix (4) Export from index.ts
+**Current item (COMP-041.9) acceptance criteria**: Checkbox 20px, Radix Checkbox, `--action-primary` checked; Switch 40×24px, Radix Switch, `--action-primary` on state.
+**Suggested steps**: (1) Create `checkbox.tsx` (2) Create `switch.tsx` (3) Export
 **Architecture refs**: COMP-041 record, COMPONENT-LIBRARY.md, DESIGN-TOKENS.md
 
 **Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
@@ -3357,7 +3357,7 @@ Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.8] Create Input + Textarea + Select
 `S58` `High` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 **Criteria**: Input 40px, correct focus ring, error state, all input types; Textarea min-height 80px; Select with Radix dropdown; all exported.
 **Steps**: (1) Create `input.tsx` (2) Create `textarea.tsx` (3) Create `select.tsx` with Radix (4) Export from index.ts
 
@@ -3461,21 +3461,21 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-17 | S58 COMP-041.6–041.7 done; 272 / 285 items done
+> Last Updated: 2026-03-17 | S58 COMP-041.8 done; 273 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 272 / 285 items | 285 / 285 | - |
+| **Overall Progress** | 273 / 285 items | 285 / 285 | - |
 | **Current Milestone** | M6 - Design System Compliance | M6 | - |
-| **Current Stage** | S58 - Design System UI Library Compliance — 7/20 done | S58 | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — 8/20 done | S58 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent completions** (2026-03-17): COMP-041.6 (Sheet: overlay token, 200ms/150ms animation, z-index, reduced-motion), COMP-041.7 (Navbar/Footer/AppLayout token names). COMP-041.1–041.5 (tokens, Button, Card, Badge) done earlier. S58 at 7/20.
+**Recent completions** (2026-03-17): COMP-041.8 (Input, Textarea, Select with Radix; design tokens; component tests). COMP-041.6–041.7 (Sheet, Navbar/Footer/AppLayout) and COMP-041.1–041.5 done earlier. S58 at 8/20.
 
 **Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests.
 
@@ -3483,6 +3483,7 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ### Recent completions
 
+- 2026-03-17 COMP-041.8 - Input, Textarea, Select (40px height, focus ring, error state, Radix Select; exported; component tests)
 - 2026-03-17 COMP-041.7 - Navbar, Footer, AppLayout refactor (token-based class names; no glass/old refs)
 - 2026-03-17 COMP-041.6 - Sheet refactor (--bg-overlay, --bg-surface, shadow-lg, z-overlay/z-modal, 200ms/150ms animation, 300px, reduced-motion)
 - 2026-03-17 COMP-041.5 - Badge refactor (7 token variants, 11px/500, pill)

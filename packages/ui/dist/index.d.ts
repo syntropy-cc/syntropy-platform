@@ -5,6 +5,9 @@
 export { Button, type ButtonProps } from "./components/button";
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, type CardProps, } from "./components/card";
 export { Badge, type BadgeProps } from "./components/badge";
+export { Input, type InputProps } from "./components/input";
+export { Textarea, type TextareaProps } from "./components/textarea";
+export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectGroupLabel, SelectSeparator, } from "./components/select";
 export { ThemeToggle, type ThemeToggleProps } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, type SheetProps, type SheetContentProps, type SheetTriggerProps, } from "./components/sheet";
 export { Navbar, type NavbarProps, type NavbarLink, } from "./components/navbar";

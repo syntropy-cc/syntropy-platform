@@ -5,6 +5,9 @@
 export { Button } from "./components/button";
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, } from "./components/card";
 export { Badge } from "./components/badge";
+export { Input } from "./components/input";
+export { Textarea } from "./components/textarea";
+export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectGroupLabel, SelectSeparator, } from "./components/select";
 export { ThemeToggle } from "./components/theme-toggle";
 export { Sheet, SheetContent, SheetTrigger, } from "./components/sheet";
 export { Navbar, } from "./components/navbar";

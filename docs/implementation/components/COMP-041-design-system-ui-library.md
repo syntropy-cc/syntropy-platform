@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 7 |
+| ✅ Done | 8 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 13 |
+| ⬜ Ready/Backlog | 12 |
 | **Total** | **20** |
 
-**Component Coverage**: 35% (7/20 items complete)
+**Component Coverage**: 40% (8/20 items complete)
 
 ### Item List
 
@@ -258,7 +258,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | M |
 | **Priority** | High |
 | **Dependencies** | COMP-041.1, COMP-041.2 |
@@ -266,17 +266,22 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 **Description**: Implement Input, Textarea, and Select as per `COMPONENT-LIBRARY.md`. These are required for all forms across pillar apps.
 
 **Acceptance Criteria**:
-- [ ] **Input**: height 40px; padding `--space-3` (12px); `--radius-md` (6px); default state `--border-default`; focus `--border-focus` + `box-shadow: var(--focus-ring)`; error `--border-error` + `box-shadow: var(--focus-ring-error)`; disabled: opacity 0.5, `--bg-surface-sunken`; read-only: `--bg-surface-sunken` no focus
-- [ ] **Input**: types: `text`, `password`, `email`, `search`, `number`, `url`; `aria-invalid` on error; never placeholder-only (label required)
-- [ ] **Textarea**: same styles as Input; min-height 80px; `resize: vertical`; line-height 1.6
-- [ ] **Select**: same height/border as Input; chevron icon right-aligned; dropdown panel `--bg-surface-raised` + `--shadow-md` + `--radius-lg`; keyboard navigation via Radix Select
-- [ ] All exported from `packages/ui/src/index.ts`
-- [ ] Component tests for default, focus, error, disabled states
+- [x] **Input**: height 40px; padding `--space-3` (12px); `--radius-md` (6px); default state `--border-default`; focus `--border-focus` + `box-shadow: var(--focus-ring)`; error `--border-error` + `box-shadow: var(--focus-ring-error)`; disabled: opacity 0.5, `--bg-surface-sunken`; read-only: `--bg-surface-sunken` no focus
+- [x] **Input**: types: `text`, `password`, `email`, `search`, `number`, `url`; `aria-invalid` on error; never placeholder-only (label required)
+- [x] **Textarea**: same styles as Input; min-height 80px; `resize: vertical`; line-height 1.6
+- [x] **Select**: same height/border as Input; chevron icon right-aligned; dropdown panel `--bg-surface-raised` + `--shadow-md` + `--radius-lg`; keyboard navigation via Radix Select
+- [x] All exported from `packages/ui/src/index.ts`
+- [x] Component tests for default, focus, error, disabled states
 
-**Files to Create**:
+**Implementation notes**: Input and Textarea use token-based Tailwind classes (arbitrary values for `--border-focus`/`--border-error`). Select uses `@radix-ui/react-select`; compound API (Select, SelectTrigger, SelectValue, SelectContent, SelectItem, etc.). Test setup mocks `Element.prototype.scrollIntoView` for jsdom. Dependency added: `@radix-ui/react-select`.
+
+**Files Created**:
 - `packages/ui/src/components/input.tsx`
 - `packages/ui/src/components/textarea.tsx`
 - `packages/ui/src/components/select.tsx`
+- `packages/ui/src/components/input.test.tsx`
+- `packages/ui/src/components/textarea.test.tsx`
+- `packages/ui/src/components/select.test.tsx`
 
 ---
 

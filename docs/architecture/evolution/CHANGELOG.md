@@ -6,6 +6,10 @@ All notable architectural changes to the Syntropy Ecosystem are documented here.
 
 ## [Unreleased]
 
+### Added
+
+- **Design System UI Library compliance**: `packages/ui` is declared the sole canonical implementation of the design system specification. Decision records the requirement to introduce `packages/ui/src/styles/tokens.css` as the canonical token file, align all existing components (Button, Card, Badge, Sheet) to `COMPONENT-LIBRARY.md` specs, and implement the 21 missing components. All apps must consume tokens from this file. See [ADR-013](../decisions/ADR-013-design-system-ui-library-compliance.md). Implementation tracked as COMP-041 (Stage S58). DS Evolution Impact Plan at `docs/design-system/evolution/ds-impact-ADR-013.md`.
+
 ### Changed
 
 - **Platform and application structure**: Platform is defined as technical foundation only (not a user-facing pillar). Institutional site is the main entry point of the system (GitHub-style). Single web application has no `/platform` route; cross-pillar features are under a shared user area (e.g. `/dashboard`). Three functional pillars exposed to users are Learn, Hub, Labs only. See [ADR-012](../decisions/ADR-012-platform-as-foundation-institutional-home.md). Root ARCHITECTURE.md, platform/web-application, platform/institutional-site, and diagrams index updated; ARCH-013 added to architecture rules.

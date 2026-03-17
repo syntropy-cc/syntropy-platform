@@ -1,8 +1,8 @@
 # Implementation Backlog
 
 > **Project**: Syntropy Platform
-> **Last Updated**: 2026-03-16
-> **Total Items**: 273 | **Done**: 0 | **In Progress**: 0 | **Ready**: 270 | **Backlog**: 3
+> **Last Updated**: 2026-03-17 (ADR-013: COMP-041 added — 20 new items, S58/M6)
+> **Total Items**: 293 | **Done**: 0 | **In Progress**: 0 | **Ready**: 290 | **Backlog**: 3
 
 ## Overview
 
@@ -19,9 +19,9 @@ For items currently being worked on, see [CURRENT-WORK.md](./CURRENT-WORK.md).
 | Done | 0 | 0% |
 | Review | 0 | 0% |
 | In Progress | 0 | 0% |
-| Ready | 270 | 98.9% |
-| Backlog | 3 | 1.1% |
-| **Total** | **273** | **100%** |
+| Ready | 290 | 98.98% |
+| Backlog | 3 | 1.02% |
+| **Total** | **293** | **100%** |
 
 ---
 
@@ -693,6 +693,36 @@ Items are grouped by architectural component. Each component links to its detail
 | COMP-040.3 | Timeout wrapper | ⬜ Ready | High | XS | COMP-001 |
 | COMP-040.4 | ResilientAdapter base class | ⬜ Ready | High | S | COMP-040.1, COMP-040.2, COMP-040.3 |
 | COMP-040.5 | Resilience integration tests | ⬜ Ready | High | S | COMP-040.4 |
+
+---
+
+### COMP-041 — Design System UI Library
+
+**Implementation Record**: [COMP-041-design-system-ui-library.md](./components/COMP-041-design-system-ui-library.md)
+**Component Status**: ⬜ Not Started | **Coverage**: 0% | **ADR**: [ADR-013](../architecture/decisions/ADR-013-design-system-ui-library-compliance.md) | **Stage**: S58 (M6)
+
+| ID | Title | Status | Priority | Size | Dependencies |
+|----|-------|--------|----------|------|--------------|
+| COMP-041.1 | Create `tokens.css` (canonical design token file) | ⬜ Ready | Critical | M | — |
+| COMP-041.2 | Update `tailwind.config.ts` (DESIGN-TOKENS Section 7.1) | ⬜ Ready | Critical | S | COMP-041.1 |
+| COMP-041.3 | Refactor Button (variants, loading, focus ring, sizes) | ⬜ Ready | Critical | S | COMP-041.1, COMP-041.2 |
+| COMP-041.4 | Refactor Card (remove glass/pillar, add elevated/interactive/sunken) | ⬜ Ready | Critical | S | COMP-041.1, COMP-041.2 |
+| COMP-041.5 | Refactor Badge (token-based variants, remove non-spec, fix typography) | ⬜ Ready | Critical | S | COMP-041.1, COMP-041.2 |
+| COMP-041.6 | Refactor Sheet (overlay token, animation, z-index) | ⬜ Ready | High | S | COMP-041.1, COMP-041.2 |
+| COMP-041.7 | Refactor Navbar, Footer, AppLayout (new token names) | ⬜ Ready | High | S | COMP-041.1, COMP-041.2 |
+| COMP-041.8 | Create Input + Textarea + Select | ⬜ Ready | High | M | COMP-041.1, COMP-041.2 |
+| COMP-041.9 | Create Checkbox + Switch | ⬜ Ready | High | S | COMP-041.1, COMP-041.2 |
+| COMP-041.10 | Create Avatar + PillarBadge | ⬜ Ready | High | S | COMP-041.1, COMP-041.2 |
+| COMP-041.11 | Create Skeleton + ProgressBar | ⬜ Ready | High | S | COMP-041.1, COMP-041.2 |
+| COMP-041.12 | Create Tooltip + FormField | ⬜ Ready | High | M | COMP-041.8 |
+| COMP-041.13 | Create Dialog | ⬜ Ready | Medium | M | COMP-041.1, COMP-041.2 |
+| COMP-041.14 | Create Toast (Sonner with DS tokens) | ⬜ Ready | Medium | S | COMP-041.1, COMP-041.2 |
+| COMP-041.15 | Create DropdownMenu + Breadcrumb | ⬜ Ready | Medium | S | COMP-041.1, COMP-041.2 |
+| COMP-041.16 | Create StatCard + EmptyState | ⬜ Ready | Medium | S | COMP-041.1, COMP-041.2 |
+| COMP-041.17 | Create TabBar + PageHeader + EntityHeader | ⬜ Ready | Medium | M | COMP-041.1, COMP-041.2 |
+| COMP-041.18 | Create ListRow | ⬜ Ready | Medium | S | COMP-041.1, COMP-041.2 |
+| COMP-041.19 | Migrate consuming apps (deprecated variants + inline buttons) | ⬜ Ready | High | M | COMP-041.3, COMP-041.4, COMP-041.5, COMP-041.10 |
+| COMP-041.20 | Unit tests for all new and refactored components | ⬜ Ready | Medium | L | COMP-041.3–COMP-041.18 |
 
 ---
 

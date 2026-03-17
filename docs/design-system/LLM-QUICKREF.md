@@ -7,6 +7,7 @@
 ## Stack
 
 Next.js + shadcn/ui + Tailwind CSS. Components in `packages/ui`. Pillar apps in `apps/learn`, `apps/hub`, `apps/labs`.
+- **Canonical token file**: `packages/ui/src/styles/tokens.css` — all apps must import `@syntropy/ui/styles`. No hardcoded values anywhere.
 
 ## Brand & Color
 
@@ -52,7 +53,7 @@ Key values: 4px, 8px, 12px, 16px, 20px, 24px, 32px, 40px, 48px, 64px.
 ## Shadows
 
 - `shadow-sm`: subtle card default. `shadow-md`: dropdown/popover. `shadow-lg`: modal.
-- Focus ring: `ring-2 ring-primary/40 ring-offset-2`.
+- Focus ring: `box-shadow: var(--focus-ring)` = `0 0 0 3px rgba(15,168,127,0.4)`. Use `focus-visible:shadow-focus` or `focus-visible:[box-shadow:var(--focus-ring)]`.
 
 ## Components (key rules)
 

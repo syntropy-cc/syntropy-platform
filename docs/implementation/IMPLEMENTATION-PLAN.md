@@ -1,24 +1,29 @@
 # Implementation Plan - Syntropy Platform
 
 > **Source of Truth**: This document governs all implementation. When it conflicts with BACKLOG.md, CURRENT-WORK.md, or PROGRESS-SUMMARY.md, this document wins.
-> **Last Updated**: 2026-03-16 (ADR-012: COMP-032.9–032.11 added; S57)
-> **Total Work Items**: 265 (enumerated in Section 6; BACKLOG.md header lists 270 - an 8-item accounting discrepancy noted in Section 3)
+> **Last Updated**: 2026-03-17 (ADR-013: COMP-041 added — Design System UI Library; S58; M6)
+> **Total Work Items**: 285 (265 original + 20 from COMP-041/ADR-013)
 
 ---
 
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S57 - ADR-012 Platform as Foundation (M5) — COMPLETE
-CURRENT ITEM  : —
-MILESTONE     : M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-STAGE PROGRESS: 3 / 3 items done (S57)
-OVERALL       : 265 / 265 items done
+CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — NOT STARTED
+CURRENT ITEM  : COMP-041.1 - Create tokens.css (canonical design token file)
+MILESTONE     : M6 - Design System Compliance (packages/ui)
+STAGE PROGRESS: 0 / 20 items done (S58)
+OVERALL       : 265 / 285 items done
 ```
 
-**Next 5 items**: (none; all work items complete)
+**Next 5 items**:
+1. `COMP-041.1` — Create `tokens.css` (primitive + semantic + pillar + shadcn bridge) — Critical, M
+2. `COMP-041.2` — Update `tailwind.config.ts` (DESIGN-TOKENS Section 7.1) — Critical, S
+3. `COMP-041.3` — Refactor Button (variants, loading, focus ring, sizes) — Critical, S
+4. `COMP-041.4` — Refactor Card (remove glass/pillar, add elevated/interactive/sunken) — Critical, S
+5. `COMP-041.5` — Refactor Badge (token-based variants, remove non-spec, fix typography) — Critical, S
 
-**Component records**: [`COMP-032`](./components/COMP-032-web-application.md), [`COMP-036`](./components/COMP-036-institutional-site.md), [`COMP-038`](./components/COMP-038-observability.md), [`COMP-039`](./components/COMP-039-data-integrity.md)
+**Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
 
 ---
 
@@ -206,7 +211,7 @@ The Syntropy Platform is a **modular monolith** (Turborepo + pnpm workspaces) th
 ---
 
 ### M5 - Delivery: Full API, IDE Platform, Institutional Site, Observability
-**Stages**: S51-S56 | **Items**: 26 | **Sessions**: 5-8
+**Stages**: S51-S57 | **Items**: 29 | **Sessions**: 5-8
 
 **Objective**: Production-ready delivery layer - all API routes registered, OpenAPI spec generated, IDE WebSocket gateway + Monaco Editor live, Institutional Site with ISR, and full observability stack (tracing, metrics, dashboards, alerting).
 
@@ -226,6 +231,23 @@ The Syntropy Platform is a **modular monolith** (Turborepo + pnpm workspaces) th
 3. `http://localhost:3002/hub/contribute/{id}/editor` - Monaco Editor loads with TypeScript LSP
 4. `http://localhost:3000/institutions/{slug}` (apps/platform) - ISR page renders in < 2.5s
 5. `http://localhost:3000/metrics` (Grafana) - all dashboards show live data
+
+---
+
+### M6 - Design System Compliance
+**Stages**: S58 | **Items**: 20 | **Sessions**: 5-8
+
+**Objective**: Bring `packages/ui` (`@syntropy/ui`) to full compliance with the design system specification in `docs/design-system/`. Introduce canonical token file, align existing components, add all 21 missing components, and migrate consuming apps.
+
+**Components**:
+- COMP-041 Design System UI Library (complete)
+
+**Browser-Testable Verification**:
+1. Primary color `#0FA87F` (teal-esmeralda) renders on buttons across all apps in light and dark mode
+2. `http://localhost:3000/learn` — card styles use `elevated`/`interactive`/`sunken` variants, no glass cards
+3. Badge components show correct semantic colors from token system (not hardcoded Tailwind utilities)
+4. All form inputs (Input, Select, Checkbox, Switch) visible in a new form page; focus ring is 3px teal
+5. Dialog, Toast, DropdownMenu, EmptyState render correctly across pillar apps
 
 ---
 
@@ -825,9 +847,31 @@ Items: `COMP-032.9`, `032.10`, `032.11`
 
 ---
 
+
+### M6 - Design System Compliance (S58)
+
+---
+
+#### S58 - Design System UI Library Compliance (M6)
+| Items | 20 | Sessions | 5-8 | Deps | S57 |
+|-------|----|---------|----|------|------|
+
+Items: `COMP-041.1`, `041.2`, `041.3`, `041.4`, `041.5`, `041.6`, `041.7`, `041.8`, `041.9`, `041.10`, `041.11`, `041.12`, `041.13`, `041.14`, `041.15`, `041.16`, `041.17`, `041.18`, `041.19`, `041.20`
+
+**ADR**: [ADR-013](../../architecture/decisions/ADR-013-design-system-ui-library-compliance.md) | **Component Record**: [COMP-041](./components/COMP-041-design-system-ui-library.md)
+
+**Verification** (M6 complete):
+1. `packages/ui/src/styles/tokens.css` exists; primary `#0FA87F` renders in browser (light + dark)
+2. All 28 components from COMPONENT-LIBRARY.md exported from `@syntropy/ui` (7 refactored + 21 new)
+3. No `font-semibold` or hardcoded hex colors in any `packages/ui/src/components/*.tsx` file
+4. All four apps build with zero TypeScript errors; no deprecated variant names in app code
+5. `packages/ui` unit test coverage ≥ 80%; all component tests pass
+
+---
+
 ## Section 6 - Work Items in Topological Order
 
-> Complete flat list of all 265 items. No item appears before its dependencies. Use this list to verify ordering and find item positions.
+> Complete flat list of all 285 items. No item appears before its dependencies. Use this list to verify ordering and find item positions.
 
 ```
   1. COMP-001.1  - Initialize Turborepo + pnpm workspaces                [S1, Critical, S]
@@ -1095,6 +1139,26 @@ Items: `COMP-032.9`, `032.10`, `032.11`
 263. COMP-032.9  - Remove /platform route; shared user area (e.g. /dashboard) [S57, High, M]
 264. COMP-032.10 - Institutional site as main entry (landing, login, signup, app access) [S57, High, M]
 265. COMP-032.11 - Navigation and IA: three pillars + shared user area; no Platform section [S57, Medium, S]
+266. COMP-041.1  - Create tokens.css (canonical design token file)               [S58, Critical, M]
+267. COMP-041.2  - Update tailwind.config.ts (DESIGN-TOKENS Section 7.1)         [S58, Critical, S]
+268. COMP-041.3  - Refactor Button (variants, loading, focus ring, sizes)         [S58, Critical, S]
+269. COMP-041.4  - Refactor Card (remove glass/pillar, add elevated/interactive)  [S58, Critical, S]
+270. COMP-041.5  - Refactor Badge (token-based variants, remove non-spec)         [S58, Critical, S]
+271. COMP-041.6  - Refactor Sheet (overlay token, animation, z-index)             [S58, High, S]
+272. COMP-041.7  - Refactor Navbar/Footer/AppLayout (new token names)             [S58, High, S]
+273. COMP-041.8  - Create Input + Textarea + Select                               [S58, High, M]
+274. COMP-041.9  - Create Checkbox + Switch                                       [S58, High, S]
+275. COMP-041.10 - Create Avatar + PillarBadge                                    [S58, High, S]
+276. COMP-041.11 - Create Skeleton + ProgressBar                                  [S58, High, S]
+277. COMP-041.12 - Create Tooltip + FormField                                     [S58, High, M]
+278. COMP-041.13 - Create Dialog                                                  [S58, Medium, M]
+279. COMP-041.14 - Create Toast (Sonner with DS tokens)                           [S58, Medium, S]
+280. COMP-041.15 - Create DropdownMenu + Breadcrumb                               [S58, Medium, S]
+281. COMP-041.16 - Create StatCard + EmptyState                                   [S58, Medium, S]
+282. COMP-041.17 - Create TabBar + PageHeader + EntityHeader                      [S58, Medium, M]
+283. COMP-041.18 - Create ListRow                                                 [S58, Medium, S]
+284. COMP-041.19 - Migrate consuming apps (deprecated variants + inline buttons)  [S58, High, M]
+285. COMP-041.20 - Unit tests for all new and refactored components               [S58, Medium, L]
 ```
 
 ---
@@ -3227,21 +3291,187 @@ Status: Done | **Deps**: COMP-032.9, COMP-032.10
 
 ---
 
+### COMP-041 — Design System UI Library (ADR-013)
+
+---
+
+#### [COMP-041.1] Create `tokens.css` — canonical design token file
+`S58` `Critical` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: —
+**Criteria**: `packages/ui/src/styles/tokens.css` created with all three token layers (primitive, semantic, pillar) + shadcn bridge; primary `#0FA87F` renders; glass/gradient vars removed; `packages/ui` builds.
+**Steps**: (1) Create `src/styles/tokens.css` (2) Implement `:root` + dark mode + shadcn bridge (3) Replace `theme.css` content with `@import` (4) Verify build
+
+---
+
+#### [COMP-041.2] Update `tailwind.config.ts` — full DESIGN-TOKENS Section 7.1 mapping
+`S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1
+**Criteria**: Primary scale, pillar tokens, surface/text/state aliases, border radius all mapped to CSS variables per DESIGN-TOKENS §7.1.
+**Steps**: (1) Extend `theme.extend.colors` with full token map (2) Update radius aliases (3) Verify Tailwind picks up token values
+
+---
+
+#### [COMP-041.3] Refactor Button to DS compliance
+`S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Variants `primary`, `secondary`, `ghost`, `destructive`, `link`, `icon-only`; sizes 32/40/48px; `loading` prop + `aria-busy`; focus ring `var(--focus-ring)`; breaking changes: `default`→`primary`, `outline`→`secondary`.
+**Steps**: (1) Update CVA variants (2) Add loading state (3) Fix focus ring (4) Update tests
+
+---
+
+#### [COMP-041.4] Refactor Card to DS compliance
+`S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Variants `default`, `elevated`, `interactive`, `sunken`; no `glass`, no `pillar`, no `pillarHeader`; `CardTitle` weight 500; hover lift only on `interactive`.
+**Steps**: (1) Remove deprecated variants (2) Add new variants with token classes (3) Fix CardTitle weight
+
+---
+
+#### [COMP-041.5] Refactor Badge to DS compliance
+`S58` `Critical` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: 7 token-based variants; no `learn/hub/labs/contribute/portfolio`; 11px/500 weight; 3px 10px padding; pill shape.
+**Steps**: (1) Remove non-spec variants (2) Replace utility opacity classes with token classes (3) Fix typography
+
+---
+
+#### [COMP-041.6] Refactor Sheet to DS compliance
+`S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Backdrop `--bg-overlay`; panel `--bg-surface`; shadow `var(--shadow-lg)`; z-index tokens; 200ms slide+fade entrance; `prefers-reduced-motion` respected; width 300px.
+**Steps**: (1) Replace class names with token equivalents (2) Add CSS animation (3) Add reduced-motion media query
+
+---
+
+#### [COMP-041.7] Refactor Navbar, Footer, AppLayout to use new token names
+`S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: All three components reference new token-based Tailwind class names; no old `--background`/`--primary` usage; existing API unchanged.
+**Steps**: (1) Update Navbar class names (2) Update Footer class names (3) Update AppLayout class names
+
+---
+
+#### [COMP-041.8] Create Input + Textarea + Select
+`S58` `High` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Input 40px, correct focus ring, error state, all input types; Textarea min-height 80px; Select with Radix dropdown; all exported.
+**Steps**: (1) Create `input.tsx` (2) Create `textarea.tsx` (3) Create `select.tsx` with Radix (4) Export from index.ts
+
+---
+
+#### [COMP-041.9] Create Checkbox + Switch
+`S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Checkbox 20px, Radix Checkbox, `--action-primary` checked; Switch 40×24px, Radix Switch, `--action-primary` on state.
+**Steps**: (1) Create `checkbox.tsx` (2) Create `switch.tsx` (3) Export
+
+---
+
+#### [COMP-041.10] Create Avatar + PillarBadge
+`S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Avatar 4 sizes, fallback initials; PillarBadge with `pillar` prop Learn/Hub/Labs, token-based pillar colors.
+**Steps**: (1) Create `avatar.tsx` (2) Create `pillar-badge.tsx` (3) Export
+
+---
+
+#### [COMP-041.11] Create Skeleton + ProgressBar
+`S58` `High` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Skeleton shimmer animation + reduced-motion; ProgressBar `role="progressbar"` + `aria-valuenow`.
+**Steps**: (1) Create `skeleton.tsx` (2) Create `progress-bar.tsx` (3) Export
+
+---
+
+#### [COMP-041.12] Create Tooltip + FormField
+`S58` `High` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.8
+**Criteria**: Tooltip Radix, 300ms delay, Escape dismiss, `aria-describedby`; FormField label→helper→input→error with `aria-describedby` linkage.
+**Steps**: (1) Create `tooltip.tsx` (2) Create `form-field.tsx` (3) Export
+
+---
+
+#### [COMP-041.13] Create Dialog
+`S58` `Medium` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: 3 max-width sizes, Radix Dialog, `--bg-overlay` backdrop, 200ms enter + 150ms exit, mobile full-screen sheet, focus trap, `aria-modal`.
+**Steps**: (1) Create `dialog.tsx` on Radix Dialog (2) Add animation (3) Add mobile bottom-sheet behavior (4) Export
+
+---
+
+#### [COMP-041.14] Create Toast
+`S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: Sonner-based, 5 variants, bottom-right/center positioning, DS token styles, `<Toaster>` provider, `aria-live`.
+**Steps**: (1) Install/configure Sonner (2) Create token-based toast styles (3) Export `<Toaster>` and toast utilities
+
+---
+
+#### [COMP-041.15] Create DropdownMenu + Breadcrumb
+`S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: DropdownMenu Radix, `--bg-surface-raised`, keyboard nav; Breadcrumb `--text-link` parents, `--text-primary` current.
+**Steps**: (1) Create `dropdown-menu.tsx` (2) Create `breadcrumb.tsx` (3) Export
+
+---
+
+#### [COMP-041.16] Create StatCard + EmptyState
+`S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: StatCard `--bg-surface-sunken` + label caption + value h3; EmptyState max-width 400px, title + description + optional action.
+**Steps**: (1) Create `stat-card.tsx` (2) Create `empty-state.tsx` (3) Export
+
+---
+
+#### [COMP-041.17] Create TabBar + PageHeader + EntityHeader
+`S58` `Medium` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: TabBar Radix Tabs, arrow key nav, 44px, active teal border; PageHeader h1 + description + action; EntityHeader name + type badge + stats + action.
+**Steps**: (1) Create `tab-bar.tsx` (2) Create `page-header.tsx` (3) Create `entity-header.tsx` (4) Export
+
+---
+
+#### [COMP-041.18] Create ListRow
+`S58` `Medium` `S` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.1, COMP-041.2
+**Criteria**: 44–56px height, status dot + title + metadata, hover `--bg-hover`, selected `--bg-selected`, mobile wrapping.
+**Steps**: (1) Create `list-row.tsx` (2) Export
+
+---
+
+#### [COMP-041.19] Migrate consuming apps to new component API
+`S58` `High` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.3, COMP-041.4, COMP-041.5, COMP-041.10
+**Criteria**: No deprecated variant names anywhere in `apps/`; no inline Tailwind button-style anchors; all four apps build successfully.
+**Steps**: (1) Run find-replace for Card variants (2) Run find-replace for Badge variants (3) Run find-replace for Button variants (4) Replace inline button-style anchors (5) Verify builds
+
+---
+
+#### [COMP-041.20] Unit tests for all new and refactored components
+`S58` `Medium` `L` [Record-](./components/COMP-041-design-system-ui-library.md)
+Status: Ready | **Deps**: COMP-041.3–COMP-041.18
+**Criteria**: `.test.tsx` for each component; Button covers all 6 variants + loading + disabled + icon-only; form components cover default/focus/error/disabled; coverage ≥ 80%.
+**Steps**: (1) Write Button tests (2) Write Card, Badge, Sheet tests (3) Write form component tests (4) Write new component tests (5) Verify coverage
+
+---
+
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-16 | S57 complete; 265 / 265 items done
+> Last Updated: 2026-03-17 | ADR-013: COMP-041 added (S58/M6); 265 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 265 / 265 items | 265 / 265 | - |
-| **Current Milestone** | M5 - Delivery | M5 | - |
-| **Current Stage** | S57 - ADR-012 Platform as Foundation — complete | S57 | - |
+| **Overall Progress** | 265 / 285 items | 285 / 285 | - |
+| **Current Milestone** | M6 - Design System Compliance | M6 | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — not started | S58 | - |
 | **Test Coverage** | - | - 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
+
+**Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests. S58 not yet started.
 
 **Recent additions** (2026-03-16): 3 work items for ADR-012 — COMP-032.9 (remove /platform, shared user area), COMP-032.10 (institutional site as main entry), COMP-032.11 (navigation/IA). All done; S57 complete.
 
@@ -3521,8 +3751,9 @@ Status: Done | **Deps**: COMP-032.9, COMP-032.10
 | M2 Core: DIP + Platform Core + AI | 73 | 20 | 27% | -- In Progress |
 | M3 Pillars: Learn + Hub + Labs | 77 | 0 | 0% | - Not Started |
 | M4 Supporting + AI Pillar Tools | 41 | 0 | 0% | - Not Started |
-| M5 Delivery | 26 | 0 | 0% | - Not Started |
-| **Total** | **262** | **85** | **32%** | - |
+| M5 Delivery | 29 | 0 | 0% | - Not Started |
+| M6 Design System Compliance | 20 | 0 | 0% | - Not Started |
+| **Total** | **285** | **63** | **22%** | - |
 
 ### Component Coverage
 
@@ -3568,7 +3799,8 @@ Status: Done | **Deps**: COMP-032.9, COMP-032.10
 | COMP-038 Observability | 6 | 1 | -- In Progress |
 | COMP-039 Data Integrity | 5 | 4 | -- In Progress |
 | COMP-040 Resilience | 5 | 5 | - Complete |
-| **Total** | **265** | **90** | |
+| COMP-041 Design System UI Library | 20 | 0 | ⬜ Not Started |
+| **Total** | **285** | **90** | |
 
 ### Layer Coverage
 
@@ -3580,8 +3812,9 @@ Status: Done | **Deps**: COMP-032.9, COMP-032.10
 | Domain (Supporting) | 7 (COMP-027-033) | 0 | 0% |
 | Infrastructure/Platform | 5 (COMP-034-036, COMP-001-002) | 0 | 0% |
 | Cross-Cutting | 4 (COMP-037-040) | 0 | 0% |
-| **Overall** | **40** | **0** | **0%** |
+| UI/Design System | 1 (COMP-041) | 0 | 0% |
+| **Overall** | **41** | **0** | **0%** |
 
 ---
 
-*End of Implementation Plan - Version 1.0 - 2026-03-13*
+*End of Implementation Plan - Version 1.1 - 2026-03-17 (ADR-013: COMP-041 Design System UI Library, S58, M6)*

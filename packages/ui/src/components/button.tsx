@@ -5,7 +5,13 @@
  * Architecture: COMP-041, COMPONENT-LIBRARY Button
  */
 
-import { type ComponentPropsWithoutRef, forwardRef } from "react";
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+} from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 import { cn } from "../lib/utils";
@@ -48,6 +54,8 @@ export type ButtonProps = Omit<
 > &
   VariantProps<typeof buttonVariants> & {
     loading?: boolean;
+    /** When true, merges button styles onto the single child element (e.g. Link). */
+    asChild?: boolean;
   } & (
     | { variant?: Exclude<ButtonVariant, "icon-only"> }
     | { variant: "icon-only"; "aria-label": string }
@@ -60,6 +68,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       loading = false,
+      asChild = false,
       children,
       disabled,
       "aria-label": ariaLabel,
@@ -69,14 +78,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const resolvedSize = variant === "icon-only" ? "icon" : size;
     const isDisabled = disabled ?? loading;
+    const variantClasses = buttonVariants({
+      variant,
+      size: resolvedSize,
+      className,
+    });
+
+    if (asChild && isValidElement(children)) {
+      const child = children as ReactElement<{ className?: string }>;
+      return cloneElement(child, {
+        className: cn(variantClasses, child.props.className),
+        ...(ref != null && { ref }),
+      });
+    }
 
     return (
       <button
         ref={ref}
         type="button"
-        className={cn(
-          buttonVariants({ variant, size: resolvedSize, className })
-        )}
+        className={variantClasses}
         disabled={isDisabled}
         aria-busy={loading ? "true" : undefined}
         aria-label={variant === "icon-only" ? ariaLabel : undefined}

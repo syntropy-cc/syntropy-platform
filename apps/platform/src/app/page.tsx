@@ -4,10 +4,9 @@ import type React from "react"
 
 import { useRef, useEffect, useState } from "react"
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
-import { Button } from "../components/ui/button"
 import { BookOpen, Users, FlaskConical, Check, Award, Briefcase, GraduationCap, Lightbulb, FileText, MessageCircle } from "lucide-react"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@syntropy/ui"
+import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from "@syntropy/ui"
 import { useAuth } from "@/hooks/use-auth"
 import { isAuthEnabled } from "@/lib/feature-flags"
 
@@ -20,7 +19,7 @@ function PortfolioCard() {
       aria-label="Ir para Portfólio"
       className="block max-w-[400px] w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
     >
-      <Card variant="pillar" pillarHeader="portfolio" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
+      <Card variant="interactive" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
         <CardHeader className="flex flex-row items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
             <Briefcase className="h-6 w-6" strokeWidth={1.5} aria-hidden />
@@ -87,7 +86,7 @@ function SyntropyProjectsCard() {
       aria-label="Ir para Syntropy Projects"
       className="block max-w-[400px] w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
     >
-      <Card variant="pillar" pillarHeader="hub" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
+      <Card variant="interactive" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
         <CardHeader className="flex flex-row items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
             <Users className="h-6 w-6" strokeWidth={1.5} aria-hidden />
@@ -144,7 +143,7 @@ function SyntropyLearnCard() {
       aria-label="Ir para Syntropy Learn"
       className="block max-w-[400px] w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
     >
-      <Card variant="pillar" pillarHeader="learn" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
+      <Card variant="interactive" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
         <CardHeader className="flex flex-row items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
             <BookOpen className="h-6 w-6" strokeWidth={1.5} aria-hidden />
@@ -202,7 +201,7 @@ function SyntropyLabsCard() {
       aria-label="Ir para Syntropy Labs"
       className="block max-w-[400px] w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
     >
-      <Card variant="pillar" pillarHeader="labs" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
+      <Card variant="interactive" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
         <CardHeader className="flex flex-row items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
             <FlaskConical className="h-6 w-6" strokeWidth={1.5} aria-hidden />
@@ -301,7 +300,7 @@ function ContributeCard() {
       aria-label="Ir para página de contribuição"
       className="block max-w-[400px] w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
     >
-      <Card variant="pillar" pillarHeader="contribute" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
+      <Card variant="interactive" className="h-full transition-transform duration-200 hover:-translate-y-0.5">
         <CardHeader className="flex flex-row items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
             <Users className="h-6 w-6" strokeWidth={1.5} aria-hidden />
@@ -426,15 +425,10 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg">
+                  <Button asChild variant="primary" size="lg">
                     <Link href="/learn/courses">Explorar cursos</Link>
                   </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="border-border text-foreground hover:bg-muted px-8 py-4 text-lg"
-                  >
+                  <Button asChild variant="secondary" size="lg">
                     <Link href="/learn">Conhecer Syntropy Learn</Link>
                   </Button>
                 </div>
@@ -471,15 +465,10 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg">
+                  <Button asChild variant="primary" size="lg">
                     <Link href="/hub">Descobrir projetos</Link>
                   </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="border-border text-foreground hover:bg-muted px-8 py-4 text-lg"
-                  >
+                  <Button asChild variant="secondary" size="lg">
                     <Link href="/hub">Conhecer Syntropy Projects</Link>
                   </Button>
                 </div>
@@ -520,15 +509,10 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg">
+                  <Button asChild variant="primary" size="lg">
                     <Link href="/labs/coming-soon">Explorar laboratórios</Link>
                   </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="border-border text-foreground hover:bg-muted px-8 py-4 text-lg"
-                  >
+                  <Button asChild variant="secondary" size="lg">
                     <Link href="/labs">Conhecer Syntropy Labs</Link>
                   </Button>
                 </div>
@@ -568,15 +552,10 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div className="flex flex-nowrap gap-4">
-                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg">
+                  <Button asChild variant="primary" size="lg">
                     <Link href="/portfolio">Começar meu portfólio</Link>
                   </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="border-border text-foreground hover:bg-muted px-8 py-4 text-lg"
-                  >
+                  <Button asChild variant="secondary" size="lg">
                     <Link href="/portfolio">Conhecer Portfólio Syntropy</Link>
                   </Button>
                 </div>
@@ -605,7 +584,7 @@ export default function HomePage() {
               <p className="text-xl text-muted-foreground mb-8 max-w-xl">
                 O Syntropy é feito por pessoas como você. Contribua com código, ideias ou documentação e faça parte de uma comunidade que valoriza colaboração, inovação e impacto real. Toda contribuição conta!
               </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-4 text-xl">
+              <Button asChild variant="primary" size="lg">
                 <Link href="/contribute">Quero contribuir</Link>
               </Button>
             </motion.div>
@@ -636,7 +615,7 @@ export default function HomePage() {
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Faça parte do ecossistema que conecta aprendizado prático, desenvolvimento colaborativo e pesquisa científica descentralizada.
               </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-12 py-4 text-lg">
+              <Button asChild variant="primary" size="lg">
                 <Link href="/auth?mode=signup">Começar minha jornada</Link>
               </Button>
             </div>

@@ -4,7 +4,7 @@
  */
 
 import Link from "next/link";
-import { Card } from "@syntropy/ui";
+import { Card, Button } from "@syntropy/ui";
 import { Check } from "lucide-react";
 
 export default function PortfolioLandingPage() {
@@ -23,7 +23,7 @@ export default function PortfolioLandingPage() {
       </section>
       <section className="section-alt py-16">
         <div className="mx-auto max-w-4xl px-4">
-          <Card variant="pillar" pillarHeader="portfolio" className="p-6">
+          <Card variant="interactive" className="p-6">
             <h2 className="text-xl font-semibold">O que compõe seu portfólio</h2>
             <ul className="mt-4 space-y-2">
               {[
@@ -39,18 +39,12 @@ export default function PortfolioLandingPage() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center rounded-md h-10 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-colors"
-              >
-                Começar meu portfólio
-              </Link>
-              <Link
-                href="/"
-                className="inline-flex items-center justify-center rounded-md h-10 px-4 py-2 text-sm font-medium border border-border bg-background hover:bg-accent transition-colors"
-              >
-                Voltar ao início
-              </Link>
+              <Button asChild variant="primary">
+                <Link href="/dashboard">Começar meu portfólio</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/">Voltar ao início</Link>
+              </Button>
             </div>
           </Card>
         </div>

@@ -4,7 +4,7 @@
  */
 
 import Link from "next/link";
-import { Card, Badge } from "@syntropy/ui";
+import { Card, PillarBadge, Button } from "@syntropy/ui";
 import { Check } from "lucide-react";
 
 const HUB_APP_URL =
@@ -15,9 +15,7 @@ export default function HubLandingPage() {
     <main className="min-h-screen">
       <section className="gradient-bg py-20 px-4">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge variant="hub" className="mb-4">
-            PJ
-          </Badge>
+          <PillarBadge pillar="hub" label="PJ" className="mb-4" />
           <h1 className="text-4xl font-bold tracking-tight text-white">
             Syntropy Projects
           </h1>
@@ -29,7 +27,7 @@ export default function HubLandingPage() {
       </section>
       <section className="section-alt py-16">
         <div className="mx-auto max-w-4xl px-4">
-          <Card variant="pillar" pillarHeader="hub" className="p-6">
+          <Card variant="interactive" className="p-6">
             <h2 className="text-xl font-semibold">O que você encontra</h2>
             <ul className="mt-4 space-y-2">
               {[
@@ -44,20 +42,18 @@ export default function HubLandingPage() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={HUB_APP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-md h-10 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-colors"
-              >
-                Acessar Hub
-              </a>
-              <Link
-                href="/"
-                className="inline-flex items-center justify-center rounded-md h-10 px-4 py-2 text-sm font-medium border border-border bg-background hover:bg-accent transition-colors"
-              >
-                Voltar ao início
-              </Link>
+              <Button asChild variant="primary">
+                <a
+                  href={HUB_APP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Acessar Hub
+                </a>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/">Voltar ao início</Link>
+              </Button>
             </div>
           </Card>
         </div>

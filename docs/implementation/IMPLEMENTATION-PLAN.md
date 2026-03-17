@@ -9,20 +9,16 @@
 ## Section 0 - Current Focus
 
 ```
-CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — IN PROGRESS
-CURRENT ITEM  : COMP-041.19 - Migrate consuming apps to new component API
+CURRENT STAGE : S58 - Design System UI Library Compliance (M6) — COMPLETE
+CURRENT ITEM  : —
 MILESTONE     : M6 - Design System Compliance (packages/ui)
-STAGE PROGRESS: 18 / 20 items done (S58)
-OVERALL       : 283 / 285 items done
+STAGE PROGRESS: 20 / 20 items done (S58)
+OVERALL       : 285 / 285 items done
 ```
 
-**Next 5 items**:
-1. `COMP-041.19` — Migrate consuming apps to new component API — High, M
-2. `COMP-041.20` — Unit tests for all new and refactored components — Medium, L
+**Next 5 items**: All items in Section 6 are complete. No further work items in plan.
 
-**Current item (COMP-041.19) acceptance criteria**: No deprecated variant names anywhere in `apps/`; no inline Tailwind button-style anchors; all four apps build successfully.
-**Suggested steps**: (1) Run find-replace for Card variants (2) Run find-replace for Badge variants (3) Run find-replace for Button variants (4) Replace inline button-style anchors (5) Verify builds
-**Architecture refs**: COMP-041 record, COMPONENT-LIBRARY.md, DESIGN-TOKENS.md
+**Current item**: S58 and Implementation Plan complete. COMP-041.19 (consumer migration) and COMP-041.20 (unit tests, coverage ≥ 80%) done.
 
 **Component records**: [`COMP-041`](./components/COMP-041-design-system-ui-library.md), [`COMP-032`](./components/COMP-032-web-application.md)
 
@@ -3442,7 +3438,7 @@ Status: **Done** | **Deps**: COMP-041.1, COMP-041.2
 
 #### [COMP-041.19] Migrate consuming apps to new component API
 `S58` `High` `M` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.3, COMP-041.4, COMP-041.5, COMP-041.10
+Status: **Done** | **Deps**: COMP-041.3, COMP-041.4, COMP-041.5, COMP-041.10
 **Criteria**: No deprecated variant names anywhere in `apps/`; no inline Tailwind button-style anchors; all four apps build successfully.
 **Steps**: (1) Run find-replace for Card variants (2) Run find-replace for Badge variants (3) Run find-replace for Button variants (4) Replace inline button-style anchors (5) Verify builds
 
@@ -3450,7 +3446,7 @@ Status: Ready | **Deps**: COMP-041.3, COMP-041.4, COMP-041.5, COMP-041.10
 
 #### [COMP-041.20] Unit tests for all new and refactored components
 `S58` `Medium` `L` [Record-](./components/COMP-041-design-system-ui-library.md)
-Status: Ready | **Deps**: COMP-041.3–COMP-041.18
+Status: **Done** | **Deps**: COMP-041.3–COMP-041.18
 **Criteria**: `.test.tsx` for each component; Button covers all 6 variants + loading + disabled + icon-only; form components cover default/focus/error/disabled; coverage ≥ 80%.
 **Steps**: (1) Write Button tests (2) Write Card, Badge, Sheet tests (3) Write form component tests (4) Write new component tests (5) Verify coverage
 
@@ -3458,21 +3454,21 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ## Section 8 - Progress Metrics
 
-> Last Updated: 2026-03-17 | S58 COMP-041.14–041.18 done; 283 / 285 items done
+> Last Updated: 2026-03-17 | S58 complete; COMP-041.19, COMP-041.20 done; 285 / 285 items done
 
 ### Summary
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Overall Progress** | 283 / 285 items | 285 / 285 | - |
+| **Overall Progress** | 285 / 285 items | 285 / 285 | - |
 | **Current Milestone** | M6 - Design System Compliance | M6 | - |
-| **Current Stage** | S58 - Design System UI Library Compliance — 18/20 done | S58 | - |
-| **Test Coverage** | - | - 80% | - |
+| **Current Stage** | S58 - Design System UI Library Compliance — 20/20 done | S58 | - |
+| **Test Coverage** | packages/ui components 85% | ≥ 80% | - |
 | **Items with Tests** | - | 100% | - |
 | **Items Blocked** | 0 | 0 | - |
 | **Technical Debt Items** | 0 | < 10 | - |
 
-**Recent completions** (2026-03-17): COMP-041.14 (Toast), COMP-041.15 (DropdownMenu + Breadcrumb), COMP-041.16 (StatCard + EmptyState), COMP-041.17 (TabBar + PageHeader + EntityHeader), COMP-041.18 (ListRow). S58 at 18/20.
+**Recent completions** (2026-03-17): COMP-041.19 (Migrate consuming apps: Card/Badge/Button/PillarBadge; inline anchors → Button asChild; all four apps build). COMP-041.20 (Unit tests: card.test, badge.test, footer.test, sheet.test; Button extended for ghost/destructive/link/disabled/asChild; packages/ui coverage 85%). S58 complete.
 
 **Recent additions** (2026-03-17): 20 work items for ADR-013 — COMP-041 Design System UI Library (S58/M6). Includes tokens.css, Tailwind config, refactor of 7 existing components, 21 new components, consumer migration, and tests.
 
@@ -3480,6 +3476,8 @@ Status: Ready | **Deps**: COMP-041.3–COMP-041.18
 
 ### Recent completions
 
+- 2026-03-17 COMP-041.20 - Unit tests for all new and refactored components (card, badge, footer, sheet tests; Button ghost/destructive/link/disabled/asChild; coverage 85%)
+- 2026-03-17 COMP-041.19 - Migrate consuming apps to new component API (Card interactive; Badge → PillarBadge; Button from @syntropy/ui; inline anchors → Button asChild; platform, hub)
 - 2026-03-17 COMP-041.18 - Create ListRow (44–56px; status dot; hover/selected; exported; tests)
 - 2026-03-17 COMP-041.17 - TabBar + PageHeader + EntityHeader (Radix Tabs; h1 + action; entity name + badge + stats; exported; tests)
 - 2026-03-17 COMP-041.16 - StatCard + EmptyState (surface-sunken; max-w 400px; exported; tests)

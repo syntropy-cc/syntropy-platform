@@ -4,7 +4,7 @@
 > **Architecture Reference**: [DESIGN-TOKENS.md](../../design-system/DESIGN-TOKENS.md) · [COMPONENT-LIBRARY.md](../../design-system/COMPONENT-LIBRARY.md)
 > **Design System Reference**: [VISUAL-DIRECTION.md](../../design-system/VISUAL-DIRECTION.md) · [PILLAR-PROFILES.md](../../design-system/PILLAR-PROFILES.md)
 > **Stage Assignment**: S58 — Design System UI Library Compliance
-> **Status**: ⬜ Not Started
+> **Status**: ✅ Complete
 > **Created**: 2026-03-17
 > **Last Updated**: 2026-03-17
 > **ADR**: [ADR-013](../../architecture/decisions/ADR-013-design-system-ui-library-compliance.md)
@@ -57,12 +57,12 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Status | Count |
 |--------|-------|
-| ✅ Done | 18 |
+| ✅ Done | 20 |
 | 🔵 In Progress | 0 |
-| ⬜ Ready/Backlog | 2 |
+| ⬜ Ready/Backlog | 0 |
 | **Total** | **20** |
 
-**Component Coverage**: 90% (18/20 items complete)
+**Component Coverage**: 100% (20/20 items complete)
 
 ### Item List
 
@@ -533,7 +533,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | M |
 | **Priority** | High |
 | **Dependencies** | COMP-041.3, COMP-041.4, COMP-041.5, COMP-041.10 |
@@ -565,7 +565,7 @@ This component was not tracked separately prior to ADR-013. Before this record, 
 
 | Field | Value |
 |-------|-------|
-| **Status** | ⬜ Ready |
+| **Status** | ✅ Done |
 | **Size** | L |
 | **Priority** | Medium |
 | **Dependencies** | COMP-041.3 through COMP-041.18 |
@@ -685,6 +685,11 @@ Components that require complex interaction (Select, Dialog, DropdownMenu, Toolt
 ---
 
 ## Implementation Log
+
+### 2026-03-17 — COMP-041.19, COMP-041.20 implemented (S58 complete)
+
+- **COMP-041.19 (Migrate consuming apps)**: Button in `packages/ui` extended with `asChild` (cloneElement merge of variant classes onto child). apps/platform: page.tsx uses Button/Card from @syntropy/ui; Card `variant="pillar"`/`pillarHeader` replaced with `variant="interactive"`; Button `variant="outline"` → `variant="secondary"`, inline button classes removed. apps/platform learn/hub/labs/portfolio/contribute pages: Card → interactive; Badge variant learn/hub/labs → PillarBadge with pillar + label; inline `<a>` button-style anchors → Button asChild + Link/a. apps/hub: contribute/[id]/page and page.tsx inline anchors → Button asChild + Link. All four apps build; no deprecated variants or inline button-style anchors in apps/.
+- **COMP-041.20 (Unit tests)**: Added card.test.tsx (4 variants, subcomponents), badge.test.tsx (7 variants), footer.test.tsx (default + custom columns), sheet.test.tsx (open panel token classes). Extended button.test.tsx (ghost, destructive, link, disabled, asChild). Added @vitest/coverage-v8 to packages/ui devDependencies. packages/ui component coverage 85% (≥ 80% target); 157 tests, 31 test files.
 
 ### 2026-03-17 — COMP-041.14–041.18 implemented
 

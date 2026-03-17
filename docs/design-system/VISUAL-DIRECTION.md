@@ -2,19 +2,17 @@
 
 > **Document Type**: Visual Direction
 > **Project**: Syntropy Ecosystem
-> **Applicability**: Web Application and Dashboard/Admin (see `.cursor/rules/design-system/design-system.mdc`, Rule DS-001)
+> **Applicability**: Web Application and Dashboard/Admin
 > **Created**: 2026-03-12
 > **Last Updated**: 2026-03-16
-> **UX Architect**: AGT-UXA
-> **Design System Reference**: `docs/design-system/DESIGN-SYSTEM.md`
-> **Rules Reference**: `.cursor/rules/design-system/design-system.mdc` (DS-016)
-> **Vision Reference**: Section 4–5 (Component Visions), Section 3 (Users and Actors)
+> **Design System Reference**: `docs/design-system/DESIGN-TOKENS.md`
+> **Pillar Profiles Reference**: `docs/design-system/PILLAR-PROFILES.md`
 
 ---
 
 ## Purpose of This Document
 
-This document translates the design token decisions in `DESIGN-SYSTEM.md` into an aesthetic narrative. The tokens tell you *what* values to use. This document tells you *why* those values were chosen, what they communicate, and how to make new visual decisions that remain consistent with the system's character.
+This document translates the design token decisions in `DESIGN-TOKENS.md` into an aesthetic narrative. The tokens tell you *what* values to use. This document tells you *why* those values were chosen, what they communicate, and how to make new visual decisions that remain consistent with the system's character.
 
 **Audiences:**
 - Developers implementing new UI components or pages
@@ -26,61 +24,69 @@ This document translates the design token decisions in `DESIGN-SYSTEM.md` into a
 
 ## 1. Aesthetic Archetype
 
-> *One word that captures the system's visual and experiential character. This is the primary calibration tool for any new visual decision: "Does this choice fit the archetype?"*
+> *The primary calibration tool for any new visual decision: "Does this choice fit the archetype?"*
 
-**Archetype**: Purposeful & Immersive
+**Archetype**: Trustworthy & Intelligent
 
-**Expansion**: Professional and progress-oriented; first impression is dark and immersive (gradient, glass). Clear hierarchy and readable content; animations confirm action or reveal state. Pillar palettes give identity without breaking unity. Dark-first, gradients on hero and cards, glass morphism, and subtle motion (scroll, entrance, hover) are part of the language.
+**Expansion**: The interface communicates competence without coldness. It is the visual equivalent of a senior colleague who knows their subject deeply, explains clearly, and genuinely wants you to succeed. Professional and progress-oriented, but never intimidating. Clear hierarchy and readable content; animations confirm action or reveal state. The system supports both light and dark modes as first-class citizens — both must feel intentional, not derived.
 
-**When to use this section**: Reference the archetype whenever making a visual decision not explicitly covered by the design tokens. Ask: "Does this fit the archetype?" A new component that introduces unnecessary decoration, animation for its own sake, or visual complexity that obscures content fails the archetype test.
+**When to use this section**: Reference the archetype whenever making a visual decision not explicitly covered by the design tokens. Ask: "Does this feel trustworthy and intelligent?" A new component that introduces unnecessary decoration, animation for its own sake, or visual complexity that obscures content fails the archetype test. Equally, a component that feels cold, clinical, or hostile also fails — the "intelligent" quality implies warmth and accessibility.
 
 ---
 
 ## 2. Visual Character
 
-> *3–5 concrete sentences describing the overall visual and experiential character of the interface. Be specific, not aspirational.*
+> *3–5 concrete sentences describing the overall visual and experiential character of the interface.*
 
-The first impression is dark and immersive: a gradient background (slate to blue), glass or elevated cards, and blue as the anchor for action. CTAs and active nav items use primary blue with subtle shadow. There is nothing to look at that is not there for a reason.
+The first impression is calm and organized: sufficient contrast, generous whitespace, and the teal-esmeralda primary as the anchor for action. CTAs and active states use the primary teal; content dominates the viewport, not decoration. There is nothing to look at that is not there for a reason.
 
 Information is organized with a clear hierarchy — headings have authority without being decorative, body text is comfortable for sustained reading, and interactive elements are unambiguous about what they do. The layout feels structured and grid-based; sections have natural breathing room without wasting space. Dense views (Hub issue lists, Labs review threads) and airy views (Learn track maps, onboarding steps) use the same design language, varying in density through spacing choices rather than color or decoration.
 
-The emotional register is that of a serious tool that takes the user's work seriously. The interface can be immersive — gradients on hero and pillar cards, subtle particles or depth on cards — without becoming consumer entertainment. It communicates that this is a place where real things get built, researched, and published.
+The emotional register is that of a serious tool that takes the user's work seriously. It communicates that this is a place where real things get built, researched, and published — without being sterile or forbidding. The gamification system (XP, collectibles, achievements) is present and rewarding within the same composed visual language — it does not override the interface's professional register.
 
-Gradients and motion are used with purpose: hero background, pillar cards, CTAs, and indicators. There are no confetti or mascotes on every action. The gamification system (XP, collectibles, achievements) is present and rewarding within the same composed visual language — it does not override the interface's professional register.
+The ecosystem feels like one product with contextual variations — not three separate applications sharing a login. A user navigating from Learn to Hub to Labs should feel the density and rhythm shift, but never feel they left the product.
 
 ---
 
 ## 3. Color Story
 
-> *The aesthetic rationale behind the color palette choices. This section does not repeat the hex values (those are in DESIGN-SYSTEM.md). It explains what the colors communicate and why these specific choices were made.*
+> *The aesthetic rationale behind the color palette choices. Hex values are in `DESIGN-TOKENS.md`. This section explains what the colors communicate and why.*
 
 ### 3.1 Brand Color Narrative
 
-**Primary brand color** (`--color-brand-primary`): The primary blue is a confident, medium-saturation tone that reads as decidedly digital-native without tipping into the generic corporate blue of enterprise software. Its saturation level is high enough to command attention as a primary action color but not so electric that it reads as casual or urgent. For the primary user types — learners, contributors, researchers — this blue signals "this action matters and it is safe to take it."
+**Primary — Teal-Esmeralda (`--color-primary-500: #0FA87F`)**: The name "Syntropy" — the opposite of entropy — describes convergence, emergence, and order arising from cooperation. The primary color sits at the intersection of green (growth, life, emergence) and blue (trust, intelligence, depth). This teal-esmeralda is distinctive in a landscape of blue SaaS products, communicates both technical competence and organic growth, and works equally in educational, collaboration, and scientific contexts.
 
-**Secondary brand color** (`--color-brand-secondary`): The slate gray sits at the intersection of cool neutrality and structural weight. It does not compete with the primary blue — it anchors it. Secondary buttons, accents, and supporting text in this tone communicate "supporting role" without being invisible. It gives the interface its sense of infrastructure: the stable scaffolding behind the active elements.
+At its brightest tones (400–500), it commands attention for primary actions: "this button matters and it is safe to press." At its darkest tones (800–900), it grounds text and headings with authority. At its lightest tones (50–100), it provides subtle backgrounds for success states and positive feedback without competing with content.
 
-**Accent color** (`--color-brand-accent`): The accent sky-blue is lighter and slightly warmer than the primary. Its role is precisely delimited: focus states, highlights, and interactive hover moments where the primary blue would be too heavy. Its sparing use is intentional — an accent that appears everywhere is no longer an accent. When the accent appears, it carries the specific signal "your attention is needed here right now."
+**Why not blue?** Blue is the default for technology products. It would make Syntropy visually invisible among the tools its users already use. The teal-esmeralda is close enough to blue to inherit trust associations, but distinct enough to be recognizable.
 
-### 3.2 Neutral Scale Narrative
+### 3.2 Pillar Accent Narrative
 
-The dark scale (background slate/blue, light foreground) is the default experience; light neutrals exist for the light theme and accessibility. In light mode, the neutral scale runs from near-black to pure white with a careful mid-range for borders and disabled states. The choice of near-black over pure black for text gives extended reading sessions a slightly softer quality. The neutrals are cool-toned throughout; this maintains the systematic, precise character and ensures the brand blue reads as the anchor.
+Each pillar has an accent color that appears in secondary, contextual roles — never replacing the primary teal for actions. The accent colors were chosen to match the emotional register of each pillar's activity:
 
-### 3.3 Semantic Color Rationale
+**Learn — Amber/Gold (`--pillar-learn-accent: #F5A623`)**: Warmth, discovery, reward. The color of achievement, of gold earned. It appears in collectibles, progress indicators, and achievement badges. It says: "you accomplished something real."
 
-The semantic colors (success green, warning yellow, error red, info blue) follow conventional expectations deliberately. For a platform where status indicators govern contribution acceptance, governance vote outcomes, peer review states, and publication statuses, deviating from convention would introduce cognitive load for no aesthetic benefit. The precise tones chosen — mid-saturation, not neon — maintain the composed palette. The non-negotiable rule that status is never conveyed by color alone (icon + text always) means these semantic colors support legibility rather than carrying the full communicative burden.
+**Hub — Slate (`--pillar-hub-accent: #6B7B93`)**: Efficiency, structure, work. Almost neutral, because the Hub is where serious work happens — governance, contracts, contributions. The accent is deliberately quiet, letting the content (issues, proposals, artifacts) dominate.
 
-### 3.4 Gradients and Glass
+**Labs — Indigo (`--pillar-labs-accent: #3D6BCF`)**: Rigor, depth, precision. The color of ink, of academic tradition meeting modern tools. It signals intellectual seriousness without the coldness of pure blue.
 
-The hero gradient and divider gradients communicate depth and focus; the cyan-to-purple gradient on icons and CTAs provides emphasis. Glass morphism (blur, semi-transparent border) on nav and overlays keeps legibility and a modern feel without competing with content.
+**Critical rule**: Pillar accents are supplementary. The primary teal always handles: primary buttons, links, active states, and progress bars. Accents appear in: pillar identification badges, section headers, decorative icons, and category labels.
 
-### 3.5 Pillar Palettes
+### 3.3 Neutral Scale Narrative
 
-Each pillar (Learn, Projects, Labs, Contribute, Portfolio) may use a semantic palette (blue, purple-blue, magenta, green, orange) on cards and icons for visual recognition, without creating separate component sets.
+The neutral scale uses a cool-toned gray that harmonizes with the teal primary. In light mode, the scale runs from near-white (`#FAFAFA`) to near-black (`#0F1117`) with a carefully calibrated mid-range for borders and secondary text. In dark mode, surfaces use deep blue-grays (`#0F1117` to `#1A1D27`) that feel warm enough to avoid sterility while maintaining the systematic, precise character.
 
-### 3.6 Palette as a Set
+The choice of near-black over pure black for text (and near-white over pure white for dark mode backgrounds) gives extended reading sessions a slightly softer quality — critical for a platform where users read Learn fragments, Labs articles, and Hub documentation for hours.
 
-Seen together, the palette reads as cool, systematic, and trust-building. This is intentional: the Syntropy ecosystem is a place where artifacts are cryptographically anchored, governance contracts are publicly readable, and contributions are verifiably recorded. The palette fits the primary user types — technical contributors, researchers, institutional founders — who associate this register with tools they can depend on.
+### 3.4 Semantic Color Rationale
+
+The semantic colors (success green, warning amber, error red, info blue) follow conventional expectations deliberately. For a platform where status indicators govern contribution acceptance, governance vote outcomes, peer review states, and publication statuses, deviating from convention would introduce cognitive load for no aesthetic benefit. The precise tones chosen — mid-saturation, not neon — maintain the composed palette.
+
+**Non-negotiable rule**: Status is never conveyed by color alone. Icon + text always accompanies semantic color. This is documented as an accessibility requirement (WCAG) and an architectural constraint.
+
+### 3.5 Palette as a Set
+
+Seen together, the palette reads as composed, systematic, and trust-building with a touch of organic warmth from the teal. This is intentional: the Syntropy ecosystem is a place where artifacts are cryptographically anchored, governance contracts are publicly readable, and contributions are verifiably recorded. The palette fits the primary user types — technical contributors, researchers, institutional founders, and learners — who need to trust the tools they depend on.
 
 ---
 
@@ -88,197 +94,171 @@ Seen together, the palette reads as cool, systematic, and trust-building. This i
 
 > *What the typeface choices communicate about the product's character.*
 
-### 4.1 Heading / Display Font
+### 4.1 Primary Font — Inter
 
-**Font**: Inter (or Geist as alternative)
+Inter is a geometric-humanist sans-serif designed specifically for screen interfaces. It carries associations of quality, modernity, and pragmatism. Using a single family for both headings and body creates visual cohesion and reduces complexity. At weight 500, headings are authoritative without rigidity. At weight 400, body text is comfortable for sustained reading.
 
-Inter is a geometric-humanist sans-serif designed specifically for screen interfaces at all sizes. It carries associations of quality, modernity, and pragmatism — the same qualities that made it the default for a generation of respected developer tools and productivity applications. At heading weights (600–700), it is authoritative without rigidity; at display size (48px), it has enough presence for hero sections without feeling decorative. Choosing Inter for headings says: "We built this carefully and for real use."
+**Why only two weights (400 and 500)?** Fewer weights mean clearer hierarchy. Size does the heavy lifting for differentiation; weight merely reinforces. Systems that use 300, 400, 500, 600, 700 create ambiguity — "is this text bold or semi-bold?" becomes a recurring question. With two weights, hierarchy is unambiguous.
 
-### 4.2 Body Font
+### 4.2 Code Font — JetBrains Mono
 
-**Font**: Inter (same family as heading)
+JetBrains Mono was designed by the makers of professional developer IDEs. Its slightly wider character width improves readability at smaller sizes — critical in a platform where code appears in inline fragments, Hub issue descriptions, artifact IDs, and the embedded IDE. The monospace presence is frequent enough that this choice has real impact on the experience.
 
-Using a single family for both headings and body creates visual cohesion and reduces the number of moving parts in the system. Inter at 400 weight and 16px with 1.6 line-height is a proven body text configuration for mixed-density interfaces — comfortable for reading Learn fragments and Labs articles, crisp enough for Hub issue descriptions and governance summaries. The absence of a contrasting body font is a deliberate choice: contrast comes from weight, size, and spacing, not from family switching.
+### 4.3 Scientific Font — Source Serif 4 (Labs only)
 
-### 4.3 Monospace / Code Font
-
-**Font**: JetBrains Mono (or Fira Code as alternative)
-
-JetBrains Mono was designed by the makers of professional developer IDEs and carries that lineage in its proportions and ligature set. Its slightly wider character width makes it more readable at smaller sizes than narrower monospace alternatives — critical in a platform where code appears in inline fragments, Hub issue descriptions, artifact IDs, and the embedded IDE. The monospace presence is frequent enough in the Hub and Labs that this choice has real impact on the experience of power users.
+For long-form scientific article reading in Labs, a serif option reduces reading fatigue. Source Serif 4 is a modern, screen-optimized serif that pairs well with Inter. It appears only in the rendered body of Labs articles — never in the UI chrome around them.
 
 ### 4.4 Type Scale Intention
 
-The scale spans from 48px display down to 12px caption — a moderate range that prioritizes hierarchy clarity over dramatic contrast. The 2:1 ratio between h1 (32px) and body (16px) establishes clear authority without making body text feel subordinate. The scale is tight enough to feel composed and unified across pillar variations (Learn's more open layouts, Hub's denser lists, Labs' academic structure) rather than dramatically expressive within any single view.
+The scale uses a 1.25 ratio (Major Third), spanning from 36px display to 11px caption. The ratio was chosen because it produces clear differentiation between levels without dramatic jumps. Hub and Labs use 14px as default body (denser content); Learn uses 16px (more breathing room for learners).
 
 ---
 
 ## 5. Spatial Character
 
-> *What the spacing scale and border radius choices communicate as a system.*
+> *What the spacing scale and border radius choices communicate.*
 
 ### 5.1 Density and Whitespace
 
-**Spacing base unit**: 4px
+The 4px base unit produces a tight, systematic grid that allows both dense and open layouts. Hub issue lists and Labs review threads use the smaller end of the scale (8–16px gaps) for information density. Learn track maps and onboarding steps use the larger end (32–64px gaps) for spatial clarity. The same grid governs both — density shifts, but the underlying order does not.
 
-The 4px base unit produces a tight, systematic grid that allows both dense and open layouts within the same vocabulary. Hub issue lists and Labs review threads use the smaller end of the scale (space-2 through space-4, 8–16px) to fit meaningful amounts of information without scrolling. Learn track maps and onboarding steps use the larger end (space-8 through space-16, 32–64px) for spatial clarity and visual breathing room. The same 4px grid governs both — the density shifts, but the underlying order does not. This serves the ecosystem's range of users: power users scanning dense tables benefit from the tight end; new learners in their first session benefit from the open end.
+This serves the ecosystem's range: power users scanning dense Hub tables benefit from the tight end; new learners in their first session benefit from the open end. See `PILLAR-PROFILES.md` for specific density specifications per pilar.
 
 ### 5.2 Border Radius Character
 
-**Base**: 0.5rem (8px); inputs and tags use smaller derived values; cards and modals in the 8–12px range; pills use full radius.
+**Base radius: 8px.** Rounded enough to avoid clinical precision (0px), but not soft enough to suggest consumer entertainment (24px+).
 
-The practical rounding range lands in the "approachable professional tool" zone. It is rounded enough to avoid clinical precision (0px corners), but not soft enough to suggest consumer entertainment (24px+). Input fields at the smaller radius feel precise and form-like. Cards at 8px feel organized and contained. Modals at 12px feel elevated and composed. Pills at 9999px — used for tags, status labels, and avatars — are the deliberate exception: their full rounding signals "categorical label," not the character of the larger interface.
+- Inputs and small elements: 6px — precise, form-like
+- Buttons and medium elements: 8px — the default, balanced
+- Cards, modals, large containers: 12px — elevated, composed
+- Pills, avatars, badges: 9999px (full) — categorical label signal
 
-### 5.3 Layout Grid Intention
+The practical range lands in the "approachable professional tool" zone. Each radius level communicates a relationship: smaller radius = smaller, more precise element; larger radius = larger, containing element.
 
-The layout is constrained and grid-based — structure is imposed, not suggested. This signals that the platform organizes information on behalf of the user rather than leaving organization to chance. Within that structure, content governs density: a research article will use the full reading column width; a Kanban board will use a multi-column grid; a fragment page will balance content and editor panels. The grid is a service to the work, not a restriction on it.
+### 5.3 Shadow Character
+
+Shadows are subtle and layered — never heavy or dramatic. Two shadow levels handle most cases: `sm` for subtle elevation (card hover), `md` for clear elevation (dropdown, popover). `lg` is reserved for modals. Focus rings use a 3px spread of the primary teal at reduced opacity.
+
+No decorative shadows. No colored shadows except the focus ring. Shadow is a functional tool indicating elevation, not a style choice.
 
 ---
 
 ## 6. Motion Character
 
-> *The animation philosophy — what motion should do, what it should avoid, and what personality it adds.*
+> *What motion should do, what it should avoid.*
 
 ### 6.1 Speed Profile
 
-**Fast end**: `--duration-fast` (100ms) — micro-interactions: tooltip appearance, checkbox toggles, focus ring transitions. At 100ms, motion is perceived as immediate response rather than animation. This speed signals "the system is listening" without drawing attention to itself.
+- **100ms (fast)**: Micro-interactions — tooltip, toggle, focus ring. Perceived as immediate.
+- **200ms (normal)**: Standard transitions — dropdown, tab switch, card hover. Just visible enough to confirm a change.
+- **400ms (slow)**: Significant transitions — modal entrance, page transition, collectible assembly. Has intentional weight.
 
-**Normal**: `--duration-normal` (200ms) — standard transitions: dropdown opens, tab switches, card hover states, skeleton loading completion. At 200ms, motion is just visible enough to confirm that something changed without creating anticipation.
-
-**Slow end**: `--duration-slow` (400ms) — page transitions, modal entrances and exits, complex reveal sequences (e.g., the collectible assembly animation in Learn, a governance contract confirmation). At 400ms, motion has intentional weight — it marks a significant state change that deserves brief acknowledgment.
-
-The speed profile makes the interface feel snappy and tool-like rather than fluid and product-like. The range is intentionally narrow (100–400ms): expressive animation diversity would contradict the purposeful archetype. Consistency in motion speed reinforces the sense of a system with clear rules.
+The range is narrow (100–400ms). Expressive animation diversity would contradict the archetype. Consistency in speed reinforces the sense of a system with clear rules.
 
 ### 6.2 Animation Philosophy
 
-Every animation confirms an action or reveals a state change. Entrance animations (fade-in, translateY) in sections, scroll-driven effects (parallax, opacity) on the hero, hover scale and tap scale on cards and buttons, and bounce on indicators are permitted. Subtle motion on CTA icons (e.g. "rocket" pulse) is allowed when it supports the CTA. Avoid motion that is purely decorative with no relation to content or state.
+Every animation confirms an action or reveals a state change. Permitted: entrance animations (fade-in, translateY) for content sections, subtle hover scale (1.02–1.04) for interactive cards, focus ring transitions, skeleton shimmer for loading states. The spring easing is reserved for positive-outcome moments: achievement unlock, collectible completion, first artifact published.
 
-Animations are short enough to be invisible in repeated use — a user submitting their twentieth contribution should not feel like they are watching the same performance again — but present enough to communicate system responsiveness. The spring easing (`--ease-spring`) is reserved for positive-outcome moments where a subtle bounce adds appropriate energy: collectible completion, achievement unlock, first artifact published.
+**Not permitted**: Confetti, bouncing mascots, attention-grabbing pulses on non-critical elements, parallax effects that serve no informational purpose, loading animations that take longer than the actual load.
 
-**Commitment**: All animations respect the `prefers-reduced-motion` media query. No animation is required for functionality — they are enhancements only.
+**Commitment**: All animations respect `prefers-reduced-motion`. No animation is required for functionality.
 
 ---
 
 ## 7. Illustration and Imagery Style
 
-> *Rules for visual assets that go beyond the component library and iconography.*
+### 7.1 Illustration Style: Geometric Flat
 
-### 7.1 Illustration Style
+Flat vector illustrations from clean geometric shapes — rectangles, circles, paths. One primary object per illustration, generous negative space. Colors drawn exclusively from the design token palette. Maximum four tones per illustration.
 
-**Style**: Geometric flat
+### 7.2 Human Presence
 
-**Style description**: Flat vector illustrations built from clean geometric shapes — rectangles, circles, paths — with no heavy shadows or textures. Compositions are simple and focused: one primary object or concept per illustration, generous negative space. Gradients are permitted in hero/marketing illustrations when aligned to design tokens (`--gradient-hero`, `--gradient-accent`); spot illustrations and empty states remain gradient-free unless specified. The visual vocabulary echoes the UI's spatial structure and token system.
+When human figures appear: highly stylized, silhouette-level abstraction. Not realistic faces. The platform's users are global and diverse; no illustration should make a specific demographic assumption.
 
-### 7.2 Color Usage in Illustrations
+### 7.3 Photography: Not Used
 
-Illustrations draw from the design system token palette only: the primary blue, the slate secondary, the accent sky-blue, and the neutral scale (light neutrals for backgrounds, near-black or dark for outlines in the relevant theme). A maximum of four tones per illustration — primary, one neutral, and up to two semantic or accent colors when the concept requires. For hero/marketing assets, gradient usage may follow the defined gradient tokens. Off-palette colors are permitted only for recognizable world objects where palette restriction would make the illustration ambiguous (e.g., a leaf in a nature metaphor may be green).
-
-### 7.3 Human Presence
-
-**Include people in illustrations**: Contextual — onboarding and marketing imagery may include simplified human figures; spot illustrations for functional states (empty state, error, success) prefer objects over people.
-
-When human figures appear, they are highly stylized and geometric — silhouette-level abstraction, not realistic faces or detailed anatomy. This level of abstraction ensures the figures are universally readable and implicitly inclusive without requiring explicit diversity management at the illustration level. The platform's users are global and span from non-technical learners to expert researchers; no illustration should make a specific demographic assumption.
-
-### 7.4 Photography Direction
-
-**Photography in use**: No
-
-The platform is a digital tool operating entirely in the abstract domain of code, research, and institutional governance. Photography would introduce a warmth and material specificity that conflicts with the platform's systematic, precise character. If photography is introduced in future (e.g., for a press kit or event marketing), it should be high-contrast, desaturated toward the neutral palette, and focused on activity (hands at a keyboard, a notebook with writing) rather than people's faces.
-
-### 7.5 Asset Categories
-
-| Category | Used In | Style Notes |
-|----------|---------|-------------|
-| Spot illustrations | Empty states, 404, success/error screens, permission-denied states | Single object, minimal, generous space; no text integrated |
-| Marketing / hero images | Landing page hero, GitHub README header, press kit | Abstract geometric compositions; visual metaphor for convergence of learning/building/research; no UI depicted |
-| Onboarding visuals | First-run wizard, career discovery, placement screens | Slightly more narrative; 2–3 objects in context; may include simplified figures |
-| Social media visuals | Release announcements, feature launches, changelog entries | Bold, legible at small sizes; geometric patterns using brand palette; no embedded text (text composited separately) |
+The platform operates in the abstract domain of code, research, and governance. Photography would introduce a material specificity that conflicts with the systematic character.
 
 ---
 
 ## 8. Anti-Patterns
 
-> *Explicit visual choices that contradict this system's aesthetic. Each item is specific and actionable.*
+> *Explicit visual choices that contradict this system. Each item is specific and actionable.*
 
 The following must not appear in this product's visual interface or assets:
 
-1. **Gradients outside design tokens**: Gradients on large surfaces are permitted only when defined by tokens (hero, pillar cards, dividers). Avoid arbitrary or consumer-style gradients everywhere.
+1. **Off-token colors.** Every color in the interface must trace to a token in `DESIGN-TOKENS.md`. A developer who writes `color: #3b82f6` instead of `text-primary` or `var(--color-primary-500)` has introduced an untraceable value that will drift.
 
-2. **Heavy drop shadows for depth signaling**: The shadow system (`--shadow-sm` through `--shadow-lg`) is calibrated for subtle elevation — dropdowns, modals, focused elements. Blue-tinted shadows for nav active and CTA emphasis are allowed per `--shadow-nav-active`. Applying large untokenized shadows to create visual drama or "float" primary content panels above the page is prohibited.
+2. **Heavy drop shadows.** The shadow system is calibrated for subtle elevation. Applying large, untokenized shadows to create visual drama is prohibited.
 
-3. **Decorative illustration within functional data-dense screens**: Spot illustrations belong in empty states, onboarding, and success/error moments. Using them inside Hub issue lists, Labs review threads, or Portfolio dashboards would fragment information hierarchy and signal that the platform does not trust its own data to carry the view.
+3. **Decorative illustration in data-dense screens.** Spot illustrations belong in empty states, onboarding, and success/error moments. Using them inside Hub issue lists, Labs review threads, or Portfolio dashboards fragments information hierarchy.
 
-4. **Consumer-gamification color explosions**: The XP, collectible, and achievement system uses the same design token vocabulary as the rest of the interface. Introducing neon accent colors, rainbow gradients, or high-saturation "celebration" palettes that deviate from the design system for gamification moments would undermine the platform's professional register.
+4. **Consumer-gamification color explosions.** The XP, collectible, and achievement system uses the same token vocabulary as the rest of the interface. Neon accents, rainbow gradients, or high-saturation "celebration" palettes are prohibited.
 
-5. **Rounded corners beyond `--radius-xl` (16px) on UI containers**: Radii beyond 16px on cards, panels, sidebars, or modals push the interface toward a soft, playful quality incompatible with the purposeful archetype. The `--radius-full` (9999px) is reserved exclusively for pills, avatars, and circular icon buttons — categorical UI elements, not layout containers.
+5. **Rounded corners beyond 12px on UI containers.** Radii beyond 12px on cards, panels, sidebars, or modals push the interface toward a soft, playful quality. `9999px` is reserved exclusively for pills, avatars, and circular icon buttons.
 
-6. **Animation without purpose**: Motion must serve a purpose (entrance, scroll, hover, confirmation). Parallax and subtle particles on hero/cards are permitted. Avoid motion that is purely decorative with no relation to content or state.
+6. **Animation without purpose.** Motion must confirm an action or reveal a state change. If removing the animation would not make the user lose information, the animation should not exist.
 
-7. **Typography mixing beyond the defined token scale**: Introducing custom font sizes outside the 11-level scale, using font-weight values not defined in the system (e.g., 300 or 800), or switching font families within a single UI context (not code/prose) introduces inconsistency that degrades the composed, unified character of the interface.
+7. **Typography outside the defined scale.** No custom font sizes, no weights beyond 400 and 500, no font family switching within a single UI context (code/prose boundary excepted).
 
-8. **Full-bleed color outside tokens**: Full-bleed color on sections is permitted when using gradient tokens or pillar palette (e.g. hero gradient, section-alt). Do not introduce ad-hoc colored panels or tinted section backgrounds that fragment visual unity.
+8. **Competing primary actions.** One primary button per viewport. If a screen has two primary buttons, the design is wrong — one of them should be secondary or ghost.
+
+9. **Color-only status communication.** Every semantic color (success, error, warning, info) must be accompanied by an icon and text. A red border alone is not sufficient to indicate an error state.
+
+10. **Pillar accent as primary action color.** The amber (Learn), slate (Hub), and indigo (Labs) accents never replace teal for buttons, links, or active states. They are contextual identity markers, not action colors.
 
 ---
 
 ## 9. Reference Landmarks
 
-> *Comparable products that informed the design direction. For each, one sentence on what specifically to take from it.*
+> *Comparable products and the specific qualities to take from each.*
 
-| Reference | What to Take | Source Connection |
-|-----------|-------------|-------------------|
-| Linear | The speed and opinion of the project/issue management interface — dense, keyboard-friendly, with clear hierarchy that serves working contributors rather than managing them | Vision §4 Component 2 (Hub): "Project management feels like Linear" |
-| GitHub | The precision and information density of the code review interface — inline comments anchored to specific passages, status states that are clear and actionable, a design that respects expert-level users | Vision §4 Component 3 (Labs): "The review interface has the precision of GitHub's code review system" |
-| Overleaf | The editorial rendering quality of the article writing view — clean typesetting, real-time preview, clear separation between editor and rendered output | Vision §4 Component 3 (Labs): "The article editor aspires to Overleaf's rendering quality" |
-| Notion | The fluidity and low-friction quality of the editing experience — starting to write should feel immediate, not ceremonial | Vision §4 Component 3 (Labs): "with Notion's editing fluidity" |
-| VS Code / Monaco | The contextual IDE integration standard — keyboard-first, state-persistent, with clear entry and exit from the editing context | Architecture reference: `platform/embedded-ide` |
-| syntropy-cc/syntropy | Reference implementation for visual style: landing page, Navbar, Footer, pillar cards (Learn, Projects, Labs, Contribute, Portfolio), MyST content styling | [GitHub — syntropy-cc/syntropy](https://github.com/syntropy-cc/syntropy) |
+| Reference | Specific Quality to Emulate |
+|-----------|----------------------------|
+| **Linear** | Information density in list views: single-column, ~48px row height, monospace IDs, right-aligned metadata, keyboard-navigable. Apply to Hub issue lists and project management. |
+| **Notion** | Editing fluidity: starting to write feels immediate, not ceremonial. Block-based interaction with minimal chrome. Apply to Learn fragment authoring and Labs article editing. |
+| **GitHub** | Code review precision: inline comments anchored to specific lines, clear status states (open/closed/merged), contextual actions. Apply to Hub contribution review and Labs peer review. |
+| **Overleaf** | Rendering quality: clean typesetting, real-time preview, clear separation between editor and rendered output. Apply to Labs MyST/LaTeX editor. |
+| **Stripe** | Documentation quality: every element is predictable, every error is actionable, every interaction confirms its outcome. Apply to the API layer and developer-facing surfaces. |
+| **VS Code / Monaco** | IDE integration: keyboard-first, state-persistent, clear entry and exit from editing context. Apply to the embedded development environment. |
 
-**Anti-reference** (do not emulate): Duolingo / Coursera
-
-**What to avoid from them**: The high-saturation, consumer-gamification visual language — bright celebratory palettes, cartoon mascots, progress bars styled as entertainment — is incompatible with the Syntropy archetype. The ecosystem's gamification (XP, collectibles, achievements) earns its meaning from being embedded in a professional, trustworthy context; mimicking edtech consumer aesthetics would signal that the platform treats its users as passive learners to be entertained rather than as contributors, researchers, and builders doing real work.
+**Anti-references** (do not emulate):
+- **Duolingo**: High-saturation consumer gamification, cartoon mascots. The ecosystem's gamification earns meaning from professional context.
+- **Coursera**: Certificate-driven progress, passive video consumption. Syntropy is project-first, not curriculum-first.
 
 ---
 
 ## 10. Extension Guidelines
 
-> *Numbered rules for making visual decisions not covered by the design token system.*
+> *Rules for making visual decisions not covered by the tokens.*
 
-1. **When introducing a new component color state not defined in the tokens**, map it to an existing semantic token before considering a new value. If no existing semantic token applies, escalate to a design system update rather than hardcoding a hex value. The token system exists precisely to prevent one-off values from fragmenting the palette.
+1. **New color state needed?** Map it to an existing semantic token before creating a new value. If no token applies, propose a design system update — never hardcode.
 
-2. **When choosing between two border radius options for a new element**, use the smaller value. The archetype is precise, not soft. A 4px input inside a card with 8px radius maintains the hierarchy of "element within container" — a 12px input in the same card blurs it.
+2. **Choosing between two border radius options?** Use the smaller value. The archetype is precise, not soft.
 
-3. **When adding a visual break between content sections on a page**, use spacing tokens (`--space-12` through `--space-16`) and optionally a 1px `--border-default` rule — not color fills, background alternation, or decorative dividers. The layout's rhythm comes from space and line, not from color contrast between sections.
+3. **Adding visual break between sections?** Use spacing tokens and optionally a 1px border. Never use color fills, background alternation, or decorative dividers.
 
-4. **When a new pillar-specific surface or interaction needs a visual distinction**, reach for a pillar semantic token (`--pillar-learn-bg-subtle`, `--pillar-hub-font-code`) rather than introducing an off-palette value. Pillar identity is expressed through these tokens and through information density and copy choices — not through separate color palettes or component sets.
+4. **New pillar-specific visual distinction needed?** Use a pillar semantic token from `PILLAR-PROFILES.md`. Never introduce an off-palette value.
 
-5. **When generating or selecting an icon for a new use case**, stay within the chosen icon library (Lucide — pinned). Do not mix icons from different libraries even if a better icon exists elsewhere. Consistency in the icon family is a measurable property of visual cohesion; mixing libraries produces subtle but cumulative visual noise.
+5. **New icon needed?** Stay within Lucide. Do not mix icon libraries — consistency in icon family is a measurable property of visual cohesion.
 
-6. **When a gamification moment (achievement, collectible completion, XP milestone) calls for visual emphasis**, express it through the accent color (`--color-brand-accent`) and the spring easing (`--ease-spring`) — not through off-palette celebratory colors or animation styles not defined in the motion system. The gamification layer lives within the design system, not above it.
+6. **Gamification moment needs emphasis?** Express it through the primary teal accent and the spring easing. Never through off-palette colors or undefined animation styles.
+
+7. **Unsure about density?** Check the page archetype in `PAGE-ARCHETYPES.md`. If no archetype covers the case, default to medium density (16px gaps, 14px body text).
 
 ---
 
 ## 11. Calibration Checklist
 
-> *Questions for developers, designers, or AI agents to self-validate a new visual element before committing it. Any "No" warrants a revision before proceeding.*
+> *Self-validation before committing any new visual element.*
 
-When adding a new component, illustration, page, or visual asset, verify:
-
-- [ ] Does every color value come from a token in `DESIGN-SYSTEM.md`? (No hardcoded hex values.)
+- [ ] Does every color value come from a token in `DESIGN-TOKENS.md`? (No hardcoded hex.)
 - [ ] Does every spacing value use a spacing token? (No arbitrary `margin: 13px`.)
-- [ ] Do gradients and glass use only the defined tokens (e.g. `--gradient-hero`, `--gradient-accent`, `--glass-bg`, `--glass-blur`)?
-- [ ] Does the element fit the aesthetic archetype — **Purposeful & Immersive**? Would a first-time user understand immediately what this element is for?
-- [ ] Does the element avoid every anti-pattern listed in Section 8? (Check each of the 8 items explicitly.)
-- [ ] If the element contains an illustration or image: does it follow the geometric flat style and token-based color rules in Section 7? (Gradients only where specified for hero/marketing.)
-- [ ] If the element introduces motion: is the duration within the 100–400ms range in `DESIGN-SYSTEM.md §6`? Is it confirming an action or revealing a state change — not purely decorative? Does it respect `prefers-reduced-motion`?
-- [ ] In dark mode: does text/background contrast meet WCAG AA where applicable?
-- [ ] Would a developer familiar with Linear and GitHub (or syntropy-cc/syntropy) consider this element visually consistent with the quality and density expectations of those references?
-- [ ] Does the element extend the design system rather than contradict it? If it introduces a new pattern not covered by the tokens, has that pattern been proposed as an Extension Guideline addition?
-
----
-
-## 12. Review and Approval
-
-| Reviewer | Role | Date | Status |
-|---------|------|------|--------|
-| AGT-UXA | UX Architect | 2026-03-12 | Approved |
-| | System Architect | | Pending |
-| | Product Owner | | Pending |
+- [ ] Does the element fit the archetype — **Trustworthy & Intelligent**?
+- [ ] Does the element avoid every anti-pattern in Section 8? (Check all 10.)
+- [ ] If illustration: geometric flat style, token-based colors, max 4 tones?
+- [ ] If motion: duration within 100–400ms? Confirms action or reveals state? Respects `prefers-reduced-motion`?
+- [ ] In both light and dark mode: does contrast meet WCAG AA?
+- [ ] Does the pillar context match the density and accent specified in `PILLAR-PROFILES.md`?
+- [ ] Would a developer familiar with Linear and Notion consider this visually consistent?
+- [ ] Does the element extend the design system rather than contradict it?

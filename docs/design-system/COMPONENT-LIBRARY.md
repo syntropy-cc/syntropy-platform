@@ -1,301 +1,468 @@
 # Component Library — Syntropy Ecosystem
 
-> **Document Type**: Component Library  
-> **Project**: Syntropy Ecosystem  
-> **Design System Reference**: `docs/design-system/DESIGN-SYSTEM.md`  
-> **Rules Reference**: `.cursor/rules/design-system/design-system.mdc` (DS-006 through DS-009)  
-> **Created**: 2026-03-12  
+> **Document Type**: Component Library
+> **Project**: Syntropy Ecosystem
+> **Design Tokens Reference**: `docs/design-system/DESIGN-TOKENS.md`
+> **Interaction Patterns Reference**: `docs/design-system/INTERACTION-PATTERNS.md`
+> **Created**: 2026-03-12
 > **Last Updated**: 2026-03-16
+
+---
+
+## Purpose
+
+This document specifies every reusable component in the Syntropy design system. Components live in `packages/ui` and are consumed by all pillar apps. Implementation uses **shadcn/ui** as the base, customized with Syntropy design tokens.
+
+**Atomic Design Levels**: Atom (single element), Molecule (composed of atoms), Organism (section-level composition).
 
 ---
 
 ## Component Index
 
-Implementation aligns with **shadcn/ui** where applicable (style: default, baseColor: neutral, cssVariables, Lucide icons). See [syntropy-cc/syntropy](https://github.com/syntropy-cc/syntropy) for reference.
-
-| Component | Level | Status | File |
-|-----------|-------|--------|------|
-| [Button](#button) | Atom | ✅ Defined | e.g. `components/ui/button.tsx` (shadcn) |
-| [Input](#input) | Atom | ✅ Defined | e.g. `components/ui/input.tsx` (shadcn) |
-| [Card](#card) | Atom | ✅ Defined | e.g. `components/ui/card.tsx` (shadcn + variants) |
-| [Badge](#badge) | Atom | ✅ Defined | e.g. `components/ui/badge.tsx` (shadcn) |
-| [Navbar](#navbar) | Molecule | ✅ Defined | e.g. `components/syntropy/Navbar.tsx` |
-| [Footer](#footer) | Molecule | ✅ Defined | e.g. `components/syntropy/Footer.tsx` |
-| [Sheet](#sheet) | Molecule | ✅ Defined | Mobile menu; e.g. `components/ui/sheet.tsx` (shadcn) |
-| Select | Atom | ⬜ Pending | — |
-| FormField | Molecule | ⬜ Pending | — |
-| Skeleton | Atom | ⬜ Pending | — |
-
-*(Status: ✅ Defined / 🔵 In Progress / ⬜ Pending. Skeleton needed for portfolio and recommendations loading states.)*
+| Component | Level | Status | shadcn Base |
+|-----------|-------|--------|-------------|
+| [Button](#button) | Atom | ✅ Defined | `button.tsx` |
+| [Input](#input) | Atom | ✅ Defined | `input.tsx` |
+| [Textarea](#textarea) | Atom | ✅ Defined | `textarea.tsx` |
+| [Select](#select) | Atom | ✅ Defined | `select.tsx` |
+| [Checkbox](#checkbox) | Atom | ✅ Defined | `checkbox.tsx` |
+| [Switch](#switch) | Atom | ✅ Defined | `switch.tsx` |
+| [Badge](#badge) | Atom | ✅ Defined | `badge.tsx` |
+| [Avatar](#avatar) | Atom | ✅ Defined | `avatar.tsx` |
+| [Card](#card) | Atom | ✅ Defined | `card.tsx` |
+| [Skeleton](#skeleton) | Atom | ✅ Defined | `skeleton.tsx` |
+| [ProgressBar](#progressbar) | Atom | ✅ Defined | Custom |
+| [Tooltip](#tooltip) | Atom | ✅ Defined | `tooltip.tsx` |
+| [FormField](#formfield) | Molecule | ✅ Defined | Custom |
+| [StatCard](#statcard) | Molecule | ✅ Defined | Custom |
+| [Navbar](#navbar) | Molecule | ✅ Defined | Custom |
+| [Sidebar](#sidebar) | Molecule | ✅ Defined | Custom |
+| [TabBar](#tabbar) | Molecule | ✅ Defined | `tabs.tsx` |
+| [Dialog](#dialog) | Molecule | ✅ Defined | `dialog.tsx` |
+| [Sheet](#sheet) | Molecule | ✅ Defined | `sheet.tsx` |
+| [Toast](#toast) | Molecule | ✅ Defined | `sonner` or `toast.tsx` |
+| [DropdownMenu](#dropdownmenu) | Molecule | ✅ Defined | `dropdown-menu.tsx` |
+| [Breadcrumb](#breadcrumb) | Molecule | ✅ Defined | Custom |
+| [EmptyState](#emptystate) | Molecule | ✅ Defined | Custom |
+| [PageHeader](#pageheader) | Organism | ✅ Defined | Custom |
+| [EntityHeader](#entityheader) | Organism | ✅ Defined | Custom |
+| [ListRow](#listrow) | Organism | ✅ Defined | Custom |
+| [PillarBadge](#pillarbadge) | Atom | ✅ Defined | Custom |
+| [Footer](#footer) | Organism | ✅ Defined | Custom |
 
 ---
 
-## Component Definitions
-
----
+## Atom Components
 
 ### Button
 
-> **Level**: Atom  
-> **Purpose**: Triggers an action or event (submit, navigate, confirm, cancel).
+**Purpose**: Triggers an action or event.
 
-#### Variants
+**Variants**:
+| Variant | When to Use | Style |
+|---------|-------------|-------|
+| `primary` | Main action (one per view): "Publish," "Submit," "Create" | Filled `--action-primary`, white text |
+| `secondary` | Secondary actions: "Cancel," "Back," "Skip" | `--border-default`, `--bg-surface`, `--text-primary` |
+| `ghost` | Tertiary: "View all," "Learn more" | No border, subtle hover `--bg-hover` |
+| `destructive` | Irreversible: "Delete," "Reject" | Filled `--action-destructive`, white text |
+| `link` | Navigate to another page | Underline on hover, `--text-link` color |
+| `icon-only` | Space-constrained; text in tooltip | Icon only; `aria-label` required |
 
-| Variant | Use Case | Style |
-|---------|----------|-------|
-| `primary` | Main call-to-action; one per view (e.g. "Publish artifact", "Submit contribution", "Create institution") | Filled `--color-action-primary` |
-| `secondary` | Secondary actions (e.g. "Cancel", "Back", "Skip") | Outlined `--border-default`, no fill |
-| `ghost` | Tertiary actions, navigation (e.g. "View all", "Learn more") | No border, subtle hover background |
-| `destructive` | Irreversible or dangerous actions (e.g. "Reject contribution", "Delete") | `--color-error-500` (filled or outlined) |
-| `link` | Navigate to another page/section | Looks like a link; underline on hover |
-| `icon-only` | When space is limited; text in tooltip or `aria-label` | Icon only; `aria-label` required |
+**Sizes**: `sm` (32px height), `md` (40px height), `lg` (48px height).
 
-#### Props / Parameters
+**States**: Default, Hover (darker shade), Focus (`--focus-ring`), Active (scale 0.98), Disabled (opacity 0.5, cursor not-allowed), Loading (spinner replaces label, `aria-busy`).
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `primary` \| `secondary` \| `ghost` \| `destructive` \| `link` \| `icon-only` | `primary` | Visual style |
-| `size` | `sm` \| `md` \| `lg` | `md` | Button dimensions (use spacing tokens) |
-| `disabled` | `boolean` | `false` | Disables interaction |
-| `loading` | `boolean` | `false` | Shows spinner, disables interaction |
-| `type` | `button` \| `submit` \| `reset` | `button` | HTML button type |
-| `onClick` | `() => void` | — | Click handler |
-| `children` | `ReactNode` | — | Button label or icon |
+**Accessibility**: Native `<button>`. `aria-disabled` when disabled. `aria-busy` when loading. `aria-label` required for icon-only.
 
-#### States
+**Responsive**: On mobile (<768px), primary buttons in forms and Guided Flow are full-width.
 
-| State | Appearance | Notes |
-|-------|------------|-------|
-| Default | Filled/outlined per variant; `--radius-md` (0.5rem); padding from spacing tokens | |
-| Hover | Darker shade; cursor pointer | `--color-action-primary-hover` for primary |
-| Focus | Default + `--shadow-focus` | Always visible; never remove focus ring |
-| Active (e.g. nav item) | Primary fill + `--shadow-nav-active` (blue tint) | Use for active nav link, selected CTA |
-| Disabled | Reduced opacity; cursor not-allowed; `aria-disabled="true"` | |
-| Loading | Spinner replaces or precedes label; interaction disabled; `aria-busy="true"` | |
-
-#### Accessibility
-
-- Use native `<button>` element (not `<div>` or `<span>`).
-- `aria-disabled="true"` when disabled (preserve focusability for screen readers where appropriate).
-- `aria-busy="true"` when loading.
-- `icon-only` variant requires `aria-label` (e.g. "Close", "Edit", "Submit").
-- Focus ring visible and meeting contrast (DS-003).
-
-#### Usage Examples
+**Rules**:
+- One primary button per viewport.
+- Loading state must disable interaction.
+- Minimum touch target 44×44px on mobile.
 
 ```tsx
-// Primary (e.g. Publish artifact)
-<Button onClick={handlePublish} loading={isPublishing}>
+<Button variant="primary" onClick={handlePublish} loading={isPublishing}>
   Publish artifact
 </Button>
 
-// Destructive (e.g. Reject contribution)
 <Button variant="destructive" onClick={handleReject}>
   Reject contribution
 </Button>
 
-// Submit with loading
-<Button type="submit" loading={isSubmitting}>
-  Submit contribution
-</Button>
-
-// Icon only
 <Button variant="icon-only" aria-label="Close dialog">
-  <CloseIcon />
+  <X className="h-4 w-4" />
 </Button>
 ```
-
-#### Do / Don't
-
-| ✅ Do | ❌ Don't |
-|-------|----------|
-| Use `primary` for the one main action per view | Put two `primary` buttons side by side |
-| Use `destructive` for reject, delete, or irreversible actions | Use `destructive` for normal actions |
-| Use `loading` during async submit/publish | Leave user with no feedback during submit |
-| Keep labels concise (e.g. "Publish", "Submit contribution") | Use long sentences as button text |
-| Provide `aria-label` for icon-only buttons | Rely on icon alone without accessible name |
-
----
-
-### Card
-
-> **Level**: Atom  
-> **Purpose**: Container for content blocks: pillar cards on landing, list items, MyST content, and overlays.
-
-#### Variants
-
-| Variant | Use Case | Style |
-|---------|----------|-------|
-| `default` | Standard content block | `--bg-surface`, `--border-default`, `--radius-md` |
-| `glass` | Overlays, nav panels | Glass morphism: `--glass-bg`, `--glass-blur`, `--glass-border` |
-| `pillar` | Landing pillar cards (Learn, Projects, Labs, Contribute, Portfolio) | Header with gradient or pillar palette; body neutral; optional mesh/particle background |
-
-#### States
-
-| State | Appearance |
-|-------|------------|
-| Default | Border, radius, subtle shadow per DESIGN-SYSTEM |
-| Hover | Slight lift (e.g. translateY -1px to -2px), increased shadow |
-| Optional | Inner shadow for depth on pillar cards |
-
-#### Usage
-
-Use for pillar cards on the landing (Learn, Projects, Labs, Contribute, Portfolio), list cards, and MyST-style content. Reference [syntropy-cc/syntropy](https://github.com/syntropy-cc/syntropy) landing page and `app/page.tsx` for structure.
-
----
-
-### Badge
-
-> **Level**: Atom  
-> **Purpose**: Tags, status labels, and short labels (e.g. "LE", "PJ" pillar badges).
-
-#### Variants
-
-Semantic or pillar-based (primary, success, warning, destructive, or pillar palette). Radius: pill (`--radius-full`). Sizes: `sm`, `md`. Optional glow for emphasis (e.g. CTA badges).
-
-#### Accessibility
-
-Badges that convey status must pair with icon + text where needed; do not rely on color alone.
-
----
-
-### Navbar
-
-> **Level**: Molecule  
-> **Purpose**: Global navigation: logo, primary links (Learn, Projects, Labs), user menu, and mobile menu.
-
-#### Structure
-
-- Logo (e.g. "Syntropy") linking to home.
-- Desktop: horizontal links; active item uses `--color-action-primary` and `--shadow-nav-active`; inactive hover uses subtle background (e.g. `bg-white/5` in dark).
-- User menu (auth): dropdown or UserMenu component.
-- Mobile: Sheet component (slide-out) with same links; close on navigation.
-
-#### Reference
-
-[syntropy-cc/syntropy Navbar](https://github.com/syntropy-cc/syntropy/blob/main/components/syntropy/Navbar.tsx).
-
----
-
-### Footer
-
-> **Level**: Molecule  
-> **Purpose**: Site footer: columns of links, copyright.
-
-#### Structure
-
-Dark background; columns (e.g. Aprenda, Construa, Comunidade) with links; copyright line. Use spacing and typography tokens; no decorative imagery unless specified.
-
-#### Reference
-
-[syntropy-cc/syntropy Footer](https://github.com/syntropy-cc/syntropy/blob/main/components/syntropy/Footer.tsx).
 
 ---
 
 ### Input
 
-> **Level**: Atom  
-> **Purpose**: Single-line text entry (name, email, search, URL, etc.).
+**Purpose**: Single-line text entry.
 
-#### Variants
+**Types**: `text`, `password`, `email`, `search`, `number`, `url`.
 
-| Variant | Use Case |
-|---------|----------|
-| `default` | Standard text (e.g. pipeline name, project name, article title) |
-| `password` | Masked password entry |
-| `search` | Search/filter inputs (e.g. cross-pillar search) |
-| `email` | Email (sign-up, login) |
-| `number` | Numeric entry where applicable |
+**States**: Default (`--border-default`), Focus (`--border-focus` + `--focus-ring`), Error (`--border-error` + `--focus-ring-error`), Disabled (opacity 0.5, `--bg-surface-sunken`), Read-only (`--bg-surface-sunken`, no focus ring).
 
-#### Props / Parameters
+**Specs**: Height 40px, padding `--space-3` (12px), border-radius `--radius-md` (6px), font-size `--text-body` (14px).
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `type` | `text` \| `password` \| `email` \| `search` \| `number` \| `url` | `text` | Input type |
-| `value` | `string` | — | Controlled value |
-| `placeholder` | `string` | — | Placeholder (never substitute for label) |
-| `disabled` | `boolean` | `false` | Disables input |
-| `readOnly` | `boolean` | `false` | Non-editable display |
-| `error` | `boolean` | `false` | Shows error styling |
-| `id` | `string` | — | Required for `<label>` association |
-| `aria-invalid` | `boolean` | — | Set when error; ties to `aria-describedby` for error message |
-| `aria-describedby` | `string` | — | ID of error or helper text |
+**Accessibility**: Always paired with `<label>` via `id`/`htmlFor`. `aria-invalid` when error. `aria-describedby` pointing to error text. Never use placeholder as the sole label.
 
-#### States
+---
 
-| State | Appearance |
-|-------|------------|
-| Default | Border `--border-default`; padding `--space-3`; radius `--radius-sm` |
-| Focus | Border `--color-action-primary`; `--shadow-focus` |
-| Filled | Same as default (optional subtle border change) |
-| Error | Border `--color-error-500`; error icon + message below (via FormField) |
-| Disabled | Reduced opacity; cursor not-allowed; bg `--color-neutral-100` |
-| Read-only | Bg `--color-neutral-50`; no focus ring |
+### Textarea
 
-#### Accessibility
+**Purpose**: Multi-line text entry. Used for descriptions, comments, article excerpts.
 
-- Always paired with `<label>` via matching `id` and `htmlFor`.
-- Never use placeholder as the only label.
-- Error: `aria-invalid="true"` and `aria-describedby` pointing to error text element.
-- Required: `required` attribute and visual indicator (e.g. asterisk); legend at form top if needed.
+**Specs**: Same styling as Input. Min-height 80px. Resizable vertically (`resize: vertical`). Line-height 1.6.
 
-#### Usage Example
+---
 
-```tsx
-<FormField label="Project name" required error={errors.name?.message}>
-  <Input
-    id="project-name"
-    value={name}
-    onChange={(e) => setName(e.target.value)}
-    placeholder="e.g. my-open-source-app"
-    error={!!errors.name}
-    aria-invalid={!!errors.name}
-    aria-describedby={errors.name ? "project-name-error" : undefined}
-  />
-</FormField>
+### Select
+
+**Purpose**: Choose from a list of options.
+
+**Specs**: Same height and border as Input (40px). Chevron icon right-aligned. Dropdown panel uses `--bg-surface-raised`, `--shadow-md`, `--radius-lg`.
+
+**Accessibility**: Use shadcn Select (Radix) for keyboard navigation. `aria-expanded`, `aria-activedescendant`.
+
+---
+
+### Checkbox
+
+**Purpose**: Toggle a boolean option. Used in filters, settings, multi-select.
+
+**Specs**: 20×20px box, `--radius-sm` (4px). Checked: `--action-primary` fill with white checkmark. Focus ring on keyboard focus. Label positioned to the right with `--space-2` (8px) gap.
+
+**Accessibility**: Native `<input type="checkbox">` or Radix Checkbox. Label always present.
+
+---
+
+### Switch
+
+**Purpose**: Toggle on/off for immediate effect (e.g., notification preference, dark mode).
+
+**Specs**: 40×24px track. Off: `--color-neutral-300` (light), `--color-neutral-600` (dark). On: `--action-primary`. Thumb: white circle, 20px, with shadow.
+
+**When to use Switch vs Checkbox**: Switch for immediate effect (no submit button needed). Checkbox for form submissions (batched with other fields).
+
+---
+
+### Badge
+
+**Purpose**: Tags, status labels, pillar identifiers.
+
+**Variants**:
+| Variant | Background | Text Color | Usage |
+|---------|------------|------------|-------|
+| `default` | `--bg-surface-sunken` | `--text-primary` | Generic tags |
+| `primary` | `--color-primary-50` | `--color-primary-800` | Primary status |
+| `success` | `--color-success-50` | `--color-success-700` | Accepted, Active, Published |
+| `error` | `--color-error-50` | `--color-error-700` | Rejected, Failed |
+| `warning` | `--color-warning-50` | `--color-warning-700` | In Review, Pending |
+| `info` | `--color-info-50` | `--color-info-700` | Informational |
+| `pillar` | `--pillar-accent-subtle` | `--pillar-accent-text` | Pillar identifier |
+
+**Specs**: Padding 3px 10px, `--radius-full`, font-size `--text-caption` (11px), weight 500.
+
+**Accessibility**: Badges conveying status must pair with icon or text; color alone never communicates state.
+
+---
+
+### Avatar
+
+**Purpose**: User or institution identity.
+
+**Sizes**: `sm` (24px), `md` (32px), `lg` (40px), `xl` (64px).
+
+**Specs**: Circular (`--radius-full`). Image fills circle. Fallback: initials on `--pillar-accent-subtle` background with `--pillar-accent-text` color. Border: `--border-default` (1px).
+
+---
+
+### Card
+
+**Purpose**: Container for content blocks.
+
+**Variants**:
+| Variant | When to Use | Style |
+|---------|-------------|-------|
+| `default` | Standard content container | `--bg-surface`, `--border-default`, `--radius-lg` (12px) |
+| `elevated` | Popovers, dropdowns, hover cards | `--bg-surface-raised`, `--shadow-md`, `--radius-lg` |
+| `interactive` | Clickable cards (discovery grid, track browser) | Default + hover: `translateY(-2px)` + `--shadow-md` |
+| `sunken` | Inset sections, code block containers | `--bg-surface-sunken`, `--border-default`, `--radius-lg` |
+
+**Padding**: Per pillar token `--pillar-card-padding`. Default: `--space-4` (16px).
+
+**Responsive**: Cards stack to single column on mobile. Padding does not change.
+
+---
+
+### Skeleton
+
+**Purpose**: Loading placeholder for content that is being fetched.
+
+**Specs**: Rounded rectangle matching the content it replaces. Background: `--bg-surface-sunken`. Shimmer animation: subtle left-to-right gradient sweep, 1.5s duration, infinite loop. Respects `prefers-reduced-motion` (no animation when reduced).
+
+**Usage**: Match the shape and size of the content being loaded. A StatCard skeleton has the same dimensions as a StatCard. A ListRow skeleton has the same height as a ListRow.
+
+---
+
+### ProgressBar
+
+**Purpose**: Visual progress indication.
+
+**Specs**: Track: 8px height, `--bg-surface-sunken`, `--radius-full`. Fill: `--action-primary` (teal), `--radius-full`. Width proportional to progress percentage.
+
+**Accessibility**: `role="progressbar"`, `aria-valuenow`, `aria-valuemin="0"`, `aria-valuemax="100"`, text label nearby (e.g., "35% complete").
+
+---
+
+### Tooltip
+
+**Purpose**: Supplementary information on hover/focus.
+
+**Specs**: `--bg-neutral-800` (light) / `--bg-neutral-100` (dark), `--text-inverse` / `--text-primary`, `--radius-md` (6px), padding `--space-1.5` `--space-2`, font-size `--text-caption`, `--shadow-md`. Arrow pointing to trigger element. Appears on hover (300ms delay) and focus.
+
+**Accessibility**: `role="tooltip"`, `aria-describedby` on trigger. Dismiss on Escape.
+
+---
+
+## Molecule Components
+
+### FormField
+
+**Purpose**: Wraps an input (Input, Textarea, Select, Checkbox) with label, optional helper text, and error message.
+
+**Structure**:
+```
+[Label]              ← --text-label (13px, weight 500), --text-primary
+[Helper text]        ← --text-caption, --text-secondary (optional)
+[Input component]
+[Error message]      ← --text-caption, --color-error-500, with error icon
 ```
 
-#### Do / Don't
+**Specs**: Label above input, `--space-1.5` (6px) gap. Error message below input, `--space-1` (4px) gap. Required fields: label ends with " *" (asterisk in `--color-error-500`).
 
-| ✅ Do | ❌ Don't |
-|-------|----------|
-| Use with FormField for label + error placement | Use Input without a visible label |
-| Show error message in text (icon + text) | Convey error by color only |
-| Use spacing and color tokens from design system | Hardcode px or hex in component |
+**Accessibility**: Label's `htmlFor` matches input's `id`. Error text element has `id` referenced by input's `aria-describedby`. Required inputs have `required` attribute.
 
 ---
 
-### FormField (Placeholder)
+### StatCard
 
-> **Level**: Molecule  
-> **Purpose**: Wraps an input (or Select, Textarea) with label, optional helper text, and error message.  
-> **Status**: ⬜ Pending — structure to be implemented per INTERACTION-DESIGN form patterns (label above, error below, required indicator).
+**Purpose**: Display a single metric with label.
+
+**Structure**:
+```
+┌──────────────────────────┐
+│  padding: 16px            │
+│                           │
+│  Active Projects          │  ← --text-caption, --text-secondary, weight 400
+│  12                       │  ← --text-h3 (18px), --text-primary, weight 500
+│  ↑ 3 from last month     │  ← --text-caption, --color-success-500 (optional trend)
+│                           │
+└──────────────────────────┘
+```
+
+**Specs**: `--bg-surface-sunken`, `--radius-lg`, no border. Used in Dashboard archetype in grids of 2–4.
 
 ---
 
-### Skeleton (Placeholder)
+### Navbar
 
-> **Level**: Atom  
-> **Purpose**: Loading placeholder for portfolio cards, recommendation blocks, list rows, and fragment content.  
-> **Status**: ⬜ Pending — use shimmer animation per DESIGN-SYSTEM motion; no hardcoded dimensions; use spacing tokens for height/width where fixed size is needed.
+**Purpose**: Global navigation present on all pages.
+
+**Structure**: Logo (left) → Pillar links: Learn, Hub, Labs (center or left) → User menu (right).
+
+**Active state**: Active pillar link uses `--text-primary` + weight 500 + 2px teal bottom border. Inactive: `--text-secondary`, hover: `--bg-hover`.
+
+**Height**: 56px. `--bg-surface`, bottom `--border-default`.
+
+**Mobile (<768px)**: Logo (left) + hamburger icon (right). Hamburger opens Sheet with navigation links.
 
 ---
 
-### MyST (Educational Content)
+### Sidebar
 
-When rendering educational or documentation content (e.g. Learn pillar, Labs articles), the **MyST** pattern can be used:
+**Purpose**: Contextual navigation within a pillar or entity.
 
-- **Grid**: Responsive grid (1–4 columns by breakpoint) with gap and animation (e.g. fadeInUp with stagger).
-- **Cards**: `myst-card` using design tokens (`--card`, `--border`, `--radius`); optional header variants (primary, success, info, warning, danger).
-- **Admonitions**: tip, note, warning, danger, cta-action; left border and optional background tint from semantic tokens.
-- **Dropdowns**: Collapsible content with trigger; variants (success, info, warning, danger) for content tint.
+**Specs**: Width 240px (expanded), 64px (collapsed, icon-only). Background `--bg-surface`. Right border `--border-default`. Sticky (height: viewport). Toggle button at bottom or top.
 
-All MyST styles should use design system tokens (`--card`, `--border`, `--primary`, `--muted`, etc.) and respect dark/light theme. Reference syntropy-cc/syntropy `styles/myst-grid-components.css` and `components/myst` for implementation patterns.
+**Items**: Icon + label (expanded) or icon-only (collapsed) with tooltip. Active: `--bg-selected`, `--text-primary`. Hover: `--bg-hover`.
+
+**Mobile**: Hidden by default. Accessed via Sheet.
+
+---
+
+### TabBar
+
+**Purpose**: Switch between views within a page (Entity Detail archetype).
+
+**Specs**: Horizontal tabs. Active: `--text-primary`, weight 500, 2px `--action-primary` bottom border. Inactive: `--text-secondary`. Hover: `--text-primary`. Gap between tabs: `--space-6` (24px). Height: 44px.
+
+**Mobile**: Horizontal scroll (`overflow-x: auto`). Active tab scrolled into view.
+
+**Accessibility**: `role="tablist"`, `role="tab"`, `role="tabpanel"`. Arrow key navigation between tabs.
+
+---
+
+### Dialog
+
+**Purpose**: Modal for confirmations, forms, and detail views.
+
+**Specs**: Centered. Max-width 480px (small), 640px (medium), 800px (large). `--bg-surface`, `--radius-lg`, `--shadow-lg`. Backdrop `--bg-overlay`. Padding `--space-6`. Close button (X) top-right.
+
+**Animation**: Entrance 200ms fade + scale(0.95→1). Exit 150ms fade + scale(1→0.95).
+
+**Mobile (<768px)**: Full-screen sheet sliding up from bottom. Drag handle at top.
+
+**Accessibility**: Focus trapped inside. Close on Escape. `aria-modal`, `aria-labelledby` (title), `aria-describedby` (description).
+
+---
+
+### Sheet
+
+**Purpose**: Slide-out panel for mobile navigation, filters, and secondary content.
+
+**Specs**: Full height, 300px width (side) or auto-height (bottom). `--bg-surface`, `--shadow-lg`. Backdrop `--bg-overlay`. Entrance from left (navigation) or bottom (filters, mobile dialogs).
+
+**Animation**: 200ms slide + fade.
+
+---
+
+### Toast
+
+**Purpose**: Non-blocking feedback notification.
+
+**Variants**: `success` (green icon), `error` (red icon), `warning` (amber icon), `info` (blue icon), `default` (no icon).
+
+**Specs**: Position: bottom-right (desktop), bottom-center (mobile). `--bg-surface`, `--border-default`, `--radius-lg`, `--shadow-md`. Auto-dismiss after 5s. Dismissable via close button.
+
+**Accessibility**: `role="status"`, `aria-live="polite"`. Error toasts use `aria-live="assertive"`.
+
+---
+
+### DropdownMenu
+
+**Purpose**: Contextual actions menu.
+
+**Specs**: `--bg-surface-raised`, `--shadow-md`, `--radius-lg`. Items: 36px height, `--text-body`, hover `--bg-hover`. Dividers: 1px `--border-default`. Icons: 16px, `--text-secondary`.
+
+**Accessibility**: `role="menu"`, `role="menuitem"`. Arrow key navigation. Close on Escape.
+
+---
+
+### Breadcrumb
+
+**Purpose**: Show navigation hierarchy (Learn: Career > Track > Course > Fragment).
+
+**Specs**: Items separated by `/` or chevron icon. Current page: `--text-primary`, weight 500. Parent pages: `--text-link`, clickable. Font-size: `--text-body-sm`.
+
+---
+
+### EmptyState
+
+**Purpose**: Displayed when a list, grid, or section has no content.
+
+**Structure**:
+```
+     [Illustration — optional, geometric flat]
+     
+     No projects yet                              ← --text-h3, --text-primary
+     Create your first project to get started.    ← --text-body, --text-secondary
+     
+     [Create project →]                           ← primary button
+```
+
+**Specs**: Centered, max-width 400px. Padding `--space-12`. Illustration max-height 160px.
+
+---
+
+## Organism Components
+
+### PageHeader
+
+**Purpose**: Top section of a page with title, description, and optional actions.
+
+**Structure**: Title (h1, `--text-h1`) + optional description (`--text-body`, `--text-secondary`) + optional action button (right-aligned on desktop, below on mobile).
+
+**Specs**: Padding `--space-6` bottom. Bottom border optional.
+
+---
+
+### EntityHeader
+
+**Purpose**: Header for institution, project, lab, track, or user profile.
+
+**Structure**: Name (h1) + type badge + inline stats (3–4) + primary action button.
+
+**Specs**: `--bg-surface`, padding `--space-6`, bottom `--border-default`. Stats use `--text-body-sm`, `--text-secondary` label + `--text-primary` value.
+
+---
+
+### ListRow
+
+**Purpose**: Single row in a Dense List.
+
+**Structure**: Status indicator (dot or icon) + ID (monospace, optional) + title + metadata (right-aligned).
+
+**Specs**: Height per pillar profile (44–64px). Padding `--space-3` vertical, `--space-4` horizontal. Bottom border `--border-default`. Hover: `--bg-hover`. Selected: `--bg-selected`.
+
+**Responsive (<768px)**: Metadata wraps below title. Single column layout.
+
+---
+
+### PillarBadge
+
+**Purpose**: Identify which pillar a piece of content belongs to.
+
+**Structure**: Small colored badge with pillar name.
+
+| Pillar | Background | Text | Label |
+|--------|------------|------|-------|
+| Learn | `--color-learn-50` | `--color-learn-800` | "Learn" |
+| Hub | `--color-hub-50` | `--color-hub-800` | "Hub" |
+| Labs | `--color-labs-50` | `--color-labs-800` | "Labs" |
+
+**Specs**: Same as Badge `pillar` variant. Used in cross-pillar search results, portfolio, and recommendations.
+
+---
+
+### Footer
+
+**Purpose**: Site footer with navigation links and copyright.
+
+**Structure**: 3–4 columns of links + copyright line. `--bg-surface`, top `--border-default`.
+
+**Specs**: Max-width 1280px, centered. Column headers: `--text-label`. Links: `--text-secondary`, hover `--text-primary`. Copyright: `--text-caption`, `--text-tertiary`.
+
+**Mobile**: Columns stack vertically.
+
+---
+
+## Composition Patterns
+
+> *How components combine to form common UI blocks.*
+
+### Issue Row (Hub)
+`ListRow` containing: StatusDot (teal/neutral/error) + IssueID (Badge, monospace) + Title (text) + Avatar (assignee, sm) + Timestamp (secondary text, right).
+
+### Fragment Card (Learn)
+`Card` (interactive) containing: PillarIcon (amber) + FragmentNumber (caption) + Title (h3) + Description (body, 2 lines) + ProgressBar + Button (primary, "Continue building").
+
+### Article Card (Labs)
+`Card` (interactive) containing: VersionBadge (indigo) + Title (h3) + Authors (secondary) + SubjectArea badges (indigo pills) + DOI badge + MetadataLine (review count, datasets).
+
+### Contribution Review Block (Hub)
+Split layout: Left = artifact content/diff. Right = review thread (list of comments, each with Avatar + name + timestamp + text + inline anchor reference).
+
+### Achievement Notification (Learn)
+`Toast` (success) with: amber star icon + achievement title + XP earned. Auto-dismiss 5s.
 
 ---
 
 ## Deprecated Components
 
-| Component | Deprecated Since | Replacement | Removal Date |
-|-----------|------------------|-------------|--------------|
-| (None) | — | — | — |
+| Component | Deprecated Since | Replacement | Notes |
+|-----------|------------------|-------------|-------|
+| Glass Card variant | 2026-03-16 | Card `elevated` variant | Glass morphism removed from component definitions. Use shadow-based elevation. |
